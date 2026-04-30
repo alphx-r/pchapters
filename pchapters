@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pokémon RPG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#1a3a5c;--brand-mid:#2563a8;--brand-light:#e8f0fb;
+  --accent:#e8a020;--accent-light:#fdf3dc;
+  --bg:#f4f6fa;--surface:#fff;--surface2:#f0f3f8;
+  --border:#dde3ee;--border2:#c8d0e0;
+  --text:#1a1f2e;--muted:#6b7a99;
+  --red:#c03030;--green:#1a7a1a;
+  --r:10px;--font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
+}
+html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);color:var(--text)}
+
+/* NAV */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:100}
+.nav-logo{font-family:var(--font-title);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px}
+.nav-logo span{color:var(--accent)}
+.nav-links{display:flex;gap:4px}
+.nav-link{font-size:13px;font-weight:600;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:none;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s}
+.nav-link:hover{background:rgba(255,255,255,.12);color:#fff}
+.nav-link.active{background:rgba(255,255,255,.18);color:#fff}
+.nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;cursor:pointer;transition:all .2s}
+.nav-login:hover{background:var(--accent);border-color:var(--accent)}
+.nav-login.active{background:var(--accent);border-color:var(--accent)}
+
+/* PAGES */
+.page{display:none;padding:28px;max-width:1000px;margin:0 auto}
+.page.active{display:block}
+
+/* FORM */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.field input,.field select,.field textarea{padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);transition:border .2s;width:100%}
+.field input:focus,.field select:focus{outline:none;border-color:var(--brand-mid)}
+.field input[type=color]{height:40px;padding:4px 8px;cursor:pointer}
+.btn{padding:9px 18px;border-radius:8px;border:none;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-block}
+.btn-primary{background:var(--brand-mid);color:#fff}
+.btn-primary:hover{background:var(--brand)}
+.btn-warn{background:#fff8e0;color:#7a5010;border:1px solid #e8d080}
+.btn-warn:hover{background:#fdf0b0}
+.btn-danger{background:#fde8e8;color:var(--red);border:1px solid #f0c0c0}
+.btn-danger:hover{background:#f8c8c8}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-full{width:100%}
+.fb{font-size:12px;font-weight:700;text-align:center;padding:7px 10px;border-radius:6px;margin-top:8px;display:none}
+.fb-ok{background:#e0f0e0;color:var(--green)}
+.fb-err{background:#fde8e8;color:var(--red)}
+
+/* ROLADOR */
+.roller-header{text-align:center;margin-bottom:28px;padding-top:8px}
+.roller-header h2{font-family:var(--font-title);font-size:22px;color:var(--brand);margin-bottom:6px}
+.roller-header p{font-size:14px;color:var(--muted)}
+.roller-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
+.ctrl-group{display:flex;flex-direction:column;gap:6px}
+.ctrl-group label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.ctrl-group select,.ctrl-group input{padding:9px 12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);transition:border .2s;width:100%}
+.ctrl-group select:focus,.ctrl-group input:focus{outline:none;border-color:var(--brand-mid)}
+.badges-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:12px 16px;background:#fff;border-radius:var(--r);border:1.5px solid #e0e0e0}
+.badges-label{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.badge-btn{width:34px;height:34px;border-radius:50%;border:2px solid #d0d0d0;background:#f4f4f4;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none;line-height:1}
+.badge-btn.earned{background:#fff8e0;border-color:#e8a020}
+.badges-info{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap;font-weight:600}
+.roll-btn{width:100%;padding:15px;background:var(--brand-mid);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-title);font-size:16px;letter-spacing:1.5px;cursor:pointer;transition:all .2s;margin-bottom:24px}
+.roll-btn:hover{background:var(--brand);transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,168,.25)}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+.poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 12px;text-align:center;transition:all .25s;animation:fadeUp .35s both}
+.poke-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 14px rgba(37,99,168,.12)}
+.poke-card-img{width:70px;height:70px;margin:0 auto 10px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden}
+.poke-card-img img{width:70px;height:70px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
+.poke-card-name{font-family:var(--font-title);font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3}
+.poke-card-meta{margin-bottom:8px}
+.poke-rarity{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.rc{background:#e0f0e0;color:#1a6a1a}.ri{background:#dde8f8;color:#1a4a8a}.rr{background:#f0e8ff;color:#5a1a9a}.rrr{background:#fff0d8;color:#8a4a00}
+.type-pill{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.3px;margin:1px}
+.t-fire{background:#ff9b4a;color:#7a2a00}.t-water{background:#6ab8ff;color:#003a6a}.t-grass{background:#78d878;color:#1a5a1a}.t-normal{background:#c8c8a0;color:#4a4a2a}.t-electric{background:#ffe030;color:#5a4a00}.t-psychic{background:#ff8fb0;color:#6a0030}.t-steel{background:#aababb;color:#2a3a3a}.t-fairy{background:#ffaad8;color:#6a0050}.t-ghost{background:#9090c0;color:#1a1a4a}.t-dragon{background:#7060f0;color:#fff}.t-ice{background:#96d8d8;color:#1a4a4a}.t-fighting{background:#c03030;color:#fff}.t-rock{background:#b8a050;color:#3a2a00}.t-ground{background:#e0c060;color:#3a2a00}.t-poison{background:#a060c0;color:#fff}.t-bug{background:#a0c020;color:#2a3a00}.t-dark{background:#705040;color:#fff}.t-flying{background:#88aaee;color:#1a1a5a}
+.gender-icon{font-size:13px;margin-left:3px}
+.poke-lvl,.poke-hab{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* FICHÁRIO */
+.ficha-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-top:8px}
+.ficha-header h2{font-family:var(--font-title);font-size:20px;color:var(--text);font-weight:700}
+.search-bar{padding:9px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;width:220px;color:var(--text);transition:border .2s}
+.search-bar:focus{outline:none;border-color:var(--brand-mid)}
+.player-section{margin-bottom:28px}
+.player-section-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.player-section-name{font-family:var(--font-title);font-size:12px;color:var(--text);letter-spacing:.8px;text-transform:uppercase}
+.player-pontos-box{display:flex;align-items:center;gap:5px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:3px 12px}
+.player-pontos-lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.player-pontos-val{font-size:13px;font-weight:700;color:var(--text)}
+.fichas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px}
+.ficha-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:all .2s;padding:16px 14px;display:flex;flex-direction:row;align-items:center;gap:12px}
+.ficha-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 14px rgba(37,99,168,.1)}
+.ficha-card-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
+.ficha-card-avatar img{width:51px;height:51px;object-fit:cover;border-radius:50%}
+.ficha-name{font-family:var(--font-title);font-size:12px;color:var(--text);line-height:1.4;letter-spacing:.3px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center}
+.modal-box{background:var(--surface);border-radius:var(--r);padding:28px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);position:relative}
+.modal-title{font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:18px}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
+/* ADM */
+.adm-login-wrap{max-width:380px;margin:40px auto}
+.adm-login-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:32px 28px}
+.adm-login-icon{width:56px;height:56px;background:var(--brand-light);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.adm-login-title{font-family:var(--font-title);font-size:18px;color:var(--brand);text-align:center;margin-bottom:4px}
+.adm-login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px}
+.adm-layout{display:grid;grid-template-columns:210px 1fr;gap:20px;padding-top:8px}
+.adm-sidebar{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;height:fit-content;position:sticky;top:78px}
+.adm-sidebar-user{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);word-break:break-all}
+.adm-nav-btn{display:block;width:100%;text-align:left;padding:9px 12px;border-radius:8px;border:none;background:transparent;font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;margin-bottom:3px}
+.adm-nav-btn:hover{background:var(--brand-light);color:var(--brand-mid)}
+.adm-nav-btn.active{background:var(--brand-light);color:var(--brand-mid)}
+.adm-nav-sep{height:1px;background:var(--border);margin:8px 0}
+.adm-nav-danger{color:var(--red) !important}
+.adm-nav-danger:hover{background:#fde8e8 !important}
+.adm-content{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:24px;min-height:500px}
+.adm-section{display:none}
+.adm-section.active{display:block}
+.sec-title{font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.box{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px}
+.box-title{font-size:12px;font-weight:700;color:var(--brand-mid);margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px}
+.adm-table{width:100%;border-collapse:collapse;font-size:13px}
+.adm-table th{text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1.5px solid var(--border)}
+.adm-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.adm-table tr:last-child td{border-bottom:none}
+.adm-table tr:hover td{background:var(--surface2)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.tipos-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tipo-tag{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;user-select:none;transition:all .15s}
+.tipo-tag:hover{border-color:var(--brand-mid)}
+.tipo-tag.sel{background:var(--brand-mid);color:#fff;border-color:var(--brand-mid)}
+
+/* HISTÓRICO */
+.hist-entry{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.hist-header{padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.hist-body{padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap}
+.hist-poke{display:flex;align-items:center;gap:6px;padding:5px 8px;background:var(--surface);border-radius:6px;border:1px solid var(--border)}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">Pokémon<span>RPG</span></div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="goTo('roller',this)">Rolador</button>
+    <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
+  </div>
+  <button class="nav-login" id="btn-adm" onclick="goToAdm()">ADM</button>
+</nav>
+
+<!-- ═══════════ ROLADOR ═══════════ -->
+<div class="page active" id="page-roller">
+  <div class="roller-header">
+    <h2>Rolador de Encontro</h2>
+    <p>Selecione o bioma, configure seu personagem e role!</p>
+  </div>
+  <div class="roller-controls">
+    <div class="ctrl-group"><label>Bioma</label><select id="bioma"></select></div>
+    <div class="ctrl-group">
+      <label>Personagem</label>
+      <input type="text" id="personagem" placeholder="Nome do personagem..." list="personagens-lista"/>
+      <datalist id="personagens-lista"></datalist>
+    </div>
+    <div class="ctrl-group"><label>Pokémon adicionais</label><input type="number" id="n-adicionais" value="0" min="0" max="10"/></div>
+  </div>
+  <div class="badges-row">
+    <span class="badges-label">Provas de valor:</span>
+    <button class="badge-btn earned" data-idx="0">⭐</button>
+    <button class="badge-btn earned" data-idx="1">⭐</button>
+    <button class="badge-btn" data-idx="2">☆</button>
+    <button class="badge-btn" data-idx="3">☆</button>
+    <button class="badge-btn" data-idx="4">☆</button>
+    <button class="badge-btn" data-idx="5">☆</button>
+    <button class="badge-btn" data-idx="6">☆</button>
+    <button class="badge-btn" data-idx="7">☆</button>
+    <span class="badges-info" id="badges-info">2 provas → Nível 11–30</span>
+  </div>
+  <button class="roll-btn" onclick="rolarEncontro()">⚔ Rolar Encontro</button>
+  <div id="results-section"></div>
+  <div id="historico-wrap" style="margin-top:32px;display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Histórico de Rolagens</div>
+      <div style="font-size:12px;color:var(--muted)" id="hist-page-label"></div>
+    </div>
+    <div id="historico-lista"></div>
+    <div id="hist-paginacao" style="display:flex;justify-content:center;gap:10px;margin-top:16px">
+      <button id="hist-prev" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaHist(-1)">← Mais recentes</button>
+      <button id="hist-next" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaHist(1)">Mais antigas →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FICHÁRIO ═══════════ -->
+<div class="page" id="page-ficha">
+  <div class="ficha-header">
+    <h2>Fichário de Personagens</h2>
+    <input class="search-bar" type="text" placeholder="Buscar personagem..." oninput="filtrarFichas(this.value)"/>
+  </div>
+  <div class="fichas-grid" id="fichas-grid"></div>
+</div>
+
+<!-- ═══════════ ADM ═══════════ -->
+<div class="page" id="page-adm">
+
+  <!-- LOGIN -->
+  <div id="adm-login-wrap" class="adm-login-wrap">
+    <div class="adm-login-card">
+      <div class="adm-login-icon">🔐</div>
+      <div class="adm-login-title">Área ADM</div>
+      <div class="adm-login-sub">Acesso restrito aos administradores</div>
+      <div class="field"><label>Usuário</label><input type="text" id="login-email" placeholder="usuário"/></div>
+      <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+      <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="fazerLogin()">Entrar</button>
+      <div class="fb fb-err" id="login-erro">E-mail ou senha incorretos.</div>
+    </div>
+  </div>
+
+  <!-- PAINEL -->
+  <div id="adm-painel" style="display:none">
+    <div class="adm-layout">
+      <div class="adm-sidebar">
+        <div class="adm-sidebar-user" id="adm-user-label">—</div>
+        <button class="adm-nav-btn active" onclick="admTab('personagens',this)">👥 Personagens</button>
+        <button class="adm-nav-btn" onclick="admTab('biomas',this)">🗺️ Biomas</button>
+        <button class="adm-nav-btn" onclick="admTab('pokemons',this)">⚡ Pokémon</button>
+        <div class="adm-nav-sep"></div>
+        <button class="adm-nav-btn" onclick="admTab('admins',this)">🔑 Admins</button>
+        <button class="adm-nav-btn" onclick="admTab('editor',this)">🎨 Editor Visual</button>
+        <div class="adm-nav-sep"></div>
+        <button class="adm-nav-btn adm-nav-danger" onclick="fazerLogout()">Sair</button>
+      </div>
+      <div class="adm-content">
+
+        <!-- ── PERSONAGENS ── -->
+        <div class="adm-section active" id="sec-personagens">
+          <div class="sec-title">Personagens</div>
+          <div class="sec-sub">Adicione, edite e remova personagens do fichário</div>
+          <div class="box">
+            <div class="box-title">Novo personagem</div>
+            <div class="g2">
+              <div class="field"><label>Nome do Player</label><input type="text" id="np-player" placeholder="Ex: Lucas"/></div>
+              <div class="field"><label>Nome do Personagem</label><input type="text" id="np-nome" placeholder="Ex: Ash Ketchum"/></div>
+              <div class="field"><label>Cor do avatar</label><input type="color" id="np-cor" value="#2563a8"/></div>
+              <div class="field"><label>Imagem do personagem (avatar)</label>
+                <input type="file" id="np-img" accept="image/*" onchange="previewPersonagemImg(this)" style="font-size:13px"/>
+                <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
+                  <div id="np-img-preview" style="width:57px;height:57px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden"><img class="unown-fallback-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/></div>
+                  <span style="font-size:11px;color:var(--muted)">Pré-visualização</span>
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="adicionarPersonagem()">+ Adicionar</button>
+            <div class="fb fb-ok" id="np-fb">✓ Personagem adicionado!</div>
+          </div>
+          <div class="box" style="margin-top:4px">
+            <div class="box-title">Pontos por Player</div>
+            <table class="adm-table" id="players-pontos-table">
+              <thead><tr><th>Player</th><th>Pontos</th><th>Ações</th></tr></thead>
+              <tbody id="tbody-players"></tbody>
+            </table>
+          </div>
+          <div class="box" style="margin-top:4px">
+            <div class="box-title">Personagens cadastrados</div>
+            <table class="adm-table">
+              <thead><tr><th>Personagem</th><th>Player</th><th>Ações</th></tr></thead>
+              <tbody id="tbody-personagens"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── BIOMAS ── -->
+        <div class="adm-section" id="sec-biomas">
+          <div class="sec-title">Biomas</div>
+          <div class="sec-sub">Crie e remova biomas disponíveis no rolador</div>
+          <div class="box">
+            <div class="box-title">Novo bioma</div>
+            <div style="display:flex;gap:10px;align-items:flex-end">
+              <div class="field" style="flex:1;margin-bottom:0"><label>Nome do bioma</label><input type="text" id="novo-bioma" placeholder="Ex: Deserto"/></div>
+              <button class="btn btn-primary" onclick="adicionarBioma()">+ Adicionar</button>
+            </div>
+            <div class="fb fb-ok" id="bioma-fb" style="margin-top:10px">✓ Bioma adicionado!</div>
+          </div>
+          <table class="adm-table">
+            <thead><tr><th>Bioma</th><th>Pokémon</th><th>Ações</th></tr></thead>
+            <tbody id="tbody-biomas"></tbody>
+          </table>
+        </div>
+
+        <!-- ── POKÉMON ── -->
+        <div class="adm-section" id="sec-pokemons">
+          <div class="sec-title">Pokémon por Bioma</div>
+          <div class="sec-sub">Adicione, edite e remova Pokémon de cada bioma</div>
+
+          <div class="box" style="border-color:#a0c8e8;background:#eef6fc">
+            <div class="box-title" style="color:#1a5a8a">📥 Importar da PokéAPI</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Busca automaticamente sprite, tipos, habilidades e gênero direto da PokéAPI. Cole os nomes (um por linha) e selecione o bioma e raridade.</p>
+            <div class="g2" style="margin-bottom:10px">
+              <div class="field"><label>Bioma</label><select id="imp-bioma"></select></div>
+              <div class="field"><label>Raridade</label>
+                <select id="imp-raridade">
+                  <option value="comum">Comum (61–100)</option>
+                  <option value="incomum">Incomum (21–60)</option>
+                  <option value="raro">Raro (8–20)</option>
+                  <option value="rarissimo">Raríssimo (1–7)</option>
+                </select>
+              </div>
+            </div>
+            <div class="field">
+              <label>Nomes dos Pokémon (um por linha)</label>
+              <textarea id="imp-lista" rows="5" placeholder="Caterpie&#10;Weedle&#10;Paras&#10;..."></textarea>
+            </div>
+            <button class="btn btn-primary btn-sm" id="imp-btn" onclick="importarDaPokeAPI()">⬇ Importar</button>
+            <div id="imp-progress" style="display:none;margin-top:10px">
+              <div style="font-size:12px;font-weight:600;color:var(--brand-mid);margin-bottom:6px" id="imp-status">Importando...</div>
+              <div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden">
+                <div id="imp-bar" style="height:6px;background:var(--brand-mid);width:0%;transition:width .3s;border-radius:4px"></div>
+              </div>
+            </div>
+            <div class="fb fb-ok" id="imp-fb-ok">✓ Importação concluída!</div>
+            <div class="fb fb-err" id="imp-fb-err">—</div>
+          </div>
+
+          <div class="box">
+            <div class="box-title">✏️ Adicionar manualmente</div>
+            <div class="g3">
+              <div class="field"><label>Nome</label><input type="text" id="pk-nome" placeholder="Ex: Pikachu"/></div>
+              <div class="field"><label>Habilidade</label><input type="text" id="pk-habilidade" placeholder="Ex: Static"/></div>
+              <div class="field"><label>Raridade</label>
+                <select id="pk-raridade">
+                  <option value="comum">Comum (61–100)</option>
+                  <option value="incomum">Incomum (21–60)</option>
+                  <option value="raro">Raro (8–20)</option>
+                  <option value="rarissimo">Raríssimo (1–7)</option>
+                </select>
+              </div>
+              <div class="field"><label>Gênero</label>
+                <select id="pk-genero">
+                  <option value="1d2">1d2 (50/50)</option>
+                  <option value="macho">100% Macho</option>
+                  <option value="femea">100% Fêmea</option>
+                  <option value="genderless">Sem gênero</option>
+                </select>
+              </div>
+              <div class="field"><label>Bioma</label><select id="pk-bioma"></select></div>
+              <div class="field"><label>Sprite do Pokémon</label>
+                <input type="file" id="pk-sprite-file" accept="image/*" onchange="previewPokeSprite(this)" style="font-size:13px"/>
+                <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
+                  <div id="pk-sprite-preview" style="width:53px;height:53px;background:var(--surface2);border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden"><img class="unown-fallback-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/></div>
+                  <span style="font-size:11px;color:var(--muted)">Pré-visualização</span>
+                </div>
+              </div>
+            </div>
+            <div class="field">
+              <label>Tipos (clique para selecionar)</label>
+              <div class="tipos-wrap" id="tipos-wrap">
+                <span class="tipo-tag" data-tipo="fire" onclick="toggleTipo(this)">🔥 Fire</span>
+                <span class="tipo-tag" data-tipo="water" onclick="toggleTipo(this)">💧 Water</span>
+                <span class="tipo-tag" data-tipo="grass" onclick="toggleTipo(this)">🌿 Grass</span>
+                <span class="tipo-tag" data-tipo="electric" onclick="toggleTipo(this)">⚡ Electric</span>
+                <span class="tipo-tag" data-tipo="normal" onclick="toggleTipo(this)">⬜ Normal</span>
+                <span class="tipo-tag" data-tipo="psychic" onclick="toggleTipo(this)">🔮 Psychic</span>
+                <span class="tipo-tag" data-tipo="steel" onclick="toggleTipo(this)">⚙️ Steel</span>
+                <span class="tipo-tag" data-tipo="fairy" onclick="toggleTipo(this)">🌸 Fairy</span>
+                <span class="tipo-tag" data-tipo="ghost" onclick="toggleTipo(this)">👻 Ghost</span>
+                <span class="tipo-tag" data-tipo="dragon" onclick="toggleTipo(this)">🐉 Dragon</span>
+                <span class="tipo-tag" data-tipo="ice" onclick="toggleTipo(this)">❄️ Ice</span>
+                <span class="tipo-tag" data-tipo="fighting" onclick="toggleTipo(this)">🥊 Fighting</span>
+                <span class="tipo-tag" data-tipo="rock" onclick="toggleTipo(this)">🪨 Rock</span>
+                <span class="tipo-tag" data-tipo="ground" onclick="toggleTipo(this)">🌍 Ground</span>
+                <span class="tipo-tag" data-tipo="poison" onclick="toggleTipo(this)">☠️ Poison</span>
+                <span class="tipo-tag" data-tipo="bug" onclick="toggleTipo(this)">🐛 Bug</span>
+                <span class="tipo-tag" data-tipo="dark" onclick="toggleTipo(this)">🌑 Dark</span>
+                <span class="tipo-tag" data-tipo="flying" onclick="toggleTipo(this)">🦅 Flying</span>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="adicionarPokemon()">+ Adicionar Pokémon</button>
+            <div class="fb fb-ok" id="pk-fb">✓ Pokémon adicionado!</div>
+          </div>
+
+          <div id="pk-filtro-wrap" class="field" style="max-width:240px;margin-bottom:16px;display:none">
+            <label>Filtrar por bioma</label>
+            <select id="pk-filtro" onchange="renderTbodyPokemons()"></select>
+          </div>
+          <table class="adm-table">
+            <thead><tr><th>Pokémon</th><th>Bioma</th><th>Raridade</th><th>Tipos</th><th>Gênero</th><th>Ações</th></tr></thead>
+            <tbody id="tbody-pokemons"></tbody>
+          </table>
+        </div>
+
+        <!-- ── ADMINS ── -->
+        <div class="adm-section" id="sec-admins">
+          <div class="sec-title">Administradores</div>
+          <div class="sec-sub">Gerencie quem tem acesso ao painel ADM</div>
+          <div class="box">
+            <div class="box-title">Novo administrador</div>
+            <div class="g2">
+              <div class="field"><label>E-mail</label><input type="email" id="adm-new-email" placeholder="novo@rpg.com"/></div>
+              <div class="field"><label>Senha</label><input type="password" id="adm-new-senha" placeholder="Mín. 6 caracteres"/></div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="adicionarAdmin()">+ Adicionar Admin</button>
+            <div class="fb fb-ok" id="adm-fb-ok">✓ Admin adicionado!</div>
+            <div class="fb fb-err" id="adm-fb-err">—</div>
+          </div>
+          <table class="adm-table">
+            <thead><tr><th>E-mail</th><th>Ações</th></tr></thead>
+            <tbody id="tbody-admins"></tbody>
+          </table>
+        </div>
+
+        <!-- ── EDITOR VISUAL ── -->
+        <div class="adm-section" id="sec-editor">
+          <div class="sec-title">Editor Visual</div>
+          <div class="sec-sub">Edite as variáveis de estilo do site: cores, fontes e background. As alterações são aplicadas em tempo real.</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+            <!-- CORES -->
+            <div class="box">
+              <div class="box-title">🎨 Cores</div>
+              <div class="field"><label>Cor principal (nav, títulos)</label>
+                <input type="color" id="ec-brand" value="#1a3a5c" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field"><label>Cor de destaque (botões, links)</label>
+                <input type="color" id="ec-brand-mid" value="#2563a8" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field"><label>Cor de acento (dourado)</label>
+                <input type="color" id="ec-accent" value="#e8a020" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field"><label>Cor de fundo da página</label>
+                <input type="color" id="ec-bg" value="#f4f6fa" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field"><label>Cor de fundo dos cards</label>
+                <input type="color" id="ec-surface" value="#ffffff" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field"><label>Cor do texto principal</label>
+                <input type="color" id="ec-text" value="#1a1f2e" oninput="aplicarEstilo()"/>
+              </div>
+            </div>
+
+            <!-- TIPOGRAFIA & BORDAS -->
+            <div>
+              <div class="box" style="margin-bottom:16px">
+                <div class="box-title">🔤 Tipografia</div>
+                <div class="field"><label>Fonte dos títulos</label>
+                  <select id="ec-font-title" onchange="aplicarEstilo()">
+                    <option value="'Cinzel',serif">Cinzel (padrão)</option>
+                    <option value="'Playfair Display',serif">Playfair Display</option>
+                    <option value="'Oswald',sans-serif">Oswald</option>
+                    <option value="'Raleway',sans-serif">Raleway</option>
+                    <option value="'Press Start 2P',monospace">Press Start 2P (pixel)</option>
+                    <option value="'Fredoka One',cursive">Fredoka One</option>
+                    <option value="Georgia,serif">Georgia</option>
+                  </select>
+                </div>
+                <div class="field"><label>Fonte do corpo</label>
+                  <select id="ec-font-body" onchange="aplicarEstilo()">
+                    <option value="'Nunito',sans-serif">Nunito (padrão)</option>
+                    <option value="'Poppins',sans-serif">Poppins</option>
+                    <option value="'Inter',sans-serif">Inter</option>
+                    <option value="'Roboto',sans-serif">Roboto</option>
+                    <option value="'Lato',sans-serif">Lato</option>
+                    <option value="'Open Sans',sans-serif">Open Sans</option>
+                  </select>
+                </div>
+              </div>
+              <div class="box">
+                <div class="box-title">⬜ Bordas & Espaço</div>
+                <div class="field"><label>Arredondamento dos cards</label>
+                  <select id="ec-radius" onchange="aplicarEstilo()">
+                    <option value="6px">Suave (6px)</option>
+                    <option value="10px" selected>Médio (10px)</option>
+                    <option value="16px">Arredondado (16px)</option>
+                    <option value="24px">Muito arredondado (24px)</option>
+                    <option value="0px">Sem arredondamento</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CSS PERSONALIZADO -->
+          <div class="box" style="margin-top:4px">
+            <div class="box-title">💻 CSS Personalizado</div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Adicione regras CSS customizadas. Exemplo: <code style="background:var(--surface);padding:2px 5px;border-radius:4px">body { background-image: url('...'); }</code></p>
+            <textarea id="ec-custom-css" rows="5" placeholder="/* Seu CSS aqui */" style="font-family:monospace;font-size:12px" oninput="aplicarEstilo()"></textarea>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="btn btn-primary" onclick="salvarEstilo()">💾 Salvar estilo</button>
+            <button class="btn btn-warn" onclick="resetarEstilo()">↺ Restaurar padrão</button>
+          </div>
+          <div class="fb fb-ok" id="editor-fb-ok" style="margin-top:10px;display:none">✓ Estilo salvo!</div>
+        </div>
+
+      </div><!-- /adm-content -->
+
+<!-- MODAL EDITAR PERSONAGEM -->
+<div class="modal-overlay" id="modal-personagem" style="display:none">
+  <div class="modal-box">
+    <button class="modal-close" onclick="fecharModal()">✕</button>
+    <div class="modal-title">Editar Personagem</div>
+    <input type="hidden" id="modal-p-id"/>
+    <div class="g2">
+      <div class="field"><label>Nome do Player</label><input type="text" id="modal-p-player"/></div>
+      <div class="field"><label>Nome do Personagem</label><input type="text" id="modal-p-nome"/></div>
+      <div class="field"><label>Cor do avatar</label><input type="color" id="modal-p-cor"/></div>
+      <div class="field"><label>Imagem do personagem</label>
+        <input type="file" id="modal-p-img" accept="image/*" onchange="modalPreviewImg(this)" style="font-size:13px"/>
+        <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
+          <div id="modal-p-img-preview" style="width:52px;height:52px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center"></div>
+          <button class="btn btn-danger btn-sm" onclick="modalRemoverImg()">Remover imagem</button>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-primary" onclick="salvarEdicaoPersonagem()">Salvar</button>
+      <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// PERSISTÊNCIA
+// ══════════════════════════════════════
+function load(k,d){try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d;}catch(e){return d;}}
+function save(k,v){
+  try{
+    localStorage.setItem(k,JSON.stringify(v));
+  }catch(e){
+    if(e.name==='QuotaExceededError'||e.code===22){
+      alert('⚠️ Armazenamento local cheio!\n\nIsso pode acontecer por excesso de imagens salvas em base64.\n\nSugestão: remova alguns personagens ou Pokémon com imagem, ou migre para o Supabase para armazenamento ilimitado.');
+    }
+  }
+}
+
+let admins      = load('rpg-admins',     [{email:'gold',senha:'pchapters'}]);
+let personagens = load('rpg-personagens',[
+  {id:1,player:'Lucas',nome:'Ash Ketchum',cor:'#2563a8'},
+  {id:2,player:'Ana',  nome:'Misty',      cor:'#2aaa80'},
+  {id:3,player:'Pedro',nome:'Brock',      cor:'#aa6030'},
+]);
+let biomas      = load('rpg-biomas',     ['Urbano','Floresta','Planície','Caverna','Aquático','Montanha']);
+let pokemonDB   = load('rpg-pokemons',   [
+  {id:1, nome:'Pikachu',   emoji:'⚡',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',  tipos:['electric'],         habilidade:'Static',       raridade:'comum',    genero:'1d2',    bioma:'Urbano'},
+  {id:2, nome:'Rattata',   emoji:'🐭',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png',  tipos:['normal'],           habilidade:'Run Away',     raridade:'comum',    genero:'1d2',    bioma:'Urbano'},
+  {id:3, nome:'Geodude',   emoji:'🪨',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png',  tipos:['rock','ground'],    habilidade:'Rock Head',    raridade:'comum',    genero:'macho',  bioma:'Montanha'},
+  {id:4, nome:'Jigglypuff',emoji:'🎵',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png',  tipos:['normal','fairy'],   habilidade:'Cute Charm',   raridade:'comum',    genero:'1d2',    bioma:'Planície'},
+  {id:5, nome:'Eevee',     emoji:'🦊',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png', tipos:['normal'],           habilidade:'Run Away',     raridade:'incomum',  genero:'1d2',    bioma:'Urbano'},
+  {id:6, nome:'Magmar',    emoji:'🔥',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/126.png', tipos:['fire'],             habilidade:'Flame Body',   raridade:'incomum',  genero:'1d2',    bioma:'Montanha'},
+  {id:7, nome:'Kadabra',   emoji:'🥄',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/64.png',  tipos:['psychic'],          habilidade:'Synchronize',  raridade:'incomum',  genero:'1d2',    bioma:'Urbano'},
+  {id:8, nome:'Haunter',   emoji:'👻',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/93.png',  tipos:['ghost','poison'],   habilidade:'Levitate',     raridade:'raro',     genero:'1d2',    bioma:'Urbano'},
+  {id:9, nome:'Starmie',   emoji:'⭐',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/121.png', tipos:['water','psychic'],  habilidade:'Natural Cure', raridade:'raro',     genero:'genderless',bioma:'Aquático'},
+  {id:10,nome:'Klefki',    emoji:'🗝️',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/707.png', tipos:['steel','fairy'],   habilidade:'Prankster',    raridade:'raro',     genero:'1d2',    bioma:'Urbano'},
+  {id:11,nome:'Dragonair', emoji:'🐉',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/148.png', tipos:['dragon'],           habilidade:'Shed Skin',    raridade:'rarissimo',genero:'1d2',    bioma:'Aquático'},
+  {id:12,nome:'Lapras',    emoji:'🧊',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/131.png', tipos:['water','ice'],      habilidade:'Water Absorb', raridade:'rarissimo',genero:'1d2',    bioma:'Aquático'},
+]);
+let historico   = load('rpg-historico',  []);
+let players     = load('rpg-players',    [
+  {nome:'Lucas', pontos:120},
+  {nome:'Ana',   pontos:95},
+  {nome:'Pedro', pontos:80},
+]);
+let nextId      = load('rpg-nextid',     100);
+let admLogado   = null;
+
+const tcls = {fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
+const rlbl = {comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
+const rcls = {comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
+const glbl = {'1d2':'1d2 (50/50)',macho:'100% Macho',femea:'100% Fêmea',genderless:'Sem gênero'};
+
+function uid(){nextId++;save('rpg-nextid',nextId);return nextId;}
+function fb(id,ms=2500){const el=document.getElementById(id);if(!el)return;el.style.display='block';setTimeout(()=>el.style.display='none',ms);}
+
+// ══════════════════════════════════════
+// NAVEGAÇÃO
+// ══════════════════════════════════════
+function goTo(page,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+  document.getElementById('btn-adm').classList.remove('active');
+  if(el)el.classList.add('active');
+}
+function goToAdm(){goTo('adm',null);document.getElementById('btn-adm').classList.add('active');}
+function admTab(sec,el){
+  document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+sec).classList.add('active');
+  document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
+  if(el)el.classList.add('active');
+  if(sec==='personagens'){renderTbodyPersonagens();renderTbodyPlayers();}
+  if(sec==='biomas')     renderTbodyBiomas();
+  if(sec==='pokemons')  {syncBiomaSelects();document.getElementById('pk-filtro-wrap').style.display='';renderTbodyPokemons();}
+  if(sec==='admins')     renderTbodyAdmins();
+  if(sec==='editor')     carregarEditorUI();
+}
+
+// ══════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════
+function fazerLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const senha=document.getElementById('login-senha').value;
+  const found=admins.find(a=>a.email===email&&a.senha===senha);
+  if(!found){fb('login-erro',3000);return;}
+  admLogado=found;
+  document.getElementById('adm-login-wrap').style.display='none';
+  document.getElementById('adm-painel').style.display='block';
+  document.getElementById('adm-user-label').textContent=email;
+  renderTbodyPersonagens();
+  renderTbodyPlayers();
+}
+function fazerLogout(){
+  admLogado=null;
+  document.getElementById('adm-login-wrap').style.display='block';
+  document.getElementById('adm-painel').style.display='none';
+  document.getElementById('login-email').value='';
+  document.getElementById('login-senha').value='';
+}
+
+// ══════════════════════════════════════
+// ADMINS
+// ══════════════════════════════════════
+function adicionarAdmin(){
+  const email=document.getElementById('adm-new-email').value.trim();
+  const senha=document.getElementById('adm-new-senha').value;
+  const errEl=document.getElementById('adm-fb-err');
+  document.getElementById('adm-fb-ok').style.display='none';
+  errEl.style.display='none';
+  if(!email||senha.length<6){errEl.textContent='Preencha e-mail e senha (mín. 6 caracteres).';errEl.style.display='block';return;}
+  if(admins.find(a=>a.email===email)){errEl.textContent='Este e-mail já está cadastrado.';errEl.style.display='block';return;}
+  admins.push({email,senha});
+  save('rpg-admins',admins);
+  fb('adm-fb-ok');
+  document.getElementById('adm-new-email').value='';
+  document.getElementById('adm-new-senha').value='';
+  renderTbodyAdmins();
+}
+function removerAdmin(email){
+  if(admins.length<=1){alert('Deve existir ao menos 1 administrador.');return;}
+  if(email===admLogado?.email){alert('Você não pode remover a si mesmo.');return;}
+  if(!confirm(`Remover o admin "${email}"?`))return;
+  admins=admins.filter(a=>a.email!==email);
+  save('rpg-admins',admins);
+  renderTbodyAdmins();
+}
+function renderTbodyAdmins(){
+  document.getElementById('tbody-admins').innerHTML=admins.map(a=>`
+    <tr>
+      <td>${a.email}${a.email===admLogado?.email?' <span style="font-size:10px;color:var(--muted)">(você)</span>':''}</td>
+      <td><button class="btn btn-danger btn-sm" onclick="removerAdmin('${a.email}')" ${a.email===admLogado?.email?'disabled':''}>Remover</button></td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════
+// PERSONAGENS
+// ══════════════════════════════════════
+function previewPersonagemImg(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const prev=document.getElementById('np-img-preview');
+    prev.innerHTML=`<img src="${e.target.result}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`;
+    prev.dataset.b64=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function adicionarPersonagem(){
+  const player=document.getElementById('np-player').value.trim();
+  const nome  =document.getElementById('np-nome').value.trim();
+  const cor   =document.getElementById('np-cor').value;
+  const prev  =document.getElementById('np-img-preview');
+  const img   =prev.dataset.b64||null;
+  if(!player||!nome){alert('Preencha o nome do player e do personagem.');return;}
+  personagens.push({id:uid(),player,nome,cor,img});
+  if(!players.find(p=>p.nome===player)) players.push({nome:player,pontos:0});
+  save('rpg-personagens',personagens);
+  save('rpg-players',players);
+  fb('np-fb');
+  document.getElementById('np-player').value='';
+  document.getElementById('np-nome').value='';
+  document.getElementById('np-img').value='';
+  prev.innerHTML=`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
+  delete prev.dataset.b64;
+  renderTbodyPersonagens();
+  renderTbodyPlayers();
+  renderFichario();
+  renderPersonagensDatalist();
+}
+function abrirModalPersonagem(id){
+  const p=personagens.find(x=>x.id===id);if(!p)return;
+  document.getElementById('modal-p-id').value=id;
+  document.getElementById('modal-p-player').value=p.player;
+  document.getElementById('modal-p-nome').value=p.nome;
+  document.getElementById('modal-p-cor').value=p.cor||'#2563a8';
+  const prev=document.getElementById('modal-p-img-preview');
+  prev.innerHTML=p.img
+    ?`<img src="${p.img}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`
+    :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
+  prev.dataset.img=p.img||'';
+  document.getElementById('modal-personagem').style.display='flex';
+}
+function fecharModal(){
+  document.getElementById('modal-personagem').style.display='none';
+}
+function modalPreviewImg(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const prev=document.getElementById('modal-p-img-preview');
+    prev.innerHTML=`<img src="${e.target.result}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`;
+    prev.dataset.img=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function modalRemoverImg(){
+  const prev=document.getElementById('modal-p-img-preview');
+  prev.innerHTML=`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
+  prev.dataset.img='';
+  document.getElementById('modal-p-img').value='';
+}
+function salvarEdicaoPersonagem(){
+  const id=parseInt(document.getElementById('modal-p-id').value);
+  const p=personagens.find(x=>x.id===id);if(!p)return;
+  const novoPlayer=document.getElementById('modal-p-player').value.trim();
+  const novoNome  =document.getElementById('modal-p-nome').value.trim();
+  const novaCor   =document.getElementById('modal-p-cor').value;
+  const novaImg   =document.getElementById('modal-p-img-preview').dataset.img||'';
+  if(!novoPlayer||!novoNome){alert('Preencha todos os campos.');return;}
+  // se mudou o nome do player, garante que existe na lista
+  if(novoPlayer!==p.player && !players.find(x=>x.nome===novoPlayer)){
+    players.push({nome:novoPlayer,pontos:0});
+    save('rpg-players',players);
+  }
+  p.player=novoPlayer;p.nome=novoNome;p.cor=novaCor;p.img=novaImg||null;
+  save('rpg-personagens',personagens);
+  fecharModal();
+  renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
+}
+function removerPlayer(nome){
+  const qtd=personagens.filter(p=>p.player===nome).length;
+  if(!confirm(`Remover o player "${nome}"?${qtd>0?`\n\nOs ${qtd} personagem(ns) deste player também serão removidos.`:''}`))return;
+  players=players.filter(p=>p.nome!==nome);
+  personagens=personagens.filter(p=>p.player!==nome);
+  save('rpg-players',players);
+  save('rpg-personagens',personagens);
+  renderTbodyPlayers();renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
+}
+function renderTbodyPlayers(){
+  const tbody=document.getElementById('tbody-players');
+  if(!tbody)return;
+  const todos=[...new Set([...players.map(p=>p.nome),...personagens.map(p=>p.player)])];
+  tbody.innerHTML=todos.length===0
+    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:16px">Nenhum player cadastrado.</td></tr>'
+    :todos.map(nome=>{
+      const pl=players.find(p=>p.nome===nome)||{nome,pontos:0};
+      const qtd=personagens.filter(p=>p.player===nome).length;
+      return`<tr>
+        <td><strong>${nome}</strong> <span style="font-size:11px;color:var(--muted)">(${qtd} personagem${qtd!==1?'s':''})</span></td>
+        <td style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--brand-mid)">${pl.pontos}
+          <button class="btn btn-warn btn-sm" onclick="editarPontosPlayer('${nome}')">✏️</button>
+        </td>
+        <td><button class="btn btn-danger btn-sm" onclick="removerPlayer('${nome}')">Remover</button></td>
+      </tr>`;
+    }).join('');
+}
+function renderTbodyPersonagens(){
+  document.getElementById('tbody-personagens').innerHTML=personagens.length===0
+    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:20px">Nenhum personagem cadastrado.</td></tr>'
+    :personagens.map(p=>`
+      <tr>
+        <td style="display:flex;align-items:center;gap:8px">
+          <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+            ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
+          </div>
+          <strong>${p.nome}</strong>
+        </td>
+        <td>${p.player}</td>
+        <td style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" onclick="abrirModalPersonagem(${p.id})">✏️ Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="removerPersonagem(${p.id})">Remover</button>
+        </td>
+      </tr>`).join('');
+}
+
+// ══════════════════════════════════════
+// BIOMAS
+// ══════════════════════════════════════
+function adicionarBioma(){
+  const nome=document.getElementById('novo-bioma').value.trim();
+  if(!nome)return;
+  if(biomas.includes(nome)){alert('Este bioma já existe.');return;}
+  biomas.push(nome);
+  save('rpg-biomas',biomas);
+  document.getElementById('novo-bioma').value='';
+  fb('bioma-fb');
+  syncBiomaSelect();renderTbodyBiomas();
+}
+function removerBioma(nome){
+  const count=pokemonDB.filter(p=>p.bioma===nome).length;
+  if(!confirm(`Remover o bioma "${nome}"?${count>0?` Os ${count} Pokémon deste bioma também serão removidos.`:''}`))return;
+  biomas=biomas.filter(b=>b!==nome);
+  pokemonDB=pokemonDB.filter(p=>p.bioma!==nome);
+  save('rpg-biomas',biomas);save('rpg-pokemons',pokemonDB);
+  syncBiomaSelect();renderTbodyBiomas();renderTbodyPokemons();
+}
+function renderTbodyBiomas(){
+  document.getElementById('tbody-biomas').innerHTML=biomas.length===0
+    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:20px">Nenhum bioma cadastrado.</td></tr>'
+    :biomas.map(b=>`
+      <tr>
+        <td><strong>${b}</strong></td>
+        <td>${pokemonDB.filter(p=>p.bioma===b).length} Pokémon</td>
+        <td><button class="btn btn-danger btn-sm" onclick="removerBioma('${b}')">Remover</button></td>
+      </tr>`).join('');
+}
+function syncBiomaSelect(){
+  // rolador
+  const sel=document.getElementById('bioma');
+  sel.innerHTML=biomas.map(b=>`<option>${b}</option>`).join('');
+}
+function syncBiomaSelects(){
+  const pks=document.getElementById('pk-bioma');
+  const flt=document.getElementById('pk-filtro');
+  const imp=document.getElementById('imp-bioma');
+  const opts=biomas.map(b=>`<option>${b}</option>`).join('');
+  if(pks)pks.innerHTML=opts;
+  if(imp)imp.innerHTML=opts;
+  if(flt)flt.innerHTML='<option value="">Todos</option>'+opts;
+}
+
+// ══════════════════════════════════════
+// IMPORTADOR POKEAPI
+// ══════════════════════════════════════
+const SPRITE_BASE='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
+
+// Mapa de nomes especiais que diferem do slug padrão da PokéAPI
+const SLUG_MAP={
+  'mr. mime':'mr-mime','mr.mime':'mr-mime','mime jr.':'mime-jr',
+  'farfetch\'d':'farfetchd','sirfetch\'d':'sirfetchd',
+  'flabébé':'flabebe','flab\u00e9b\u00e9':'flabebe',
+  'squawkabilly':'squawkabilly','squawkabilly (blue)':'squawkabilly',
+  'squawkabilly (blue plumage)':'squawkabilly',
+  'nidoran♀':'nidoran-f','nidoran♂':'nidoran-m',
+  'ho-oh':'ho-oh','porygon-z':'porygon-z','porygon2':'porygon2',
+  'type: null':'type-null','jangmo-o':'jangmo-o','hakamo-o':'hakamo-o','kommo-o':'kommo-o',
+};
+
+function toSlug(name){
+  const lower=name.toLowerCase().trim();
+  if(SLUG_MAP[lower])return SLUG_MAP[lower];
+  return lower
+    .replace(/\s*\(.*?\)/g,'')
+    .trim()
+    .replace(/[^a-z0-9\-]/g,'')
+    .replace(/\s+/g,'-');
+}
+
+async function fetchPokeAPI(url){
+  const r=await fetch(url,{headers:{'Accept':'application/json'}});
+  if(!r.ok)throw new Error(`HTTP ${r.status}`);
+  return r.json();
+}
+
+async function importarDaPokeAPI(){
+  const lista=document.getElementById('imp-lista').value.trim();
+  const bioma=document.getElementById('imp-bioma').value;
+  const raridade=document.getElementById('imp-raridade').value;
+  if(!lista){alert('Cole ao menos um nome de Pokémon.');return;}
+  const names=lista.split('\n').map(n=>n.trim()).filter(Boolean);
+  if(names.length===0)return;
+
+  const btn=document.getElementById('imp-btn');
+  const progress=document.getElementById('imp-progress');
+  const status=document.getElementById('imp-status');
+  const bar=document.getElementById('imp-bar');
+  const fbOk=document.getElementById('imp-fb-ok');
+  const fbErr=document.getElementById('imp-fb-err');
+  btn.disabled=true;progress.style.display='block';
+  fbOk.style.display='none';fbErr.style.display='none';
+
+  const erros=[];
+  let ok=0;
+
+  for(let i=0;i<names.length;i++){
+    const raw=names[i];
+    const slug=toSlug(raw);
+    status.textContent=`Buscando ${raw}... (${i+1}/${names.length})`;
+    bar.style.width=`${Math.round((i/names.length)*100)}%`;
+    try{
+      const data=await fetchPokeAPI(`https://pokeapi.co/api/v2/pokemon/${slug}`);
+      const species=await fetchPokeAPI(data.species.url);
+
+      // tipos
+      const tipos=data.types.map(t=>t.type.name);
+
+      // habilidade principal (não hidden)
+      const habs=data.abilities
+        .filter(a=>!a.is_hidden)
+        .map(a=>a.ability.name.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
+      const habilidade=habs[0]||'—';
+
+      // sprite via PokeAPI sprites (pixel 32x32 clássico)
+      const sprite=`${SPRITE_BASE}${data.id}.png`;
+
+      // gênero
+      const gr=species.gender_rate??-1;
+      const genero=gr===-1?'genderless':gr===0?'macho':gr===8?'femea':'1d2';
+
+      // evita duplicata no mesmo bioma
+      const nomeFormatado=raw.trim();
+      if(!pokemonDB.find(p=>p.nome.toLowerCase()===nomeFormatado.toLowerCase()&&p.bioma===bioma)){
+        pokemonDB.push({id:uid(),nome:nomeFormatado,emoji:'❓',sprite,tipos,habilidade,raridade,genero,bioma});
+      }
+      ok++;
+    }catch(e){
+      console.warn(`Erro ao buscar "${raw}" (slug: "${slug}"):`,e.message);
+      erros.push(raw);
+    }
+    await new Promise(r=>setTimeout(r,250));
+  }
+
+  save('rpg-pokemons',pokemonDB);
+  bar.style.width='100%';
+  btn.disabled=false;
+  progress.style.display='none';
+
+  if(erros.length>0){
+    fbErr.textContent=`⚠ ${ok} importados. Não encontrados: ${erros.join(', ')}`;
+    fbErr.style.display='block';
+    setTimeout(()=>fbErr.style.display='none',8000);
+  } else {
+    fbOk.textContent=`✓ ${ok} Pokémon importados com sucesso!`;
+    fbOk.style.display='block';
+    setTimeout(()=>fbOk.style.display='none',3000);
+  }
+  document.getElementById('imp-lista').value='';
+  renderTbodyPokemons();renderTbodyBiomas();
+}
+
+// ══════════════════════════════════════
+// POKÉMON
+// ══════════════════════════════════════
+function toggleTipo(el){el.classList.toggle('sel');}
+function previewPokeSprite(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const prev=document.getElementById('pk-sprite-preview');
+    prev.innerHTML=`<img src="${e.target.result}" style="width:53px;height:53px;object-fit:contain;image-rendering:pixelated"/>`;
+    prev.dataset.b64=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+function adicionarPokemon(){
+  const nome      =document.getElementById('pk-nome').value.trim();
+  const habilidade=document.getElementById('pk-habilidade').value.trim();
+  const raridade  =document.getElementById('pk-raridade').value;
+  const genero    =document.getElementById('pk-genero').value;
+  const bioma     =document.getElementById('pk-bioma').value;
+  const tipos     =[...document.querySelectorAll('#tipos-wrap .tipo-tag.sel')].map(t=>t.dataset.tipo);
+  const prev      =document.getElementById('pk-sprite-preview');
+  const sprite    =prev.dataset.b64||null;
+  if(!nome||tipos.length===0){alert('Preencha o nome e selecione ao menos 1 tipo.');return;}
+  pokemonDB.push({id:uid(),nome,emoji:'❓',sprite,tipos,habilidade,raridade,genero,bioma});
+  save('rpg-pokemons',pokemonDB);
+  fb('pk-fb');
+  document.getElementById('pk-nome').value='';
+  document.getElementById('pk-habilidade').value='';
+  document.getElementById('pk-sprite-file').value='';
+  prev.innerHTML=`<img src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;delete prev.dataset.b64;
+  document.querySelectorAll('#tipos-wrap .tipo-tag').forEach(t=>t.classList.remove('sel'));
+  renderTbodyPokemons();renderTbodyBiomas();
+}
+function removerPokemon(id){
+  if(!confirm('Remover este Pokémon?'))return;
+  pokemonDB=pokemonDB.filter(p=>p.id!==id);
+  save('rpg-pokemons',pokemonDB);
+  renderTbodyPokemons();renderTbodyBiomas();
+}
+function renderTbodyPokemons(){
+  const filtro=document.getElementById('pk-filtro')?.value||'';
+  const lista=filtro?pokemonDB.filter(p=>p.bioma===filtro):pokemonDB;
+  document.getElementById('tbody-pokemons').innerHTML=lista.length===0
+    ?'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Nenhum Pokémon encontrado.</td></tr>'
+    :lista.map(p=>`
+      <tr>
+        <td style="display:flex;align-items:center;gap:8px">
+          <div style="width:36px;height:36px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+            ${p.sprite
+              ? `<img src="${p.sprite}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>`
+              : `<img src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`}
+          </div>
+          <strong>${p.nome}</strong>
+        </td>
+        <td>${p.bioma}</td>
+        <td><span class="poke-rarity ${rcls[p.raridade]}">${rlbl[p.raridade]}</span></td>
+        <td>${p.tipos.map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}</td>
+        <td style="font-size:12px;color:var(--muted)">${glbl[p.genero]||p.genero}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="removerPokemon(${p.id})">Remover</button></td>
+      </tr>`).join('');
+}
+
+// ══════════════════════════════════════
+// FICHÁRIO
+// ══════════════════════════════════════
+function renderFichario(){
+  const container = document.getElementById('fichas-grid');
+  if(personagens.length===0){
+    container.innerHTML='<div style="color:var(--muted);font-size:14px;padding:20px">Nenhum personagem cadastrado ainda.</div>';
+    return;
+  }
+  // agrupar por player mantendo ordem de inserção
+  const grupos = {};
+  personagens.forEach(p=>{
+    if(!grupos[p.player]) grupos[p.player]=[];
+    grupos[p.player].push(p);
+  });
+  container.innerHTML = Object.entries(grupos).map(([playerNome, chars])=>{
+    const pl = players.find(p=>p.nome===playerNome);
+    const pontos = pl ? pl.pontos : 0;
+    const cards = chars.map(p=>`
+      <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}">
+        <div class="ficha-card-avatar" style="background:${p.cor}22;border:2px solid ${p.cor}">
+          ${p.img
+            ? `<img src="${p.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
+            : `<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}
+        </div>
+        <div class="ficha-name">${p.nome}</div>
+      </div>`).join('');
+    return `<div class="player-section">
+      <div class="player-section-header">
+        <div class="player-section-name">${playerNome}</div>
+        <div class="player-pontos-box">
+          <span class="player-pontos-lbl">Pontos</span>
+          <span class="player-pontos-val">${pontos}</span>
+        </div>
+      </div>
+      <div class="fichas-grid">${cards}</div>
+    </div>`;
+  }).join('');
+}
+function filtrarFichas(q){
+  q=q.toLowerCase();
+  document.querySelectorAll('.player-section').forEach(sec=>{
+    let anyVisible=false;
+    sec.querySelectorAll('.ficha-card').forEach(c=>{
+      const match=c.dataset.nome.includes(q)||c.dataset.player.includes(q);
+      c.style.display=match?'':'none';
+      if(match)anyVisible=true;
+    });
+    sec.style.display=anyVisible?'':'none';
+  });
+}
+function renderPersonagensDatalist(){
+  document.getElementById('personagens-lista').innerHTML=personagens.map(p=>`<option value="${p.nome}"/>`).join('');
+}
+
+// ══════════════════════════════════════
+// BADGES
+// ══════════════════════════════════════
+// ══════════════════════════════════════
+// BADGES
+// ══════════════════════════════════════
+const badgeBtns = [...document.querySelectorAll('.badge-btn')];
+badgeBtns.forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const idx = parseInt(this.dataset.idx);
+    const currentEarned = badgeBtns.filter(b=>b.classList.contains('earned')).length;
+    // Se clicou na última estrela earned (desmarcar tudo a partir dali)
+    // Se já está earned e é a última, desmarca ela e as seguintes
+    // Lógica: clicar em idx X marca 0..X; se X já é o último earned, desmarca X
+    if(this.classList.contains('earned') && currentEarned === idx+1){
+      // desmarca essa
+      badgeBtns.forEach((b,i)=>{
+        if(i>=idx){ b.classList.remove('earned'); b.textContent='☆'; }
+      });
+    } else {
+      // marca todas de 0 até idx
+      badgeBtns.forEach((b,i)=>{
+        if(i<=idx){ b.classList.add('earned'); b.textContent='⭐'; }
+        else       { b.classList.remove('earned'); b.textContent='☆'; }
+      });
+    }
+    atualizarBadgeInfo();
+  });
+});
+function atualizarBadgeInfo(){
+  const c=document.querySelectorAll('.badge-btn.earned').length;
+  const min=c===0?1:c*10+1, max=c===0?10:Math.min(c*10+10,90);
+  document.getElementById('badges-info').textContent=`${c} prova${c!==1?'s':''} → Nível ${min}–${max}`;
+}
+
+// ══════════════════════════════════════
+// ROLADOR
+// ══════════════════════════════════════
+function rollRarity(){
+  const r=Math.ceil(Math.random()*100);
+  if(r<=7)return 'rarissimo';if(r<=20)return 'raro';if(r<=60)return 'incomum';return 'comum';
+}
+function rollGender(g){
+  if(g==='macho')return{s:'♂',c:'#3a80e0'};
+  if(g==='femea')return{s:'♀',c:'#e04090'};
+  if(g==='genderless')return{s:'—',c:'#888'};
+  return Math.random()<.5?{s:'♂',c:'#3a80e0'}:{s:'♀',c:'#e04090'};
+}
+function rollLevel(){
+  const c=document.querySelectorAll('.badge-btn.earned').length;
+  const min=c===0?1:c*10+1, max=c===0?10:Math.min(c*10+10,90);
+  return Math.floor(Math.random()*(max-min+1))+min;
+}
+function buildCardData(){
+  const bioma=document.getElementById('bioma').value;
+  const rarity=rollRarity();
+  const pool=pokemonDB.filter(p=>p.bioma===bioma&&p.raridade===rarity);
+  const fallback=pokemonDB.filter(p=>p.bioma===bioma);
+  const p=pool.length>0?pool[Math.floor(Math.random()*pool.length)]
+         :fallback.length>0?fallback[Math.floor(Math.random()*fallback.length)]
+         :{nome:'???',emoji:'❓',tipos:['normal'],habilidade:'???',raridade:rarity,genero:'1d2'};
+  const gender=rollGender(p.genero);
+  return{nome:p.nome,tipos:p.tipos,emoji:p.emoji||'❓',sprite:p.sprite||null,habilidade:p.habilidade,rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
+}
+const FALLBACK_SPRITE_DEFAULT = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
+let FALLBACK_SPRITE = FALLBACK_SPRITE_DEFAULT;
+let FALLBACK_AVATAR = FALLBACK_SPRITE_DEFAULT;
+
+// Busca o sprite correto do Unown ? na API em runtime
+fetch('https://pokeapi.co/api/v2/pokemon-form/10027/')
+  .then(r=>r.json())
+  .then(data=>{
+    const url = data?.sprites?.front_default;
+    if(url){
+      FALLBACK_SPRITE = url;
+      FALLBACK_AVATAR = url;
+      // atualiza previews estáticos no HTML
+      document.querySelectorAll('.unown-fallback-img').forEach(img=>img.src=url);
+    }
+  })
+  .catch(()=>{});
+
+function spriteHtml(pk){
+  const src = pk.sprite || FALLBACK_SPRITE;
+  return `<img src="${src}" alt="${pk.nome}" style="width:70px;height:70px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges" onerror="this.src='${FALLBACK_SPRITE}'"/>`;
+}
+function buildCardHtml(pk,delay){
+  const pills=pk.tipos.map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('');
+  return`<div class="poke-card" style="animation-delay:${delay}s">
+    <div class="poke-card-img">${spriteHtml(pk)}</div>
+    <div class="poke-card-name">${pk.nome} <span class="gender-icon" style="color:${pk.genderC}">${pk.genderS}</span></div>
+    <div class="poke-card-meta">${pills}</div>
+    <div><span class="poke-rarity ${rcls[pk.rarity]}">${rlbl[pk.rarity]}</span></div>
+    <div class="poke-lvl">Nível ${pk.lvl}</div>
+    <div class="poke-hab">Hab: ${pk.habilidade}</div>
+  </div>`;
+}
+function rolarEncontro(){
+  const adicionais=Math.max(0,parseInt(document.getElementById('n-adicionais').value)||0);
+  const total=3+adicionais;
+  const bioma=document.getElementById('bioma').value;
+  const personagem=document.getElementById('personagem').value||'—';
+  const section=document.getElementById('results-section');
+  section.innerHTML='';
+  const pokes=[];
+  const grid=document.createElement('div');
+  grid.className='results-grid';
+  grid.style.gridTemplateColumns=`repeat(${Math.min(total<=4?total:3,total)},1fr)`;
+  for(let i=0;i<total;i++){const pk=buildCardData();pokes.push(pk);grid.innerHTML+=buildCardHtml(pk,i*0.08);}
+  section.appendChild(grid);
+  salvarNoHistorico(bioma,personagem,pokes);
+}
+
+// ══════════════════════════════════════
+// HISTÓRICO
+// ══════════════════════════════════════
+function salvarNoHistorico(bioma,personagem,pokes){
+  const agora=new Date();
+  historico.unshift({
+    bioma,personagem,pokes,
+    hora:agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
+    data:agora.toLocaleDateString('pt-BR')
+  });
+  save('rpg-historico',historico);
+  histPagina = 0;
+  renderHistorico();
+}
+let histPagina = 0;
+const HIST_POR_PAG = 10;
+
+function mudarPaginaHist(dir){
+  const totalPags = Math.ceil(historico.length / HIST_POR_PAG);
+  histPagina = Math.max(0, Math.min(histPagina + dir, totalPags - 1));
+  renderHistorico();
+}
+function renderHistorico(){
+  const wrap  = document.getElementById('historico-wrap');
+  const lista = document.getElementById('historico-lista');
+  if(historico.length===0){wrap.style.display='none';return;}
+  wrap.style.display='block';
+
+  const totalPags = Math.ceil(historico.length / HIST_POR_PAG);
+  histPagina = Math.max(0, Math.min(histPagina, totalPags - 1));
+  const inicio = histPagina * HIST_POR_PAG;
+  const pagina = historico.slice(inicio, inicio + HIST_POR_PAG);
+
+  // label
+  document.getElementById('hist-page-label').textContent =
+    `Página ${histPagina+1} de ${totalPags} · ${historico.length} rolagem${historico.length!==1?'s':''}`;
+
+  // botões
+  document.getElementById('hist-prev').style.display = histPagina > 0 ? '' : 'none';
+  document.getElementById('hist-next').style.display = histPagina < totalPags-1 ? '' : 'none';
+  document.getElementById('hist-paginacao').style.display = totalPags > 1 ? 'flex' : 'none';
+
+  lista.innerHTML = pagina.map(e=>{
+    const ph=e.pokes.map(pk=>`
+      <div class="hist-poke">
+        <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border-radius:50%;overflow:hidden;flex-shrink:0">
+          ${pk.sprite
+            ? `<img src="${pk.sprite}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>`
+            : `<img src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`}
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:600;color:var(--text)">${pk.nome} <span style="color:${pk.genderC}">${pk.genderS}</span></div>
+          <div style="font-size:10px;color:var(--muted)">Nv.${pk.lvl} · <span class="poke-rarity ${rcls[pk.rarity]}" style="padding:1px 5px;font-size:9px">${rlbl[pk.rarity]}</span></div>
+        </div>
+      </div>`).join('');
+    return`<div class="hist-entry">
+      <div class="hist-header">
+        <div><span style="font-size:12px;font-weight:700;color:var(--brand)">${e.personagem}</span><span style="font-size:11px;color:var(--muted);margin-left:8px">• ${e.bioma}</span></div>
+        <span style="font-size:11px;color:var(--muted)">${e.hora} · ${e.data}</span>
+      </div>
+      <div class="hist-body">${ph}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════
+// EDITOR VISUAL
+// ══════════════════════════════════════
+const ESTILO_DEFAULT = {
+  brand:'#1a3a5c', brandMid:'#2563a8', accent:'#e8a020',
+  bg:'#f4f6fa', surface:'#ffffff', text:'#1a1f2e',
+  fontTitle:"'Cinzel',serif", fontBody:"'Nunito',sans-serif",
+  radius:'10px', customCss:''
+};
+
+function carregarEditorUI(){
+  const e = load('rpg-estilo', ESTILO_DEFAULT);
+  document.getElementById('ec-brand').value       = e.brand;
+  document.getElementById('ec-brand-mid').value   = e.brandMid;
+  document.getElementById('ec-accent').value      = e.accent;
+  document.getElementById('ec-bg').value          = e.bg;
+  document.getElementById('ec-surface').value     = e.surface;
+  document.getElementById('ec-text').value        = e.text;
+  document.getElementById('ec-font-title').value  = e.fontTitle;
+  document.getElementById('ec-font-body').value   = e.fontBody;
+  document.getElementById('ec-radius').value      = e.radius;
+  document.getElementById('ec-custom-css').value  = e.customCss||'';
+}
+
+function aplicarEstilo(){
+  const e = coletarEstilo();
+  aplicarVars(e);
+}
+
+function coletarEstilo(){
+  return {
+    brand:     document.getElementById('ec-brand').value,
+    brandMid:  document.getElementById('ec-brand-mid').value,
+    accent:    document.getElementById('ec-accent').value,
+    bg:        document.getElementById('ec-bg').value,
+    surface:   document.getElementById('ec-surface').value,
+    text:      document.getElementById('ec-text').value,
+    fontTitle: document.getElementById('ec-font-title').value,
+    fontBody:  document.getElementById('ec-font-body').value,
+    radius:    document.getElementById('ec-radius').value,
+    customCss: document.getElementById('ec-custom-css').value,
+  };
+}
+
+function aplicarVars(e){
+  const root = document.documentElement;
+  // hex to rgb helper for brand-light derivation
+  root.style.setProperty('--brand',       e.brand);
+  root.style.setProperty('--brand-mid',   e.brandMid);
+  root.style.setProperty('--accent',      e.accent);
+  root.style.setProperty('--bg',          e.bg);
+  root.style.setProperty('--surface',     e.surface);
+  root.style.setProperty('--text',        e.text);
+  root.style.setProperty('--font-title',  e.fontTitle);
+  root.style.setProperty('--font-body',   e.fontBody);
+  root.style.setProperty('--r',           e.radius);
+  // custom CSS injection
+  let tag = document.getElementById('custom-css-tag');
+  if(!tag){tag=document.createElement('style');tag.id='custom-css-tag';document.head.appendChild(tag);}
+  tag.textContent = e.customCss||'';
+  // load Google Fonts if needed
+  injectFonts(e.fontTitle+' '+e.fontBody);
+}
+
+function injectFonts(str){
+  const needed=[];
+  if(str.includes('Playfair'))  needed.push('Playfair+Display:wght@400;600;700');
+  if(str.includes('Oswald'))    needed.push('Oswald:wght@400;600;700');
+  if(str.includes('Raleway'))   needed.push('Raleway:wght@400;600;700');
+  if(str.includes('Press Start')) needed.push('Press+Start+2P');
+  if(str.includes('Fredoka'))   needed.push('Fredoka+One');
+  if(str.includes('Poppins'))   needed.push('Poppins:wght@400;500;600;700');
+  if(str.includes('Inter'))     needed.push('Inter:wght@400;500;600;700');
+  if(str.includes('Roboto'))    needed.push('Roboto:wght@400;500;700');
+  if(str.includes('Lato'))      needed.push('Lato:wght@400;700');
+  if(str.includes('Open Sans')) needed.push('Open+Sans:wght@400;600;700');
+  needed.forEach(f=>{
+    const id='gf-'+f.split(':')[0].replace(/\+/g,'-');
+    if(!document.getElementById(id)){
+      const l=document.createElement('link');
+      l.id=id;l.rel='stylesheet';
+      l.href=`https://fonts.googleapis.com/css2?family=${f}&display=swap`;
+      document.head.appendChild(l);
+    }
+  });
+}
+
+function salvarEstilo(){
+  const e=coletarEstilo();
+  save('rpg-estilo',e);
+  aplicarVars(e);
+  fb('editor-fb-ok');
+}
+
+function resetarEstilo(){
+  if(!confirm('Restaurar todas as configurações visuais para o padrão?'))return;
+  save('rpg-estilo',ESTILO_DEFAULT);
+  carregarEditorUI();
+  aplicarVars(ESTILO_DEFAULT);
+}
+
+function aplicarEstiloSalvo(){
+  const e=load('rpg-estilo',ESTILO_DEFAULT);
+  aplicarVars(e);
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+aplicarEstiloSalvo();
+syncBiomaSelect();
+renderFichario();
+renderPersonagensDatalist();
+renderHistorico();
+</script>
+</body>
+</html>
