@@ -122,6 +122,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .sec-sub{font-size:13px;color:var(--muted);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
 .box{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px}
 .box-title{font-size:12px;font-weight:700;color:var(--brand-mid);margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px}
+.adm-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .adm-table{width:100%;border-collapse:collapse;font-size:13px}
 .adm-table th{text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1.5px solid var(--border)}
 .adm-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
@@ -167,6 +168,91 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes diceShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(5deg)}}
+
+/* ── MOBILE ── */
+@media(max-width:768px){
+  /* NAV */
+  .nav{padding:0 14px;height:52px}
+  .nav-logo{font-size:14px}
+  .nav-link{padding:6px 10px;font-size:12px}
+  .nav-login{padding:6px 12px;font-size:11px}
+
+  /* PAGES */
+  .page{padding:16px}
+
+  /* ROLADOR */
+  .roller-header{margin-bottom:18px}
+  .roller-header h2{font-size:18px}
+  .roller-controls{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
+  .badges-row{gap:6px;padding:10px 12px}
+  .badge-btn{width:30px;height:30px;font-size:16px}
+  .badges-info{font-size:11px;width:100%;text-align:right;margin-left:0}
+  .roll-btn{font-size:14px;padding:13px}
+
+  /* CARDS DO ROLADOR */
+  .results-grid{grid-template-columns:1fr;gap:10px}
+  .poke-card{padding:12px;gap:12px}
+  .poke-card-img{width:80px;height:80px}
+  .poke-card-img img{width:80px;height:80px}
+
+  /* HISTÓRICO */
+  .hist-body{gap:6px}
+  .hist-poke{min-width:0;width:100%}
+  .hist-header{flex-direction:column;align-items:flex-start;gap:4px}
+
+  /* FICHÁRIO */
+  .ficha-header{flex-direction:column;align-items:flex-start;gap:10px}
+  .search-bar{width:100%}
+  .fichas-grid{grid-template-columns:1fr 1fr}
+  .ficha-card{padding:12px 10px;gap:8px}
+  .ficha-card-avatar{width:40px;height:40px}
+  .ficha-card-avatar img{width:40px;height:40px}
+  .ficha-name{font-size:11px}
+
+  /* ADM LOGIN */
+  .adm-login-wrap{margin:20px auto;padding:0 4px}
+
+  /* ADM PAINEL */
+  .adm-layout{grid-template-columns:1fr;gap:12px}
+  .adm-sidebar{position:static;padding:10px}
+  .adm-sidebar-user{display:none}
+  .adm-nav-btn{padding:8px 10px;font-size:12px;display:inline-block;width:auto;margin-right:4px;margin-bottom:4px}
+  .adm-content{padding:16px;min-height:auto}
+  .g2{grid-template-columns:1fr}
+  .g3{grid-template-columns:1fr 1fr}
+  .adm-table{font-size:12px}
+  .adm-table th{padding:6px 8px}
+  .adm-table td{padding:7px 8px}
+  /* overflow table on small screens */
+  .adm-table-wrap{overflow-x:auto}
+
+  /* MODAL */
+  .modal-box{padding:20px 16px;margin:0 12px;max-width:100%}
+  .modal-box .g2{grid-template-columns:1fr}
+
+  /* DADOS */
+  .dice-controls{grid-template-columns:1fr;gap:10px}
+  .dice-result-num{font-size:40px}
+  .dice-sides-wrap{gap:4px}
+  .dice-side-btn{padding:5px 10px;font-size:11px}
+  .dice-hist-entry{flex-wrap:wrap;gap:6px}
+
+  /* EDITOR VISUAL */
+  #sec-editor > div[style*="grid"]{display:flex;flex-direction:column;gap:12px}
+}
+
+@media(max-width:480px){
+  .nav-links{gap:2px}
+  .nav-link{padding:5px 8px;font-size:11px}
+  .results-grid{grid-template-columns:1fr}
+  .fichas-grid{grid-template-columns:1fr}
+  .poke-card{gap:10px}
+  .poke-card-img{width:70px;height:70px}
+  .poke-card-img img{width:70px;height:70px}
+  .g3{grid-template-columns:1fr}
+  .badges-row{gap:5px}
+  .badge-btn{width:28px;height:28px;font-size:14px}
+}
 </style>
 </head>
 <body>
@@ -347,17 +433,17 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           </div>
           <div class="box">
             <div class="box-title">Pontos por Player</div>
-            <table class="adm-table">
+            <div class="adm-table-wrap"><table class="adm-table">
               <thead><tr><th>Player</th><th>Pontos</th><th>Ações</th></tr></thead>
               <tbody id="tbody-players"></tbody>
-            </table>
+            </table></div>
           </div>
           <div class="box">
             <div class="box-title">Personagens cadastrados</div>
-            <table class="adm-table">
+            <div class="adm-table-wrap"><table class="adm-table">
               <thead><tr><th>Personagem</th><th>Player</th><th>Ações</th></tr></thead>
               <tbody id="tbody-personagens"></tbody>
-            </table>
+            </table></div>
           </div>
         </div>
 
@@ -373,10 +459,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             </div>
             <div class="fb fb-ok" id="bioma-fb" style="margin-top:10px">✓ Bioma adicionado!</div>
           </div>
-          <table class="adm-table">
+          <div class="adm-table-wrap"><table class="adm-table">
             <thead><tr><th>Bioma</th><th>Pokémon</th><th>Ações</th></tr></thead>
             <tbody id="tbody-biomas"></tbody>
-          </table>
+          </table></div>
         </div>
 
         <!-- POKÉMON -->
@@ -470,10 +556,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <label>Filtrar por bioma</label>
             <select id="pk-filtro" onchange="renderTbodyPokemons()"></select>
           </div>
-          <table class="adm-table">
+          <div class="adm-table-wrap"><table class="adm-table">
             <thead><tr><th>Pokémon</th><th>Bioma</th><th>Raridade</th><th>Tipos</th><th>Gênero</th><th>Ações</th></tr></thead>
             <tbody id="tbody-pokemons"></tbody>
-          </table>
+          </table></div>
         </div>
 
         <!-- ADMINS -->
@@ -490,10 +576,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <div class="fb fb-ok" id="adm-fb-ok">✓ Admin adicionado!</div>
             <div class="fb fb-err" id="adm-fb-err">—</div>
           </div>
-          <table class="adm-table">
+          <div class="adm-table-wrap"><table class="adm-table">
             <thead><tr><th>Usuário</th><th>Ações</th></tr></thead>
             <tbody id="tbody-admins"></tbody>
-          </table>
+          </table></div>
         </div>
 
         <!-- EDITOR VISUAL -->
