@@ -66,8 +66,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .badge-btn{width:34px;height:34px;border-radius:50%;border:2px solid #d0d0d0;background:#f4f4f4;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none;line-height:1}
 .badge-btn.earned{background:#fff8e0;border-color:#e8a020}
 .badges-info{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap;font-weight:600}
-.roll-btn{width:100%;padding:15px;background:var(--brand-mid);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-title);font-size:16px;letter-spacing:1.5px;cursor:pointer;transition:all .2s;margin-bottom:24px}
-.roll-btn:hover{background:var(--brand);transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,168,.25)}
+.roll-btn{width:100%;padding:15px;background:var(--brand-mid);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-title);font-size:16px;letter-spacing:1.5px;cursor:pointer;margin-bottom:24px}
+.roll-btn:hover{background:var(--brand-mid)}
 .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
 .poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:16px;transition:all .25s;animation:fadeUp .35s both}
 .poke-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 14px rgba(37,99,168,.12)}
@@ -1170,8 +1170,9 @@ badgeBtns.forEach(btn=>{
 });
 function atualizarBadgeInfo(){
   const c=document.querySelectorAll('.badge-btn.earned').length;
-  const max=c===0?10:Math.min(c*10,90);
-  document.getElementById('badges-info').textContent=`${c} prova${c!==1?'s':''} → Nível 1–${max}`;
+  const min=c===0?1:c*10+1;
+  const max=c===0?10:Math.min(c*10+10,90);
+  document.getElementById('badges-info').textContent=`${c} prova${c!==1?'s':''} → Nível ${min}–${max}`;
 }
 
 // ══════════════════════════════════════
@@ -1179,7 +1180,7 @@ function atualizarBadgeInfo(){
 // ══════════════════════════════════════
 function rollRarity(){const r=Math.ceil(Math.random()*100);if(r<=7)return 'rarissimo';if(r<=20)return 'raro';if(r<=60)return 'incomum';return 'comum';}
 function rollGender(g){if(g==='macho')return{s:'♂',c:'#3a80e0'};if(g==='femea')return{s:'♀',c:'#e04090'};if(g==='genderless')return{s:'—',c:'#888'};return Math.random()<.5?{s:'♂',c:'#3a80e0'}:{s:'♀',c:'#e04090'};}
-function rollLevel(){const c=document.querySelectorAll('.badge-btn.earned').length;const max=c===0?10:Math.min(c*10,90);return Math.floor(Math.random()*max)+1;}
+function rollLevel(){const c=document.querySelectorAll('.badge-btn.earned').length;const min=c===0?1:c*10+1;const max=c===0?10:Math.min(c*10+10,90);return Math.floor(Math.random()*(max-min+1))+min;}
 function spriteHtml(pk){
   const src=pk.sprite||FALLBACK_SPRITE;
   return`<img src="${src}" alt="${pk.nome}" style="width:108px;height:108px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges" onerror="this.src='${FALLBACK_SPRITE}'"/>`;
