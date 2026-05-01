@@ -173,7 +173,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="ctrl-group"><label>Bioma</label><select id="bioma"></select></div>
     <div class="ctrl-group">
       <label>Personagem</label>
-      <input type="text" id="personagem" placeholder="Nome do personagem..." list="personagens-lista"/>
+      <input type="text" id="personagem" placeholder="Nome do personagem..." list="personagens-lista" required/>
       <datalist id="personagens-lista"></datalist>
     </div>
     <div class="ctrl-group"><label>Pokémon adicionais</label><input type="number" id="n-adicionais" value="0" min="0" max="10"/></div>
@@ -1064,10 +1064,15 @@ function buildCardHtml(pk,delay){
   </div>`;
 }
 async function rolarEncontro(){
+  const personagem=document.getElementById('personagem').value.trim();
+  if(!personagem){
+    alert('Preencha o nome do personagem antes de rolar!');
+    document.getElementById('personagem').focus();
+    return;
+  }
   const adicionais=Math.max(0,parseInt(document.getElementById('n-adicionais').value)||0);
   const total=3+adicionais;
   const bioma=document.getElementById('bioma').value;
-  const personagem=document.getElementById('personagem').value||'—';
   const section=document.getElementById('results-section');
   section.innerHTML='';
   const pokes=[];
