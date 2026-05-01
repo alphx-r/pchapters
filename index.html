@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>pchapters | index </title>
+<title>Pokémon RPG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -143,30 +143,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .hist-header{padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .hist-body{padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap}
 .hist-poke{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border);min-width:160px}
-/* ROLADOR DE DADOS */
-.dice-roller-wrap{margin:0 auto}
-.dice-header{text-align:center;margin-bottom:28px;padding-top:8px}
-.dice-header h2{font-family:var(--font-title);font-size:22px;color:var(--brand);margin-bottom:6px}
-.dice-header p{font-size:14px;color:var(--muted)}
-.dice-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
-.dice-result-box{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:24px 20px;text-align:center;margin-bottom:20px;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:border-color .3s}
-.dice-result-box.rolled{border-color:var(--brand-mid);animation:fadeUp .3s both}
-.dice-result-num{font-family:var(--font-title);font-size:52px;font-weight:700;color:var(--brand);line-height:1}
-.dice-result-label{font-size:13px;color:var(--muted);line-height:1.5}
-.dice-result-max{font-size:12px;color:var(--muted);font-weight:600}
-.dice-hist-entry{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;animation:fadeUp .25s both}
-.dice-hist-entry:hover{border-color:var(--brand-mid);background:var(--surface2)}
-.dice-hist-msg{font-size:13px;color:var(--text);flex:1}
-.dice-hist-msg strong{color:var(--brand-mid)}
-.dice-hist-num{font-family:var(--font-title);font-size:18px;font-weight:700;color:var(--brand);min-width:32px;text-align:right}
-.dice-hist-time{font-size:11px;color:var(--muted);white-space:nowrap}
-.dice-sides-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
-.dice-side-btn{padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
-.dice-side-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
-.dice-side-btn.active{background:var(--brand-mid);border-color:var(--brand-mid);color:#fff}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes diceShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(5deg)}}
 </style>
 </head>
 <body>
@@ -177,10 +155,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 </div>
 
 <nav class="nav">
-  <div class="nav-logo">P<span>Chapters</span></div>
+  <div class="nav-logo">Pokémon<span>RPG</span></div>
   <div class="nav-links">
-    <button class="nav-link active" onclick="goTo('roller',this)">Pokémon</button>
-    <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
+    <button class="nav-link active" onclick="goTo('roller',this)">Rolador</button>
     <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
   </div>
   <button class="nav-login" id="btn-adm" onclick="goToAdm()">ADM</button>
@@ -203,15 +180,15 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
   <div class="badges-row">
     <span class="badges-label">Provas de valor:</span>
-    <button class="badge-btn" data-idx="0">☆</button>
-    <button class="badge-btn" data-idx="1">☆</button>
+    <button class="badge-btn earned" data-idx="0">⭐</button>
+    <button class="badge-btn earned" data-idx="1">⭐</button>
     <button class="badge-btn" data-idx="2">☆</button>
     <button class="badge-btn" data-idx="3">☆</button>
     <button class="badge-btn" data-idx="4">☆</button>
     <button class="badge-btn" data-idx="5">☆</button>
     <button class="badge-btn" data-idx="6">☆</button>
     <button class="badge-btn" data-idx="7">☆</button>
-    <span class="badges-info" id="badges-info">0 provas → Nível 1–10</span>
+    <span class="badges-info" id="badges-info">2 provas → Nível 11–30</span>
   </div>
   <button class="roll-btn" onclick="rolarEncontro()">⚔ Rolar Encontro</button>
   <div id="results-section"></div>
@@ -224,62 +201,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div id="hist-paginacao" style="display:flex;justify-content:center;gap:10px;margin-top:16px">
       <button id="hist-prev" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaHist(-1)">← Mais recentes</button>
       <button id="hist-next" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaHist(1)">Mais antigas →</button>
-    </div>
-  </div>
-</div>
-
-<!-- ROLADOR DE DADOS -->
-<div class="page" id="page-dados">
-  <div class="dice-roller-wrap">
-    <div class="dice-header">
-      <h2>Rolador de Dados</h2>
-      <p>Escolha o dado, o personagem e o motivo da rolagem</p>
-    </div>
-
-    <!-- Atalhos de dado -->
-    <div style="margin-bottom:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Dados rápidos</div>
-      <div class="dice-sides-wrap">
-        <button class="dice-side-btn" onclick="setLados(4)">d4</button>
-        <button class="dice-side-btn" onclick="setLados(6)">d6</button>
-        <button class="dice-side-btn" onclick="setLados(8)">d8</button>
-        <button class="dice-side-btn" onclick="setLados(10)">d10</button>
-        <button class="dice-side-btn" onclick="setLados(12)">d12</button>
-        <button class="dice-side-btn" onclick="setLados(20)">d20</button>
-        <button class="dice-side-btn active" onclick="setLados(100)">d100</button>
-      </div>
-    </div>
-
-    <!-- Controles -->
-    <div class="dice-controls">
-      <div class="ctrl-group">
-        <label>Personagem</label>
-        <input type="text" id="dice-personagem" placeholder="Nome do personagem..." list="personagens-lista"/>
-      </div>
-      <div class="ctrl-group">
-        <label>Lados do dado</label>
-        <input type="number" id="dice-lados" value="100" min="2" max="10000" oninput="sincLadosBtns()"/>
-      </div>
-      <div class="ctrl-group">
-        <label>Motivo</label>
-        <input type="text" id="dice-motivo" placeholder="Ex: Ataque, Fuga..." required/>
-      </div>
-    </div>
-
-    <!-- Botão rolar -->
-    <button class="roll-btn" onclick="rolarDado()">🎲 Rolar dado</button>
-
-    <!-- Histórico de dados -->
-    <div id="dice-hist-wrap" style="display:none;margin-top:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Histórico de Rolagens</div>
-        <span style="font-size:12px;color:var(--muted)" id="dice-hist-label"></span>
-      </div>
-      <div id="dice-hist-lista"></div>
-      <div id="dice-hist-paginacao" style="display:flex;justify-content:center;gap:10px;margin-top:16px">
-        <button id="dice-hist-prev" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaDados(-1)">← Mais recentes</button>
-        <button id="dice-hist-next" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaDados(1)">Mais antigas →</button>
-      </div>
     </div>
   </div>
 </div>
@@ -316,7 +237,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <div class="adm-nav-sep"></div>
         <button class="adm-nav-btn" onclick="admTab('admins',this)">🔑 Admins</button>
         <button class="adm-nav-btn" onclick="admTab('editor',this)">🎨 Editor Visual</button>
-        <button class="adm-nav-btn" onclick="admTab('historicos',this)">🗑️ Históricos</button>
         <div class="adm-nav-sep"></div>
         <button class="adm-nav-btn adm-nav-danger" onclick="fazerLogout()">Sair</button>
       </div>
@@ -560,45 +480,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           <div class="fb fb-ok" id="editor-fb-ok" style="margin-top:10px;display:none">✓ Estilo salvo!</div>
         </div>
 
-        <!-- HISTÓRICOS -->
-        <div class="adm-section" id="sec-historicos">
-          <div class="sec-title">Históricos</div>
-          <div class="sec-sub">Limpeza dos históricos de rolagens — disponível apenas para o admin <strong>pchaptersrpg@gmail.com</strong></div>
-          <div id="hist-clear-blocked" style="display:none;background:#fde8e8;border:1.5px solid #f0c0c0;border-radius:8px;padding:16px;color:var(--red);font-size:13px;font-weight:600">
-            🔒 Apenas o admin <strong>pchaptersrpg@gmail.com</strong> pode limpar os históricos.
-          </div>
-          <div id="hist-clear-panel">
-            <div class="box" style="border-color:#f0c0c0">
-              <div class="box-title" style="color:var(--red)">🗑️ Histórico de Encontros Pokémon</div>
-              <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Apaga rolagens de encontro Pokémon no período selecionado, ou tudo de uma vez.</p>
-              <div class="g2" style="margin-bottom:12px">
-                <div class="field"><label>De</label><input type="date" id="poke-data-de"/></div>
-                <div class="field"><label>Até</label><input type="date" id="poke-data-ate"/></div>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-danger btn-sm" onclick="limparHistPokemonPorData()">🗑 Apagar período</button>
-                <button class="btn btn-danger" onclick="limparHistPokemon()">Limpar tudo</button>
-              </div>
-              <div class="fb fb-ok" id="hist-poke-fb" style="margin-top:8px">✓ Registros apagados!</div>
-              <div class="fb fb-err" id="hist-poke-fb-err" style="margin-top:8px">—</div>
-            </div>
-            <div class="box" style="border-color:#f0c0c0">
-              <div class="box-title" style="color:var(--red)">🗑️ Histórico de Dados</div>
-              <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Apaga rolagens de dados no período selecionado, ou tudo de uma vez.</p>
-              <div class="g2" style="margin-bottom:12px">
-                <div class="field"><label>De</label><input type="date" id="dados-data-de"/></div>
-                <div class="field"><label>Até</label><input type="date" id="dados-data-ate"/></div>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-danger btn-sm" onclick="limparHistDadosPorData()">🗑 Apagar período</button>
-                <button class="btn btn-danger" onclick="limparHistDados()">Limpar tudo</button>
-              </div>
-              <div class="fb fb-ok" id="hist-dados-fb" style="margin-top:8px">✓ Registros apagados!</div>
-              <div class="fb fb-err" id="hist-dados-fb-err" style="margin-top:8px">—</div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
@@ -629,7 +510,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 // ══════════════════════════════════════
 // SUPABASE CONFIG
@@ -638,13 +518,10 @@ const SUPA_URL = 'https://jdgfxsvgxfdkdrzqbgje.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
 
 async function sb(path, opts={}){
-  // usa token da sessão Auth se disponível, senão anon key
-  const session = supabaseClient?.auth ? (await supabaseClient.auth.getSession()).data.session : null;
-  const token = session?.access_token || SUPA_KEY;
   const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
     headers:{
       'apikey': SUPA_KEY,
-      'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${SUPA_KEY}`,
       'Content-Type': 'application/json',
       'Prefer': opts.prefer || 'return=representation',
       ...opts.headers
@@ -656,9 +533,6 @@ async function sb(path, opts={}){
   if(!text) return [];
   try{ return JSON.parse(text); }catch(e){ return []; }
 }
-
-// cliente Supabase JS para Auth
-const supabaseClient = supabase.createClient(SUPA_URL, SUPA_KEY);
 const dbGet  = (t,q='')        => sb(`${t}?${q}&order=created_at.asc`);
 const dbPost = (t,b)           => sb(t,{method:'POST',body:JSON.stringify(b)});
 const dbPatch= (t,q,b)         => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
@@ -691,33 +565,22 @@ function fb(id,ms=2500){const el=document.getElementById(id);if(!el)return;el.st
 async function init(){
   loading(true);
   try{
-    // verifica sessão ativa (ex: após refresh de página)
-    const {data:{session}}=await supabaseClient.auth.getSession();
-    if(session){
-      admLogado={email:session.user.email};
-      document.getElementById('adm-login-wrap').style.display='none';
-      document.getElementById('adm-painel').style.display='block';
-      document.getElementById('adm-user-label').textContent=session.user.email;
-    }
-    const [_admins,_players,_personagens,_biomas,_pokemons,_historico,_histDados,estilo] = await Promise.all([
+    const [_admins,_players,_personagens,_biomas,_pokemons,_historico,estilo] = await Promise.all([
       dbGet('admins'),
       dbGet('players'),
       dbGet('personagens'),
       dbGet('biomas'),
       dbGet('pokemons'),
       dbGet('historico','order=created_at.desc&limit=200'),
-      dbGet('historico_dados','order=created_at.desc&limit=300'),
       carregarEstiloSalvo(),
     ]);
     admins=_admins; players=_players; personagens=_personagens;
     biomas=_biomas; pokemonDB=_pokemons; historico=_historico;
-    historicoDados=_histDados;
     aplicarVars(estilo);
     syncBiomaSelect();
     renderFichario();
     renderPersonagensDatalist();
     renderHistorico();
-    renderHistDados();
   } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); }
   loading(false);
 }
@@ -743,11 +606,6 @@ function admTab(sec,el){
   if(sec==='pokemons'){syncBiomaSelects();document.getElementById('pk-filtro-wrap').style.display='';renderTbodyPokemons();}
   if(sec==='admins')renderTbodyAdmins();
   if(sec==='editor'){carregarEstiloSalvo().then(e=>carregarEditorUI(e));}
-  if(sec==='historicos'){
-    const isGold=admLogado?.email==='pchaptersrpg@gmail.com';
-    document.getElementById('hist-clear-blocked').style.display=isGold?'none':'block';
-    document.getElementById('hist-clear-panel').style.display=isGold?'block':'none';
-  }
 }
 
 // ══════════════════════════════════════
@@ -756,18 +614,15 @@ function admTab(sec,el){
 async function fazerLogin(){
   const email=document.getElementById('login-email').value.trim();
   const senha=document.getElementById('login-senha').value;
-  const errEl=document.getElementById('login-erro');
-  errEl.style.display='none';
-  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:senha});
-  if(error||!data.session){errEl.style.display='block';return;}
-  admLogado={email:data.user.email};
+  const found=admins.find(a=>a.email===email&&a.senha===senha);
+  if(!found){fb('login-erro',3000);return;}
+  admLogado=found;
   document.getElementById('adm-login-wrap').style.display='none';
   document.getElementById('adm-painel').style.display='block';
-  document.getElementById('adm-user-label').textContent=data.user.email;
+  document.getElementById('adm-user-label').textContent=email;
   renderTbodyPersonagens();renderTbodyPlayers();
 }
-async function fazerLogout(){
-  await supabaseClient.auth.signOut();
+function fazerLogout(){
   admLogado=null;
   document.getElementById('adm-login-wrap').style.display='block';
   document.getElementById('adm-painel').style.display='none';
@@ -1170,8 +1025,8 @@ badgeBtns.forEach(btn=>{
 });
 function atualizarBadgeInfo(){
   const c=document.querySelectorAll('.badge-btn.earned').length;
-  const min=c===0?1:c*10+1,max=c===0?10:Math.min(c*10+10,90);
-  document.getElementById('badges-info').textContent=`${c} prova${c!==1?'s':''} → Nível ${min}–${max}`;
+  const max=c===0?10:Math.min(c*10,90);
+  document.getElementById('badges-info').textContent=`${c} prova${c!==1?'s':''} → Nível 1–${max}`;
 }
 
 // ══════════════════════════════════════
@@ -1179,7 +1034,7 @@ function atualizarBadgeInfo(){
 // ══════════════════════════════════════
 function rollRarity(){const r=Math.ceil(Math.random()*100);if(r<=7)return 'rarissimo';if(r<=20)return 'raro';if(r<=60)return 'incomum';return 'comum';}
 function rollGender(g){if(g==='macho')return{s:'♂',c:'#3a80e0'};if(g==='femea')return{s:'♀',c:'#e04090'};if(g==='genderless')return{s:'—',c:'#888'};return Math.random()<.5?{s:'♂',c:'#3a80e0'}:{s:'♀',c:'#e04090'};}
-function rollLevel(){const c=document.querySelectorAll('.badge-btn.earned').length;const min=c===0?1:c*10+1,max=c===0?10:Math.min(c*10+10,90);return Math.floor(Math.random()*(max-min+1))+min;}
+function rollLevel(){const c=document.querySelectorAll('.badge-btn.earned').length;const max=c===0?10:Math.min(c*10,90);return Math.floor(Math.random()*max)+1;}
 function spriteHtml(pk){
   const src=pk.sprite||FALLBACK_SPRITE;
   return`<img src="${src}" alt="${pk.nome}" style="width:108px;height:108px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges" onerror="this.src='${FALLBACK_SPRITE}'"/>`;
@@ -1188,8 +1043,10 @@ function buildCardData(){
   const bioma=document.getElementById('bioma').value;
   const rarity=rollRarity();
   const pool=pokemonDB.filter(p=>p.bioma===bioma&&p.raridade===rarity);
-  const fallback=pokemonDB.filter(p=>p.bioma===bioma);
-  const p=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:fallback.length>0?fallback[Math.floor(Math.random()*fallback.length)]:{nome:'???',emoji:'❓',tipos:['normal'],habilidade:'???',raridade:rarity,genero:'1d2',sprite:null};
+  // Se não houver Pokémon da raridade sorteada, mostra ??? com a raridade correta
+  const p=pool.length>0
+    ? pool[Math.floor(Math.random()*pool.length)]
+    : {nome:'???',emoji:'❓',tipos:['normal'],habilidade:'???',raridade:rarity,genero:'1d2',sprite:null};
   const gender=rollGender(p.genero);
   return{nome:p.nome,tipos:p.tipos||[],emoji:p.emoji||'❓',sprite:p.sprite||null,habilidade:p.habilidade,rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
 }
@@ -1396,147 +1253,6 @@ async function resetarEstilo(){
   });
   carregarEditorUI(ESTILO_DEFAULT);
   aplicarVars(ESTILO_DEFAULT);
-}
-
-// ══════════════════════════════════════
-// ROLADOR DE DADOS
-// ══════════════════════════════════════
-let historicoDados=[], dadosPagina=0;
-const DADOS_POR_PAG=15;
-
-function setLados(n){
-  document.getElementById('dice-lados').value=n;
-  sincLadosBtns();
-}
-function sincLadosBtns(){
-  const v=parseInt(document.getElementById('dice-lados').value);
-  document.querySelectorAll('.dice-side-btn').forEach(b=>{
-    const lbl=b.textContent.replace('d','');
-    b.classList.toggle('active', parseInt(lbl)===v);
-  });
-}
-async function rolarDado(){
-  const personagem=document.getElementById('dice-personagem').value.trim();
-  const lados=parseInt(document.getElementById('dice-lados').value);
-  const motivo=document.getElementById('dice-motivo').value.trim();
-  if(!personagem){alert('Preencha o nome do personagem!');document.getElementById('dice-personagem').focus();return;}
-  if(!lados||lados<2){alert('O dado precisa ter ao menos 2 lados.');return;}
-  if(!motivo){alert('Preencha o motivo da rolagem!');document.getElementById('dice-motivo').focus();return;}
-
-  const resultado=Math.floor(Math.random()*lados)+1;
-  const agora=new Date();
-  const hora=agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  const data=agora.toLocaleDateString('pt-BR');
-  const entry={personagem,lados,motivo,resultado,hora,data};
-  const res=await dbPost('historico_dados',entry);
-  if(res&&res[0])historicoDados.unshift(res[0]);
-  else historicoDados.unshift({...entry,id:Date.now()});
-  dadosPagina=0;
-  renderHistDados();
-}
-
-function mudarPaginaDados(dir){
-  const totalPags=Math.ceil(historicoDados.length/DADOS_POR_PAG);
-  dadosPagina=Math.max(0,Math.min(dadosPagina+dir,totalPags-1));
-  renderHistDados();
-}
-
-function renderHistDados(){
-  const wrap=document.getElementById('dice-hist-wrap');
-  const lista=document.getElementById('dice-hist-lista');
-  if(historicoDados.length===0){wrap.style.display='none';return;}
-  wrap.style.display='block';
-  const totalPags=Math.ceil(historicoDados.length/DADOS_POR_PAG);
-  dadosPagina=Math.max(0,Math.min(dadosPagina,totalPags-1));
-  const inicio=dadosPagina*DADOS_POR_PAG;
-  const pagina=historicoDados.slice(inicio,inicio+DADOS_POR_PAG);
-  document.getElementById('dice-hist-label').textContent=`${historicoDados.length} rolagem${historicoDados.length!==1?'s':''}`;
-  document.getElementById('dice-hist-prev').style.display=dadosPagina>0?'':'none';
-  document.getElementById('dice-hist-next').style.display=dadosPagina<totalPags-1?'':'none';
-  document.getElementById('dice-hist-paginacao').style.display=totalPags>1?'flex':'none';
-  lista.innerHTML=pagina.map((e,i)=>{
-    const motivoStr=e.motivo?` para <strong>${e.motivo}</strong>`:'';
-    return`<div class="dice-hist-entry" style="animation-delay:${i*0.04}s">
-      <div class="dice-hist-msg">
-        [${e.data} ${e.hora}] <strong>${e.personagem}</strong> rolou <strong>1d${e.lados}</strong> para <strong>${e.motivo}</strong> e obteve: <strong>${e.resultado}</strong>
-      </div>
-      <div class="dice-hist-num" style="display:none">${e.resultado}</div>
-    </div>`;
-  }).join('');
-}
-
-// converte "dd/mm/aaaa" → Date para comparação
-function parseBrDate(str){ const [d,m,a]=str.split('/'); return new Date(`${a}-${m}-${d}`); }
-
-async function limparHistPokemonPorData(){
-  if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
-  const de=document.getElementById('poke-data-de').value;
-  const ate=document.getElementById('poke-data-ate').value;
-  const errEl=document.getElementById('hist-poke-fb-err');
-  errEl.style.display='none';
-  if(!de&&!ate){errEl.textContent='Selecione ao menos uma data.';errEl.style.display='block';return;}
-  const deD=de?new Date(de):null;
-  const ateD=ate?new Date(ate):null;
-  if(deD&&ateD&&deD>ateD){errEl.textContent='A data "De" não pode ser maior que "Até".';errEl.style.display='block';return;}
-  const targets=historico.filter(e=>{
-    const d=parseBrDate(e.data);
-    if(deD&&d<deD)return false;
-    if(ateD&&d>ateD)return false;
-    return true;
-  });
-  if(targets.length===0){errEl.textContent='Nenhum registro encontrado nesse período.';errEl.style.display='block';return;}
-  if(!confirm(`Apagar ${targets.length} registro${targets.length!==1?'s':''} de encontros entre ${de||'início'} e ${ate||'hoje'}?`))return;
-  for(const e of targets) await dbDel('historico',`id=eq.${e.id}`);
-  const ids=new Set(targets.map(e=>e.id));
-  historico=historico.filter(e=>!ids.has(e.id));
-  renderHistorico();
-  fb('hist-poke-fb');
-  document.getElementById('poke-data-de').value='';
-  document.getElementById('poke-data-ate').value='';
-}
-
-async function limparHistDadosPorData(){
-  if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
-  const de=document.getElementById('dados-data-de').value;
-  const ate=document.getElementById('dados-data-ate').value;
-  const errEl=document.getElementById('hist-dados-fb-err');
-  errEl.style.display='none';
-  if(!de&&!ate){errEl.textContent='Selecione ao menos uma data.';errEl.style.display='block';return;}
-  const deD=de?new Date(de):null;
-  const ateD=ate?new Date(ate):null;
-  if(deD&&ateD&&deD>ateD){errEl.textContent='A data "De" não pode ser maior que "Até".';errEl.style.display='block';return;}
-  const targets=historicoDados.filter(e=>{
-    const d=parseBrDate(e.data);
-    if(deD&&d<deD)return false;
-    if(ateD&&d>ateD)return false;
-    return true;
-  });
-  if(targets.length===0){errEl.textContent='Nenhum registro encontrado nesse período.';errEl.style.display='block';return;}
-  if(!confirm(`Apagar ${targets.length} registro${targets.length!==1?'s':''} de dados entre ${de||'início'} e ${ate||'hoje'}?`))return;
-  for(const e of targets) await dbDel('historico_dados',`id=eq.${e.id}`);
-  const ids=new Set(targets.map(e=>e.id));
-  historicoDados=historicoDados.filter(e=>!ids.has(e.id));
-  renderHistDados();
-  fb('hist-dados-fb');
-  document.getElementById('dados-data-de').value='';
-  document.getElementById('dados-data-ate').value='';
-}
-
-async function limparHistDados(){
-  if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
-  if(!confirm('Limpar TODO o histórico de dados? Esta ação não pode ser desfeita.'))return;
-  await dbDel('historico_dados','id=gte.0');
-  historicoDados=[];
-  renderHistDados();
-  fb('hist-dados-fb');
-}
-async function limparHistPokemon(){
-  if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
-  if(!confirm('Limpar TODO o histórico de encontros Pokémon? Esta ação não pode ser desfeita.'))return;
-  await dbDel('historico','id=gte.0');
-  historico=[];
-  renderHistorico();
-  fb('hist-poke-fb');
 }
 
 // ══════════════════════════════════════
