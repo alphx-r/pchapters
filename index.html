@@ -18,8 +18,6 @@
   --r:10px;--font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
 }
 html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);color:var(--text)}
-
-/* NAV */
 .nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:100}
 .nav-logo{font-family:var(--font-title);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px}
 .nav-logo span{color:var(--accent)}
@@ -30,12 +28,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;cursor:pointer;transition:all .2s}
 .nav-login:hover{background:var(--accent);border-color:var(--accent)}
 .nav-login.active{background:var(--accent);border-color:var(--accent)}
-
-/* PAGES */
 .page{display:none;padding:28px;max-width:1000px;margin:0 auto}
 .page.active{display:block}
-
-/* FORM */
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
 .field label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
 .field input,.field select,.field textarea{padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);transition:border .2s;width:100%}
@@ -53,7 +47,11 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .fb{font-size:12px;font-weight:700;text-align:center;padding:7px 10px;border-radius:6px;margin-top:8px;display:none}
 .fb-ok{background:#e0f0e0;color:var(--green)}
 .fb-err{background:#fde8e8;color:var(--red)}
-
+/* loading overlay */
+.loading-overlay{position:fixed;inset:0;background:rgba(255,255,255,.8);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--brand-mid);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:var(--muted);font-weight:600}
 /* ROLADOR */
 .roller-header{text-align:center;margin-bottom:28px;padding-top:8px}
 .roller-header h2{font-family:var(--font-title);font-size:22px;color:var(--brand);margin-bottom:6px}
@@ -71,19 +69,20 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .roll-btn{width:100%;padding:15px;background:var(--brand-mid);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-title);font-size:16px;letter-spacing:1.5px;cursor:pointer;transition:all .2s;margin-bottom:24px}
 .roll-btn:hover{background:var(--brand);transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,168,.25)}
 .results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
-.poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 12px;text-align:center;transition:all .25s;animation:fadeUp .35s both}
+.poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:16px;transition:all .25s;animation:fadeUp .35s both}
 .poke-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 14px rgba(37,99,168,.12)}
-.poke-card-img{width:70px;height:70px;margin:0 auto 10px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;overflow:hidden}
-.poke-card-img img{width:70px;height:70px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
-.poke-card-name{font-family:var(--font-title);font-size:12px;font-weight:600;color:var(--text);margin-bottom:6px;line-height:1.3}
-.poke-card-meta{margin-bottom:8px}
-.poke-rarity{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.poke-card-left{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0}
+.poke-card-img{width:90px;height:90px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.poke-card-img img{width:90px;height:90px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
+.poke-card-name{font-family:var(--font-title);font-size:12px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
+.poke-card-info{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.poke-card-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
+.poke-rarity{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px}
 .rc{background:#e0f0e0;color:#1a6a1a}.ri{background:#dde8f8;color:#1a4a8a}.rr{background:#f0e8ff;color:#5a1a9a}.rrr{background:#fff0d8;color:#8a4a00}
 .type-pill{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.3px;margin:1px}
 .t-fire{background:#ff9b4a;color:#7a2a00}.t-water{background:#6ab8ff;color:#003a6a}.t-grass{background:#78d878;color:#1a5a1a}.t-normal{background:#c8c8a0;color:#4a4a2a}.t-electric{background:#ffe030;color:#5a4a00}.t-psychic{background:#ff8fb0;color:#6a0030}.t-steel{background:#aababb;color:#2a3a3a}.t-fairy{background:#ffaad8;color:#6a0050}.t-ghost{background:#9090c0;color:#1a1a4a}.t-dragon{background:#7060f0;color:#fff}.t-ice{background:#96d8d8;color:#1a4a4a}.t-fighting{background:#c03030;color:#fff}.t-rock{background:#b8a050;color:#3a2a00}.t-ground{background:#e0c060;color:#3a2a00}.t-poison{background:#a060c0;color:#fff}.t-bug{background:#a0c020;color:#2a3a00}.t-dark{background:#705040;color:#fff}.t-flying{background:#88aaee;color:#1a1a5a}
-.gender-icon{font-size:13px;margin-left:3px}
-.poke-lvl,.poke-hab{font-size:11px;color:var(--muted);margin-top:3px}
-
+.gender-icon{font-size:12px;margin-left:3px}
+.poke-lvl,.poke-hab{font-size:11px;color:var(--muted);text-align:center}
 /* FICHÁRIO */
 .ficha-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-top:8px}
 .ficha-header h2{font-family:var(--font-title);font-size:20px;color:var(--text);font-weight:700}
@@ -98,31 +97,25 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .fichas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px}
 .ficha-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:all .2s;padding:16px 14px;display:flex;flex-direction:row;align-items:center;gap:12px}
 .ficha-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 14px rgba(37,99,168,.1)}
-.ficha-card-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
+.ficha-card-avatar{width:51px;height:51px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
 .ficha-card-avatar img{width:51px;height:51px;object-fit:cover;border-radius:50%}
 .ficha-name{font-family:var(--font-title);font-size:12px;color:var(--text);line-height:1.4;letter-spacing:.3px}
-
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center}
-.modal-box{background:var(--surface);border-radius:var(--r);padding:28px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);position:relative}
-.modal-title{font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:18px}
-.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
 /* ADM */
 .adm-login-wrap{max-width:380px;margin:40px auto}
 .adm-login-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:32px 28px}
 .adm-login-icon{width:56px;height:56px;background:var(--brand-light);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:26px}
 .adm-login-title{font-family:var(--font-title);font-size:18px;color:var(--brand);text-align:center;margin-bottom:4px}
 .adm-login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px}
-.adm-layout{display:grid;grid-template-columns:210px 1fr;gap:20px;padding-top:8px}
+.adm-layout{display:grid;grid-template-columns:210px 1fr;gap:20px;padding-top:8px;align-items:start}
 .adm-sidebar{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;height:fit-content;position:sticky;top:78px}
 .adm-sidebar-user{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);word-break:break-all}
 .adm-nav-btn{display:block;width:100%;text-align:left;padding:9px 12px;border-radius:8px;border:none;background:transparent;font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;margin-bottom:3px}
 .adm-nav-btn:hover{background:var(--brand-light);color:var(--brand-mid)}
 .adm-nav-btn.active{background:var(--brand-light);color:var(--brand-mid)}
 .adm-nav-sep{height:1px;background:var(--border);margin:8px 0}
-.adm-nav-danger{color:var(--red) !important}
-.adm-nav-danger:hover{background:#fde8e8 !important}
-.adm-content{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:24px;min-height:500px}
+.adm-nav-danger{color:var(--red)!important}
+.adm-nav-danger:hover{background:#fde8e8!important}
+.adm-content{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:24px;min-height:500px;min-width:0;width:100%}
 .adm-section{display:none}
 .adm-section.active{display:block}
 .sec-title{font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:4px}
@@ -137,20 +130,29 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .tipos-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
-.tipo-tag{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;user-select:none;transition:all .15s}
+.tipo-tag{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;user-select:none;transition:all .15px}
 .tipo-tag:hover{border-color:var(--brand-mid)}
 .tipo-tag.sel{background:var(--brand-mid);color:#fff;border-color:var(--brand-mid)}
-
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center}
+.modal-box{background:var(--surface);border-radius:var(--r);padding:28px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);position:relative}
+.modal-title{font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:18px}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
 /* HISTÓRICO */
 .hist-entry{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
 .hist-header{padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .hist-body{padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap}
-.hist-poke{display:flex;align-items:center;gap:6px;padding:5px 8px;background:var(--surface);border-radius:6px;border:1px solid var(--border)}
-
+.hist-poke{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border);min-width:160px}
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Carregando...</div>
+</div>
 
 <nav class="nav">
   <div class="nav-logo">Pokémon<span>RPG</span></div>
@@ -161,7 +163,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <button class="nav-login" id="btn-adm" onclick="goToAdm()">ADM</button>
 </nav>
 
-<!-- ═══════════ ROLADOR ═══════════ -->
+<!-- ROLADOR -->
 <div class="page active" id="page-roller">
   <div class="roller-header">
     <h2>Rolador de Encontro</h2>
@@ -203,19 +205,17 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
 </div>
 
-<!-- ═══════════ FICHÁRIO ═══════════ -->
+<!-- FICHÁRIO -->
 <div class="page" id="page-ficha">
   <div class="ficha-header">
     <h2>Fichário de Personagens</h2>
     <input class="search-bar" type="text" placeholder="Buscar personagem..." oninput="filtrarFichas(this.value)"/>
   </div>
-  <div class="fichas-grid" id="fichas-grid"></div>
+  <div id="fichas-container"></div>
 </div>
 
-<!-- ═══════════ ADM ═══════════ -->
+<!-- ADM -->
 <div class="page" id="page-adm">
-
-  <!-- LOGIN -->
   <div id="adm-login-wrap" class="adm-login-wrap">
     <div class="adm-login-card">
       <div class="adm-login-icon">🔐</div>
@@ -224,11 +224,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div class="field"><label>Usuário</label><input type="text" id="login-email" placeholder="usuário"/></div>
       <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
       <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="fazerLogin()">Entrar</button>
-      <div class="fb fb-err" id="login-erro">E-mail ou senha incorretos.</div>
+      <div class="fb fb-err" id="login-erro">Usuário ou senha incorretos.</div>
     </div>
   </div>
-
-  <!-- PAINEL -->
   <div id="adm-painel" style="display:none">
     <div class="adm-layout">
       <div class="adm-sidebar">
@@ -244,7 +242,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       </div>
       <div class="adm-content">
 
-        <!-- ── PERSONAGENS ── -->
+        <!-- PERSONAGENS -->
         <div class="adm-section active" id="sec-personagens">
           <div class="sec-title">Personagens</div>
           <div class="sec-sub">Adicione, edite e remova personagens do fichário</div>
@@ -257,7 +255,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               <div class="field"><label>Imagem do personagem (avatar)</label>
                 <input type="file" id="np-img" accept="image/*" onchange="previewPersonagemImg(this)" style="font-size:13px"/>
                 <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-                  <div id="np-img-preview" style="width:57px;height:57px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden"><img class="unown-fallback-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/></div>
+                  <div id="np-img-preview" style="width:57px;height:57px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center">
+                    <img class="unown-fallback-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>
+                  </div>
                   <span style="font-size:11px;color:var(--muted)">Pré-visualização</span>
                 </div>
               </div>
@@ -265,14 +265,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <button class="btn btn-primary btn-sm" onclick="adicionarPersonagem()">+ Adicionar</button>
             <div class="fb fb-ok" id="np-fb">✓ Personagem adicionado!</div>
           </div>
-          <div class="box" style="margin-top:4px">
+          <div class="box">
             <div class="box-title">Pontos por Player</div>
-            <table class="adm-table" id="players-pontos-table">
+            <table class="adm-table">
               <thead><tr><th>Player</th><th>Pontos</th><th>Ações</th></tr></thead>
               <tbody id="tbody-players"></tbody>
             </table>
           </div>
-          <div class="box" style="margin-top:4px">
+          <div class="box">
             <div class="box-title">Personagens cadastrados</div>
             <table class="adm-table">
               <thead><tr><th>Personagem</th><th>Player</th><th>Ações</th></tr></thead>
@@ -281,7 +281,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           </div>
         </div>
 
-        <!-- ── BIOMAS ── -->
+        <!-- BIOMAS -->
         <div class="adm-section" id="sec-biomas">
           <div class="sec-title">Biomas</div>
           <div class="sec-sub">Crie e remova biomas disponíveis no rolador</div>
@@ -299,14 +299,13 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           </table>
         </div>
 
-        <!-- ── POKÉMON ── -->
+        <!-- POKÉMON -->
         <div class="adm-section" id="sec-pokemons">
           <div class="sec-title">Pokémon por Bioma</div>
           <div class="sec-sub">Adicione, edite e remova Pokémon de cada bioma</div>
-
           <div class="box" style="border-color:#a0c8e8;background:#eef6fc">
             <div class="box-title" style="color:#1a5a8a">📥 Importar da PokéAPI</div>
-            <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Busca automaticamente sprite, tipos, habilidades e gênero direto da PokéAPI. Cole os nomes (um por linha) e selecione o bioma e raridade.</p>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Busca automaticamente sprite, tipos, habilidades e gênero direto da PokéAPI.</p>
             <div class="g2" style="margin-bottom:10px">
               <div class="field"><label>Bioma</label><select id="imp-bioma"></select></div>
               <div class="field"><label>Raridade</label>
@@ -318,10 +317,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
                 </select>
               </div>
             </div>
-            <div class="field">
-              <label>Nomes dos Pokémon (um por linha)</label>
-              <textarea id="imp-lista" rows="5" placeholder="Caterpie&#10;Weedle&#10;Paras&#10;..."></textarea>
-            </div>
+            <div class="field"><label>Nomes dos Pokémon (um por linha)</label><textarea id="imp-lista" rows="5" placeholder="Caterpie&#10;Weedle&#10;Paras&#10;..."></textarea></div>
             <button class="btn btn-primary btn-sm" id="imp-btn" onclick="importarDaPokeAPI()">⬇ Importar</button>
             <div id="imp-progress" style="display:none;margin-top:10px">
               <div style="font-size:12px;font-weight:600;color:var(--brand-mid);margin-bottom:6px" id="imp-status">Importando...</div>
@@ -332,7 +328,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <div class="fb fb-ok" id="imp-fb-ok">✓ Importação concluída!</div>
             <div class="fb fb-err" id="imp-fb-err">—</div>
           </div>
-
           <div class="box">
             <div class="box-title">✏️ Adicionar manualmente</div>
             <div class="g3">
@@ -358,7 +353,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               <div class="field"><label>Sprite do Pokémon</label>
                 <input type="file" id="pk-sprite-file" accept="image/*" onchange="previewPokeSprite(this)" style="font-size:13px"/>
                 <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-                  <div id="pk-sprite-preview" style="width:53px;height:53px;background:var(--surface2);border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden"><img class="unown-fallback-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/></div>
+                  <div id="pk-sprite-preview" style="width:53px;height:53px;background:var(--surface2);border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden">
+                    <img class="unown-fallback-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>
+                  </div>
                   <span style="font-size:11px;color:var(--muted)">Pré-visualização</span>
                 </div>
               </div>
@@ -389,7 +386,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <button class="btn btn-primary btn-sm" onclick="adicionarPokemon()">+ Adicionar Pokémon</button>
             <div class="fb fb-ok" id="pk-fb">✓ Pokémon adicionado!</div>
           </div>
-
           <div id="pk-filtro-wrap" class="field" style="max-width:240px;margin-bottom:16px;display:none">
             <label>Filtrar por bioma</label>
             <select id="pk-filtro" onchange="renderTbodyPokemons()"></select>
@@ -400,14 +396,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           </table>
         </div>
 
-        <!-- ── ADMINS ── -->
+        <!-- ADMINS -->
         <div class="adm-section" id="sec-admins">
           <div class="sec-title">Administradores</div>
           <div class="sec-sub">Gerencie quem tem acesso ao painel ADM</div>
           <div class="box">
             <div class="box-title">Novo administrador</div>
             <div class="g2">
-              <div class="field"><label>E-mail</label><input type="email" id="adm-new-email" placeholder="novo@rpg.com"/></div>
+              <div class="field"><label>Usuário</label><input type="text" id="adm-new-email" placeholder="novo_usuario"/></div>
               <div class="field"><label>Senha</label><input type="password" id="adm-new-senha" placeholder="Mín. 6 caracteres"/></div>
             </div>
             <button class="btn btn-primary btn-sm" onclick="adicionarAdmin()">+ Adicionar Admin</button>
@@ -415,42 +411,25 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <div class="fb fb-err" id="adm-fb-err">—</div>
           </div>
           <table class="adm-table">
-            <thead><tr><th>E-mail</th><th>Ações</th></tr></thead>
+            <thead><tr><th>Usuário</th><th>Ações</th></tr></thead>
             <tbody id="tbody-admins"></tbody>
           </table>
         </div>
 
-        <!-- ── EDITOR VISUAL ── -->
+        <!-- EDITOR VISUAL -->
         <div class="adm-section" id="sec-editor">
           <div class="sec-title">Editor Visual</div>
-          <div class="sec-sub">Edite as variáveis de estilo do site: cores, fontes e background. As alterações são aplicadas em tempo real.</div>
-
+          <div class="sec-sub">Edite as variáveis de estilo do site em tempo real.</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-
-            <!-- CORES -->
             <div class="box">
               <div class="box-title">🎨 Cores</div>
-              <div class="field"><label>Cor principal (nav, títulos)</label>
-                <input type="color" id="ec-brand" value="#1a3a5c" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field"><label>Cor de destaque (botões, links)</label>
-                <input type="color" id="ec-brand-mid" value="#2563a8" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field"><label>Cor de acento (dourado)</label>
-                <input type="color" id="ec-accent" value="#e8a020" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field"><label>Cor de fundo da página</label>
-                <input type="color" id="ec-bg" value="#f4f6fa" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field"><label>Cor de fundo dos cards</label>
-                <input type="color" id="ec-surface" value="#ffffff" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field"><label>Cor do texto principal</label>
-                <input type="color" id="ec-text" value="#1a1f2e" oninput="aplicarEstilo()"/>
-              </div>
+              <div class="field"><label>Cor principal (nav)</label><input type="color" id="ec-brand" value="#1a3a5c" oninput="aplicarEstilo()"/></div>
+              <div class="field"><label>Cor de destaque (botões)</label><input type="color" id="ec-brand-mid" value="#2563a8" oninput="aplicarEstilo()"/></div>
+              <div class="field"><label>Cor de acento (dourado)</label><input type="color" id="ec-accent" value="#e8a020" oninput="aplicarEstilo()"/></div>
+              <div class="field"><label>Cor de fundo da página</label><input type="color" id="ec-bg" value="#f4f6fa" oninput="aplicarEstilo()"/></div>
+              <div class="field"><label>Cor de fundo dos cards</label><input type="color" id="ec-surface" value="#ffffff" oninput="aplicarEstilo()"/></div>
+              <div class="field"><label>Cor do texto principal</label><input type="color" id="ec-text" value="#1a1f2e" oninput="aplicarEstilo()"/></div>
             </div>
-
-            <!-- TIPOGRAFIA & BORDAS -->
             <div>
               <div class="box" style="margin-bottom:16px">
                 <div class="box-title">🔤 Tipografia</div>
@@ -477,7 +456,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
                 </div>
               </div>
               <div class="box">
-                <div class="box-title">⬜ Bordas & Espaço</div>
+                <div class="box-title">⬜ Bordas</div>
                 <div class="field"><label>Arredondamento dos cards</label>
                   <select id="ec-radius" onchange="aplicarEstilo()">
                     <option value="6px">Suave (6px)</option>
@@ -490,14 +469,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               </div>
             </div>
           </div>
-
-          <!-- CSS PERSONALIZADO -->
-          <div class="box" style="margin-top:4px">
+          <div class="box">
             <div class="box-title">💻 CSS Personalizado</div>
-            <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Adicione regras CSS customizadas. Exemplo: <code style="background:var(--surface);padding:2px 5px;border-radius:4px">body { background-image: url('...'); }</code></p>
             <textarea id="ec-custom-css" rows="5" placeholder="/* Seu CSS aqui */" style="font-family:monospace;font-size:12px" oninput="aplicarEstilo()"></textarea>
           </div>
-
           <div style="display:flex;gap:10px;margin-top:4px">
             <button class="btn btn-primary" onclick="salvarEstilo()">💾 Salvar estilo</button>
             <button class="btn btn-warn" onclick="resetarEstilo()">↺ Restaurar padrão</button>
@@ -505,7 +480,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           <div class="fb fb-ok" id="editor-fb-ok" style="margin-top:10px;display:none">✓ Estilo salvo!</div>
         </div>
 
-      </div><!-- /adm-content -->
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL EDITAR PERSONAGEM -->
 <div class="modal-overlay" id="modal-personagem" style="display:none">
@@ -534,56 +512,78 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 <script>
 // ══════════════════════════════════════
-// PERSISTÊNCIA
+// SUPABASE CONFIG
 // ══════════════════════════════════════
-function load(k,d){try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d;}catch(e){return d;}}
-function save(k,v){
-  try{
-    localStorage.setItem(k,JSON.stringify(v));
-  }catch(e){
-    if(e.name==='QuotaExceededError'||e.code===22){
-      alert('⚠️ Armazenamento local cheio!\n\nIsso pode acontecer por excesso de imagens salvas em base64.\n\nSugestão: remova alguns personagens ou Pokémon com imagem, ou migre para o Supabase para armazenamento ilimitado.');
-    }
-  }
+const SUPA_URL = 'https://jdgfxsvgxfdkdrzqbgje.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
+
+async function sb(path, opts={}){
+  const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
+    headers:{
+      'apikey': SUPA_KEY,
+      'Authorization': `Bearer ${SUPA_KEY}`,
+      'Content-Type': 'application/json',
+      'Prefer': opts.prefer || 'return=representation',
+      ...opts.headers
+    },
+    ...opts
+  });
+  if(opts.method==='DELETE'||res.status===204) return [];
+  const text = await res.text();
+  if(!text) return [];
+  try{ return JSON.parse(text); }catch(e){ return []; }
 }
+const dbGet  = (t,q='')        => sb(`${t}?${q}&order=created_at.asc`);
+const dbPost = (t,b)           => sb(t,{method:'POST',body:JSON.stringify(b)});
+const dbPatch= (t,q,b)         => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
+const dbDel  = (t,q)           => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
 
-let admins      = load('rpg-admins',     [{email:'gold',senha:'pchapters'}]);
-let personagens = load('rpg-personagens',[
-  {id:1,player:'Lucas',nome:'Ash Ketchum',cor:'#2563a8'},
-  {id:2,player:'Ana',  nome:'Misty',      cor:'#2aaa80'},
-  {id:3,player:'Pedro',nome:'Brock',      cor:'#aa6030'},
-]);
-let biomas      = load('rpg-biomas',     ['Urbano','Floresta','Planície','Caverna','Aquático','Montanha']);
-let pokemonDB   = load('rpg-pokemons',   [
-  {id:1, nome:'Pikachu',   emoji:'⚡',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png',  tipos:['electric'],         habilidade:'Static',       raridade:'comum',    genero:'1d2',    bioma:'Urbano'},
-  {id:2, nome:'Rattata',   emoji:'🐭',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png',  tipos:['normal'],           habilidade:'Run Away',     raridade:'comum',    genero:'1d2',    bioma:'Urbano'},
-  {id:3, nome:'Geodude',   emoji:'🪨',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/74.png',  tipos:['rock','ground'],    habilidade:'Rock Head',    raridade:'comum',    genero:'macho',  bioma:'Montanha'},
-  {id:4, nome:'Jigglypuff',emoji:'🎵',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/39.png',  tipos:['normal','fairy'],   habilidade:'Cute Charm',   raridade:'comum',    genero:'1d2',    bioma:'Planície'},
-  {id:5, nome:'Eevee',     emoji:'🦊',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png', tipos:['normal'],           habilidade:'Run Away',     raridade:'incomum',  genero:'1d2',    bioma:'Urbano'},
-  {id:6, nome:'Magmar',    emoji:'🔥',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/126.png', tipos:['fire'],             habilidade:'Flame Body',   raridade:'incomum',  genero:'1d2',    bioma:'Montanha'},
-  {id:7, nome:'Kadabra',   emoji:'🥄',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/64.png',  tipos:['psychic'],          habilidade:'Synchronize',  raridade:'incomum',  genero:'1d2',    bioma:'Urbano'},
-  {id:8, nome:'Haunter',   emoji:'👻',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/93.png',  tipos:['ghost','poison'],   habilidade:'Levitate',     raridade:'raro',     genero:'1d2',    bioma:'Urbano'},
-  {id:9, nome:'Starmie',   emoji:'⭐',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/121.png', tipos:['water','psychic'],  habilidade:'Natural Cure', raridade:'raro',     genero:'genderless',bioma:'Aquático'},
-  {id:10,nome:'Klefki',    emoji:'🗝️',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/707.png', tipos:['steel','fairy'],   habilidade:'Prankster',    raridade:'raro',     genero:'1d2',    bioma:'Urbano'},
-  {id:11,nome:'Dragonair', emoji:'🐉',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/148.png', tipos:['dragon'],           habilidade:'Shed Skin',    raridade:'rarissimo',genero:'1d2',    bioma:'Aquático'},
-  {id:12,nome:'Lapras',    emoji:'🧊',sprite:'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/131.png', tipos:['water','ice'],      habilidade:'Water Absorb', raridade:'rarissimo',genero:'1d2',    bioma:'Aquático'},
-]);
-let historico   = load('rpg-historico',  []);
-let players     = load('rpg-players',    [
-  {nome:'Lucas', pontos:120},
-  {nome:'Ana',   pontos:95},
-  {nome:'Pedro', pontos:80},
-]);
-let nextId      = load('rpg-nextid',     100);
-let admLogado   = null;
+// ══════════════════════════════════════
+// STATE
+// ══════════════════════════════════════
+let admins=[], players=[], personagens=[], biomas=[], pokemonDB=[], historico=[];
+let admLogado=null, histPagina=0;
+const HIST_POR_PAG=10;
 
-const tcls = {fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
-const rlbl = {comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
-const rcls = {comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
-const glbl = {'1d2':'1d2 (50/50)',macho:'100% Macho',femea:'100% Fêmea',genderless:'Sem gênero'};
+const tcls={fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
+const rlbl={comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
+const rcls={comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
+const glbl={'1d2':'1d2 (50/50)',macho:'100% Macho',femea:'100% Fêmea',genderless:'Sem gênero'};
 
-function uid(){nextId++;save('rpg-nextid',nextId);return nextId;}
+// Unown ?
+const FALLBACK_SPRITE_DEFAULT='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
+let FALLBACK_SPRITE=FALLBACK_SPRITE_DEFAULT, FALLBACK_AVATAR=FALLBACK_SPRITE_DEFAULT;
+fetch('https://pokeapi.co/api/v2/pokemon-form/10027/')
+  .then(r=>r.json()).then(d=>{ const u=d?.sprites?.front_default; if(u){FALLBACK_SPRITE=u;FALLBACK_AVATAR=u;document.querySelectorAll('.unown-fallback-img').forEach(i=>i.src=u);} }).catch(()=>{});
+
+function loading(show){ document.getElementById('loading-overlay').style.display=show?'flex':'none'; }
 function fb(id,ms=2500){const el=document.getElementById(id);if(!el)return;el.style.display='block';setTimeout(()=>el.style.display='none',ms);}
+
+// ══════════════════════════════════════
+// INIT — carrega tudo do Supabase
+// ══════════════════════════════════════
+async function init(){
+  loading(true);
+  try{
+    const [_admins,_players,_personagens,_biomas,_pokemons,_historico,estilo] = await Promise.all([
+      dbGet('admins'),
+      dbGet('players'),
+      dbGet('personagens'),
+      dbGet('biomas'),
+      dbGet('pokemons'),
+      dbGet('historico','order=created_at.desc&limit=200'),
+      carregarEstiloSalvo(),
+    ]);
+    admins=_admins; players=_players; personagens=_personagens;
+    biomas=_biomas; pokemonDB=_pokemons; historico=_historico;
+    aplicarVars(estilo);
+    syncBiomaSelect();
+    renderFichario();
+    renderPersonagensDatalist();
+    renderHistorico();
+  } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); }
+  loading(false);
+}
 
 // ══════════════════════════════════════
 // NAVEGAÇÃO
@@ -602,16 +602,16 @@ function admTab(sec,el){
   document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
   if(el)el.classList.add('active');
   if(sec==='personagens'){renderTbodyPersonagens();renderTbodyPlayers();}
-  if(sec==='biomas')     renderTbodyBiomas();
-  if(sec==='pokemons')  {syncBiomaSelects();document.getElementById('pk-filtro-wrap').style.display='';renderTbodyPokemons();}
-  if(sec==='admins')     renderTbodyAdmins();
-  if(sec==='editor')     carregarEditorUI();
+  if(sec==='biomas')renderTbodyBiomas();
+  if(sec==='pokemons'){syncBiomaSelects();document.getElementById('pk-filtro-wrap').style.display='';renderTbodyPokemons();}
+  if(sec==='admins')renderTbodyAdmins();
+  if(sec==='editor'){carregarEstiloSalvo().then(e=>carregarEditorUI(e));}
 }
 
 // ══════════════════════════════════════
 // LOGIN
 // ══════════════════════════════════════
-function fazerLogin(){
+async function fazerLogin(){
   const email=document.getElementById('login-email').value.trim();
   const senha=document.getElementById('login-senha').value;
   const found=admins.find(a=>a.email===email&&a.senha===senha);
@@ -620,8 +620,7 @@ function fazerLogin(){
   document.getElementById('adm-login-wrap').style.display='none';
   document.getElementById('adm-painel').style.display='block';
   document.getElementById('adm-user-label').textContent=email;
-  renderTbodyPersonagens();
-  renderTbodyPlayers();
+  renderTbodyPersonagens();renderTbodyPlayers();
 }
 function fazerLogout(){
   admLogado=null;
@@ -634,35 +633,67 @@ function fazerLogout(){
 // ══════════════════════════════════════
 // ADMINS
 // ══════════════════════════════════════
-function adicionarAdmin(){
+async function adicionarAdmin(){
   const email=document.getElementById('adm-new-email').value.trim();
   const senha=document.getElementById('adm-new-senha').value;
   const errEl=document.getElementById('adm-fb-err');
-  document.getElementById('adm-fb-ok').style.display='none';
-  errEl.style.display='none';
-  if(!email||senha.length<6){errEl.textContent='Preencha e-mail e senha (mín. 6 caracteres).';errEl.style.display='block';return;}
-  if(admins.find(a=>a.email===email)){errEl.textContent='Este e-mail já está cadastrado.';errEl.style.display='block';return;}
-  admins.push({email,senha});
-  save('rpg-admins',admins);
-  fb('adm-fb-ok');
-  document.getElementById('adm-new-email').value='';
-  document.getElementById('adm-new-senha').value='';
+  document.getElementById('adm-fb-ok').style.display='none';errEl.style.display='none';
+  if(!email||senha.length<6){errEl.textContent='Preencha usuário e senha (mín. 6 caracteres).';errEl.style.display='block';return;}
+  if(admins.find(a=>a.email===email)){errEl.textContent='Este usuário já está cadastrado.';errEl.style.display='block';return;}
+  const res=await dbPost('admins',{email,senha});
+  if(res&&res[0]){admins.push(res[0]);fb('adm-fb-ok');}
+  document.getElementById('adm-new-email').value='';document.getElementById('adm-new-senha').value='';
   renderTbodyAdmins();
 }
-function removerAdmin(email){
+async function removerAdmin(id,email){
   if(admins.length<=1){alert('Deve existir ao menos 1 administrador.');return;}
   if(email===admLogado?.email){alert('Você não pode remover a si mesmo.');return;}
   if(!confirm(`Remover o admin "${email}"?`))return;
-  admins=admins.filter(a=>a.email!==email);
-  save('rpg-admins',admins);
+  await dbDel('admins',`id=eq.${id}`);
+  admins=admins.filter(a=>a.id!==id);
   renderTbodyAdmins();
 }
 function renderTbodyAdmins(){
   document.getElementById('tbody-admins').innerHTML=admins.map(a=>`
     <tr>
       <td>${a.email}${a.email===admLogado?.email?' <span style="font-size:10px;color:var(--muted)">(você)</span>':''}</td>
-      <td><button class="btn btn-danger btn-sm" onclick="removerAdmin('${a.email}')" ${a.email===admLogado?.email?'disabled':''}>Remover</button></td>
+      <td><button class="btn btn-danger btn-sm" onclick="removerAdmin('${a.id}','${a.email}')" ${a.email===admLogado?.email?'disabled':''}>Remover</button></td>
     </tr>`).join('');
+}
+
+// ══════════════════════════════════════
+// PLAYERS
+// ══════════════════════════════════════
+async function editarPontosPlayer(id,nome){
+  const pl=players.find(p=>p.id===id);if(!pl)return;
+  const val=prompt(`Pontos de "${nome}":`,pl.pontos);if(val===null)return;
+  const n=parseInt(val);if(isNaN(n)){alert('Valor inválido.');return;}
+  await dbPatch('players',`id=eq.${id}`,{pontos:n});
+  pl.pontos=n;
+  renderTbodyPlayers();renderFichario();
+}
+async function removerPlayer(id,nome){
+  const qtd=personagens.filter(p=>p.player===nome).length;
+  if(!confirm(`Remover o player "${nome}"?${qtd>0?`\n\nOs ${qtd} personagem(ns) deste player também serão removidos.`:''}`))return;
+  await dbDel('players',`id=eq.${id}`);
+  players=players.filter(p=>p.id!==id);
+  personagens=personagens.filter(p=>p.player!==nome);
+  renderTbodyPlayers();renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
+}
+function renderTbodyPlayers(){
+  const tbody=document.getElementById('tbody-players');if(!tbody)return;
+  tbody.innerHTML=players.length===0
+    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:16px">Nenhum player cadastrado.</td></tr>'
+    :players.map(pl=>{
+      const qtd=personagens.filter(p=>p.player===pl.nome).length;
+      return`<tr>
+        <td><strong>${pl.nome}</strong> <span style="font-size:11px;color:var(--muted)">(${qtd} personagem${qtd!==1?'s':''})</span></td>
+        <td style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--brand-mid)">${pl.pontos}
+          <button class="btn btn-warn btn-sm" onclick="editarPontosPlayer('${pl.id}','${pl.nome}')">✏️</button>
+        </td>
+        <td><button class="btn btn-danger btn-sm" onclick="removerPlayer('${pl.id}','${pl.nome}')">Remover</button></td>
+      </tr>`;
+    }).join('');
 }
 
 // ══════════════════════════════════════
@@ -673,44 +704,38 @@ function previewPersonagemImg(input){
   const reader=new FileReader();
   reader.onload=e=>{
     const prev=document.getElementById('np-img-preview');
-    prev.innerHTML=`<img src="${e.target.result}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`;
+    prev.innerHTML=`<img src="${e.target.result}" style="width:57px;height:57px;object-fit:cover;border-radius:50%"/>`;
     prev.dataset.b64=e.target.result;
   };
   reader.readAsDataURL(file);
 }
-function adicionarPersonagem(){
+async function adicionarPersonagem(){
   const player=document.getElementById('np-player').value.trim();
   const nome  =document.getElementById('np-nome').value.trim();
   const cor   =document.getElementById('np-cor').value;
   const prev  =document.getElementById('np-img-preview');
   const img   =prev.dataset.b64||null;
   if(!player||!nome){alert('Preencha o nome do player e do personagem.');return;}
-  personagens.push({id:uid(),player,nome,cor,img});
-  if(!players.find(p=>p.nome===player)) players.push({nome:player,pontos:0});
-  save('rpg-personagens',personagens);
-  save('rpg-players',players);
+  // garante player existe
+  if(!players.find(p=>p.nome===player)){
+    const res=await dbPost('players',{nome:player,pontos:0});
+    if(res&&res[0])players.push(res[0]);
+  }
+  const res=await dbPost('personagens',{player,nome,cor,img});
+  if(res&&res[0])personagens.push(res[0]);
   fb('np-fb');
   document.getElementById('np-player').value='';
   document.getElementById('np-nome').value='';
   document.getElementById('np-img').value='';
-  prev.innerHTML=`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
+  prev.innerHTML=`<img class="unown-fallback-img" src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
   delete prev.dataset.b64;
-  renderTbodyPersonagens();
-  renderTbodyPlayers();
-  renderFichario();
-  renderPersonagensDatalist();
+  renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
 }
-function editarPontosPlayer(nome){
-  const pl=players.find(p=>p.nome===nome);
-  if(!pl){players.push({nome,pontos:0});}
-  const cur=players.find(p=>p.nome===nome);
-  const val=prompt(`Pontos de "${nome}":`,cur.pontos);
-  if(val===null)return;
-  const n=parseInt(val);
-  if(isNaN(n)){alert('Valor inválido.');return;}
-  cur.pontos=n;
-  save('rpg-players',players);
-  renderTbodyPlayers();renderFichario();
+async function removerPersonagem(id){
+  if(!confirm('Remover este personagem?'))return;
+  await dbDel('personagens',`id=eq.${id}`);
+  personagens=personagens.filter(p=>p.id!==id);
+  renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
 }
 function abrirModalPersonagem(id){
   const p=personagens.find(x=>x.id===id);if(!p)return;
@@ -719,15 +744,12 @@ function abrirModalPersonagem(id){
   document.getElementById('modal-p-nome').value=p.nome;
   document.getElementById('modal-p-cor').value=p.cor||'#2563a8';
   const prev=document.getElementById('modal-p-img-preview');
-  prev.innerHTML=p.img
-    ?`<img src="${p.img}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`
+  prev.innerHTML=p.img?`<img src="${p.img}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`
     :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
   prev.dataset.img=p.img||'';
   document.getElementById('modal-personagem').style.display='flex';
 }
-function fecharModal(){
-  document.getElementById('modal-personagem').style.display='none';
-}
+function fecharModal(){document.getElementById('modal-personagem').style.display='none';}
 function modalPreviewImg(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
@@ -744,56 +766,22 @@ function modalRemoverImg(){
   prev.dataset.img='';
   document.getElementById('modal-p-img').value='';
 }
-function salvarEdicaoPersonagem(){
-  const id=parseInt(document.getElementById('modal-p-id').value);
+async function salvarEdicaoPersonagem(){
+  const id=document.getElementById('modal-p-id').value;
   const p=personagens.find(x=>x.id===id);if(!p)return;
   const novoPlayer=document.getElementById('modal-p-player').value.trim();
   const novoNome  =document.getElementById('modal-p-nome').value.trim();
   const novaCor   =document.getElementById('modal-p-cor').value;
-  const novaImg   =document.getElementById('modal-p-img-preview').dataset.img||'';
+  const novaImg   =document.getElementById('modal-p-img-preview').dataset.img||null;
   if(!novoPlayer||!novoNome){alert('Preencha todos os campos.');return;}
-  // se mudou o nome do player, garante que existe na lista
-  if(novoPlayer!==p.player && !players.find(x=>x.nome===novoPlayer)){
-    players.push({nome:novoPlayer,pontos:0});
-    save('rpg-players',players);
+  if(novoPlayer!==p.player&&!players.find(x=>x.nome===novoPlayer)){
+    const res=await dbPost('players',{nome:novoPlayer,pontos:0});
+    if(res&&res[0])players.push(res[0]);
   }
-  p.player=novoPlayer;p.nome=novoNome;p.cor=novaCor;p.img=novaImg||null;
-  save('rpg-personagens',personagens);
+  await dbPatch('personagens',`id=eq.${id}`,{player:novoPlayer,nome:novoNome,cor:novaCor,img:novaImg});
+  p.player=novoPlayer;p.nome=novoNome;p.cor=novaCor;p.img=novaImg;
   fecharModal();
   renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
-}
-function removerPersonagem(id){
-  if(!confirm('Remover este personagem?'))return;
-  personagens=personagens.filter(p=>p.id!==id);
-  save('rpg-personagens',personagens);
-  renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
-}
-function removerPlayer(nome){
-  const qtd=personagens.filter(p=>p.player===nome).length;
-  if(!confirm(`Remover o player "${nome}"?${qtd>0?`\n\nOs ${qtd} personagem(ns) deste player também serão removidos.`:''}`))return;
-  players=players.filter(p=>p.nome!==nome);
-  personagens=personagens.filter(p=>p.player!==nome);
-  save('rpg-players',players);
-  save('rpg-personagens',personagens);
-  renderTbodyPlayers();renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
-}
-function renderTbodyPlayers(){
-  const tbody=document.getElementById('tbody-players');
-  if(!tbody)return;
-  const todos=[...new Set([...players.map(p=>p.nome),...personagens.map(p=>p.player)])];
-  tbody.innerHTML=todos.length===0
-    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:16px">Nenhum player cadastrado.</td></tr>'
-    :todos.map(nome=>{
-      const pl=players.find(p=>p.nome===nome)||{nome,pontos:0};
-      const qtd=personagens.filter(p=>p.player===nome).length;
-      return`<tr>
-        <td><strong>${nome}</strong> <span style="font-size:11px;color:var(--muted)">(${qtd} personagem${qtd!==1?'s':''})</span></td>
-        <td style="display:flex;align-items:center;gap:8px;font-weight:700;color:var(--brand-mid)">${pl.pontos}
-          <button class="btn btn-warn btn-sm" onclick="editarPontosPlayer('${nome}')">✏️</button>
-        </td>
-        <td><button class="btn btn-danger btn-sm" onclick="removerPlayer('${nome}')">Remover</button></td>
-      </tr>`;
-    }).join('');
 }
 function renderTbodyPersonagens(){
   document.getElementById('tbody-personagens').innerHTML=personagens.length===0
@@ -803,13 +791,12 @@ function renderTbodyPersonagens(){
         <td style="display:flex;align-items:center;gap:8px">
           <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center">
             ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
-          </div>
-          <strong>${p.nome}</strong>
+          </div><strong>${p.nome}</strong>
         </td>
         <td>${p.player}</td>
         <td style="display:flex;gap:6px">
-          <button class="btn btn-primary btn-sm" onclick="abrirModalPersonagem(${p.id})">✏️ Editar</button>
-          <button class="btn btn-danger btn-sm" onclick="removerPersonagem(${p.id})">Remover</button>
+          <button class="btn btn-primary btn-sm" onclick="abrirModalPersonagem('${p.id}')">✏️ Editar</button>
+          <button class="btn btn-danger btn-sm" onclick="removerPersonagem('${p.id}')">Remover</button>
         </td>
       </tr>`).join('');
 }
@@ -817,156 +804,46 @@ function renderTbodyPersonagens(){
 // ══════════════════════════════════════
 // BIOMAS
 // ══════════════════════════════════════
-function adicionarBioma(){
+async function adicionarBioma(){
   const nome=document.getElementById('novo-bioma').value.trim();
   if(!nome)return;
-  if(biomas.includes(nome)){alert('Este bioma já existe.');return;}
-  biomas.push(nome);
-  save('rpg-biomas',biomas);
+  if(biomas.find(b=>b.nome===nome)){alert('Este bioma já existe.');return;}
+  const res=await dbPost('biomas',{nome});
+  if(res&&res[0])biomas.push(res[0]);
   document.getElementById('novo-bioma').value='';
   fb('bioma-fb');
-  syncBiomaSelect();renderTbodyBiomas();
+  syncBiomaSelect();syncBiomaSelects();renderTbodyBiomas();
 }
-function removerBioma(nome){
+async function removerBioma(id,nome){
   const count=pokemonDB.filter(p=>p.bioma===nome).length;
   if(!confirm(`Remover o bioma "${nome}"?${count>0?` Os ${count} Pokémon deste bioma também serão removidos.`:''}`))return;
-  biomas=biomas.filter(b=>b!==nome);
+  await dbDel('biomas',`id=eq.${id}`);
+  biomas=biomas.filter(b=>b.id!==id);
   pokemonDB=pokemonDB.filter(p=>p.bioma!==nome);
-  save('rpg-biomas',biomas);save('rpg-pokemons',pokemonDB);
-  syncBiomaSelect();renderTbodyBiomas();renderTbodyPokemons();
+  syncBiomaSelect();syncBiomaSelects();renderTbodyBiomas();renderTbodyPokemons();
 }
 function renderTbodyBiomas(){
   document.getElementById('tbody-biomas').innerHTML=biomas.length===0
     ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:20px">Nenhum bioma cadastrado.</td></tr>'
     :biomas.map(b=>`
       <tr>
-        <td><strong>${b}</strong></td>
-        <td>${pokemonDB.filter(p=>p.bioma===b).length} Pokémon</td>
-        <td><button class="btn btn-danger btn-sm" onclick="removerBioma('${b}')">Remover</button></td>
+        <td><strong>${b.nome}</strong></td>
+        <td>${pokemonDB.filter(p=>p.bioma===b.nome).length} Pokémon</td>
+        <td><button class="btn btn-danger btn-sm" onclick="removerBioma('${b.id}','${b.nome}')">Remover</button></td>
       </tr>`).join('');
 }
 function syncBiomaSelect(){
-  // rolador
   const sel=document.getElementById('bioma');
-  sel.innerHTML=biomas.map(b=>`<option>${b}</option>`).join('');
+  sel.innerHTML=biomas.map(b=>`<option>${b.nome}</option>`).join('');
 }
 function syncBiomaSelects(){
   const pks=document.getElementById('pk-bioma');
   const flt=document.getElementById('pk-filtro');
   const imp=document.getElementById('imp-bioma');
-  const opts=biomas.map(b=>`<option>${b}</option>`).join('');
+  const opts=biomas.map(b=>`<option>${b.nome}</option>`).join('');
   if(pks)pks.innerHTML=opts;
   if(imp)imp.innerHTML=opts;
   if(flt)flt.innerHTML='<option value="">Todos</option>'+opts;
-}
-
-// ══════════════════════════════════════
-// IMPORTADOR POKEAPI
-// ══════════════════════════════════════
-const SPRITE_BASE='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-
-// Mapa de nomes especiais que diferem do slug padrão da PokéAPI
-const SLUG_MAP={
-  'mr. mime':'mr-mime','mr.mime':'mr-mime','mime jr.':'mime-jr',
-  'farfetch\'d':'farfetchd','sirfetch\'d':'sirfetchd',
-  'flabébé':'flabebe','flab\u00e9b\u00e9':'flabebe',
-  'squawkabilly':'squawkabilly','squawkabilly (blue)':'squawkabilly',
-  'squawkabilly (blue plumage)':'squawkabilly',
-  'nidoran♀':'nidoran-f','nidoran♂':'nidoran-m',
-  'ho-oh':'ho-oh','porygon-z':'porygon-z','porygon2':'porygon2',
-  'type: null':'type-null','jangmo-o':'jangmo-o','hakamo-o':'hakamo-o','kommo-o':'kommo-o',
-};
-
-function toSlug(name){
-  const lower=name.toLowerCase().trim();
-  if(SLUG_MAP[lower])return SLUG_MAP[lower];
-  return lower
-    .replace(/\s*\(.*?\)/g,'')
-    .trim()
-    .replace(/[^a-z0-9\-]/g,'')
-    .replace(/\s+/g,'-');
-}
-
-async function fetchPokeAPI(url){
-  const r=await fetch(url,{headers:{'Accept':'application/json'}});
-  if(!r.ok)throw new Error(`HTTP ${r.status}`);
-  return r.json();
-}
-
-async function importarDaPokeAPI(){
-  const lista=document.getElementById('imp-lista').value.trim();
-  const bioma=document.getElementById('imp-bioma').value;
-  const raridade=document.getElementById('imp-raridade').value;
-  if(!lista){alert('Cole ao menos um nome de Pokémon.');return;}
-  const names=lista.split('\n').map(n=>n.trim()).filter(Boolean);
-  if(names.length===0)return;
-
-  const btn=document.getElementById('imp-btn');
-  const progress=document.getElementById('imp-progress');
-  const status=document.getElementById('imp-status');
-  const bar=document.getElementById('imp-bar');
-  const fbOk=document.getElementById('imp-fb-ok');
-  const fbErr=document.getElementById('imp-fb-err');
-  btn.disabled=true;progress.style.display='block';
-  fbOk.style.display='none';fbErr.style.display='none';
-
-  const erros=[];
-  let ok=0;
-
-  for(let i=0;i<names.length;i++){
-    const raw=names[i];
-    const slug=toSlug(raw);
-    status.textContent=`Buscando ${raw}... (${i+1}/${names.length})`;
-    bar.style.width=`${Math.round((i/names.length)*100)}%`;
-    try{
-      const data=await fetchPokeAPI(`https://pokeapi.co/api/v2/pokemon/${slug}`);
-      const species=await fetchPokeAPI(data.species.url);
-
-      // tipos
-      const tipos=data.types.map(t=>t.type.name);
-
-      // habilidade principal (não hidden)
-      const habs=data.abilities
-        .filter(a=>!a.is_hidden)
-        .map(a=>a.ability.name.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
-      const habilidade=habs[0]||'—';
-
-      // sprite via PokeAPI sprites (pixel 32x32 clássico)
-      const sprite=`${SPRITE_BASE}${data.id}.png`;
-
-      // gênero
-      const gr=species.gender_rate??-1;
-      const genero=gr===-1?'genderless':gr===0?'macho':gr===8?'femea':'1d2';
-
-      // evita duplicata no mesmo bioma
-      const nomeFormatado=raw.trim();
-      if(!pokemonDB.find(p=>p.nome.toLowerCase()===nomeFormatado.toLowerCase()&&p.bioma===bioma)){
-        pokemonDB.push({id:uid(),nome:nomeFormatado,emoji:'❓',sprite,tipos,habilidade,raridade,genero,bioma});
-      }
-      ok++;
-    }catch(e){
-      console.warn(`Erro ao buscar "${raw}" (slug: "${slug}"):`,e.message);
-      erros.push(raw);
-    }
-    await new Promise(r=>setTimeout(r,250));
-  }
-
-  save('rpg-pokemons',pokemonDB);
-  bar.style.width='100%';
-  btn.disabled=false;
-  progress.style.display='none';
-
-  if(erros.length>0){
-    fbErr.textContent=`⚠ ${ok} importados. Não encontrados: ${erros.join(', ')}`;
-    fbErr.style.display='block';
-    setTimeout(()=>fbErr.style.display='none',8000);
-  } else {
-    fbOk.textContent=`✓ ${ok} Pokémon importados com sucesso!`;
-    fbOk.style.display='block';
-    setTimeout(()=>fbOk.style.display='none',3000);
-  }
-  document.getElementById('imp-lista').value='';
-  renderTbodyPokemons();renderTbodyBiomas();
 }
 
 // ══════════════════════════════════════
@@ -983,7 +860,7 @@ function previewPokeSprite(input){
   };
   reader.readAsDataURL(file);
 }
-function adicionarPokemon(){
+async function adicionarPokemon(){
   const nome      =document.getElementById('pk-nome').value.trim();
   const habilidade=document.getElementById('pk-habilidade').value.trim();
   const raridade  =document.getElementById('pk-raridade').value;
@@ -993,20 +870,21 @@ function adicionarPokemon(){
   const prev      =document.getElementById('pk-sprite-preview');
   const sprite    =prev.dataset.b64||null;
   if(!nome||tipos.length===0){alert('Preencha o nome e selecione ao menos 1 tipo.');return;}
-  pokemonDB.push({id:uid(),nome,emoji:'❓',sprite,tipos,habilidade,raridade,genero,bioma});
-  save('rpg-pokemons',pokemonDB);
+  const res=await dbPost('pokemons',{nome,emoji:'❓',sprite,tipos,habilidade,raridade,genero,bioma});
+  if(res&&res[0])pokemonDB.push(res[0]);
   fb('pk-fb');
   document.getElementById('pk-nome').value='';
   document.getElementById('pk-habilidade').value='';
   document.getElementById('pk-sprite-file').value='';
-  prev.innerHTML=`<img src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;delete prev.dataset.b64;
+  prev.innerHTML=`<img class="unown-fallback-img" src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
+  delete prev.dataset.b64;
   document.querySelectorAll('#tipos-wrap .tipo-tag').forEach(t=>t.classList.remove('sel'));
   renderTbodyPokemons();renderTbodyBiomas();
 }
-function removerPokemon(id){
+async function removerPokemon(id){
   if(!confirm('Remover este Pokémon?'))return;
+  await dbDel('pokemons',`id=eq.${id}`);
   pokemonDB=pokemonDB.filter(p=>p.id!==id);
-  save('rpg-pokemons',pokemonDB);
   renderTbodyPokemons();renderTbodyBiomas();
 }
 function renderTbodyPokemons(){
@@ -1017,55 +895,98 @@ function renderTbodyPokemons(){
     :lista.map(p=>`
       <tr>
         <td style="display:flex;align-items:center;gap:8px">
-          <div style="width:36px;height:36px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
-            ${p.sprite
-              ? `<img src="${p.sprite}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>`
-              : `<img src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`}
-          </div>
-          <strong>${p.nome}</strong>
+          <div style="width:40px;height:40px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+            <img src="${p.sprite||FALLBACK_SPRITE}" style="width:40px;height:40px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>
+          </div><strong>${p.nome}</strong>
         </td>
         <td>${p.bioma}</td>
         <td><span class="poke-rarity ${rcls[p.raridade]}">${rlbl[p.raridade]}</span></td>
-        <td>${p.tipos.map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}</td>
+        <td>${(p.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}</td>
         <td style="font-size:12px;color:var(--muted)">${glbl[p.genero]||p.genero}</td>
-        <td><button class="btn btn-danger btn-sm" onclick="removerPokemon(${p.id})">Remover</button></td>
+        <td><button class="btn btn-danger btn-sm" onclick="removerPokemon('${p.id}')">Remover</button></td>
       </tr>`).join('');
+}
+
+// IMPORTADOR
+const SLUG_MAP={'mr. mime':'mr-mime','farfetch\'d':'farfetchd','sirfetch\'d':'sirfetchd','flabébé':'flabebe','nidoran♀':'nidoran-f','nidoran♂':'nidoran-m','squawkabilly (blue plumage)':'squawkabilly','squawkabilly (blue)':'squawkabilly'};
+function toSlug(name){
+  const lower=name.toLowerCase().trim();
+  if(SLUG_MAP[lower])return SLUG_MAP[lower];
+  return lower.replace(/\s*\(.*?\)/g,'').trim().replace(/[^a-z0-9\-]/g,'').replace(/\s+/g,'-');
+}
+async function importarDaPokeAPI(){
+  const lista=document.getElementById('imp-lista').value.trim();
+  const bioma=document.getElementById('imp-bioma').value;
+  const raridade=document.getElementById('imp-raridade').value;
+  if(!lista){alert('Cole ao menos um nome de Pokémon.');return;}
+  const names=lista.split('\n').map(n=>n.trim()).filter(Boolean);
+  const btn=document.getElementById('imp-btn');
+  const progress=document.getElementById('imp-progress');
+  const status=document.getElementById('imp-status');
+  const bar=document.getElementById('imp-bar');
+  btn.disabled=true;progress.style.display='block';
+  document.getElementById('imp-fb-ok').style.display='none';
+  document.getElementById('imp-fb-err').style.display='none';
+  const erros=[];let ok=0;
+  for(let i=0;i<names.length;i++){
+    const raw=names[i];
+    const slug=toSlug(raw);
+    status.textContent=`Buscando ${raw}... (${i+1}/${names.length})`;
+    bar.style.width=`${Math.round((i/names.length)*100)}%`;
+    try{
+      const data=await fetch(`https://pokeapi.co/api/v2/pokemon/${slug}`,{headers:{'Accept':'application/json'}}).then(r=>{if(!r.ok)throw new Error();return r.json();});
+      const species=await fetch(data.species.url).then(r=>r.json());
+      const tipos=data.types.map(t=>t.type.name);
+      const habs=data.abilities.filter(a=>!a.is_hidden).map(a=>a.ability.name.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
+      const habilidade=habs[0]||'—';
+      const sprite=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`;
+      const gr=species.gender_rate??-1;
+      const genero=gr===-1?'genderless':gr===0?'macho':gr===8?'femea':'1d2';
+      const nomeFormatado=raw.trim();
+      if(!pokemonDB.find(p=>p.nome.toLowerCase()===nomeFormatado.toLowerCase()&&p.bioma===bioma)){
+        const res=await dbPost('pokemons',{nome:nomeFormatado,emoji:'❓',sprite,tipos,habilidade,raridade,genero,bioma});
+        if(res&&res[0])pokemonDB.push(res[0]);
+      }
+      ok++;
+    }catch(e){erros.push(raw);}
+    await new Promise(r=>setTimeout(r,250));
+  }
+  bar.style.width='100%';btn.disabled=false;progress.style.display='none';
+  if(erros.length>0){
+    const errEl=document.getElementById('imp-fb-err');
+    errEl.textContent=`⚠ ${ok} importados. Não encontrados: ${erros.join(', ')}`;
+    errEl.style.display='block';setTimeout(()=>errEl.style.display='none',8000);
+  } else { fb('imp-fb-ok'); }
+  document.getElementById('imp-lista').value='';
+  renderTbodyPokemons();renderTbodyBiomas();
 }
 
 // ══════════════════════════════════════
 // FICHÁRIO
 // ══════════════════════════════════════
 function renderFichario(){
-  const container = document.getElementById('fichas-grid');
+  const container=document.getElementById('fichas-container');
   if(personagens.length===0){
     container.innerHTML='<div style="color:var(--muted);font-size:14px;padding:20px">Nenhum personagem cadastrado ainda.</div>';
     return;
   }
-  // agrupar por player mantendo ordem de inserção
-  const grupos = {};
-  personagens.forEach(p=>{
-    if(!grupos[p.player]) grupos[p.player]=[];
-    grupos[p.player].push(p);
-  });
-  container.innerHTML = Object.entries(grupos).map(([playerNome, chars])=>{
-    const pl = players.find(p=>p.nome===playerNome);
-    const pontos = pl ? pl.pontos : 0;
-    const cards = chars.map(p=>`
+  const grupos={};
+  personagens.forEach(p=>{ if(!grupos[p.player])grupos[p.player]=[]; grupos[p.player].push(p); });
+  container.innerHTML=Object.entries(grupos).map(([playerNome,chars])=>{
+    const pl=players.find(p=>p.nome===playerNome);
+    const pontos=pl?pl.pontos:0;
+    const cards=chars.map(p=>`
       <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}">
         <div class="ficha-card-avatar" style="background:${p.cor}22;border:2px solid ${p.cor}">
-          ${p.img
-            ? `<img src="${p.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
-            : `<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}
+          ${p.img?`<img src="${p.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
+            :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}
         </div>
         <div class="ficha-name">${p.nome}</div>
       </div>`).join('');
-    return `<div class="player-section">
+    return`<div class="player-section">
       <div class="player-section-header">
         <div class="player-section-name">${playerNome}</div>
-        <div class="player-pontos-box">
-          <span class="player-pontos-lbl">Pontos</span>
-          <span class="player-pontos-val">${pontos}</span>
-        </div>
+        <div class="player-pontos-box"><span class="player-pontos-lbl">Pontos</span><span class="player-pontos-val">${pontos}</span></div>
       </div>
       <div class="fichas-grid">${cards}</div>
     </div>`;
@@ -1074,13 +995,12 @@ function renderFichario(){
 function filtrarFichas(q){
   q=q.toLowerCase();
   document.querySelectorAll('.player-section').forEach(sec=>{
-    let anyVisible=false;
+    let any=false;
     sec.querySelectorAll('.ficha-card').forEach(c=>{
       const match=c.dataset.nome.includes(q)||c.dataset.player.includes(q);
-      c.style.display=match?'':'none';
-      if(match)anyVisible=true;
+      c.style.display=match?'':'none';if(match)any=true;
     });
-    sec.style.display=anyVisible?'':'none';
+    sec.style.display=any?'':'none';
   });
 }
 function renderPersonagensDatalist(){
@@ -1090,101 +1010,60 @@ function renderPersonagensDatalist(){
 // ══════════════════════════════════════
 // BADGES
 // ══════════════════════════════════════
-// ══════════════════════════════════════
-// BADGES
-// ══════════════════════════════════════
-const badgeBtns = [...document.querySelectorAll('.badge-btn')];
+const badgeBtns=[...document.querySelectorAll('.badge-btn')];
 badgeBtns.forEach(btn=>{
   btn.addEventListener('click',function(){
-    const idx = parseInt(this.dataset.idx);
-    const currentEarned = badgeBtns.filter(b=>b.classList.contains('earned')).length;
-    // Se clicou na última estrela earned (desmarcar tudo a partir dali)
-    // Se já está earned e é a última, desmarca ela e as seguintes
-    // Lógica: clicar em idx X marca 0..X; se X já é o último earned, desmarca X
-    if(this.classList.contains('earned') && currentEarned === idx+1){
-      // desmarca essa
-      badgeBtns.forEach((b,i)=>{
-        if(i>=idx){ b.classList.remove('earned'); b.textContent='☆'; }
-      });
+    const idx=parseInt(this.dataset.idx);
+    const currentEarned=badgeBtns.filter(b=>b.classList.contains('earned')).length;
+    if(this.classList.contains('earned')&&currentEarned===idx+1){
+      badgeBtns.forEach((b,i)=>{if(i>=idx){b.classList.remove('earned');b.textContent='☆';}});
     } else {
-      // marca todas de 0 até idx
-      badgeBtns.forEach((b,i)=>{
-        if(i<=idx){ b.classList.add('earned'); b.textContent='⭐'; }
-        else       { b.classList.remove('earned'); b.textContent='☆'; }
-      });
+      badgeBtns.forEach((b,i)=>{if(i<=idx){b.classList.add('earned');b.textContent='⭐';}else{b.classList.remove('earned');b.textContent='☆';}});
     }
     atualizarBadgeInfo();
   });
 });
 function atualizarBadgeInfo(){
   const c=document.querySelectorAll('.badge-btn.earned').length;
-  const min=c===0?1:c*10+1, max=c===0?10:Math.min(c*10+10,90);
+  const min=c===0?1:c*10+1,max=c===0?10:Math.min(c*10+10,90);
   document.getElementById('badges-info').textContent=`${c} prova${c!==1?'s':''} → Nível ${min}–${max}`;
 }
 
 // ══════════════════════════════════════
 // ROLADOR
 // ══════════════════════════════════════
-function rollRarity(){
-  const r=Math.ceil(Math.random()*100);
-  if(r<=7)return 'rarissimo';if(r<=20)return 'raro';if(r<=60)return 'incomum';return 'comum';
-}
-function rollGender(g){
-  if(g==='macho')return{s:'♂',c:'#3a80e0'};
-  if(g==='femea')return{s:'♀',c:'#e04090'};
-  if(g==='genderless')return{s:'—',c:'#888'};
-  return Math.random()<.5?{s:'♂',c:'#3a80e0'}:{s:'♀',c:'#e04090'};
-}
-function rollLevel(){
-  const c=document.querySelectorAll('.badge-btn.earned').length;
-  const min=c===0?1:c*10+1, max=c===0?10:Math.min(c*10+10,90);
-  return Math.floor(Math.random()*(max-min+1))+min;
+function rollRarity(){const r=Math.ceil(Math.random()*100);if(r<=7)return 'rarissimo';if(r<=20)return 'raro';if(r<=60)return 'incomum';return 'comum';}
+function rollGender(g){if(g==='macho')return{s:'♂',c:'#3a80e0'};if(g==='femea')return{s:'♀',c:'#e04090'};if(g==='genderless')return{s:'—',c:'#888'};return Math.random()<.5?{s:'♂',c:'#3a80e0'}:{s:'♀',c:'#e04090'};}
+function rollLevel(){const c=document.querySelectorAll('.badge-btn.earned').length;const min=c===0?1:c*10+1,max=c===0?10:Math.min(c*10+10,90);return Math.floor(Math.random()*(max-min+1))+min;}
+function spriteHtml(pk){
+  const src=pk.sprite||FALLBACK_SPRITE;
+  return`<img src="${src}" alt="${pk.nome}" style="width:70px;height:70px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges" onerror="this.src='${FALLBACK_SPRITE}'"/>`;
 }
 function buildCardData(){
   const bioma=document.getElementById('bioma').value;
   const rarity=rollRarity();
   const pool=pokemonDB.filter(p=>p.bioma===bioma&&p.raridade===rarity);
   const fallback=pokemonDB.filter(p=>p.bioma===bioma);
-  const p=pool.length>0?pool[Math.floor(Math.random()*pool.length)]
-         :fallback.length>0?fallback[Math.floor(Math.random()*fallback.length)]
-         :{nome:'???',emoji:'❓',tipos:['normal'],habilidade:'???',raridade:rarity,genero:'1d2'};
+  const p=pool.length>0?pool[Math.floor(Math.random()*pool.length)]:fallback.length>0?fallback[Math.floor(Math.random()*fallback.length)]:{nome:'???',emoji:'❓',tipos:['normal'],habilidade:'???',raridade:rarity,genero:'1d2',sprite:null};
   const gender=rollGender(p.genero);
-  return{nome:p.nome,tipos:p.tipos,emoji:p.emoji||'❓',sprite:p.sprite||null,habilidade:p.habilidade,rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
-}
-const FALLBACK_SPRITE_DEFAULT = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
-let FALLBACK_SPRITE = FALLBACK_SPRITE_DEFAULT;
-let FALLBACK_AVATAR = FALLBACK_SPRITE_DEFAULT;
-
-// Busca o sprite correto do Unown ? na API em runtime
-fetch('https://pokeapi.co/api/v2/pokemon-form/10027/')
-  .then(r=>r.json())
-  .then(data=>{
-    const url = data?.sprites?.front_default;
-    if(url){
-      FALLBACK_SPRITE = url;
-      FALLBACK_AVATAR = url;
-      // atualiza previews estáticos no HTML
-      document.querySelectorAll('.unown-fallback-img').forEach(img=>img.src=url);
-    }
-  })
-  .catch(()=>{});
-
-function spriteHtml(pk){
-  const src = pk.sprite || FALLBACK_SPRITE;
-  return `<img src="${src}" alt="${pk.nome}" style="width:70px;height:70px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges" onerror="this.src='${FALLBACK_SPRITE}'"/>`;
+  return{nome:p.nome,tipos:p.tipos||[],emoji:p.emoji||'❓',sprite:p.sprite||null,habilidade:p.habilidade,rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
 }
 function buildCardHtml(pk,delay){
-  const pills=pk.tipos.map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('');
+  const pills=(pk.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('');
   return`<div class="poke-card" style="animation-delay:${delay}s">
-    <div class="poke-card-img">${spriteHtml(pk)}</div>
-    <div class="poke-card-name">${pk.nome} <span class="gender-icon" style="color:${pk.genderC}">${pk.genderS}</span></div>
-    <div class="poke-card-meta">${pills}</div>
-    <div><span class="poke-rarity ${rcls[pk.rarity]}">${rlbl[pk.rarity]}</span></div>
-    <div class="poke-lvl">Nível ${pk.lvl}</div>
-    <div class="poke-hab">Hab: ${pk.habilidade}</div>
+    <div class="poke-card-left">
+      <div class="poke-card-img">${spriteHtml(pk)}</div>
+      <div class="poke-card-name">${pk.nome} <span class="gender-icon" style="color:${pk.genderC}">${pk.genderS}</span></div>
+    </div>
+    <div class="poke-card-info">
+      <div class="poke-card-meta">${pills}</div>
+      <div><span class="poke-rarity ${rcls[pk.rarity]}">${rlbl[pk.rarity]}</span></div>
+      <div class="poke-lvl">Nível ${pk.lvl}</div>
+      <div class="poke-hab">Hab: ${pk.habilidade}</div>
+    </div>
   </div>`;
 }
-function rolarEncontro(){
+async function rolarEncontro(){
   const adicionais=Math.max(0,parseInt(document.getElementById('n-adicionais').value)||0);
   const total=3+adicionais;
   const bioma=document.getElementById('bioma').value;
@@ -1197,62 +1076,55 @@ function rolarEncontro(){
   grid.style.gridTemplateColumns=`repeat(${Math.min(total<=4?total:3,total)},1fr)`;
   for(let i=0;i<total;i++){const pk=buildCardData();pokes.push(pk);grid.innerHTML+=buildCardHtml(pk,i*0.08);}
   section.appendChild(grid);
-  salvarNoHistorico(bioma,personagem,pokes);
+  await salvarNoHistorico(bioma,personagem,pokes);
 }
 
 // ══════════════════════════════════════
 // HISTÓRICO
 // ══════════════════════════════════════
-function salvarNoHistorico(bioma,personagem,pokes){
+async function salvarNoHistorico(bioma,personagem,pokes){
   const agora=new Date();
-  historico.unshift({
-    bioma,personagem,pokes,
-    hora:agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),
-    data:agora.toLocaleDateString('pt-BR')
-  });
-  save('rpg-historico',historico);
-  histPagina = 0;
+  const hora=agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const data=agora.toLocaleDateString('pt-BR');
+  const entry={bioma,personagem,hora,data,pokes};
+  const res=await dbPost('historico',entry);
+  if(res&&res[0])historico.unshift(res[0]);
+  histPagina=0;
   renderHistorico();
 }
-let histPagina = 0;
-const HIST_POR_PAG = 10;
-
 function mudarPaginaHist(dir){
-  const totalPags = Math.ceil(historico.length / HIST_POR_PAG);
-  histPagina = Math.max(0, Math.min(histPagina + dir, totalPags - 1));
+  const totalPags=Math.ceil(historico.length/HIST_POR_PAG);
+  histPagina=Math.max(0,Math.min(histPagina+dir,totalPags-1));
   renderHistorico();
 }
 function renderHistorico(){
-  const wrap  = document.getElementById('historico-wrap');
-  const lista = document.getElementById('historico-lista');
+  const wrap=document.getElementById('historico-wrap');
+  const lista=document.getElementById('historico-lista');
   if(historico.length===0){wrap.style.display='none';return;}
   wrap.style.display='block';
-
-  const totalPags = Math.ceil(historico.length / HIST_POR_PAG);
-  histPagina = Math.max(0, Math.min(histPagina, totalPags - 1));
-  const inicio = histPagina * HIST_POR_PAG;
-  const pagina = historico.slice(inicio, inicio + HIST_POR_PAG);
-
-  // label
-  document.getElementById('hist-page-label').textContent =
-    `Página ${histPagina+1} de ${totalPags} · ${historico.length} rolagem${historico.length!==1?'s':''}`;
-
-  // botões
-  document.getElementById('hist-prev').style.display = histPagina > 0 ? '' : 'none';
-  document.getElementById('hist-next').style.display = histPagina < totalPags-1 ? '' : 'none';
-  document.getElementById('hist-paginacao').style.display = totalPags > 1 ? 'flex' : 'none';
-
-  lista.innerHTML = pagina.map(e=>{
-    const ph=e.pokes.map(pk=>`
+  const totalPags=Math.ceil(historico.length/HIST_POR_PAG);
+  histPagina=Math.max(0,Math.min(histPagina,totalPags-1));
+  const inicio=histPagina*HIST_POR_PAG;
+  const pagina=historico.slice(inicio,inicio+HIST_POR_PAG);
+  document.getElementById('hist-page-label').textContent=`Página ${histPagina+1} de ${totalPags} · ${historico.length} rolagem${historico.length!==1?'s':''}`;
+  document.getElementById('hist-prev').style.display=histPagina>0?'':'none';
+  document.getElementById('hist-next').style.display=histPagina<totalPags-1?'':'none';
+  document.getElementById('hist-paginacao').style.display=totalPags>1?'flex':'none';
+  lista.innerHTML=pagina.map(e=>{
+    const pokes=Array.isArray(e.pokes)?e.pokes:[];
+    const ph=pokes.map(pk=>`
       <div class="hist-poke">
-        <div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border-radius:50%;overflow:hidden;flex-shrink:0">
-          ${pk.sprite
-            ? `<img src="${pk.sprite}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>`
-            : `<img src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`}
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+          <div style="width:56px;height:56px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden">
+            <img src="${pk.sprite||FALLBACK_SPRITE}" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>
+          </div>
+          <div style="font-size:10px;font-weight:600;color:var(--text);text-align:center;font-family:var(--font-title);line-height:1.2">${pk.nome} <span style="color:${pk.genderC}">${pk.genderS}</span></div>
         </div>
-        <div>
-          <div style="font-size:11px;font-weight:600;color:var(--text)">${pk.nome} <span style="color:${pk.genderC}">${pk.genderS}</span></div>
-          <div style="font-size:10px;color:var(--muted)">Nv.${pk.lvl} · <span class="poke-rarity ${rcls[pk.rarity]}" style="padding:1px 5px;font-size:9px">${rlbl[pk.rarity]}</span></div>
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px">
+          <div>${(pk.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}</div>
+          <div><span class="poke-rarity ${rcls[pk.rarity]||'rc'}" style="font-size:9px;padding:1px 7px">${rlbl[pk.rarity]||''}</span></div>
+          <div style="font-size:10px;color:var(--muted)">Nv.${pk.lvl}</div>
+          <div style="font-size:10px;color:var(--muted)">Hab: ${pk.habilidade}</div>
         </div>
       </div>`).join('');
     return`<div class="hist-entry">
@@ -1268,34 +1140,34 @@ function renderHistorico(){
 // ══════════════════════════════════════
 // EDITOR VISUAL
 // ══════════════════════════════════════
-const ESTILO_DEFAULT = {
-  brand:'#1a3a5c', brandMid:'#2563a8', accent:'#e8a020',
-  bg:'#f4f6fa', surface:'#ffffff', text:'#1a1f2e',
-  fontTitle:"'Cinzel',serif", fontBody:"'Nunito',sans-serif",
-  radius:'10px', customCss:''
-};
+const ESTILO_DEFAULT={brand:'#1a3a5c',brandMid:'#2563a8',accent:'#e8a020',bg:'#f4f6fa',surface:'#ffffff',text:'#1a1f2e',fontTitle:"'Cinzel',serif",fontBody:"'Nunito',sans-serif",radius:'10px',customCss:''};
 
-function carregarEditorUI(){
-  const e = load('rpg-estilo', ESTILO_DEFAULT);
-  document.getElementById('ec-brand').value       = e.brand;
-  document.getElementById('ec-brand-mid').value   = e.brandMid;
-  document.getElementById('ec-accent').value      = e.accent;
-  document.getElementById('ec-bg').value          = e.bg;
-  document.getElementById('ec-surface').value     = e.surface;
-  document.getElementById('ec-text').value        = e.text;
-  document.getElementById('ec-font-title').value  = e.fontTitle;
-  document.getElementById('ec-font-body').value   = e.fontBody;
-  document.getElementById('ec-radius').value      = e.radius;
-  document.getElementById('ec-custom-css').value  = e.customCss||'';
+async function carregarEstiloSalvo(){
+  try{
+    const res=await sb('configuracoes?chave=eq.estilo&select=valor');
+    if(res&&res[0]&&res[0].valor&&Object.keys(res[0].valor).length>0){
+      return {...ESTILO_DEFAULT,...res[0].valor};
+    }
+  }catch(e){}
+  return ESTILO_DEFAULT;
 }
 
-function aplicarEstilo(){
-  const e = coletarEstilo();
-  aplicarVars(e);
+function carregarEditorUI(e){
+  const d=e||ESTILO_DEFAULT;
+  document.getElementById('ec-brand').value=d.brand;
+  document.getElementById('ec-brand-mid').value=d.brandMid;
+  document.getElementById('ec-accent').value=d.accent;
+  document.getElementById('ec-bg').value=d.bg;
+  document.getElementById('ec-surface').value=d.surface;
+  document.getElementById('ec-text').value=d.text;
+  document.getElementById('ec-font-title').value=d.fontTitle;
+  document.getElementById('ec-font-body').value=d.fontBody;
+  document.getElementById('ec-radius').value=d.radius;
+  document.getElementById('ec-custom-css').value=d.customCss||'';
 }
 
 function coletarEstilo(){
-  return {
+  return{
     brand:     document.getElementById('ec-brand').value,
     brandMid:  document.getElementById('ec-brand-mid').value,
     accent:    document.getElementById('ec-accent').value,
@@ -1310,75 +1182,76 @@ function coletarEstilo(){
 }
 
 function aplicarVars(e){
-  const root = document.documentElement;
-  // hex to rgb helper for brand-light derivation
-  root.style.setProperty('--brand',       e.brand);
-  root.style.setProperty('--brand-mid',   e.brandMid);
-  root.style.setProperty('--accent',      e.accent);
-  root.style.setProperty('--bg',          e.bg);
-  root.style.setProperty('--surface',     e.surface);
-  root.style.setProperty('--text',        e.text);
-  root.style.setProperty('--font-title',  e.fontTitle);
-  root.style.setProperty('--font-body',   e.fontBody);
-  root.style.setProperty('--r',           e.radius);
-  // custom CSS injection
-  let tag = document.getElementById('custom-css-tag');
+  const r=document.documentElement;
+  r.style.setProperty('--brand',e.brand);
+  r.style.setProperty('--brand-mid',e.brandMid);
+  r.style.setProperty('--accent',e.accent);
+  r.style.setProperty('--bg',e.bg);
+  r.style.setProperty('--surface',e.surface);
+  r.style.setProperty('--text',e.text);
+  r.style.setProperty('--font-title',e.fontTitle);
+  r.style.setProperty('--font-body',e.fontBody);
+  r.style.setProperty('--r',e.radius);
+  let tag=document.getElementById('custom-css-tag');
   if(!tag){tag=document.createElement('style');tag.id='custom-css-tag';document.head.appendChild(tag);}
-  tag.textContent = e.customCss||'';
-  // load Google Fonts if needed
-  injectFonts(e.fontTitle+' '+e.fontBody);
+  tag.textContent=e.customCss||'';
+  injectFonts((e.fontTitle||'')+(e.fontBody||''));
 }
 
 function injectFonts(str){
-  const needed=[];
-  if(str.includes('Playfair'))  needed.push('Playfair+Display:wght@400;600;700');
-  if(str.includes('Oswald'))    needed.push('Oswald:wght@400;600;700');
-  if(str.includes('Raleway'))   needed.push('Raleway:wght@400;600;700');
-  if(str.includes('Press Start')) needed.push('Press+Start+2P');
-  if(str.includes('Fredoka'))   needed.push('Fredoka+One');
-  if(str.includes('Poppins'))   needed.push('Poppins:wght@400;500;600;700');
-  if(str.includes('Inter'))     needed.push('Inter:wght@400;500;600;700');
-  if(str.includes('Roboto'))    needed.push('Roboto:wght@400;500;700');
-  if(str.includes('Lato'))      needed.push('Lato:wght@400;700');
-  if(str.includes('Open Sans')) needed.push('Open+Sans:wght@400;600;700');
-  needed.forEach(f=>{
-    const id='gf-'+f.split(':')[0].replace(/\+/g,'-');
-    if(!document.getElementById(id)){
-      const l=document.createElement('link');
-      l.id=id;l.rel='stylesheet';
-      l.href=`https://fonts.googleapis.com/css2?family=${f}&display=swap`;
-      document.head.appendChild(l);
+  const map={
+    'Playfair':'Playfair+Display:wght@400;600;700',
+    'Oswald':'Oswald:wght@400;600;700',
+    'Raleway':'Raleway:wght@400;600;700',
+    'Press Start':'Press+Start+2P',
+    'Fredoka':'Fredoka+One',
+    'Poppins':'Poppins:wght@400;500;600;700',
+    'Inter':'Inter:wght@400;500;600;700',
+    'Roboto':'Roboto:wght@400;500;700',
+    'Lato':'Lato:wght@400;700',
+    'Open Sans':'Open+Sans:wght@400;600;700',
+  };
+  Object.entries(map).forEach(([k,v])=>{
+    if(str.includes(k)){
+      const id='gf-'+k.replace(/\s/g,'-');
+      if(!document.getElementById(id)){
+        const l=document.createElement('link');
+        l.id=id;l.rel='stylesheet';
+        l.href=`https://fonts.googleapis.com/css2?family=${v}&display=swap`;
+        document.head.appendChild(l);
+      }
     }
   });
 }
 
-function salvarEstilo(){
+function aplicarEstilo(){aplicarVars(coletarEstilo());}
+
+async function salvarEstilo(){
   const e=coletarEstilo();
-  save('rpg-estilo',e);
   aplicarVars(e);
+  await sb('configuracoes?chave=eq.estilo',{
+    method:'PATCH',
+    body:JSON.stringify({valor:e, updated_at: new Date().toISOString()}),
+    prefer:'return=minimal'
+  });
   fb('editor-fb-ok');
 }
 
-function resetarEstilo(){
-  if(!confirm('Restaurar todas as configurações visuais para o padrão?'))return;
-  save('rpg-estilo',ESTILO_DEFAULT);
-  carregarEditorUI();
+async function resetarEstilo(){
+  if(!confirm('Restaurar padrão para todos os dispositivos?'))return;
+  await sb('configuracoes?chave=eq.estilo',{
+    method:'PATCH',
+    body:JSON.stringify({valor:ESTILO_DEFAULT, updated_at: new Date().toISOString()}),
+    prefer:'return=minimal'
+  });
+  carregarEditorUI(ESTILO_DEFAULT);
   aplicarVars(ESTILO_DEFAULT);
 }
 
-function aplicarEstiloSalvo(){
-  const e=load('rpg-estilo',ESTILO_DEFAULT);
-  aplicarVars(e);
-}
-
 // ══════════════════════════════════════
-// INIT
+// START
 // ══════════════════════════════════════
-aplicarEstiloSalvo();
-syncBiomaSelect();
-renderFichario();
-renderPersonagensDatalist();
-renderHistorico();
+init();
 </script>
 </body>
 </html>
