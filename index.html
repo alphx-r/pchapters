@@ -496,7 +496,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <div class="box-title">✏️ Adicionar manualmente</div>
             <div class="g3">
               <div class="field"><label>Nome</label><input type="text" id="pk-nome" placeholder="Ex: Pikachu"/></div>
-              <div class="field"><label>Habilidade</label><input type="text" id="pk-habilidade" placeholder="Ex: Static"/></div>
+              <div class="field"><label>Habilidade 1</label><input type="text" id="pk-habilidade" placeholder="Ex: Static"/></div>
+              <div class="field"><label>Habilidade 2</label><input type="text" id="pk-habilidade2" placeholder="Ex: Lightning Rod"/></div>
               <div class="field"><label>Raridade</label>
                 <select id="pk-raridade">
                   <option value="comum">Comum (61–100)</option>
@@ -1156,20 +1157,22 @@ function previewPokeSprite(input){
   reader.readAsDataURL(file);
 }
 async function adicionarPokemon(){
-  const nome      =document.getElementById('pk-nome').value.trim();
-  const habilidade=document.getElementById('pk-habilidade').value.trim();
-  const raridade  =document.getElementById('pk-raridade').value;
-  const genero    =document.getElementById('pk-genero').value;
-  const bioma     =document.getElementById('pk-bioma').value;
-  const tipos     =[...document.querySelectorAll('#tipos-wrap .tipo-tag.sel')].map(t=>t.dataset.tipo);
-  const prev      =document.getElementById('pk-sprite-preview');
-  const sprite    =prev.dataset.b64||null;
+  const nome          =document.getElementById('pk-nome').value.trim();
+  const habilidade    =document.getElementById('pk-habilidade').value.trim();
+  const habilidade2   =document.getElementById('pk-habilidade2').value.trim();
+  const raridade      =document.getElementById('pk-raridade').value;
+  const genero        =document.getElementById('pk-genero').value;
+  const bioma         =document.getElementById('pk-bioma').value;
+  const tipos         =[...document.querySelectorAll('#tipos-wrap .tipo-tag.sel')].map(t=>t.dataset.tipo);
+  const prev          =document.getElementById('pk-sprite-preview');
+  const sprite        =prev.dataset.b64||null;
   if(!nome||tipos.length===0){alert('Preencha o nome e selecione ao menos 1 tipo.');return;}
-  const res=await dbPost('pokemons',{nome,emoji:'❓',sprite,tipos,habilidade,raridade,genero,bioma});
+  const res=await dbPost('pokemons',{nome,emoji:'❓',sprite,tipos,habilidade,habilidade2,raridade,genero,bioma});
   if(res&&res[0])pokemonDB.push(res[0]);
   fb('pk-fb');
   document.getElementById('pk-nome').value='';
   document.getElementById('pk-habilidade').value='';
+  document.getElementById('pk-habilidade2').value='';
   document.getElementById('pk-sprite-file').value='';
   prev.innerHTML=`<img class="unown-fallback-img" src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
   delete prev.dataset.b64;
@@ -1182,24 +1185,42 @@ async function removerPokemon(id){
   pokemonDB=pokemonDB.filter(p=>p.id!==id);
   renderTbodyPokemons();renderTbodyBiomas();
 }
+async function editarNomePokemon(id){
+  const p=pokemonDB.find(x=>String(x.id)===String(id));
+  if(!p)return;
+  const novo=prompt(`Novo nome para "${p.nome}":`,p.nome);
+  if(!novo||novo.trim()===p.nome)return;
+  const novoNome=novo.trim();
+  await dbPatch('pokemons',`id=eq.${id}`,{nome:novoNome});
+  p.nome=novoNome;
+  renderTbodyPokemons();
+}
 function renderTbodyPokemons(){
   const filtro=document.getElementById('pk-filtro')?.value||'';
-  const lista=filtro?pokemonDB.filter(p=>p.bioma===filtro):pokemonDB;
+  const lista=(filtro?pokemonDB.filter(p=>p.bioma===filtro):pokemonDB)
+    .slice().sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
   document.getElementById('tbody-pokemons').innerHTML=lista.length===0
     ?'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Nenhum Pokémon encontrado.</td></tr>'
-    :lista.map(p=>`
-      <tr>
+    :lista.map(p=>{
+      const habs=[p.habilidade,p.habilidade2].filter(Boolean);
+      const habStr=habs.length>0?habs.join(' / '):'—';
+      return`<tr>
         <td style="display:flex;align-items:center;gap:8px">
           <div style="width:40px;height:40px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
             <img src="${p.sprite||FALLBACK_SPRITE}" style="width:40px;height:40px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>
-          </div><strong>${p.nome}</strong>
+          </div>
+          <strong>${p.nome}</strong>
         </td>
         <td>${p.bioma}</td>
         <td><span class="poke-rarity ${rcls[p.raridade]}">${rlbl[p.raridade]}</span></td>
         <td>${(p.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}</td>
         <td style="font-size:12px;color:var(--muted)">${glbl[p.genero]||p.genero}</td>
-        <td><button class="btn btn-danger btn-sm" onclick="removerPokemon('${p.id}')">Remover</button></td>
-      </tr>`).join('');
+        <td style="white-space:nowrap">
+          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px" onclick="editarNomePokemon('${p.id}')">✏️ Nome</button>
+          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px;margin-left:4px" onclick="removerPokemon('${p.id}')">Remover</button>
+        </td>
+      </tr>`;
+    }).join('');
 }
 
 // IMPORTADOR
@@ -1232,14 +1253,15 @@ async function importarDaPokeAPI(){
       const data=await fetch(`https://pokeapi.co/api/v2/pokemon/${slug}`,{headers:{'Accept':'application/json'}}).then(r=>{if(!r.ok)throw new Error();return r.json();});
       const species=await fetch(data.species.url).then(r=>r.json());
       const tipos=data.types.map(t=>t.type.name);
-      const habs=data.abilities.filter(a=>!a.is_hidden).map(a=>a.ability.name.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
-      const habilidade=habs[0]||'—';
+      const habsNormais=data.abilities.filter(a=>!a.is_hidden).map(a=>a.ability.name.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
+      const habilidade        =habsNormais[0]||'—';
+      const habilidade2       =habsNormais[1]||'';
       const sprite=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`;
       const gr=species.gender_rate??-1;
       const genero=gr===-1?'genderless':gr===0?'macho':gr===8?'femea':'1d2';
       const nomeFormatado=raw.trim();
       if(!pokemonDB.find(p=>p.nome.toLowerCase()===nomeFormatado.toLowerCase()&&p.bioma===bioma)){
-        const res=await dbPost('pokemons',{nome:nomeFormatado,emoji:'❓',sprite,tipos,habilidade,raridade,genero,bioma});
+        const res=await dbPost('pokemons',{nome:nomeFormatado,emoji:'❓',sprite,tipos,habilidade,habilidade2,raridade,genero,bioma});
         if(res&&res[0])pokemonDB.push(res[0]);
       }
       ok++;
