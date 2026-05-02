@@ -864,7 +864,7 @@ function renderBiomaConteudo(){
   const ordem = ['comum','incomum','raro','rarissimo'];
   const nomes  = {rarissimo:'Raríssimo',raro:'Raro',incomum:'Incomum',comum:'Comum'};
   cont.innerHTML = ordem.map(r=>{
-    const grupo = pokes.filter(p=>p.raridade===r);
+    const grupo = pokes.filter(p=>p.raridade===r).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
     if(!grupo.length) return '';
     const cards = grupo.map(p=>`
       <div class="bioma-poke-card">
