@@ -257,7 +257,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <button class="nav-link active" onclick="goTo('roller',this)">Pokémon</button>
     <button class="nav-link" onclick="goTo('bioma',this)">Por Bioma</button>
     <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
-    <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
+    <button class="nav-link" onclick="goTo('fichario',this)">Fichário</button>
   </div>
   <button class="nav-login" id="btn-adm" onclick="goToAdm()">ADM</button>
 </nav>
@@ -361,7 +361,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 </div>
 
 <!-- FICHÁRIO -->
-<div class="page" id="page-ficha">
+<div class="page" id="page-fichario">
   <div class="ficha-header">
     <h2>Fichário de Personagens</h2>
     <input class="search-bar" type="text" placeholder="Buscar personagem..." oninput="filtrarFichas(this.value)"/>
@@ -825,7 +825,7 @@ async function carregarAba(page){
         dbGet('historico_dados','order=created_at.desc&limit=100'),
       ]).then(([_h,_hd])=>{ historico=_h; historicoDados=_hd; renderHistorico(); renderHistDados(); });
     }
-    else if(page==='ficha'){
+    else if(page==='fichario'){
       const [_players,_personagens] = await Promise.all([
         dbGet('players'),
         dbGet('personagens'),
@@ -1158,7 +1158,7 @@ function renderTbodyPersonagens(){
     :personagens.map(p=>`
       <tr>
         <td style="display:flex;align-items:center;gap:8px">
-          <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+          <div onclick="abrirModalPersonagem('${p.id}')" title="Clique para editar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
           </div><strong>${p.nome}</strong>
         </td>
@@ -1800,7 +1800,7 @@ async function limparHistPokemon(){
 // ══════════════════════════════════════
 window.addEventListener('hashchange', ()=>{
   const page = location.hash.replace('#','') || 'roller';
-  const validPages = ['roller','ficha','bioma','dados','adm'];
+  const validPages = ['roller','ficha','fichario','bioma','dados','adm'];
   if(validPages.includes(page)){
     carregarAba(page).then(()=>navegarPara(page));
   }
