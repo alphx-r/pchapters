@@ -1413,6 +1413,7 @@ async function rolarEncontro(){
   const pokes=[];
   const grid=document.createElement('div');
   grid.className='results-grid';
+  grid.style.gridTemplateColumns=`repeat(${Math.min(total<=4?total:4,total)},1fr)`;
   for(let i=0;i<total;i++){const pk=buildCardData();pokes.push(pk);grid.innerHTML+=buildCardHtml(pk,i*0.08);}
   section.appendChild(grid);
   await salvarNoHistorico(bioma,personagem,pokes);
