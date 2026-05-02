@@ -49,7 +49,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .fb-err{background:#fde8e8;color:var(--red)}
 /* loading overlay */
 .loading-overlay{position:fixed;inset:0;background:var(--bg, #f4f6fa);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--brand-mid);border-radius:50%;animation:spin .7s linear infinite}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:#e53e3e;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:14px;color:var(--muted);font-weight:600}
 /* ROLADOR */
@@ -248,7 +248,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Carregando...</div>
+  <div class="loading-text">O aplicativo da sua Pokédex está carregando...</div>
 </div>
 
 <nav class="nav">
