@@ -7,117 +7,101 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --green-dark:#93c47d;--green-mid:#b6d7a8;--green-light:#d9ead3;
-  --bg:#d9d9d9;--surface:#ffffff;--surface2:#f3f3f3;
-  --text:#000000;--muted:#555555;
-  --font-title:'Century Gothic','Trebuchet MS',sans-serif;
-  --font-body:'Verdana',sans-serif;
+  --brand:#1a3a5c;--brand-mid:#2563a8;--accent:#e8a020;
+  --bg:#f4f6fa;--surface:#fff;--surface2:#f0f3f9;
+  --text:#1a2340;--muted:#6b7a99;--border:#d4daea;
+  --red:#dc2626;--green:#16a34a;
+  --font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
+  --r:10px;
 }
-html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);color:var(--text)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg);color:var(--text);min-height:100vh}
+
 /* LOADING */
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.loading-spinner{width:36px;height:36px;border:3px solid #ccc;border-top-color:var(--green-dark);border-radius:50%;animation:spin .7s linear infinite}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:#e53e3e;border-radius:50%;animation:spin .7s linear infinite}
 .loading-text{font-size:14px;color:var(--muted);font-weight:600}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* LOGIN */
-.login-wrap{max-width:380px;margin:80px auto;background:var(--surface);border:2px solid var(--green-dark);border-radius:4px;padding:32px;text-align:center}
-.login-wrap h2{font-family:var(--font-title);font-size:18px;color:#000;margin-bottom:6px;font-weight:700}
-.login-wrap p{font-size:12px;color:var(--muted);margin-bottom:24px;font-family:var(--font-body)}
-.field{text-align:left;margin-bottom:14px}
-.field label{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;font-family:var(--font-body)}
-.field input{width:100%;padding:8px 10px;border:1.5px solid #ccc;border-radius:3px;font-family:var(--font-body);font-size:13px;color:var(--text);background:var(--surface);outline:none}
-.field input:focus{border-color:var(--green-dark)}
-.btn{padding:8px 18px;border-radius:3px;border:none;font-family:var(--font-body);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s}
-.btn:hover{opacity:.85}
-.btn-primary{background:var(--green-dark);color:#fff}
-.btn-danger{background:#fee2e2;color:#c00;border:1px solid #fca5a5}
-.btn-sm{padding:5px 12px;font-size:11px}
-.fb-err{background:#fee2e2;color:#c00;border:1px solid #fca5a5;border-radius:3px;padding:8px 12px;font-size:12px;font-weight:600;margin-top:10px}
 
-/* TOP BAR */
-.top-bar{background:var(--green-dark);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
-.top-bar-title{font-family:var(--font-title);font-size:14px;color:#fff;font-weight:700}
+/* LOGIN */
+.login-wrap{max-width:380px;margin:80px auto;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:32px;text-align:center}
+.login-wrap h2{font-family:var(--font-title);font-size:18px;color:var(--brand);margin-bottom:6px}
+.login-wrap p{font-size:13px;color:var(--muted);margin-bottom:24px}
+.field{text-align:left;margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.field input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:14px;color:var(--text);background:var(--surface);outline:none;transition:border-color .2s}
+.field input:focus{border-color:var(--brand-mid)}
+.btn{padding:10px 22px;border-radius:8px;border:none;font-family:var(--font-body);font-size:14px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--brand-mid);color:#fff}
+.btn-danger{background:#fee2e2;color:var(--red);border:1.5px solid #fca5a5}
+.btn-sm{padding:6px 14px;font-size:13px}
+.fb-err{background:#fee2e2;color:var(--red);border:1.5px solid #fca5a5;border-radius:8px;padding:9px 14px;font-size:13px;font-weight:600;margin-top:10px}
+
+/* FICHA */
+.ficha-wrap{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+.ficha-header{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ficha-avatar{width:80px;height:80px;border-radius:50%;overflow:hidden;flex-shrink:0;background:var(--surface2);border:3px solid var(--border);display:flex;align-items:center;justify-content:center}
+.ficha-avatar img{width:80px;height:80px;object-fit:cover;border-radius:50%}
+.ficha-header-info{flex:1;min-width:200px}
+.ficha-title{font-family:var(--font-title);font-size:22px;font-weight:700;color:var(--brand);line-height:1.2}
+.ficha-photoplayer{font-size:13px;color:var(--muted);font-style:italic;margin-top:3px}
+.ficha-slogan{font-size:13px;color:var(--muted);margin-top:6px;font-style:italic}
+.ficha-player-badge{background:var(--surface2);border:1.5px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;color:var(--brand-mid);margin-top:8px;display:inline-block}
+.ficha-section{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:16px;overflow:hidden}
+.ficha-section-title{font-family:var(--font-title);font-size:12px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.8px;padding:12px 18px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.ficha-section-body{padding:16px 18px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.stat-box{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.stat-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.stat-val{font-family:var(--font-title);font-size:22px;font-weight:700;color:var(--brand)}
+.dados-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.dado-box{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px}
+.dado-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.dado-val{font-size:14px;color:var(--text);font-weight:600}
+.time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.poke-slot{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:12px;min-height:100px}
+.poke-slot.vazio{border-style:dashed;opacity:.5;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+.poke-slot-nome{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);margin-bottom:4px}
+.poke-slot-info{font-size:12px;color:var(--muted);line-height:1.6}
+.rel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.rel-item{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px}
+.rel-nome{font-size:13px;font-weight:700;color:var(--text)}
+.rel-tipo{font-size:11px;color:var(--muted);font-style:italic}
+.bio-text{font-size:14px;color:var(--text);line-height:1.8;white-space:pre-wrap}
+.pe-badge{background:var(--accent);color:#fff;border-radius:20px;padding:4px 14px;font-size:13px;font-weight:700;font-family:var(--font-title)}
+
+/* MODO EDIÇÃO */
+.edit-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--border);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;flex-wrap:wrap}
+.edit-bar-info{font-size:13px;color:var(--muted)}
+.edit-bar-info strong{color:var(--brand-mid)}
+.edit-input{width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-body);font-size:13px;color:var(--text);background:var(--surface);outline:none;transition:border-color .2s;resize:vertical}
+.edit-input:focus{border-color:var(--brand-mid)}
+.edit-input-sm{height:34px;resize:none}
+.edit-section{position:relative}
+.edit-section .edit-overlay{display:none}
+.editing .edit-section .view-content{display:none}
+.editing .edit-section .edit-content{display:block}
+.edit-content{display:none}
+.view-content{display:block}
+.poke-slot-fields{display:flex;flex-direction:column;gap:6px}
+.poke-slot-fields input,.poke-slot-fields textarea{width:100%;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font-body);resize:vertical;outline:none}
+.poke-slot-fields input:focus,.poke-slot-fields textarea:focus{border-color:var(--brand-mid)}
+.fb-ok{background:#dcfce7;color:var(--green);border:1.5px solid #86efac;border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600}
+.tag{background:var(--surface2);border:1.5px solid var(--border);border-radius:20px;padding:3px 12px;font-size:12px;color:var(--muted);display:inline-block;margin:3px 2px}
+
+/* NAV topo */
+.top-bar{background:var(--surface);border-bottom:1.5px solid var(--border);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.top-bar-title{font-family:var(--font-title);font-size:14px;color:var(--brand);font-weight:700}
 .top-bar-actions{display:flex;gap:8px;align-items:center}
 
-/* FICHA WRAP */
-.ficha-wrap{max-width:860px;margin:0 auto;padding:16px 12px 60px}
-
-/* CABEÇALHO */
-.ficha-header{background:var(--bg);margin-bottom:4px}
-.header-name-row{background:var(--green-mid);padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
-.ficha-title{font-family:var(--font-title);font-size:20px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase}
-.pe-badge{font-size:11px;font-weight:700;color:#000;font-family:var(--font-body)}
-.header-slogan-row{background:var(--green-light);padding:6px 12px;display:flex;align-items:center;justify-content:space-between}
-.ficha-slogan{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title)}
-.header-body{background:var(--surface2);display:grid;grid-template-columns:180px 1fr 180px;min-height:140px}
-.header-avatar-col{padding:8px;display:flex;align-items:center;justify-content:center;border-right:1.5px solid var(--bg)}
-.ficha-avatar{width:140px;height:100px;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.ficha-avatar img{width:140px;height:100px;object-fit:cover}
-.header-mid-col{padding:8px;display:flex;align-items:center;justify-content:center;border-right:1.5px solid var(--bg)}
-.header-mid-col img{max-width:100%;max-height:120px;object-fit:contain}
-.header-right-col{padding:8px;display:flex;align-items:center;justify-content:center}
-.header-right-col img{max-width:100%;max-height:180px;object-fit:contain}
-
-/* STATS ROW */
-.stats-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
-.stat-header{background:var(--green-mid);padding:5px 8px;text-align:center;font-size:10px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
-.stat-header:last-child{border-right:none}
-.stat-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:4px}
-.stat-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:12px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
-.stat-val:last-child{border-right:none}
-
-/* DADOS ROW */
-.dados-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
-.dado-header{background:var(--green-mid);padding:5px 8px;text-align:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
-.dado-header:last-child{border-right:none}
-.dado-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:8px}
-.dado-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:11px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
-.dado-val:last-child{border-right:none}
-
-/* SECTION */
-.ficha-section{margin-bottom:4px}
-.ficha-section-title{background:var(--green-dark);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
-.ficha-section-body{background:var(--surface);border:1.5px solid var(--bg);padding:12px}
-
-/* TIME */
-.time-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
-.poke-slot{background:var(--surface);border:1.5px solid var(--bg);padding:8px;min-height:80px}
-.poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body)}
-.poke-slot-header{background:#000;padding:4px 6px;text-align:center;margin:-8px -8px 6px -8px}
-.poke-slot-nome-lbl{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title)}
-.poke-slot-info{font-size:10px;color:var(--muted);line-height:1.6;font-family:var(--font-body)}
-.poke-slot-dados{background:var(--surface2);padding:4px 6px;font-size:9px;font-weight:700;text-align:center;margin:4px -8px -8px -8px;font-family:var(--font-body)}
-
-/* RELACIONAMENTOS */
-.rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
-.rel-item{background:#000;padding:5px 8px;text-align:center;border:1px solid var(--bg)}
-.rel-nome{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body)}
-.rel-tipo{font-size:10px;color:var(--green-mid);font-family:var(--font-body)}
-
-/* TEXTO */
-.bio-text{font-size:12px;color:var(--text);line-height:1.8;white-space:pre-wrap;font-family:var(--font-body);text-align:justify;text-indent:28px}
-
-/* EDIT */
-.edit-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--green-dark);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;flex-wrap:wrap}
-.edit-bar-info{font-size:12px;color:var(--muted);font-family:var(--font-body)}
-.edit-bar-info strong{color:var(--green-dark)}
-.edit-input{width:100%;padding:6px 10px;border:1.5px solid #ccc;border-radius:3px;font-family:var(--font-body);font-size:12px;color:var(--text);background:var(--surface);outline:none;resize:vertical}
-.edit-input:focus{border-color:var(--green-dark)}
-.edit-input-sm{height:32px;resize:none}
-.fb-ok{background:#dcfce7;color:green;border:1px solid #86efac;border-radius:3px;padding:6px 12px;font-size:12px;font-weight:600;font-family:var(--font-body)}
-.poke-slot-fields{display:flex;flex-direction:column;gap:4px}
-.poke-slot-fields input,.poke-slot-fields textarea{width:100%;padding:4px 6px;border:1px solid #ccc;border-radius:2px;font-size:10px;font-family:var(--font-body);resize:vertical;outline:none}
-.poke-slot-fields input:focus,.poke-slot-fields textarea:focus{border-color:var(--green-dark)}
-.view-content{display:block}
-.edit-content{display:none}
-
 @media(max-width:600px){
-  .time-grid{grid-template-columns:repeat(3,1fr)}
-  .header-body{grid-template-columns:1fr}
-  .header-mid-col,.header-right-col{display:none}
-  .stats-row,.stat-val-row,.dados-row,.dado-val-row{grid-template-columns:repeat(2,1fr)}
+  .stats-grid,.dados-grid,.time-grid,.rel-grid{grid-template-columns:1fr 1fr}
+  .ficha-header{flex-direction:column;text-align:center}
+}
+@media(max-width:400px){
+  .stats-grid,.time-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -131,7 +115,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 <!-- TOP BAR -->
 <div class="top-bar" id="top-bar" style="display:none">
-  <div class="top-bar-title">Ficha do Personagem</div>
+  <div class="top-bar-title">📋 Ficha do Personagem</div>
   <div class="top-bar-actions" id="top-bar-actions"></div>
 </div>
 
@@ -150,82 +134,79 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 <!-- FICHA -->
 <div id="ficha-wrap" class="ficha-wrap" style="display:none">
 
-  <!-- CABEÇALHO: nome + slogan + PE -->
+  <!-- CABEÇALHO -->
   <div class="ficha-header">
-    <div class="header-name-row">
+    <div class="ficha-avatar" id="f-avatar"></div>
+    <div class="ficha-header-info">
       <div class="ficha-title" id="f-nome"></div>
+      <div class="ficha-photoplayer" id="f-photoplayer"></div>
+      <div id="f-slogan-view" class="view-content"><div class="ficha-slogan" id="f-slogan-txt"></div></div>
+      <div id="f-slogan-edit" class="edit-content"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="margin-top:6px"/></div>
+      <div class="ficha-player-badge" id="f-player-badge"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
       <div id="f-pe-view" class="view-content"><span class="pe-badge" id="f-pe-txt">PE: 0</span></div>
-      <div id="f-pe-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pe-input" type="number" min="0" style="width:80px;text-align:center"/></div>
-    </div>
-    <div class="header-slogan-row">
-      <div id="f-slogan-view" class="view-content"><span class="ficha-slogan" id="f-slogan-txt" style="font-style:italic;font-size:11px;color:#555"></span></div>
-      <div id="f-slogan-edit" class="edit-content" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></div>
-      <div style="font-size:10px;color:#555;font-family:var(--font-body)" id="f-player-badge"></div>
-    </div>
-    <div class="header-body">
-      <div class="header-avatar-col">
-        <div class="ficha-avatar" id="f-avatar"></div>
-      </div>
-      <div class="header-mid-col">
-        <div id="f-photoplayer" style="font-size:11px;color:var(--muted);font-style:italic;text-align:center"></div>
-      </div>
-      <div class="header-right-col"></div>
+      <div id="f-pe-edit" class="edit-content"><div style="display:flex;align-items:center;gap:6px"><label style="font-size:11px;color:var(--muted);font-weight:700">PE</label><input class="edit-input edit-input-sm" id="f-pe-input" type="number" min="0" style="width:80px"/></div></div>
     </div>
   </div>
 
   <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-header">Reputação</div>
-    <div class="stat-header">C$</div>
-    <div class="stat-header">PV</div>
-    <div class="stat-header">CA</div>
-  </div>
-  <div class="stat-val-row">
-    <div class="stat-val">
-      <div id="f-rep-view" class="view-content"><span id="f-rep-txt">0</span></div>
-      <div id="f-rep-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-rep-input" type="number" style="text-align:center"/></div>
-    </div>
-    <div class="stat-val">
-      <div id="f-cs-view" class="view-content"><span id="f-cs-txt">0</span></div>
-      <div id="f-cs-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-cs-input" type="number" style="text-align:center"/></div>
-    </div>
-    <div class="stat-val">
-      <div id="f-pv-view" class="view-content"><span id="f-pv-txt">0</span></div>
-      <div id="f-pv-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pv-input" type="number" style="text-align:center"/></div>
-    </div>
-    <div class="stat-val">
-      <div id="f-ca-view" class="view-content"><span id="f-ca-txt">0</span></div>
-      <div id="f-ca-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-ca-input" type="number" style="text-align:center"/></div>
+  <div class="ficha-section">
+    <div class="ficha-section-title">⚔️ Status</div>
+    <div class="ficha-section-body">
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-label">Reputação</div>
+          <div id="f-rep-view" class="view-content"><div class="stat-val" id="f-rep-txt">0</div></div>
+          <div id="f-rep-edit" class="edit-content"><input class="edit-input edit-input-sm" id="f-rep-input" type="number" style="text-align:center;font-size:18px;font-weight:700"/></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">C$</div>
+          <div id="f-cs-view" class="view-content"><div class="stat-val" id="f-cs-txt">0</div></div>
+          <div id="f-cs-edit" class="edit-content"><input class="edit-input edit-input-sm" id="f-cs-input" type="number" style="text-align:center;font-size:18px;font-weight:700"/></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">PV</div>
+          <div id="f-pv-view" class="view-content"><div class="stat-val" id="f-pv-txt">0</div></div>
+          <div id="f-pv-edit" class="edit-content"><input class="edit-input edit-input-sm" id="f-pv-input" type="number" style="text-align:center;font-size:18px;font-weight:700"/></div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">CA</div>
+          <div id="f-ca-view" class="view-content"><div class="stat-val" id="f-ca-txt">0</div></div>
+          <div id="f-ca-edit" class="edit-content"><input class="edit-input edit-input-sm" id="f-ca-input" type="number" style="text-align:center;font-size:18px;font-weight:700"/></div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- DADOS PESSOAIS -->
-  <div class="dados-row">
-    <div class="dado-header">Idade</div>
-    <div class="dado-header">Ocupação</div>
-    <div class="dado-header">Origem</div>
-    <div class="dado-header">Player</div>
-  </div>
-  <div class="dado-val-row">
-    <div class="dado-val">
-      <div id="f-idade-view" class="view-content"><span id="f-idade-txt">—</span></div>
-      <div id="f-idade-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-idade-input" placeholder="Ex: 17"/></div>
+  <div class="ficha-section">
+    <div class="ficha-section-title">🪪 Dados Pessoais</div>
+    <div class="ficha-section-body">
+      <div class="dados-grid">
+        <div class="dado-box">
+          <div class="dado-label">Idade</div>
+          <div id="f-idade-view" class="view-content"><div class="dado-val" id="f-idade-txt">—</div></div>
+          <div id="f-idade-edit" class="edit-content"><input class="edit-input edit-input-sm" id="f-idade-input" placeholder="Ex: 17"/></div>
+        </div>
+        <div class="dado-box">
+          <div class="dado-label">Ocupação</div>
+          <div id="f-ocup-view" class="view-content"><div class="dado-val" id="f-ocup-txt">—</div></div>
+          <div id="f-ocup-edit" class="edit-content"><input class="edit-input edit-input-sm" id="f-ocup-input" placeholder="Ex: Treinador"/></div>
+        </div>
+        <div class="dado-box">
+          <div class="dado-label">Origem</div>
+          <div id="f-orig-view" class="view-content"><div class="dado-val" id="f-orig-txt">—</div></div>
+          <div id="f-orig-edit" class="edit-content"><input class="edit-input edit-input-sm" id="f-orig-input" placeholder="Ex: Pallet Town"/></div>
+        </div>
+      </div>
     </div>
-    <div class="dado-val">
-      <div id="f-ocup-view" class="view-content"><span id="f-ocup-txt">—</span></div>
-      <div id="f-ocup-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-ocup-input" placeholder="Ex: Treinador"/></div>
-    </div>
-    <div class="dado-val">
-      <div id="f-orig-view" class="view-content"><span id="f-orig-txt">—</span></div>
-      <div id="f-orig-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-orig-input" placeholder="Ex: Pallet Town"/></div>
-    </div>
-    <div class="dado-val" id="f-player-dado">—</div>
   </div>
 
   <!-- TIME PRINCIPAL -->
   <div class="ficha-section">
     <div class="ficha-section-title">🏆 Time Principal</div>
-    <div class="ficha-section-body" style="padding:0">
+    <div class="ficha-section-body">
       <div class="time-grid" id="time-grid"></div>
     </div>
   </div>
@@ -235,18 +216,18 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="ficha-section-title">🎒 Inventário</div>
     <div class="ficha-section-body">
       <div id="f-inv-view" class="view-content"><div class="bio-text" id="f-inv-txt" style="color:var(--muted)">Nenhum item registrado.</div></div>
-      <div id="f-inv-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-inv-input" rows="4" placeholder="Liste os itens do personagem..."></textarea></div>
+      <div id="f-inv-edit" class="edit-content"><textarea class="edit-input" id="f-inv-input" rows="4" placeholder="Liste os itens do personagem..."></textarea></div>
     </div>
   </div>
 
   <!-- RELACIONAMENTOS -->
   <div class="ficha-section">
     <div class="ficha-section-title">🤝 Relacionamentos</div>
-    <div class="ficha-section-body" style="padding:0">
+    <div class="ficha-section-body">
       <div id="f-rel-view" class="view-content"><div class="rel-grid" id="f-rel-grid"></div></div>
-      <div id="f-rel-edit" class="edit-content" style="display:none;padding:12px">
+      <div id="f-rel-edit" class="edit-content">
         <div id="rel-edit-grid" style="display:flex;flex-direction:column;gap:8px"></div>
-        <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc;margin-top:10px" onclick="addRelSlot()">+ Adicionar relacionamento</button>
+        <button class="btn btn-sm" style="background:var(--surface2);border:1.5px solid var(--border);margin-top:10px" onclick="addRelSlot()">+ Adicionar relacionamento</button>
       </div>
     </div>
   </div>
@@ -256,16 +237,16 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="ficha-section-title">📖 Biografia</div>
     <div class="ficha-section-body">
       <div id="f-bio-view" class="view-content"><div class="bio-text" id="f-bio-txt" style="color:var(--muted)">Nenhuma biografia registrada.</div></div>
-      <div id="f-bio-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-bio-input" rows="6" placeholder="Escreva a história do personagem..."></textarea></div>
+      <div id="f-bio-edit" class="edit-content"><textarea class="edit-input" id="f-bio-input" rows="6" placeholder="Escreva a história do personagem..."></textarea></div>
     </div>
   </div>
 
-  <!-- ANOTAÇÕES -->
+  <!-- ANOTAÇÕES / CONQUISTAS -->
   <div class="ficha-section" style="margin-bottom:80px">
     <div class="ficha-section-title">📝 Anotações e Conquistas</div>
     <div class="ficha-section-body">
       <div id="f-anot-view" class="view-content"><div class="bio-text" id="f-anot-txt" style="color:var(--muted)">Nenhuma anotação registrada.</div></div>
-      <div id="f-anot-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-anot-input" rows="4" placeholder="Conquistas, tags, notas livres..."></textarea></div>
+      <div id="f-anot-edit" class="edit-content"><textarea class="edit-input" id="f-anot-input" rows="4" placeholder="Conquistas, tags, notas livres..."></textarea></div>
     </div>
   </div>
 
@@ -275,7 +256,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 <div class="edit-bar" id="edit-bar" style="display:none">
   <div class="edit-bar-info" id="edit-bar-info"></div>
   <div style="display:flex;gap:8px">
-    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
+    <button class="btn btn-sm" style="background:var(--surface2);border:1.5px solid var(--border)" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
     <button class="btn btn-primary btn-sm" id="btn-salvar" onclick="salvarFicha()">💾 Salvar</button>
   </div>
 </div>
@@ -316,7 +297,6 @@ function renderFicha(){
   const ph=document.getElementById('f-photoplayer');
   ph.textContent=p.photoplayer||'';ph.style.display=p.photoplayer?'':'none';
   document.getElementById('f-player-badge').textContent=`👤 ${p.player}`;
-  document.getElementById('f-player-dado').textContent=p.player;
   // Slogan
   document.getElementById('f-slogan-txt').textContent=f.slogan||'';
   document.getElementById('f-slogan-input').value=f.slogan||'';
@@ -360,10 +340,10 @@ function renderTime(){
     }
     if(modoEdicao) return slotEdit(i,pk);
     return`<div class="poke-slot">
-      <div class="poke-slot-header"><div class="poke-slot-nome-lbl">${pk.nome}</div></div>
+      <div class="poke-slot-nome">${pk.nome}</div>
       <div class="poke-slot-info">
-        ${pk.level?`<strong>Nv. ${pk.level}</strong><br>`:''}
-        ${pk.ability?`${pk.ability}<br>`:''}
+        ${pk.level?`Nível ${pk.level}<br>`:''}
+        ${pk.ability?`<em>${pk.ability}</em><br>`:''}
         ${pk.moveset?pk.moveset.split('\n').filter(Boolean).map(m=>`• ${m}`).join('<br>'):''}
       </div>
     </div>`;
