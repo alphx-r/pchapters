@@ -45,20 +45,22 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .ficha-wrap{max-width:860px;margin:0 auto;padding:16px 12px 60px}
 
 /* CABEÇALHO */
-.ficha-header{background:var(--bg);margin-bottom:4px}
-.header-name-row{background:var(--green-mid);padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
-.ficha-title{font-family:var(--font-title);font-size:20px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase}
-.pe-badge{font-size:11px;font-weight:700;color:#000;font-family:var(--font-body)}
-.header-slogan-row{background:var(--green-light);padding:6px 12px;display:flex;align-items:center;justify-content:space-between}
-.ficha-slogan{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title)}
-.header-body{background:var(--surface2);display:grid;grid-template-columns:180px 1fr 180px;min-height:140px}
-.header-avatar-col{padding:8px;display:flex;align-items:center;justify-content:center;border-right:1.5px solid var(--bg)}
-.ficha-avatar{width:140px;height:100px;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.ficha-avatar img{width:140px;height:100px;object-fit:cover}
-.header-mid-col{padding:8px;display:flex;align-items:center;justify-content:center;border-right:1.5px solid var(--bg)}
-.header-mid-col img{max-width:100%;max-height:120px;object-fit:contain}
-.header-right-col{padding:8px;display:flex;align-items:center;justify-content:center}
-.header-right-col img{max-width:100%;max-height:180px;object-fit:contain}
+.ficha-header{background:var(--bg);margin-bottom:1px}
+.header-name-row{background:var(--green-mid);padding:7px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ficha-title{font-family:var(--font-title);font-size:18px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase}
+.pe-badge{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body);white-space:nowrap}
+.header-slogan-row{background:var(--green-light);padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ficha-slogan{font-size:10px;font-style:italic;color:#444;font-family:var(--font-body)}
+/* grid: banner ocupa tudo menos coluna direita de foto */
+.header-body{display:grid;grid-template-columns:1fr 200px;min-height:160px;border-top:2px solid var(--bg)}
+.header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#eee;position:relative;cursor:pointer}
+.header-banner-col img{width:100%;height:100%;object-fit:cover;display:block}
+.header-banner-placeholder{font-size:12px;color:#aaa;font-family:var(--font-body);text-align:center;padding:20px}
+.header-banner-edit-btn{position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:3px;font-size:10px;font-family:var(--font-body);padding:3px 8px;cursor:pointer;display:none}
+.header-banner-col:hover .header-banner-edit-btn{display:block}
+.header-photo-col{border-left:2px solid var(--bg);overflow:hidden;display:flex;align-items:center;justify-content:center;background:#ddd;position:relative}
+.header-photo-col img{width:200px;height:100%;object-fit:cover;display:block}
+.header-photo-placeholder{font-size:11px;color:#aaa;font-family:var(--font-body);text-align:center;padding:10px}
 
 /* STATS ROW */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
@@ -138,38 +140,74 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 <!-- LOGIN DO JOGADOR -->
 <div id="login-wrap" style="display:none">
   <div class="login-wrap">
-    <h2>Editar Ficha</h2>
-    <p>Entre com o nome do personagem e a senha definida pelo ADM para editar.</p>
-    <div class="field"><label>Nome do Personagem</label><input type="text" id="login-nome" placeholder="Ex: Ash Ketchum"/></div>
-    <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="Senha do jogador" onkeydown="if(event.key==='Enter')fazerLoginJogador()"/></div>
-    <button class="btn btn-primary" style="width:100%" onclick="fazerLoginJogador()">Entrar</button>
-    <div class="fb-err" id="login-err" style="display:none">Nome ou senha incorretos.</div>
+
+    <!-- PASSO 1: nome do player -->
+    <div id="login-step-1">
+      <h2>Área do Player</h2>
+      <p>Entre com seu nome de player para acessar suas fichas.</p>
+      <div class="field"><label>Nome do Player</label><input type="text" id="login-player" placeholder="Ex: Lucas" onkeydown="if(event.key==='Enter')confirmarPlayer()"/></div>
+      <button class="btn btn-primary" style="width:100%" onclick="confirmarPlayer()">Continuar →</button>
+      <div class="fb-err" id="login-err-1" style="display:none">Player não encontrado.</div>
+    </div>
+
+    <!-- PASSO 2: selecionar personagem -->
+    <div id="login-step-2" style="display:none">
+      <h2>Qual personagem?</h2>
+      <p id="login-step-2-sub"></p>
+      <div id="login-personagens-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc;width:100%" onclick="voltarStep1()">← Voltar</button>
+    </div>
+
+    <!-- PASSO 3: senha -->
+    <div id="login-step-3" style="display:none">
+      <h2 id="login-step-3-title">Acessar Ficha</h2>
+      <p id="login-step-3-sub"></p>
+      <div class="field"><label id="login-senha-label">Senha</label>
+        <input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')confirmarSenha()"/>
+      </div>
+      <div class="field" id="login-senha2-wrap" style="display:none"><label>Confirmar senha</label>
+        <input type="password" id="login-senha2" placeholder="Repita a senha" onkeydown="if(event.key==='Enter')confirmarSenha()"/>
+      </div>
+      <button class="btn btn-primary" style="width:100%" onclick="confirmarSenha()">Entrar</button>
+      <div class="fb-err" id="login-err-3" style="display:none">Senha incorreta.</div>
+      <div style="margin-top:10px;text-align:center">
+        <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="voltarStep2()">← Voltar</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <!-- FICHA -->
 <div id="ficha-wrap" class="ficha-wrap" style="display:none">
 
-  <!-- CABEÇALHO: nome + slogan + PE -->
+  <!-- CABEÇALHO -->
   <div class="ficha-header">
     <div class="header-name-row">
       <div class="ficha-title" id="f-nome"></div>
-      <div id="f-pe-view" class="view-content"><span class="pe-badge" id="f-pe-txt">PE: 0</span></div>
-      <div id="f-pe-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pe-input" type="number" min="0" style="width:80px;text-align:center"/></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span id="f-pe-view" class="view-content pe-badge" id="f-pe-txt"></span>
+        <span id="f-pe-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pe-input" type="number" min="0" style="width:70px;text-align:center"/></span>
+      </div>
     </div>
     <div class="header-slogan-row">
-      <div id="f-slogan-view" class="view-content"><span class="ficha-slogan" id="f-slogan-txt" style="font-style:italic;font-size:11px;color:#555"></span></div>
-      <div id="f-slogan-edit" class="edit-content" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></div>
-      <div style="font-size:10px;color:#555;font-family:var(--font-body)" id="f-player-badge"></div>
+      <span id="f-slogan-view" class="view-content ficha-slogan" id="f-slogan-txt"></span>
+      <span id="f-slogan-edit" class="edit-content" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></span>
+      <span style="font-size:10px;color:#666;font-family:var(--font-body);white-space:nowrap" id="f-player-badge"></span>
     </div>
     <div class="header-body">
-      <div class="header-avatar-col">
-        <div class="ficha-avatar" id="f-avatar"></div>
+      <!-- BANNER (editável pelo player) -->
+      <div class="header-banner-col" id="header-banner-col">
+        <div id="f-banner-view">
+          <div id="f-banner-placeholder" class="header-banner-placeholder">Sem banner — clique para adicionar</div>
+        </div>
+        <button class="header-banner-edit-btn" id="btn-banner-edit" onclick="editarBanner()" style="display:none">🖼 Trocar banner</button>
+        <input type="file" id="banner-file-input" accept="image/*" style="display:none" onchange="onBannerFile(this)"/>
       </div>
-      <div class="header-mid-col">
-        <div id="f-photoplayer" style="font-size:11px;color:var(--muted);font-style:italic;text-align:center"></div>
+      <!-- FOTO DO PERSONAGEM (coluna direita) -->
+      <div class="header-photo-col" id="header-photo-col">
+        <div id="f-photo-placeholder" class="header-photo-placeholder">Sem foto</div>
       </div>
-      <div class="header-right-col"></div>
     </div>
   </div>
 
@@ -300,6 +338,7 @@ const apiPatch=(p,q,b)=>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)})
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
+let loginPlayerNome='', loginPlayerData=null, loginPersonagemSelecionado=null, loginPersonagensDoPlayer=[];
 const personagemId=new URLSearchParams(location.search).get('id');
 
 // ─── Render ───────────────────────────────────────────
@@ -307,21 +346,36 @@ const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites
 
 function renderFicha(){
   const p=personagem, f=ficha;
-  // Avatar
-  const av=document.getElementById('f-avatar');
-  av.innerHTML=p.img?`<img src="${p.img}"/>`:`<img src="${FALLBACK}" style="width:60px;height:60px;object-fit:contain;image-rendering:pixelated"/>`;
-  av.style.borderColor=p.cor||'var(--border)';
   // Header
   document.getElementById('f-nome').textContent=p.nome;
-  const ph=document.getElementById('f-photoplayer');
-  ph.textContent=p.photoplayer||'';ph.style.display=p.photoplayer?'':'none';
   document.getElementById('f-player-badge').textContent=`👤 ${p.player}`;
   document.getElementById('f-player-dado').textContent=p.player;
+  // Banner
+  const bannerCol=document.getElementById('header-banner-col');
+  const bannerPlaceholder=document.getElementById('f-banner-placeholder');
+  if(f.banner){
+    bannerPlaceholder.style.display='none';
+    let img=bannerCol.querySelector('img.banner-img');
+    if(!img){img=document.createElement('img');img.className='banner-img';bannerCol.insertBefore(img,bannerCol.firstChild);}
+    img.src=f.banner;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+  } else {
+    bannerPlaceholder.style.display='';
+    const img=bannerCol.querySelector('img.banner-img');if(img)img.remove();
+  }
+  // Foto do personagem (coluna direita)
+  const photoCol=document.getElementById('header-photo-col');
+  const photoPlaceholder=document.getElementById('f-photo-placeholder');
+  if(p.img){
+    photoPlaceholder.style.display='none';
+    let img=photoCol.querySelector('img.photo-img');
+    if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
+    img.src=p.img;img.style.cssText='width:200px;height:100%;object-fit:cover;display:block';
+  } else { photoPlaceholder.style.display=''; }
   // Slogan
   document.getElementById('f-slogan-txt').textContent=f.slogan||'';
   document.getElementById('f-slogan-input').value=f.slogan||'';
   // PE
-  document.getElementById('f-pe-txt').textContent=`PE: ${f.pe||0}`;
+  document.getElementById('f-pe-view').textContent=`${f.pe||0} PE`;
   document.getElementById('f-pe-input').value=f.pe||0;
   // Stats
   ['rep','cs','pv','ca'].forEach(k=>{
@@ -335,19 +389,23 @@ function renderFicha(){
   document.getElementById('f-ocup-input').value=f.ocupacao||'';
   document.getElementById('f-orig-txt').textContent=f.origem||'—';
   document.getElementById('f-orig-input').value=f.origem||'';
-  // Time
   renderTime();
-  // Inventário
   document.getElementById('f-inv-txt').textContent=f.inventario||'Nenhum item registrado.';
   document.getElementById('f-inv-input').value=f.inventario||'';
-  // Relacionamentos
   renderRel();
-  // Biografia
   document.getElementById('f-bio-txt').textContent=f.biografia||'Nenhuma biografia registrada.';
   document.getElementById('f-bio-input').value=f.biografia||'';
-  // Anotações
   document.getElementById('f-anot-txt').textContent=f.anotacoes||'Nenhuma anotação registrada.';
   document.getElementById('f-anot-input').value=f.anotacoes||'';
+}
+
+// ─── Banner ───────────────────────────────────────────
+function editarBanner(){document.getElementById('banner-file-input').click();}
+function onBannerFile(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{ficha.banner=e.target.result;renderFicha();};
+  reader.readAsDataURL(file);input.value='';
 }
 
 function renderTime(){
@@ -370,7 +428,7 @@ function renderTime(){
   }).join('');
 }
 function slotEdit(i,pk){
-  return`<div class="poke-slot" style="border-color:var(--brand-mid)">
+  return`<div class="poke-slot" style="border-color:var(--green-dark)">
     <div class="poke-slot-fields">
       <input value="${pk.nome||''}" placeholder="Nome do Pokémon" id="pk-nome-${i}"/>
       <input value="${pk.level||''}" placeholder="Nível" id="pk-level-${i}" type="number" min="1" max="90"/>
@@ -384,7 +442,7 @@ function slotEditVazio(i,pk){return slotEdit(i,pk);}
 function renderRel(){
   const rels=ficha.relacionamentos||[];
   const grid=document.getElementById('f-rel-grid');
-  if(rels.length===0){grid.innerHTML='<div style="color:var(--muted);font-size:13px">Nenhum relacionamento registrado.</div>';return;}
+  if(rels.length===0){grid.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px">Nenhum relacionamento registrado.</div>';return;}
   grid.innerHTML=rels.map(r=>`<div class="rel-item"><div class="rel-nome">${r.nome}</div><div class="rel-tipo">${r.tipo||''}</div></div>`).join('');
   renderRelEdit();
 }
@@ -400,31 +458,26 @@ function renderRelEdit(){
 }
 function addRelSlot(){
   if(!ficha.relacionamentos)ficha.relacionamentos=[];
-  ficha.relacionamentos.push({nome:'',tipo:''});
-  renderRelEdit();
+  ficha.relacionamentos.push({nome:'',tipo:''});renderRelEdit();
 }
-function removerRel(i){
-  ficha.relacionamentos.splice(i,1);
-  renderRelEdit();
-}
+function removerRel(i){ficha.relacionamentos.splice(i,1);renderRelEdit();}
 
 // ─── Modo edição ──────────────────────────────────────
 function ativarEdicao(){
   modoEdicao=true;
-  document.getElementById('ficha-wrap').classList.add('editing');
   document.getElementById('edit-bar').style.display='flex';
   document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
-  renderTime();
-  renderRelEdit();
+  document.getElementById('btn-banner-edit').style.display='block';
+  renderTime();renderRelEdit();
 }
 function cancelarEdicao(){
   modoEdicao=false;
-  document.getElementById('ficha-wrap').classList.remove('editing');
   document.getElementById('edit-bar').style.display='none';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
+  document.getElementById('btn-banner-edit').style.display='none';
   renderFicha();
 }
 
@@ -432,8 +485,6 @@ function cancelarEdicao(){
 async function salvarFicha(){
   const btn=document.getElementById('btn-salvar');
   btn.textContent='Salvando...';btn.disabled=true;
-
-  // Coleta time
   const time=[];
   for(let i=0;i<6;i++){
     const nome=(document.getElementById(`pk-nome-${i}`)?.value||'').trim();
@@ -442,15 +493,13 @@ async function salvarFicha(){
     const moveset=(document.getElementById(`pk-moveset-${i}`)?.value||'').trim();
     time.push(nome?{nome,level,ability,moveset}:{});
   }
-
-  // Coleta relacionamentos do editor
   const rels=ficha.relacionamentos||[];
   const relacionamentos=rels.map((_,i)=>({
     nome:(document.getElementById(`rel-nome-${i}`)?.value||'').trim(),
     tipo:(document.getElementById(`rel-tipo-${i}`)?.value||'').trim()
   })).filter(r=>r.nome);
-
   const novaFicha={
+    banner:ficha.banner||null,
     slogan:document.getElementById('f-slogan-input').value.trim(),
     pe:parseInt(document.getElementById('f-pe-input').value)||0,
     rep:parseInt(document.getElementById('f-rep-input').value)||0,
@@ -463,87 +512,100 @@ async function salvarFicha(){
     inventario:document.getElementById('f-inv-input').value.trim(),
     biografia:document.getElementById('f-bio-input').value.trim(),
     anotacoes:document.getElementById('f-anot-input').value.trim(),
-    time,relacionamentos,
-    updated_at:new Date().toISOString()
+    time,relacionamentos,updated_at:new Date().toISOString()
   };
-
-  // Registra histórico de campos alterados
-  const campos=['slogan','pe','rep','cs','pv','ca','idade','ocupacao','origem','inventario','biografia','anotacoes'];
-  const hist=[];
-  campos.forEach(c=>{
-    const anterior=String(ficha[c]??'');
-    const novo=String(novaFicha[c]??'');
-    if(anterior!==novo) hist.push({
-      ficha_id:ficha.id,
-      personagem_nome:personagem.nome,
-      player_nome:personagem.player,
-      campo:c,
-      valor_anterior:anterior,
-      valor_novo:novo,
-      editado_em:new Date().toISOString()
-    });
-  });
-  // time e relacionamentos como JSON se mudaram
-  if(JSON.stringify(ficha.time)!==JSON.stringify(time)) hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:personagem.player,campo:'time',valor_anterior:JSON.stringify(ficha.time||[]),valor_novo:JSON.stringify(time),editado_em:new Date().toISOString()});
-  if(JSON.stringify(ficha.relacionamentos)!==JSON.stringify(relacionamentos)) hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:personagem.player,campo:'relacionamentos',valor_anterior:JSON.stringify(ficha.relacionamentos||[]),valor_novo:JSON.stringify(relacionamentos),editado_em:new Date().toISOString()});
-
-  // Upsert ficha
-  let res;
   if(ficha.id){
-    res=await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
+    await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
   } else {
-    res=await apiPost('fichas',{...novaFicha,personagem_id:personagemId});
+    const res=await apiPost('fichas',{...novaFicha,personagem_id:personagemId});
     if(res&&res[0]) ficha.id=res[0].id;
   }
-
-  // Salva histórico
-  if(hist.length>0) await apiPost('fichas_historico',hist);
-
   Object.assign(ficha,novaFicha);
   btn.textContent='💾 Salvar';btn.disabled=false;
   cancelarEdicao();
 }
 
-// ─── Login jogador ────────────────────────────────────
-async function fazerLoginJogador(){
-  const nome=document.getElementById('login-nome').value.trim();
+// ─── Login — 3 passos ─────────────────────────────────
+function showStep(n){[1,2,3].forEach(i=>document.getElementById(`login-step-${i}`).style.display=i===n?'block':'none');}
+
+async function confirmarPlayer(){
+  const nome=document.getElementById('login-player').value.trim();
+  const err=document.getElementById('login-err-1');err.style.display='none';
+  if(!nome)return;
+  // busca o player e seus personagens
+  const [playerRes, lista] = await Promise.all([
+    apiGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`),
+    apiGet('personagens',`player=eq.${encodeURIComponent(nome)}&select=id,nome,img,cor`)
+  ]);
+  if(!playerRes||playerRes.length===0||!lista||lista.length===0){err.style.display='block';return;}
+  loginPlayerNome=nome;
+  loginPlayerData=playerRes[0];
+  loginPersonagensDoPlayer=lista;
+  document.getElementById('login-step-2-sub').textContent=`Olá, ${nome}! Selecione o personagem que deseja editar:`;
+  document.getElementById('login-personagens-list').innerHTML=lista.map(p=>`
+    <button class="btn btn-primary" style="width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px" onclick="selecionarPersonagemLogin('${p.id}')">
+      <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor||'#ccc'}33;border:2px solid ${p.cor||'#ccc'};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+        ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<span style="font-size:14px">👤</span>`}
+      </div>
+      <span style="font-size:13px">${p.nome}</span>
+    </button>`).join('');
+  showStep(2);
+}
+function voltarStep1(){showStep(1);}
+function selecionarPersonagemLogin(id){
+  loginPersonagemSelecionado=loginPersonagensDoPlayer.find(p=>p.id===id);
+  const primeirVez=!loginPlayerData.senha;
+  document.getElementById('login-step-3-title').textContent=primeirVez?'Criar sua senha':'Acessar Ficha';
+  document.getElementById('login-step-3-sub').textContent=primeirVez
+    ?`Primeira vez aqui, ${loginPlayerNome}! Crie uma senha para acessar suas fichas.`
+    :`Bem-vindo de volta, ${loginPlayerNome}!`;
+  document.getElementById('login-senha-label').textContent=primeirVez?'Nova senha':'Senha';
+  document.getElementById('login-senha2-wrap').style.display=primeirVez?'block':'none';
+  document.getElementById('login-senha').value='';
+  document.getElementById('login-err-3').style.display='none';
+  showStep(3);
+}
+function voltarStep2(){showStep(2);}
+async function confirmarSenha(){
   const senha=document.getElementById('login-senha').value;
-  const err=document.getElementById('login-err');
-  err.style.display='none';
-  // Busca todos personagens do mesmo player
-  const p=personagem;
-  const irmãos=await apiGet('personagens',`player=eq.${encodeURIComponent(p.player)}&select=id,nome,senha`);
-  const match=irmãos.find(x=>x.nome.toLowerCase()===nome.toLowerCase()&&x.senha===senha);
-  if(!match){err.style.display='block';return;}
-  jogadorLogado={nome:match.nome,player:p.player};
+  const err=document.getElementById('login-err-3');err.style.display='none';
+  const primeirVez=!loginPlayerData.senha;
+  if(primeirVez){
+    const senha2=document.getElementById('login-senha2').value;
+    if(senha.length<4){err.textContent='Use pelo menos 4 caracteres.';err.style.display='block';return;}
+    if(senha!==senha2){err.textContent='As senhas não coincidem.';err.style.display='block';return;}
+    // salva senha no player
+    await apiPatch('players',`id=eq.${loginPlayerData.id}`,{senha});
+    loginPlayerData.senha=senha;
+  } else {
+    if(loginPlayerData.senha!==senha){err.textContent='Senha incorreta.';err.style.display='block';return;}
+  }
+  jogadorLogado={nome:loginPersonagemSelecionado.nome,player:loginPlayerNome,id:loginPersonagemSelecionado.id};
   document.getElementById('login-wrap').style.display='none';
   document.getElementById('ficha-wrap').style.display='block';
   document.getElementById('top-bar').style.display='flex';
-  atualizarTopBar();
-  ativarEdicao();
+  atualizarTopBar();ativarEdicao();
 }
 
 function atualizarTopBar(){
   const actions=document.getElementById('top-bar-actions');
   if(jogadorLogado){
-    actions.innerHTML=`<span style="font-size:12px;color:var(--muted)">Logado como <strong>${jogadorLogado.nome}</strong></span>
-      <button class="btn btn-danger btn-sm" onclick="sairJogador()">Sair</button>
-      <button class="btn btn-primary btn-sm" onclick="ativarEdicao()">✏️ Editar</button>`;
+    actions.innerHTML=`<span style="font-size:11px;color:#fff;opacity:.8">Editando como <strong>${jogadorLogado.nome}</strong></span>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="sairJogador()">Sair</button>`;
   } else {
-    actions.innerHTML=`<button class="btn btn-sm" style="background:var(--surface2);border:1.5px solid var(--border)" onclick="mostrarLogin()">✏️ Editar ficha</button>`;
+    actions.innerHTML=`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="mostrarLogin()">✏️ Editar ficha</button>`;
   }
 }
 function mostrarLogin(){
+  document.getElementById('login-player').value='';
+  document.getElementById('login-err-1').style.display='none';
+  showStep(1);
   document.getElementById('login-wrap').style.display='block';
   document.getElementById('ficha-wrap').style.display='none';
-  document.getElementById('login-nome').value='';
-  document.getElementById('login-senha').value='';
-  document.getElementById('login-err').style.display='none';
 }
 function sairJogador(){
-  jogadorLogado=null;
-  cancelarEdicao();
-  atualizarTopBar();
+  jogadorLogado=null;cancelarEdicao();atualizarTopBar();
+  document.getElementById('btn-banner-edit').style.display='none';
 }
 
 // ─── Init ─────────────────────────────────────────────
@@ -563,7 +625,7 @@ async function init(){
   }
   personagem=ps[0];
   ficha=fichas&&fichas[0]?fichas[0]:{
-    id:null,slogan:'',pe:0,rep:0,cs:0,pv:0,ca:0,
+    id:null,banner:null,slogan:'',pe:0,rep:0,cs:0,pv:0,ca:0,
     idade:'',ocupacao:'',origem:'',inventario:'',
     biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
   };
