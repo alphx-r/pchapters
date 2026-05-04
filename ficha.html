@@ -9,7 +9,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --accent:#c03030;
+  --accent:#1a1a1a;
   --bg:#f4f6fa;--surface:#ffffff;--surface2:#f0f0f0;
   --text:#1a1f2e;--muted:#666666;--border:#d0d0d0;
   --font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
@@ -163,7 +163,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="header-slogan-row">
       <span class="view-content ficha-slogan" id="f-slogan-txt"></span>
       <span class="edit-content" id="f-slogan-edit" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></span>
-      <span style="font-size:10px;color:#666;font-family:var(--font-body);white-space:nowrap" id="f-player-badge"></span>
+      <span style="font-size:10px;color:#fff;font-family:var(--font-body);white-space:nowrap" id="f-player-badge"></span>
     </div>
     <div class="header-body">
       <!-- BANNER (editável pelo player) -->
@@ -317,7 +317,7 @@ function renderFicha(){
   const p=personagem, f=ficha;
   // Header
   document.getElementById('f-nome').textContent=p.nome;
-  document.getElementById('f-player-badge').textContent=`👤 ${p.player}`;
+  document.getElementById('f-player-badge').textContent=`${p.player}`;
   document.getElementById('f-player-dado').textContent=p.player;
   // Banner
   const bannerCol=document.getElementById('header-banner-col');
