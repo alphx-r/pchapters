@@ -806,7 +806,7 @@ const dbDel  = (t,q)           => sb(`${t}?${q}`,{method:'DELETE',prefer:'return
 // STATE
 // ══════════════════════════════════════
 let admins=[], players=[], personagens=[], biomas=[], pokemonDB=[], historico=[];
-let admLogado=null, histPagina=0;
+let admLogado=null, playerLogado=null, histPagina=0;
 const HIST_POR_PAG=10;
 
 function slugify(str){
@@ -896,7 +896,8 @@ async function init(){
       if(pageKey===paginaInicial) b.classList.add('active');
       else b.classList.remove('active');
     });
-    if(paginaInicial==='adm') 
+    if(['login','player','adm'].includes(paginaInicial))
+      document.getElementById('btn-login').classList.add('active');
 
   } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); loading(false); }
 }
@@ -957,7 +958,7 @@ window.addEventListener('popstate',e=>{
     const pk=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
     if(pk===page)b.classList.add('active');else b.classList.remove('active');
   });
-  if(page==='adm')
+  if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
 });
 
 // ══════════════════════════════════════
@@ -1055,7 +1056,6 @@ async function fazerLogout(){
 }
 
 // ── LOGIN PLAYER ──────────────────────────────────────
-let playerLogado=null;
 async function fazerLoginPlayer(){
   const nome=document.getElementById('player-nome-input').value.trim();
   const senha=document.getElementById('player-senha-input').value;
