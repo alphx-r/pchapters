@@ -308,6 +308,8 @@ const apiPatch=(p,q,b)=>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)})
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
+let loginPlayerNome='', loginPlayerData=null, loginPersonagemSelecionado=null, loginPersonagensDoPlayer=[];
+const personagemSlug=new URLSearchParams(location.search).get('id');
 
 // ─── Render ───────────────────────────────────────────
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
@@ -487,7 +489,7 @@ async function salvarFicha(){
   if(ficha.id){
     await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
   } else {
-    const res=await apiPost('fichas',{...novaFicha,personagem_id:new URLSearchParams(location.search).get('id')});
+    const res=await apiPost('fichas',{...novaFicha,personagem_slug:personagemSlug});
     if(res&&res[0]) ficha.id=res[0].id;
   }
   Object.assign(ficha,novaFicha);
@@ -538,15 +540,15 @@ function sairJogador(){
 
 // ─── Init ─────────────────────────────────────────────
 async function init(){
-  const pid=new URLSearchParams(location.search).get('id');
+  const pid=personagemSlug;
   if(!pid){
     document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ ID do personagem não encontrado na URL.</div>';
     return;
   }
   try{
     const [ps,fichas]=await Promise.all([
-      apiGet('personagens',`id=eq.${pid}`),
-      apiGet('fichas',`personagem_id=eq.${pid}`)
+      apiGet('personagens',`slug=eq.${pid}`),
+      apiGet('fichas',`personagem_slug=eq.${pid}`)
     ]);
     if(!ps||!ps[0]){
       document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ Personagem não encontrado no banco.</div>';
