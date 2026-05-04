@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>pchapters | index </title>
+<title>pchapters</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -166,6 +166,16 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .dice-side-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
 .dice-side-btn.active{background:var(--brand-mid);border-color:var(--brand-mid);color:#fff}
 .adm-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+/* ACCORDION PLAYERS */
+.acc-player{border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.acc-player-header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);cursor:pointer;user-select:none;transition:background .15s}
+.acc-player-header:hover{background:var(--brand-light)}
+.acc-player-chevron{font-size:11px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.acc-player-header.open .acc-player-chevron{transform:rotate(90deg)}
+.acc-player-nome{font-weight:700;font-size:13px;color:var(--text);flex:1}
+.acc-player-meta{font-size:11px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.acc-player-body{display:none;padding:10px 14px;background:var(--surface)}
+.acc-player-body.open{display:block}
 /* POR BIOMA */
 .bioma-tab-btn{padding:7px 18px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
 .bioma-tab-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
@@ -432,18 +442,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <div class="fb fb-ok" id="np-fb">✓ Personagem adicionado!</div>
           </div>
           <div class="box">
-            <div class="box-title">Pontos por Player</div>
-            <div class="adm-table-wrap"><table class="adm-table">
-              <thead><tr><th>Player</th><th>Pontos</th><th>Senha</th><th>Ações</th></tr></thead>
-              <tbody id="tbody-players"></tbody>
-            </table></div>
-          </div>
-          <div class="box">
-            <div class="box-title">Personagens cadastrados</div>
-            <div class="adm-table-wrap"><table class="adm-table">
-              <thead><tr><th>Personagem</th><th>Player</th><th>Ações</th></tr></thead>
-              <tbody id="tbody-personagens"></tbody>
-            </table></div>
+            <div class="box-title">Players e Personagens</div>
+            <div id="accordion-players"></div>
           </div>
         </div>
 
@@ -1013,29 +1013,58 @@ async function removerPlayer(id,nome){
   personagens=personagens.filter(p=>p.player!==nome);
   renderTbodyPlayers();renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
 }
-function renderTbodyPlayers(){
-  const tbody=document.getElementById('tbody-players');if(!tbody)return;
-  tbody.innerHTML=players.length===0
-    ?'<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:16px">Nenhum player cadastrado.</td></tr>'
-    :players.map(pl=>{
-      const qtd=personagens.filter(p=>p.player===pl.nome).length;
-      const temSenha=!!pl.senha;
-      return`<tr>
-        <td><strong>${pl.nome}</strong> <span style="font-size:11px;color:var(--muted)">(${qtd} personagem${qtd!==1?'s':''})</span></td>
-        <td style="font-weight:700;color:var(--brand-mid)">${pl.pontos}</td>
-        <td style="white-space:nowrap">
-          ${temSenha
-            ?`<span style="font-size:11px;color:var(--green);font-weight:700">✓ Definida</span>`
-            :`<span style="font-size:11px;color:var(--muted)">Sem senha</span>`}
-          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px;margin-left:6px" onclick="editarSenhaPlayer('${pl.id}','${pl.nome}')">🔑</button>
-        </td>
-        <td style="white-space:nowrap">
-          <button class="btn btn-warn btn-xs" style="padding:3px 8px;font-size:11px" onclick="editarPontosPlayer('${pl.id}','${pl.nome}')">✏️ Pontos</button>
-          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px;margin-left:4px" onclick="removerPlayer('${pl.id}','${pl.nome}')">Remover</button>
-        </td>
-      </tr>`;
-    }).join('');
+function renderTbodyPlayers(){ renderAccordionPlayers(); }
+function renderTbodyPersonagens(){ renderAccordionPlayers(); }
+
+function renderAccordionPlayers(){
+  const el=document.getElementById('accordion-players');if(!el)return;
+  if(players.length===0){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px">Nenhum player cadastrado.</div>';return;}
+  const sorted=[...players].sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
+  el.innerHTML=sorted.map(pl=>{
+    const chars=personagens.filter(p=>p.player===pl.nome).sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
+    const temSenha=!!pl.senha;
+    const rows=chars.length===0
+      ?`<div style="color:var(--muted);font-size:12px;padding:6px 0">Nenhum personagem cadastrado.</div>`
+      :chars.map(p=>`
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+          <div onclick="abrirModalPersonagem('${p.id}')" title="Clique para editar"
+            style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .15s"
+            onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
+            ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--text)">${p.nome}</div>
+            ${p.photoplayer?`<div style="font-size:11px;color:var(--muted)">${p.photoplayer}</div>`:''}
+          </div>
+          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="removerPersonagem('${p.id}')">Remover</button>
+        </div>`).join('');
+    return`<div class="acc-player" id="acc-${pl.id}">
+      <div class="acc-player-header" onclick="toggleAcc('${pl.id}')">
+        <span class="acc-player-chevron">▶</span>
+        <span class="acc-player-nome">${pl.nome}</span>
+        <span class="acc-player-meta">
+          <span>${chars.length} personagem${chars.length!==1?'s':''}</span>
+          <span style="font-weight:700;color:var(--brand-mid)">${pl.pontos} pts</span>
+          ${temSenha?'<span style="color:#1a7a1a;font-size:10px">✓ senha</span>':' <span style="color:var(--muted);font-size:10px">sem senha</span>'}
+        </span>
+        <span style="display:flex;gap:5px;margin-left:8px" onclick="event.stopPropagation()">
+          <button class="btn btn-warn btn-xs" style="padding:3px 8px;font-size:11px" onclick="editarPontosPlayer('${pl.id}','${pl.nome}')">pts</button>
+          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px" onclick="editarSenhaPlayer('${pl.id}','${pl.nome}')">🔑</button>
+          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px" onclick="removerPlayer('${pl.id}','${pl.nome}')">✕</button>
+        </span>
+      </div>
+      <div class="acc-player-body" id="acc-body-${pl.id}">${rows}</div>
+    </div>`;
+  }).join('');
 }
+
+function toggleAcc(id){
+  const header=document.querySelector(`#acc-${id} .acc-player-header`);
+  const body=document.getElementById(`acc-body-${id}`);
+  header.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
 async function editarSenhaPlayer(id,nome){
   const nova=prompt(`Senha do player "${nome}" (deixe vazio para remover):`, '');
   if(nova===null)return;
@@ -1136,23 +1165,6 @@ async function salvarEdicaoPersonagem(){
   p.player=novoPlayer;p.nome=novoNome;p.photoplayer=novoPhotoplayer||null;p.cor=novaCor;p.img=novaImg;
   fecharModal();
   renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
-}
-function renderTbodyPersonagens(){
-  document.getElementById('tbody-personagens').innerHTML=personagens.length===0
-    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:20px">Nenhum personagem cadastrado.</td></tr>'
-    :personagens.map(p=>`
-      <tr>
-        <td style="display:flex;align-items:center;gap:8px">
-          <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center">
-            ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
-          </div><strong>${p.nome}</strong>
-        </td>
-        <td>${p.player}</td>
-        <td style="white-space:nowrap">
-          <button class="btn btn-primary btn-xs" style="padding:3px 8px;font-size:11px" onclick="abrirModalPersonagem('${p.id}')">✏️ Editar</button>
-          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px;margin-left:4px" onclick="removerPersonagem('${p.id}')">Remover</button>
-        </td>
-      </tr>`).join('');
 }
 
 // ══════════════════════════════════════
@@ -1347,7 +1359,10 @@ function renderFichario(){
   }
   const grupos={};
   personagens.forEach(p=>{ if(!grupos[p.player])grupos[p.player]=[]; grupos[p.player].push(p); });
-  container.innerHTML=Object.entries(grupos).map(([playerNome,chars])=>{
+  // ordena players e personagens alfabeticamente
+  const playersOrdenados=Object.keys(grupos).sort((a,b)=>a.localeCompare(b,'pt'));
+  container.innerHTML=playersOrdenados.map(playerNome=>{
+    const chars=grupos[playerNome].sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
     const pl=players.find(p=>p.nome===playerNome);
     const pontos=pl?pl.pontos:0;
     const cards=chars.map(p=>`
@@ -1369,7 +1384,6 @@ function renderFichario(){
       <div class="fichas-grid">${cards}</div>
     </div>`;
   }).join('');
-}
 function filtrarFichas(q){
   q=q.toLowerCase();
   document.querySelectorAll('.player-section').forEach(sec=>{
