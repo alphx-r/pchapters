@@ -768,6 +768,12 @@ let admins=[], players=[], personagens=[], biomas=[], pokemonDB=[], historico=[]
 let admLogado=null, histPagina=0;
 const HIST_POR_PAG=10;
 
+function slugify(str){
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]/g,'');
+}
+
 const tcls={fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
 const rlbl={comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
 const rcls={comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
@@ -1052,7 +1058,8 @@ async function adicionarPersonagem(){
     const res=await dbPost('players',{nome:player,pontos:0});
     if(res&&res[0])players.push(res[0]);
   }
-  const res=await dbPost('personagens',{player,nome,photoplayer:photoplayer||null,senha:senha||null,cor,img});
+  const slug=slugify(nome);
+  const res=await dbPost('personagens',{player,nome,photoplayer:photoplayer||null,senha:senha||null,cor,img,slug});
   if(res&&res[0])personagens.push(res[0]);
   fb('np-fb');
   document.getElementById('np-player').value='';
@@ -1337,7 +1344,7 @@ function renderFichario(){
     const pl=players.find(p=>p.nome===playerNome);
     const pontos=pl?pl.pontos:0;
     const cards=chars.map(p=>`
-      <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}" onclick="window.open('ficha.html?id=${p.id}','_blank')" style="cursor:pointer">
+      <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}" onclick="window.open('ficha.html?id=${p.slug||slugify(p.nome)}','_blank')" style="cursor:pointer">
         <div class="ficha-card-avatar" style="background:${p.cor}22;border:2px solid ${p.cor}">
           ${p.img?`<img src="${p.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
             :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}
