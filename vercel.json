@@ -1,5 +1,12 @@
 {
   "rewrites": [
+    { "source": "/pokemon",     "destination": "/index.html" },
+    { "source": "/bioma",       "destination": "/index.html" },
+    { "source": "/dados",       "destination": "/index.html" },
+    { "source": "/fichario",    "destination": "/index.html" },
+    { "source": "/login",       "destination": "/index.html" },
+    { "source": "/player",      "destination": "/index.html" },
+    { "source": "/adm",         "destination": "/index.html" },
     { "source": "/ficha/:slug", "destination": "/ficha.html" }
   ]
 }

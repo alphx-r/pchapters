@@ -268,7 +268,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
     <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
   </div>
-  <button class="nav-login" id="btn-adm" onclick="goToAdm()">ADM</button>
+  <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
 </nav>
 
 <!-- ROLADOR -->
@@ -388,19 +388,62 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div id="bioma-content"></div>
 </div>
 
-<div class="page" id="page-adm">
-  <div id="adm-login-wrap" class="adm-login-wrap">
-    <div class="adm-login-card">
-      <div class="adm-login-icon">🔐</div>
-      <div class="adm-login-title">Área ADM</div>
-      <div class="adm-login-sub">Acesso restrito aos administradores</div>
-      <div class="field"><label>Usuário</label><input type="text" id="login-email" placeholder="usuário"/></div>
-      <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
-      <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="fazerLogin()">Entrar</button>
-      <div class="fb fb-err" id="login-erro">Usuário ou senha incorretos.</div>
+<!-- LOGIN -->
+<div class="page" id="page-login">
+  <div style="max-width:700px;margin:40px auto;padding:0 16px">
+    <div style="text-align:center;margin-bottom:28px">
+      <div style="font-family:var(--font-title);font-size:20px;color:var(--brand);font-weight:700">Área de Acesso</div>
+      <div style="font-size:13px;color:var(--muted);margin-top:6px">Escolha seu tipo de acesso</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+      <!-- JANELA ADM -->
+      <div class="box" style="padding:28px 24px">
+        <div style="text-align:center;margin-bottom:20px">
+          <div style="font-size:32px;margin-bottom:8px">🔐</div>
+          <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--brand)">Administrador</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Acesso ao painel de controle</div>
+        </div>
+        <div class="field"><label>Usuário</label><input type="text" id="login-email" placeholder="usuário" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+        <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+        <button class="btn btn-primary btn-full" onclick="fazerLogin()">Entrar como ADM</button>
+        <div class="fb fb-err" id="login-erro" style="margin-top:10px">Usuário ou senha incorretos.</div>
+      </div>
+
+      <!-- JANELA PLAYER -->
+      <div class="box" style="padding:28px 24px">
+        <div style="text-align:center;margin-bottom:20px">
+          <div style="font-size:32px;margin-bottom:8px">🎮</div>
+          <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--brand)">Player</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:4px">Acesso às suas fichas de personagem</div>
+        </div>
+        <div class="field"><label>Nome do Player</label><input type="text" id="player-nome-input" placeholder="Seu nome de player" onkeydown="if(event.key==='Enter')fazerLoginPlayer()"/></div>
+        <div class="field"><label>Senha</label><input type="password" id="player-senha-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLoginPlayer()"/></div>
+        <button class="btn btn-primary btn-full" onclick="fazerLoginPlayer()">Entrar como Player</button>
+        <div class="fb fb-err" id="player-login-erro" style="margin-top:10px">Nome ou senha incorretos.</div>
+      </div>
+
     </div>
   </div>
-  <div id="adm-painel" style="display:none">
+</div>
+
+<!-- ÁREA DO PLAYER -->
+<div class="page" id="page-player">
+  <div style="max-width:900px;margin:0 auto;padding:24px 16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-family:var(--font-title);font-size:18px;color:var(--brand);font-weight:700" id="player-area-title">Suas Fichas</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px" id="player-area-sub"></div>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="sairPlayer()">Sair</button>
+    </div>
+    <div class="fichas-grid" id="player-fichas-grid"></div>
+  </div>
+</div>
+
+<!-- ADM -->
+<div class="page" id="page-adm">
+  <div id="adm-painel">
     <div class="adm-layout">
       <div class="adm-sidebar">
         <div class="adm-sidebar-user" id="adm-user-label">—</div>
@@ -816,14 +859,16 @@ async function init(){
     const {data:{session}}=await supabaseClient.auth.getSession();
     if(session){
       admLogado={email:session.user.email};
-      document.getElementById('adm-login-wrap').style.display='none';
-      document.getElementById('adm-painel').style.display='block';
       document.getElementById('adm-user-label').textContent=session.user.email;
     }
 
     // descobre qual aba abrir pelo pathname
     const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
-    const paginaInicial=PATH_PAGES[pathSeg]||'roller';
+    let paginaInicial=PATH_PAGES[pathSeg]||'roller';
+    // se tentou acessar /adm sem estar logado, redireciona para /login
+    if(paginaInicial==='adm'&&!admLogado) paginaInicial='login';
+    // se tentou acessar /player sem estar logado como player, redireciona para /login
+    if(paginaInicial==='player'&&!playerLogado) paginaInicial='login';
 
     // dados sempre necessários (base compartilhada)
     const [_players,_personagens,_biomas,_pokemons,_admins,estilo] = await Promise.all([
@@ -851,7 +896,7 @@ async function init(){
       if(pageKey===paginaInicial) b.classList.add('active');
       else b.classList.remove('active');
     });
-    if(paginaInicial==='adm') document.getElementById('btn-adm').classList.add('active');
+    if(paginaInicial==='adm') 
 
   } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); loading(false); }
 }
@@ -860,23 +905,22 @@ async function init(){
 // NAVEGAÇÃO
 // ══════════════════════════════════════
 // mapa aba → path e path → aba
-const PAGE_PATHS={roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',adm:'adm'};
+const PAGE_PATHS={roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm'};
 const PATH_PAGES=Object.fromEntries(Object.entries(PAGE_PATHS).map(([k,v])=>[v,k]));
-// controle de abas já carregadas
-const pagesLoaded={roller:false,bioma:false,dados:false,ficha:false,adm:false};
+const pagesLoaded={roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false};
 
 async function goTo(page,el,pushState=true){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
-  document.getElementById('btn-adm').classList.remove('active');
+  document.getElementById('btn-login').classList.remove('active');
   if(el) el.classList.add('active');
-  if(pushState) history.pushState({page},'',' /'+PAGE_PATHS[page]);
+  if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
+  if(pushState) history.pushState({page},'','/'+PAGE_PATHS[page]);
   await lazyLoad(page);
 }
 async function goToAdm(pushState=true){
   await goTo('adm',null,pushState);
-  document.getElementById('btn-adm').classList.add('active');
 }
 
 async function lazyLoad(page){
@@ -887,12 +931,10 @@ async function lazyLoad(page){
     historico=raw||[];
     renderHistorico();
   }
-  if(page==='bioma'){
-    renderBiomaPage();
-  }
+  if(page==='bioma') renderBiomaPage();
   if(page==='dados'){
     const raw=await dbGet('historico_dados','order=created_at.desc&limit=300');
-    historicoDados=(raw||[]);
+    historicoDados=raw||[];
     renderHistDados();
   }
   if(page==='ficha'){
@@ -915,7 +957,7 @@ window.addEventListener('popstate',e=>{
     const pk=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
     if(pk===page)b.classList.add('active');else b.classList.remove('active');
   });
-  if(page==='adm')document.getElementById('btn-adm').classList.add('active');
+  if(page==='adm')
 });
 
 // ══════════════════════════════════════
@@ -1000,18 +1042,59 @@ async function fazerLogin(){
   const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:senha});
   if(error||!data.session){errEl.style.display='block';return;}
   admLogado={email:data.user.email};
-  document.getElementById('adm-login-wrap').style.display='none';
-  document.getElementById('adm-painel').style.display='block';
   document.getElementById('adm-user-label').textContent=data.user.email;
-  renderTbodyPersonagens();renderTbodyPlayers();
+  pagesLoaded['adm']=false; // força reload do painel
+  await goTo('adm',null,true);
 }
 async function fazerLogout(){
   await supabaseClient.auth.signOut();
   admLogado=null;
-  document.getElementById('adm-login-wrap').style.display='block';
-  document.getElementById('adm-painel').style.display='none';
   document.getElementById('login-email').value='';
   document.getElementById('login-senha').value='';
+  await goTo('login',null,true);
+}
+
+// ── LOGIN PLAYER ──────────────────────────────────────
+let playerLogado=null;
+async function fazerLoginPlayer(){
+  const nome=document.getElementById('player-nome-input').value.trim();
+  const senha=document.getElementById('player-senha-input').value;
+  const errEl=document.getElementById('player-login-erro');
+  errEl.style.display='none';
+  const res=await dbGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`);
+  const pl=res&&res[0];
+  if(!pl||pl.senha!==senha){errEl.style.display='block';return;}
+  playerLogado={id:pl.id,nome:pl.nome};
+  await renderAreaPlayer();
+  await goTo('player',null,true);
+}
+async function renderAreaPlayer(){
+  const p=playerLogado;
+  document.getElementById('player-area-title').textContent=`Olá, ${p.nome}!`;
+  document.getElementById('player-area-sub').textContent='Escolha qual ficha você quer editar.';
+  const chars=personagens.filter(c=>c.player===p.nome);
+  const grid=document.getElementById('player-fichas-grid');
+  if(!chars.length){
+    grid.innerHTML='<div style="color:var(--muted);font-size:13px">Nenhum personagem vinculado ao seu player.</div>';
+    return;
+  }
+  grid.innerHTML=chars.map(c=>`
+    <div class="ficha-card" onclick="window.open('ficha/${encodeURIComponent(c.slug||slugify(c.nome))}','_blank')" style="cursor:pointer">
+      <div class="ficha-card-avatar" style="background:${c.cor}22;border:2px solid ${c.cor}">
+        ${c.img?`<img src="${c.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
+          :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}
+      </div>
+      <div>
+        <div class="ficha-name">${c.nome}</div>
+        ${c.photoplayer?`<div class="ficha-photoplayer">${c.photoplayer}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+async function sairPlayer(){
+  playerLogado=null;
+  document.getElementById('player-nome-input').value='';
+  document.getElementById('player-senha-input').value='';
+  await goTo('login',null,true);
 }
 
 // ══════════════════════════════════════
