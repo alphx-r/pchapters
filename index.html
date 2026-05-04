@@ -812,7 +812,7 @@ async function carregarFichasHist(){
 async function init(){
   loading(true);
   try{
-    // verifica sessão ativa (ex: após refresh de página)
+    // verifica sessão ativa
     const {data:{session}}=await supabaseClient.auth.getSession();
     if(session){
       admLogado={email:session.user.email};
@@ -821,35 +821,37 @@ async function init(){
       document.getElementById('adm-user-label').textContent=session.user.email;
     }
 
-    // FASE 1 — dados críticos para o site funcionar (carrega junto)
-    const [_players,_personagens,_biomas,_pokemons,estilo] = await Promise.all([
+    // descobre qual aba abrir pelo pathname
+    const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
+    const paginaInicial=PATH_PAGES[pathSeg]||'roller';
+
+    // dados sempre necessários (base compartilhada)
+    const [_players,_personagens,_biomas,_pokemons,_admins,estilo] = await Promise.all([
       dbGet('players'),
       dbGet('personagens'),
       dbGet('biomas'),
       dbGet('pokemons'),
+      dbGet('admins'),
       carregarEstiloSalvo(),
     ]);
     players=_players; personagens=_personagens;
-    biomas=_biomas; pokemonDB=_pokemons;
+    biomas=_biomas; pokemonDB=_pokemons; admins=_admins;
     aplicarVars(estilo);
     syncBiomaSelect();
-    renderFichario();
-    renderPersonagensDatalist();
 
-    // Esconde loading — site já está usável
     loading(false);
 
-    // FASE 2 — dados secundários em background (não bloqueia a UI)
-    const [_admins,_historico,_histDados] = await Promise.all([
-      dbGet('admins'),
-      dbGet('historico','order=created_at.desc&limit=100'),
-      dbGet('historico_dados','order=created_at.desc&limit=100'),
-    ]);
-    admins=_admins;
-    historico=_historico;
-    historicoDados=_histDados;
-    renderHistorico();
-    renderHistDados();
+    // navega para a aba correta sem pushState (já está na URL certa)
+    await goTo(paginaInicial, null, false);
+
+    // destaca o botão da nav correto
+    const navBtns=document.querySelectorAll('.nav-link');
+    navBtns.forEach(b=>{
+      const pageKey=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
+      if(pageKey===paginaInicial) b.classList.add('active');
+      else b.classList.remove('active');
+    });
+    if(paginaInicial==='adm') document.getElementById('btn-adm').classList.add('active');
 
   } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); loading(false); }
 }
@@ -857,15 +859,64 @@ async function init(){
 // ══════════════════════════════════════
 // NAVEGAÇÃO
 // ══════════════════════════════════════
-function goTo(page,el){
+// mapa aba → path e path → aba
+const PAGE_PATHS={roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',adm:'adm'};
+const PATH_PAGES=Object.fromEntries(Object.entries(PAGE_PATHS).map(([k,v])=>[v,k]));
+// controle de abas já carregadas
+const pagesLoaded={roller:false,bioma:false,dados:false,ficha:false,adm:false};
+
+async function goTo(page,el,pushState=true){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
   document.getElementById('btn-adm').classList.remove('active');
-  if(el)el.classList.add('active');
-  if(page==='bioma') renderBiomaPage();
+  if(el) el.classList.add('active');
+  if(pushState) history.pushState({page},'',' /'+PAGE_PATHS[page]);
+  await lazyLoad(page);
 }
-function goToAdm(){goTo('adm',null);document.getElementById('btn-adm').classList.add('active');}
+async function goToAdm(pushState=true){
+  await goTo('adm',null,pushState);
+  document.getElementById('btn-adm').classList.add('active');
+}
+
+async function lazyLoad(page){
+  if(pagesLoaded[page]) return;
+  pagesLoaded[page]=true;
+  if(page==='roller'){
+    const raw=await dbGet('historico','order=created_at.desc&limit=100');
+    historico=raw||[];
+    renderHistorico();
+  }
+  if(page==='bioma'){
+    renderBiomaPage();
+  }
+  if(page==='dados'){
+    const raw=await dbGet('historico_dados','order=created_at.desc&limit=300');
+    historicoDados=(raw||[]);
+    renderHistDados();
+  }
+  if(page==='ficha'){
+    renderFichario();
+    renderPersonagensDatalist();
+  }
+  if(page==='adm'){
+    renderTbodyPersonagens();
+    renderTbodyPlayers();
+  }
+}
+
+function tryParse(str,def){try{return JSON.parse(str);}catch{return def;}}
+
+// botão voltar do browser
+window.addEventListener('popstate',e=>{
+  const page=e.state?.page||(PATH_PAGES[location.pathname.replace(/^\/+/,'').replace(/\/+$/,'')])|| 'roller';
+  goTo(page,null,false);
+  document.querySelectorAll('.nav-link').forEach(b=>{
+    const pk=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
+    if(pk===page)b.classList.add('active');else b.classList.remove('active');
+  });
+  if(page==='adm')document.getElementById('btn-adm').classList.add('active');
+});
 
 // ══════════════════════════════════════
 // POR BIOMA
