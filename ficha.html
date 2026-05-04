@@ -309,7 +309,13 @@ const apiPatch=(p,q,b)=>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)})
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
 let loginPlayerNome='', loginPlayerData=null, loginPersonagemSelecionado=null, loginPersonagensDoPlayer=[];
-const personagemSlug=new URLSearchParams(location.search).get('id');
+const personagemSlug=(()=>{
+  const params=new URLSearchParams(location.search).get('id');
+  if(params) return params;
+  // lê do path: /ficha/hanograssly
+  const match=location.pathname.match(/\/ficha\/([^\/]+)/);
+  return match?match[1]:null;
+})();
 
 // ─── Render ───────────────────────────────────────────
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
