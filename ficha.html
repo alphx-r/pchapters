@@ -157,13 +157,13 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="header-name-row">
       <div class="ficha-title" id="f-nome"></div>
       <div style="display:flex;align-items:center;gap:12px">
-        <span id="f-pe-view" class="view-content pe-badge" id="f-pe-txt"></span>
-        <span id="f-pe-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pe-input" type="number" min="0" style="width:70px;text-align:center"/></span>
+        <span class="view-content pe-badge" id="f-pe-view"></span>
+        <span class="edit-content" id="f-pe-edit" style="display:none"><input class="edit-input edit-input-sm" id="f-pe-input" type="number" min="0" style="width:70px;text-align:center"/></span>
       </div>
     </div>
     <div class="header-slogan-row">
-      <span id="f-slogan-view" class="view-content ficha-slogan" id="f-slogan-txt"></span>
-      <span id="f-slogan-edit" class="edit-content" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></span>
+      <span class="view-content ficha-slogan" id="f-slogan-txt"></span>
+      <span class="edit-content" id="f-slogan-edit" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></span>
       <span style="font-size:10px;color:#666;font-family:var(--font-body);white-space:nowrap" id="f-player-badge"></span>
     </div>
     <div class="header-body">
@@ -314,6 +314,7 @@ let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
 
 function renderFicha(){
+  try{
   const p=personagem, f=ficha;
   // Header
   document.getElementById('f-nome').textContent=p.nome;
@@ -366,6 +367,7 @@ function renderFicha(){
   document.getElementById('f-bio-input').value=f.biografia||'';
   document.getElementById('f-anot-txt').textContent=f.anotacoes||'Nenhuma anotação registrada.';
   document.getElementById('f-anot-input').value=f.anotacoes||'';
+  }catch(e){console.error('Erro no renderFicha:',e);}
 }
 
 // ─── Banner ───────────────────────────────────────────
@@ -539,33 +541,38 @@ function sairJogador(){
 async function init(){
   const pid=new URLSearchParams(location.search).get('id');
   if(!pid){
-    document.getElementById('loading-overlay').innerHTML='<div style="font-size:16px;color:var(--muted)">Personagem não encontrado.</div>';
+    document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ ID do personagem não encontrado na URL.</div>';
     return;
   }
-  const [ps,fichas]=await Promise.all([
-    apiGet('personagens',`id=eq.${pid}`),
-    apiGet('fichas',`personagem_id=eq.${pid}`)
-  ]);
-  if(!ps||!ps[0]){
-    document.getElementById('loading-overlay').innerHTML='<div style="font-size:16px;color:var(--muted)">Personagem não encontrado.</div>';
-    return;
+  try{
+    const [ps,fichas]=await Promise.all([
+      apiGet('personagens',`id=eq.${pid}`),
+      apiGet('fichas',`personagem_id=eq.${pid}`)
+    ]);
+    if(!ps||!ps[0]){
+      document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ Personagem não encontrado no banco.</div>';
+      return;
+    }
+    personagem=ps[0];
+    ficha=fichas&&fichas[0]?fichas[0]:{
+      id:null,banner:null,slogan:'',pe:0,rep:0,cs:0,pv:0,ca:0,
+      idade:'',ocupacao:'',origem:'',inventario:'',
+      biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
+    };
+    ['time','relacionamentos'].forEach(k=>{
+      if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];}}
+      if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];
+    });
+    document.title=`Ficha — ${personagem.nome}`;
+    renderFicha();
+    document.getElementById('loading-overlay').style.display='none';
+    document.getElementById('top-bar').style.display='flex';
+    document.getElementById('ficha-wrap').style.display='block';
+    atualizarTopBar();
+  } catch(e){
+    console.error('Erro no init da ficha:',e);
+    document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:13px;max-width:400px;text-align:center">❌ Erro ao carregar a ficha:<br><code style="font-size:11px">${e.message}</code><br><br><button onclick="location.reload()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:none;background:#2563a8;color:#fff;cursor:pointer">Tentar novamente</button></div>`;
   }
-  personagem=ps[0];
-  ficha=fichas&&fichas[0]?fichas[0]:{
-    id:null,banner:null,slogan:'',pe:0,rep:0,cs:0,pv:0,ca:0,
-    idade:'',ocupacao:'',origem:'',inventario:'',
-    biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
-  };
-  ['time','relacionamentos'].forEach(k=>{
-    if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];}}
-    if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];
-  });
-  document.title=`Ficha — ${personagem.nome}`;
-  renderFicha();
-  document.getElementById('loading-overlay').style.display='none';
-  document.getElementById('top-bar').style.display='flex';
-  document.getElementById('ficha-wrap').style.display='block';
-  atualizarTopBar();
 }
 init();
 </script>
