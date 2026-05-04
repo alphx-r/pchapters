@@ -68,12 +68,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .badges-info{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap;font-weight:600}
 .roll-btn{width:100%;padding:15px;background:var(--brand-mid);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-title);font-size:16px;letter-spacing:1.5px;cursor:pointer;margin-bottom:24px}
 .roll-btn:hover{background:var(--brand-mid)}
-.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
+.results-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:24px}
 .poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:16px;transition:all .25s;animation:fadeUp .35s both}
 .poke-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 14px rgba(37,99,168,.12)}
 .poke-card-left{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0}
-.poke-card-img{width:108px;height:108px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.poke-card-img img{width:108px;height:108px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
+.poke-card-img{width:102px;height:102px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.poke-card-img img{width:102px;height:102px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
 .poke-card-name{font-family:var(--font-title);font-size:12px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
 .poke-card-info{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
 .poke-card-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
@@ -173,8 +173,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .bioma-raridade-section{margin-bottom:28px}
 .bioma-raridade-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--border)}
 .bioma-poke-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.bioma-poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .2s}
-.bioma-poke-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.bioma-poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:box-shadow .2s}
+.bioma-poke-card:hover{border-color:var(--brand-mid);box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .bioma-poke-sprite{width:64px;height:64px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}
 .bioma-poke-sprite img{width:64px;height:64px;object-fit:contain;image-rendering:pixelated}
 .bioma-poke-name{font-family:var(--font-title);font-size:11px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
@@ -192,17 +192,17 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .roller-header{margin-bottom:18px}
   .roller-header h2{font-size:18px}
   .roller-controls{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
-  .badges-row{flex-wrap:wrap;row-gap:8px;padding:10px 12px;align-items:center}
-  .badges-label{flex-shrink:0;margin-right:2px}
-  .badge-btn{width:28px;height:28px;font-size:14px;flex-shrink:0}
-  .badges-info{width:100%;text-align:center;margin-left:0;font-size:11px;order:99}
+  .badges-row{flex-wrap:nowrap;padding:10px 12px;align-items:center;gap:5px;overflow:hidden}
+  .badges-label{display:none}
+  .badge-btn{width:26px;height:26px;font-size:13px;flex-shrink:0}
+  .badges-info{font-size:11px;margin-left:auto;white-space:nowrap;flex-shrink:0}
   .roll-btn{font-size:14px;padding:13px}
-  .results-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-  .poke-card{padding:12px;gap:12px}
-  .poke-card-img{width:80px;height:80px}
+  .results-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .poke-card{padding:10px;gap:8px}
+  .poke-card-img{width:60px;height:60px}
   .poke-card-img img{width:80px;height:80px}
-  .hist-body{gap:6px;display:grid;grid-template-columns:1fr 1fr}
-  .hist-poke{min-width:0;width:auto}
+  .hist-body{gap:6px}
+  .hist-poke{min-width:0;width:100%}
   .hist-header{flex-direction:column;align-items:flex-start;gap:4px}
   .ficha-header{flex-direction:column;align-items:flex-start;gap:10px}
   .search-bar{width:100%}
@@ -235,11 +235,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 @media(max-width:480px){
   .nav-links{gap:2px}
   .nav-link{padding:5px 8px;font-size:11px}
+  .results-grid{grid-template-columns:repeat(2,1fr)}
   .fichas-grid{grid-template-columns:1fr}
-  .poke-card-img{width:70px;height:70px}
-  .poke-card-img img{width:70px;height:70px}
+  .poke-card-img{width:50px;height:50px}
+  .poke-card-img img{width:65px;height:65px}
   .g3{grid-template-columns:1fr}
-  .badge-btn{width:26px;height:26px;font-size:13px}
+  .badge-btn{width:24px;height:24px;font-size:12px}
 }
 </style>
 </head>
@@ -247,7 +248,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Carregando...</div>
+  <div class="loading-text">O aplicativo da sua Pokédex está carregando...</div>
 </div>
 
 <nav class="nav">
@@ -256,7 +257,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <button class="nav-link active" onclick="goTo('roller',this)">Pokémon</button>
     <button class="nav-link" onclick="goTo('bioma',this)">Por Bioma</button>
     <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
-    <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
+    <button class="nav-link" onclick="goTo('fichario',this)">Fichário</button>
   </div>
   <button class="nav-login" id="btn-adm" onclick="goToAdm()">ADM</button>
 </nav>
@@ -360,7 +361,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 </div>
 
 <!-- FICHÁRIO -->
-<div class="page" id="page-ficha">
+<div class="page" id="page-fichario">
   <div class="ficha-header">
     <h2>Fichário de Personagens</h2>
     <input class="search-bar" type="text" placeholder="Buscar personagem..." oninput="filtrarFichas(this.value)"/>
@@ -401,7 +402,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="adm-nav-btn" onclick="admTab('admins',this)">🔑 Admins</button>
         <button class="adm-nav-btn" onclick="admTab('editor',this)">🎨 Editor Visual</button>
         <button class="adm-nav-btn" onclick="admTab('historicos',this)">🗑️ Históricos</button>
-        <button class="adm-nav-btn" onclick="admTab('fichas-hist',this)">📋 Fichas</button>
         <div class="adm-nav-sep"></div>
         <button class="adm-nav-btn adm-nav-danger" onclick="fazerLogout()">Sair</button>
       </div>
@@ -417,7 +417,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               <div class="field"><label>Nome do Player</label><input type="text" id="np-player" placeholder="Ex: Lucas"/></div>
               <div class="field"><label>Nome do Personagem</label><input type="text" id="np-nome" placeholder="Ex: Ash Ketchum"/></div>
               <div class="field"><label>Photoplayer</label><input type="text" id="np-photoplayer" placeholder="Ex: Satoshi"/></div>
-              <div class="field"><label>Senha do Jogador</label><input type="password" id="np-senha" placeholder="Senha para editar a ficha"/></div>
               <div class="field"><label>Cor do avatar</label><input type="color" id="np-cor" value="#2563a8"/></div>
               <div class="field"><label>Imagem do personagem (avatar)</label>
                 <input type="file" id="np-img" accept="image/*" onchange="previewPersonagemImg(this)" style="font-size:13px"/>
@@ -687,19 +686,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           </div>
         </div>
 
-        <!-- HISTÓRICO DE FICHAS -->
-        <div class="adm-section" id="sec-fichas-hist">
-          <div class="sec-title">Histórico de Fichas</div>
-          <div class="sec-sub">Todas as edições feitas pelos jogadores nas fichas dos personagens</div>
-          <div class="box">
-            <div id="fichas-hist-lista" style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Clique na aba para carregar.</div>
-          </div>
-        </div>
-
       </div>
     </div>
   </div>
 </div>
+
+<!-- MODAL EDITAR PERSONAGEM -->
 <div class="modal-overlay" id="modal-personagem" style="display:none">
   <div class="modal-box">
     <button class="modal-close" onclick="fecharModal()">✕</button>
@@ -709,7 +701,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div class="field"><label>Nome do Player</label><input type="text" id="modal-p-player"/></div>
       <div class="field"><label>Nome do Personagem</label><input type="text" id="modal-p-nome"/></div>
       <div class="field"><label>Photoplayer</label><input type="text" id="modal-p-photoplayer" placeholder="Ex: Satoshi"/></div>
-      <div class="field"><label>Senha do Jogador</label><input type="password" id="modal-p-senha" placeholder="Deixe em branco para não alterar"/></div>
       <div class="field"><label>Cor do avatar</label><input type="color" id="modal-p-cor"/></div>
       <div class="field"><label>Imagem do personagem</label>
         <input type="file" id="modal-p-img" accept="image/*" onchange="modalPreviewImg(this)" style="font-size:13px"/>
@@ -783,33 +774,23 @@ function loading(show){ document.getElementById('loading-overlay').style.display
 function fb(id,ms=2500){const el=document.getElementById(id);if(!el)return;el.style.display='block';setTimeout(()=>el.style.display='none',ms);}
 
 // ══════════════════════════════════════
-// HISTÓRICO DE FICHAS (ADM)
-// ══════════════════════════════════════
-async function carregarFichasHist(){
-  const el=document.getElementById('fichas-hist-lista');
-  el.textContent='Carregando...';
-  const data=await dbGet('fichas_historico','order=editado_em.desc&limit=200');
-  if(!data||data.length===0){el.innerHTML='<div style="color:var(--muted);padding:20px;text-align:center">Nenhuma edição registrada ainda.</div>';return;}
-  el.innerHTML=`<table class="adm-table" style="width:100%">
-    <thead><tr><th>Data/Hora</th><th>Personagem</th><th>Player</th><th>Campo</th><th>Novo valor</th></tr></thead>
-    <tbody>${data.map(h=>`<tr>
-      <td style="font-size:11px;white-space:nowrap">${new Date(h.editado_em).toLocaleString('pt-BR')}</td>
-      <td><strong>${h.personagem_nome||'—'}</strong></td>
-      <td style="color:var(--muted)">${h.player_nome||'—'}</td>
-      <td><span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:11px">${h.campo}</span></td>
-      <td style="font-size:12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(h.valor_novo||'').replace(/"/g,'&quot;')}">${h.valor_novo||'<em>vazio</em>'}</td>
-    </tr>`).join('')}</tbody>
-  </table>`;
-}
-
-// ══════════════════════════════════════
 // INIT — carrega tudo do Supabase
 // ══════════════════════════════════════
+// ══════════════════════════════════════
+// LAZY LOADING STATE
+// ══════════════════════════════════════
+const loaded = {roller:false, ficha:false, bioma:false, dados:false, adm:false};
+
 async function init(){
   loading(true);
   try{
-    // verifica sessão ativa (ex: após refresh de página)
-    const {data:{session}}=await supabaseClient.auth.getSession();
+    // Sessão + estilo em paralelo — sempre necessários
+    const [estilo, session] = await Promise.all([
+      carregarEstiloSalvo(),
+      supabaseClient.auth.getSession().then(r=>r.data.session),
+    ]);
+    aplicarVars(estilo);
+
     if(session){
       admLogado={email:session.user.email};
       document.getElementById('adm-login-wrap').style.display='none';
@@ -817,51 +798,105 @@ async function init(){
       document.getElementById('adm-user-label').textContent=session.user.email;
     }
 
-    // FASE 1 — dados críticos para o site funcionar (carrega junto)
-    const [_players,_personagens,_biomas,_pokemons,estilo] = await Promise.all([
-      dbGet('players'),
-      dbGet('personagens'),
-      dbGet('biomas'),
-      dbGet('pokemons'),
-      carregarEstiloSalvo(),
-    ]);
-    players=_players; personagens=_personagens;
-    biomas=_biomas; pokemonDB=_pokemons;
-    aplicarVars(estilo);
-    syncBiomaSelect();
-    renderFichario();
-    renderPersonagensDatalist();
+    // Detecta aba inicial pelo hash
+    const hash = location.hash.replace('#','') || 'roller';
+    await carregarAba(hash);
+    navegarPara(hash, true);
 
-    // Esconde loading — site já está usável
-    loading(false);
+  } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); }
+  loading(false);
+}
 
-    // FASE 2 — dados secundários em background (não bloqueia a UI)
-    const [_admins,_historico,_histDados] = await Promise.all([
-      dbGet('admins'),
-      dbGet('historico','order=created_at.desc&limit=100'),
-      dbGet('historico_dados','order=created_at.desc&limit=100'),
-    ]);
-    admins=_admins;
-    historico=_historico;
-    historicoDados=_histDados;
-    renderHistorico();
-    renderHistDados();
-
-  } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); loading(false); }
+async function carregarAba(page){
+  if(loaded[page]) return; // já carregado, não repete
+  loading(true);
+  try{
+    if(page==='roller'){
+      const [_biomas,_pokemons] = await Promise.all([
+        dbGet('biomas'),
+        dbGet('pokemons'),
+      ]);
+      biomas=_biomas; pokemonDB=_pokemons;
+      syncBiomaSelect();
+      renderPersonagensDatalist();
+      // histórico em background
+      Promise.all([
+        dbGet('historico','order=created_at.desc&limit=100'),
+        dbGet('historico_dados','order=created_at.desc&limit=100'),
+      ]).then(([_h,_hd])=>{ historico=_h; historicoDados=_hd; renderHistorico(); renderHistDados(); });
+    }
+    else if(page==='fichario'){
+      const [_players,_personagens] = await Promise.all([
+        dbGet('players'),
+        dbGet('personagens'),
+      ]);
+      players=_players; personagens=_personagens;
+      renderFichario();
+      renderPersonagensDatalist();
+    }
+    else if(page==='bioma'){
+      // pokémons já carregados pelo roller? aproveita
+      if(!loaded.roller){
+        const [_biomas,_pokemons] = await Promise.all([
+          dbGet('biomas'),
+          dbGet('pokemons'),
+        ]);
+        biomas=_biomas; pokemonDB=_pokemons;
+        syncBiomaSelect();
+      }
+    }
+    else if(page==='dados'){
+      // dados não precisa de Supabase — só renderiza
+    }
+    else if(page==='adm'){
+      if(!admLogado) return; // não carrega ADM sem login
+      const [_admins,_players,_personagens,_biomas,_pokemons] = await Promise.all([
+        dbGet('admins'),
+        dbGet('players'),
+        dbGet('personagens'),
+        dbGet('biomas'),
+        dbGet('pokemons'),
+      ]);
+      admins=_admins; players=_players; personagens=_personagens;
+      biomas=_biomas; pokemonDB=_pokemons;
+      syncBiomaSelect();
+      renderTbodyPersonagens(); renderTbodyPlayers();
+    }
+    loaded[page] = true;
+  } catch(e){ console.error('Erro ao carregar aba',page,e); }
+  loading(false);
 }
 
 // ══════════════════════════════════════
-// NAVEGAÇÃO
+// NAVEGAÇÃO COM HASH
 // ══════════════════════════════════════
-function goTo(page,el){
+function navegarPara(page, replace=false){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
+  const el=document.getElementById('page-'+page);
+  if(el) el.classList.add('active');
   document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
   document.getElementById('btn-adm').classList.remove('active');
-  if(el)el.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(b=>{
+    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(`'${page}'`)) b.classList.add('active');
+  });
+  if(page==='adm') document.getElementById('btn-adm').classList.add('active');
   if(page==='bioma') renderBiomaPage();
+  // roller usa hash vazio (home)
+  const hash = page==='roller' ? '' : page;
+  if(replace) history.replaceState(null,'','#'+hash);
+  else location.hash = hash;
 }
-function goToAdm(){goTo('adm',null);document.getElementById('btn-adm').classList.add('active');}
+
+function goTo(page,el){
+  carregarAba(page).then(()=>navegarPara(page));
+  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
+  document.getElementById('btn-adm').classList.remove('active');
+  if(el) el.classList.add('active');
+}
+function goToAdm(){
+  carregarAba('adm').then(()=>navegarPara('adm'));
+  document.getElementById('btn-adm').classList.add('active');
+}
 
 // ══════════════════════════════════════
 // POR BIOMA
@@ -931,7 +966,6 @@ function admTab(sec,el){
     document.getElementById('hist-clear-blocked').style.display=isGold?'none':'block';
     document.getElementById('hist-clear-panel').style.display=isGold?'block':'none';
   }
-  if(sec==='fichas-hist') carregarFichasHist();
 }
 
 // ══════════════════════════════════════
@@ -948,7 +982,9 @@ async function fazerLogin(){
   document.getElementById('adm-login-wrap').style.display='none';
   document.getElementById('adm-painel').style.display='block';
   document.getElementById('adm-user-label').textContent=data.user.email;
-  renderTbodyPersonagens();renderTbodyPlayers();
+  // carrega dados do ADM agora que está logado
+  loaded.adm=false;
+  await carregarAba('adm');
 }
 async function fazerLogout(){
   await supabaseClient.auth.signOut();
@@ -1043,7 +1079,6 @@ async function adicionarPersonagem(){
   const player     =document.getElementById('np-player').value.trim();
   const nome       =document.getElementById('np-nome').value.trim();
   const photoplayer=document.getElementById('np-photoplayer').value.trim();
-  const senha      =document.getElementById('np-senha').value;
   const cor        =document.getElementById('np-cor').value;
   const prev       =document.getElementById('np-img-preview');
   const img        =prev.dataset.b64||null;
@@ -1052,13 +1087,13 @@ async function adicionarPersonagem(){
     const res=await dbPost('players',{nome:player,pontos:0});
     if(res&&res[0])players.push(res[0]);
   }
-  const res=await dbPost('personagens',{player,nome,photoplayer:photoplayer||null,senha:senha||null,cor,img});
+  const slug=nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'');
+  const res=await dbPost('personagens',{player,nome,photoplayer:photoplayer||null,cor,img,slug});
   if(res&&res[0])personagens.push(res[0]);
   fb('np-fb');
   document.getElementById('np-player').value='';
   document.getElementById('np-nome').value='';
   document.getElementById('np-photoplayer').value='';
-  document.getElementById('np-senha').value='';
   document.getElementById('np-img').value='';
   prev.innerHTML=`<img class="unown-fallback-img" src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
   delete prev.dataset.b64;
@@ -1076,7 +1111,6 @@ function abrirModalPersonagem(id){
   document.getElementById('modal-p-player').value=p.player;
   document.getElementById('modal-p-nome').value=p.nome;
   document.getElementById('modal-p-photoplayer').value=p.photoplayer||'';
-  document.getElementById('modal-p-senha').value='';
   document.getElementById('modal-p-cor').value=p.cor||'#2563a8';
   const prev=document.getElementById('modal-p-img-preview');
   prev.innerHTML=p.img?`<img src="${p.img}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`
@@ -1104,22 +1138,18 @@ function modalRemoverImg(){
 async function salvarEdicaoPersonagem(){
   const id=document.getElementById('modal-p-id').value;
   const p=personagens.find(x=>x.id===id);if(!p)return;
-  const novoPlayer     =document.getElementById('modal-p-player').value.trim();
-  const novoNome       =document.getElementById('modal-p-nome').value.trim();
+  const novoPlayer    =document.getElementById('modal-p-player').value.trim();
+  const novoNome      =document.getElementById('modal-p-nome').value.trim();
   const novoPhotoplayer=document.getElementById('modal-p-photoplayer').value.trim();
-  const novaSenha      =document.getElementById('modal-p-senha').value;
-  const novaCor        =document.getElementById('modal-p-cor').value;
-  const novaImg        =document.getElementById('modal-p-img-preview').dataset.img||null;
+  const novaCor       =document.getElementById('modal-p-cor').value;
+  const novaImg       =document.getElementById('modal-p-img-preview').dataset.img||null;
   if(!novoPlayer||!novoNome){alert('Preencha todos os campos.');return;}
   if(novoPlayer!==p.player&&!players.find(x=>x.nome===novoPlayer)){
     const res=await dbPost('players',{nome:novoPlayer,pontos:0});
     if(res&&res[0])players.push(res[0]);
   }
-  const patch={player:novoPlayer,nome:novoNome,photoplayer:novoPhotoplayer||null,cor:novaCor,img:novaImg};
-  if(novaSenha) patch.senha=novaSenha;
-  await dbPatch('personagens',`id=eq.${id}`,patch);
+  await dbPatch('personagens',`id=eq.${id}`,{player:novoPlayer,nome:novoNome,photoplayer:novoPhotoplayer||null,cor:novaCor,img:novaImg});
   p.player=novoPlayer;p.nome=novoNome;p.photoplayer=novoPhotoplayer||null;p.cor=novaCor;p.img=novaImg;
-  if(novaSenha) p.senha=novaSenha;
   fecharModal();
   renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
 }
@@ -1129,7 +1159,7 @@ function renderTbodyPersonagens(){
     :personagens.map(p=>`
       <tr>
         <td style="display:flex;align-items:center;gap:8px">
-          <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+          <div onclick="abrirModalPersonagem('${p.id}')" title="Clique para editar" style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .15s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
           </div><strong>${p.nome}</strong>
         </td>
@@ -1337,7 +1367,7 @@ function renderFichario(){
     const pl=players.find(p=>p.nome===playerNome);
     const pontos=pl?pl.pontos:0;
     const cards=chars.map(p=>`
-      <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}" onclick="window.open('ficha.html?id=${p.id}','_blank')" style="cursor:pointer">
+      <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}">
         <div class="ficha-card-avatar" style="background:${p.cor}22;border:2px solid ${p.cor}">
           ${p.img?`<img src="${p.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
             :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}
@@ -1450,6 +1480,7 @@ async function rolarEncontro(){
   const pokes=[];
   const grid=document.createElement('div');
   grid.className='results-grid';
+  grid.style.gridTemplateColumns=`repeat(${Math.min(total<=4?total:4,total)},1fr)`;
   for(let i=0;i<total;i++){const pk=buildCardData();pokes.push(pk);grid.innerHTML+=buildCardHtml(pk,i*0.08);}
   section.appendChild(grid);
   await salvarNoHistorico(bioma,personagem,pokes);
@@ -1768,6 +1799,14 @@ async function limparHistPokemon(){
 // ══════════════════════════════════════
 // START
 // ══════════════════════════════════════
+window.addEventListener('hashchange', ()=>{
+  const page = location.hash.replace('#','') || 'roller';
+  const validPages = ['roller','ficha','fichario','bioma','dados','adm'];
+  if(validPages.includes(page)){
+    carregarAba(page).then(()=>navegarPara(page));
+  }
+});
+
 init();
 </script>
 </body>
