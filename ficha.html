@@ -447,16 +447,16 @@ function ativarEdicao(){
   document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
-  
   renderTime();renderRelEdit();
+  atualizarTopBar();
 }
 function cancelarEdicao(){
   modoEdicao=false;
   document.getElementById('edit-bar').style.display='none';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
-  
   renderFicha();
+  atualizarTopBar();
 }
 
 // ─── Salvar ───────────────────────────────────────────
@@ -527,8 +527,10 @@ async function fazerLogin(){
 function atualizarTopBar(){
   const actions=document.getElementById('top-bar-actions');
   if(jogadorLogado){
-    actions.innerHTML=`<span style="font-size:11px;color:#fff;opacity:.8">Editando como <strong>${jogadorLogado.nome}</strong></span>
-      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="sairJogador()">Sair</button>`;
+    actions.innerHTML=`
+      <span style="font-size:11px;color:#fff;opacity:.8">${modoEdicao?'Editando como':'Logado como'} <strong>${jogadorLogado.nome}</strong></span>
+      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">✏️ Editar</button>`}
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)" onclick="sairJogador()">Sair</button>`;
   } else {
     actions.innerHTML=`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="mostrarLogin()">✏️ Editar ficha</button>`;
   }
