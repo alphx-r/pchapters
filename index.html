@@ -417,7 +417,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               <div class="field"><label>Nome do Player</label><input type="text" id="np-player" placeholder="Ex: Lucas"/></div>
               <div class="field"><label>Nome do Personagem</label><input type="text" id="np-nome" placeholder="Ex: Ash Ketchum"/></div>
               <div class="field"><label>Photoplayer</label><input type="text" id="np-photoplayer" placeholder="Ex: Satoshi"/></div>
-              <div class="field"><label>Senha do Jogador</label><input type="password" id="np-senha" placeholder="Senha para editar a ficha"/></div>
               <div class="field"><label>Cor do avatar</label><input type="color" id="np-cor" value="#2563a8"/></div>
               <div class="field"><label>Imagem do personagem (avatar)</label>
                 <input type="file" id="np-img" accept="image/*" onchange="previewPersonagemImg(this)" style="font-size:13px"/>
@@ -435,7 +434,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           <div class="box">
             <div class="box-title">Pontos por Player</div>
             <div class="adm-table-wrap"><table class="adm-table">
-              <thead><tr><th>Player</th><th>Pontos</th><th>Ações</th></tr></thead>
+              <thead><tr><th>Player</th><th>Pontos</th><th>Senha</th><th>Ações</th></tr></thead>
               <tbody id="tbody-players"></tbody>
             </table></div>
           </div>
@@ -709,7 +708,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div class="field"><label>Nome do Player</label><input type="text" id="modal-p-player"/></div>
       <div class="field"><label>Nome do Personagem</label><input type="text" id="modal-p-nome"/></div>
       <div class="field"><label>Photoplayer</label><input type="text" id="modal-p-photoplayer" placeholder="Ex: Satoshi"/></div>
-      <div class="field"><label>Senha do Jogador</label><input type="password" id="modal-p-senha" placeholder="Deixe em branco para não alterar"/></div>
       <div class="field"><label>Cor do avatar</label><input type="color" id="modal-p-cor"/></div>
       <div class="field"><label>Imagem do personagem</label>
         <input type="file" id="modal-p-img" accept="image/*" onchange="modalPreviewImg(this)" style="font-size:13px"/>
@@ -1018,18 +1016,33 @@ async function removerPlayer(id,nome){
 function renderTbodyPlayers(){
   const tbody=document.getElementById('tbody-players');if(!tbody)return;
   tbody.innerHTML=players.length===0
-    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:16px">Nenhum player cadastrado.</td></tr>'
+    ?'<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:16px">Nenhum player cadastrado.</td></tr>'
     :players.map(pl=>{
       const qtd=personagens.filter(p=>p.player===pl.nome).length;
+      const temSenha=!!pl.senha;
       return`<tr>
         <td><strong>${pl.nome}</strong> <span style="font-size:11px;color:var(--muted)">(${qtd} personagem${qtd!==1?'s':''})</span></td>
         <td style="font-weight:700;color:var(--brand-mid)">${pl.pontos}</td>
         <td style="white-space:nowrap">
-          <button class="btn btn-warn btn-xs" style="padding:3px 8px;font-size:11px" onclick="editarPontosPlayer('${pl.id}','${pl.nome}')">✏️ Editar</button>
+          ${temSenha
+            ?`<span style="font-size:11px;color:var(--green);font-weight:700">✓ Definida</span>`
+            :`<span style="font-size:11px;color:var(--muted)">Sem senha</span>`}
+          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px;margin-left:6px" onclick="editarSenhaPlayer('${pl.id}','${pl.nome}')">🔑</button>
+        </td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-warn btn-xs" style="padding:3px 8px;font-size:11px" onclick="editarPontosPlayer('${pl.id}','${pl.nome}')">✏️ Pontos</button>
           <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px;margin-left:4px" onclick="removerPlayer('${pl.id}','${pl.nome}')">Remover</button>
         </td>
       </tr>`;
     }).join('');
+}
+async function editarSenhaPlayer(id,nome){
+  const nova=prompt(`Senha do player "${nome}" (deixe vazio para remover):`, '');
+  if(nova===null)return;
+  await dbPatch('players',`id=eq.${id}`,{senha:nova||null});
+  const pl=players.find(p=>p.id===id);
+  if(pl) pl.senha=nova||null;
+  renderTbodyPlayers();
 }
 
 // ══════════════════════════════════════
@@ -1049,7 +1062,6 @@ async function adicionarPersonagem(){
   const player     =document.getElementById('np-player').value.trim();
   const nome       =document.getElementById('np-nome').value.trim();
   const photoplayer=document.getElementById('np-photoplayer').value.trim();
-  const senha      =document.getElementById('np-senha').value;
   const cor        =document.getElementById('np-cor').value;
   const prev       =document.getElementById('np-img-preview');
   const img        =prev.dataset.b64||null;
@@ -1059,13 +1071,12 @@ async function adicionarPersonagem(){
     if(res&&res[0])players.push(res[0]);
   }
   const slug=slugify(nome);
-  const res=await dbPost('personagens',{player,nome,photoplayer:photoplayer||null,senha:senha||null,cor,img,slug});
+  const res=await dbPost('personagens',{player,nome,photoplayer:photoplayer||null,cor,img,slug});
   if(res&&res[0])personagens.push(res[0]);
   fb('np-fb');
   document.getElementById('np-player').value='';
   document.getElementById('np-nome').value='';
   document.getElementById('np-photoplayer').value='';
-  document.getElementById('np-senha').value='';
   document.getElementById('np-img').value='';
   prev.innerHTML=`<img class="unown-fallback-img" src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
   delete prev.dataset.b64;
@@ -1083,7 +1094,6 @@ function abrirModalPersonagem(id){
   document.getElementById('modal-p-player').value=p.player;
   document.getElementById('modal-p-nome').value=p.nome;
   document.getElementById('modal-p-photoplayer').value=p.photoplayer||'';
-  document.getElementById('modal-p-senha').value='';
   document.getElementById('modal-p-cor').value=p.cor||'#2563a8';
   const prev=document.getElementById('modal-p-img-preview');
   prev.innerHTML=p.img?`<img src="${p.img}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`
@@ -1114,7 +1124,6 @@ async function salvarEdicaoPersonagem(){
   const novoPlayer     =document.getElementById('modal-p-player').value.trim();
   const novoNome       =document.getElementById('modal-p-nome').value.trim();
   const novoPhotoplayer=document.getElementById('modal-p-photoplayer').value.trim();
-  const novaSenha      =document.getElementById('modal-p-senha').value;
   const novaCor        =document.getElementById('modal-p-cor').value;
   const novaImg        =document.getElementById('modal-p-img-preview').dataset.img||null;
   if(!novoPlayer||!novoNome){alert('Preencha todos os campos.');return;}
@@ -1123,10 +1132,8 @@ async function salvarEdicaoPersonagem(){
     if(res&&res[0])players.push(res[0]);
   }
   const patch={player:novoPlayer,nome:novoNome,photoplayer:novoPhotoplayer||null,cor:novaCor,img:novaImg};
-  if(novaSenha) patch.senha=novaSenha;
   await dbPatch('personagens',`id=eq.${id}`,patch);
   p.player=novoPlayer;p.nome=novoNome;p.photoplayer=novoPhotoplayer||null;p.cor=novaCor;p.img=novaImg;
-  if(novaSenha) p.senha=novaSenha;
   fecharModal();
   renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
 }
@@ -1344,7 +1351,7 @@ function renderFichario(){
     const pl=players.find(p=>p.nome===playerNome);
     const pontos=pl?pl.pontos:0;
     const cards=chars.map(p=>`
-      <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}" onclick="window.open('ficha.html?id=${p.slug||slugify(p.nome)}','_blank')" style="cursor:pointer">
+      <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}" onclick="window.open('ficha.html?id=${p.id}','_blank')" style="cursor:pointer">
         <div class="ficha-card-avatar" style="background:${p.cor}22;border:2px solid ${p.cor}">
           ${p.img?`<img src="${p.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
             :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}

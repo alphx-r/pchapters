@@ -140,41 +140,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 <!-- LOGIN DO JOGADOR -->
 <div id="login-wrap" style="display:none">
   <div class="login-wrap">
-
-    <!-- PASSO 1: nome do player -->
-    <div id="login-step-1">
-      <h2>Área do Player</h2>
-      <p>Entre com seu nome de player para acessar suas fichas.</p>
-      <div class="field"><label>Nome do Player</label><input type="text" id="login-player" placeholder="Ex: Lucas" onkeydown="if(event.key==='Enter')confirmarPlayer()"/></div>
-      <button class="btn btn-primary" style="width:100%" onclick="confirmarPlayer()">Continuar →</button>
-      <div class="fb-err" id="login-err-1" style="display:none">Player não encontrado.</div>
-    </div>
-
-    <!-- PASSO 2: selecionar personagem -->
-    <div id="login-step-2" style="display:none">
-      <h2>Qual personagem?</h2>
-      <p id="login-step-2-sub"></p>
-      <div id="login-personagens-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px"></div>
-      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc;width:100%" onclick="voltarStep1()">← Voltar</button>
-    </div>
-
-    <!-- PASSO 3: senha -->
-    <div id="login-step-3" style="display:none">
-      <h2 id="login-step-3-title">Acessar Ficha</h2>
-      <p id="login-step-3-sub"></p>
-      <div class="field"><label id="login-senha-label">Senha</label>
-        <input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')confirmarSenha()"/>
-      </div>
-      <div class="field" id="login-senha2-wrap" style="display:none"><label>Confirmar senha</label>
-        <input type="password" id="login-senha2" placeholder="Repita a senha" onkeydown="if(event.key==='Enter')confirmarSenha()"/>
-      </div>
-      <button class="btn btn-primary" style="width:100%" onclick="confirmarSenha()">Entrar</button>
-      <div class="fb-err" id="login-err-3" style="display:none">Senha incorreta.</div>
-      <div style="margin-top:10px;text-align:center">
-        <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="voltarStep2()">← Voltar</button>
-      </div>
-    </div>
-
+    <h2>Editar Ficha</h2>
+    <p>Entre com seu nome de player e senha para editar qualquer ficha vinculada ao seu player.</p>
+    <div class="field"><label>Nome do Player</label><input type="text" id="login-nome" placeholder="Ex: Lucas" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+    <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+    <button class="btn btn-primary" style="width:100%" onclick="fazerLogin()">Entrar</button>
+    <div class="fb-err" id="login-err" style="display:none">Nome ou senha incorretos.</div>
   </div>
 </div>
 
@@ -338,8 +309,6 @@ const apiPatch=(p,q,b)=>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)})
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
-let loginPlayerNome='', loginPlayerData=null, loginPersonagemSelecionado=null, loginPersonagensDoPlayer=[];
-const personagemSlug=new URLSearchParams(location.search).get('id');
 
 // ─── Render ───────────────────────────────────────────
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
@@ -469,7 +438,7 @@ function ativarEdicao(){
   document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
-  document.getElementById('btn-banner-edit').style.display='block';
+  
   renderTime();renderRelEdit();
 }
 function cancelarEdicao(){
@@ -477,7 +446,7 @@ function cancelarEdicao(){
   document.getElementById('edit-bar').style.display='none';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
-  document.getElementById('btn-banner-edit').style.display='none';
+  
   renderFicha();
 }
 
@@ -517,7 +486,7 @@ async function salvarFicha(){
   if(ficha.id){
     await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
   } else {
-    const res=await apiPost('fichas',{...novaFicha,personagem_slug:personagemSlug});
+    const res=await apiPost('fichas',{...novaFicha,personagem_id:new URLSearchParams(location.search).get('id')});
     if(res&&res[0]) ficha.id=res[0].id;
   }
   Object.assign(ficha,novaFicha);
@@ -526,67 +495,26 @@ async function salvarFicha(){
 }
 
 // ─── Login — 3 passos ─────────────────────────────────
-function showStep(n){[1,2,3].forEach(i=>document.getElementById(`login-step-${i}`).style.display=i===n?'block':'none');}
 
-async function confirmarPlayer(){
-  const nome=document.getElementById('login-player').value.trim();
-  const err=document.getElementById('login-err-1');err.style.display='none';
-  if(!nome)return;
-  // busca o player e seus personagens
-  const [playerRes, lista] = await Promise.all([
-    apiGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`),
-    apiGet('personagens',`player=eq.${encodeURIComponent(nome)}&select=id,nome,img,cor`)
-  ]);
-  if(!playerRes||playerRes.length===0||!lista||lista.length===0){err.style.display='block';return;}
-  loginPlayerNome=nome;
-  loginPlayerData=playerRes[0];
-  loginPersonagensDoPlayer=lista;
-  document.getElementById('login-step-2-sub').textContent=`Olá, ${nome}! Selecione o personagem que deseja editar:`;
-  document.getElementById('login-personagens-list').innerHTML=lista.map(p=>`
-    <button class="btn btn-primary" style="width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px" onclick="selecionarPersonagemLogin('${p.id}')">
-      <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor||'#ccc'}33;border:2px solid ${p.cor||'#ccc'};flex-shrink:0;display:flex;align-items:center;justify-content:center">
-        ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<span style="font-size:14px">👤</span>`}
-      </div>
-      <span style="font-size:13px">${p.nome}</span>
-    </button>`).join('');
-  showStep(2);
-}
-function voltarStep1(){showStep(1);}
-function selecionarPersonagemLogin(id){
-  loginPersonagemSelecionado=loginPersonagensDoPlayer.find(p=>p.id===id);
-  const primeirVez=!loginPlayerData.senha;
-  document.getElementById('login-step-3-title').textContent=primeirVez?'Criar sua senha':'Acessar Ficha';
-  document.getElementById('login-step-3-sub').textContent=primeirVez
-    ?`Primeira vez aqui, ${loginPlayerNome}! Crie uma senha para acessar suas fichas.`
-    :`Bem-vindo de volta, ${loginPlayerNome}!`;
-  document.getElementById('login-senha-label').textContent=primeirVez?'Nova senha':'Senha';
-  document.getElementById('login-senha2-wrap').style.display=primeirVez?'block':'none';
-  document.getElementById('login-senha').value='';
-  document.getElementById('login-err-3').style.display='none';
-  showStep(3);
-}
-function voltarStep2(){showStep(2);}
-async function confirmarSenha(){
+
+async function fazerLogin(){
+  const nome=document.getElementById('login-nome').value.trim();
   const senha=document.getElementById('login-senha').value;
-  const err=document.getElementById('login-err-3');err.style.display='none';
-  const primeirVez=!loginPlayerData.senha;
-  if(primeirVez){
-    const senha2=document.getElementById('login-senha2').value;
-    if(senha.length<4){err.textContent='Use pelo menos 4 caracteres.';err.style.display='block';return;}
-    if(senha!==senha2){err.textContent='As senhas não coincidem.';err.style.display='block';return;}
-    // salva senha no player
-    await apiPatch('players',`id=eq.${loginPlayerData.id}`,{senha});
-    loginPlayerData.senha=senha;
-  } else {
-    if(loginPlayerData.senha!==senha){err.textContent='Senha incorreta.';err.style.display='block';return;}
-  }
-  jogadorLogado={nome:loginPersonagemSelecionado.nome,player:loginPlayerNome,id:loginPersonagemSelecionado.id};
+  const err=document.getElementById('login-err');
+  err.style.display='none';
+  // Busca player pelo nome e verifica senha
+  const res=await apiGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`);
+  const pl=res&&res[0];
+  if(!pl||pl.senha!==senha){err.style.display='block';return;}
+  // Verifica se o player é dono de algum personagem desta ficha
+  const playerDaFicha=personagem.player.toLowerCase()===nome.toLowerCase();
+  if(!playerDaFicha){err.textContent='Este player não tem acesso a esta ficha.';err.style.display='block';return;}
+  jogadorLogado={nome,player:nome};
   document.getElementById('login-wrap').style.display='none';
   document.getElementById('ficha-wrap').style.display='block';
   document.getElementById('top-bar').style.display='flex';
   atualizarTopBar();ativarEdicao();
 }
-
 function atualizarTopBar(){
   const actions=document.getElementById('top-bar-actions');
   if(jogadorLogado){
@@ -597,27 +525,26 @@ function atualizarTopBar(){
   }
 }
 function mostrarLogin(){
-  document.getElementById('login-player').value='';
-  document.getElementById('login-err-1').style.display='none';
-  showStep(1);
+  document.getElementById('login-nome').value='';
+  document.getElementById('login-senha').value='';
+  document.getElementById('login-err').style.display='none';
   document.getElementById('login-wrap').style.display='block';
   document.getElementById('ficha-wrap').style.display='none';
 }
 function sairJogador(){
   jogadorLogado=null;cancelarEdicao();atualizarTopBar();
-  document.getElementById('btn-banner-edit').style.display='none';
 }
 
 // ─── Init ─────────────────────────────────────────────
 async function init(){
-  if(!personagemSlug){
+  const pid=new URLSearchParams(location.search).get('id');
+  if(!pid){
     document.getElementById('loading-overlay').innerHTML='<div style="font-size:16px;color:var(--muted)">Personagem não encontrado.</div>';
     return;
   }
-  // Carrega personagem pelo slug
   const [ps,fichas]=await Promise.all([
-    apiGet('personagens',`slug=eq.${personagemSlug}`),
-    apiGet('fichas',`personagem_slug=eq.${personagemSlug}`)
+    apiGet('personagens',`id=eq.${pid}`),
+    apiGet('fichas',`personagem_id=eq.${pid}`)
   ]);
   if(!ps||!ps[0]){
     document.getElementById('loading-overlay').innerHTML='<div style="font-size:16px;color:var(--muted)">Personagem não encontrado.</div>';
@@ -629,14 +556,11 @@ async function init(){
     idade:'',ocupacao:'',origem:'',inventario:'',
     biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
   };
-  // Normaliza JSON fields
   ['time','relacionamentos'].forEach(k=>{
     if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];}}
     if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];
   });
-  // Aplica título da aba
   document.title=`Ficha — ${personagem.nome}`;
-  // Renderiza
   renderFicha();
   document.getElementById('loading-overlay').style.display='none';
   document.getElementById('top-bar').style.display='flex';
