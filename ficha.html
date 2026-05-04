@@ -136,6 +136,18 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div class="top-bar-actions" id="top-bar-actions"></div>
 </div>
 
+<!-- LOGIN DO JOGADOR -->
+<div id="login-wrap" style="display:none">
+  <div class="login-wrap">
+    <h2>Editar Ficha</h2>
+    <p>Entre com seu nome de player e senha para editar qualquer ficha vinculada ao seu player.</p>
+    <div class="field"><label>Nome do Player</label><input type="text" id="login-nome" placeholder="Ex: Lucas" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+    <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+    <button class="btn btn-primary" style="width:100%" onclick="fazerLogin()">Entrar</button>
+    <div class="fb-err" id="login-err" style="display:none">Nome ou senha incorretos.</div>
+  </div>
+</div>
+
 <!-- FICHA -->
 <div id="ficha-wrap" class="ficha-wrap" style="display:none">
 
@@ -494,26 +506,44 @@ async function salvarFicha(){
 // ─── Login — 3 passos ─────────────────────────────────
 
 
-// ─── Sessão do player ─────────────────────────────────
-function getPlayerLogado(){
-  try{ const s=sessionStorage.getItem('player_logado'); return s?JSON.parse(s):null; }catch{return null;}
+async function fazerLogin(){
+  const nome=document.getElementById('login-nome').value.trim();
+  const senha=document.getElementById('login-senha').value;
+  const err=document.getElementById('login-err');
+  err.style.display='none';
+  // Busca player pelo nome e verifica senha
+  const res=await apiGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`);
+  const pl=res&&res[0];
+  if(!pl||pl.senha!==senha){err.style.display='block';return;}
+  // Verifica se o player é dono de algum personagem desta ficha
+  const playerDaFicha=personagem.player.toLowerCase()===nome.toLowerCase();
+  if(!playerDaFicha){err.textContent='Este player não tem acesso a esta ficha.';err.style.display='block';return;}
+  jogadorLogado={nome,player:nome};
+  document.getElementById('login-wrap').style.display='none';
+  document.getElementById('ficha-wrap').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  atualizarTopBar();ativarEdicao();
 }
 function atualizarTopBar(){
   const actions=document.getElementById('top-bar-actions');
-  const pl=getPlayerLogado();
-  if(pl&&personagem&&pl.nome===personagem.player){
-    if(modoEdicao){
-      actions.innerHTML=`
-        <span style="font-size:11px;color:#fff;opacity:.8">Editando como <strong>${pl.nome}</strong></span>
-        <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="cancelarEdicao()">Cancelar</button>`;
-    } else {
-      actions.innerHTML=`
-        <span style="font-size:11px;color:#fff;opacity:.8">Logado como <strong>${pl.nome}</strong></span>
-        <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">✏️ Editar</button>`;
-    }
+  if(jogadorLogado){
+    actions.innerHTML=`
+      <span style="font-size:11px;color:#fff;opacity:.8">${modoEdicao?'Editando como':'Logado como'} <strong>${jogadorLogado.nome}</strong></span>
+      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">✏️ Editar</button>`}
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)" onclick="sairJogador()">Sair</button>`;
   } else {
-    actions.innerHTML=`<span style="font-size:11px;color:rgba(255,255,255,.6)">Somente leitura</span>`;
+    actions.innerHTML=`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="mostrarLogin()">✏️ Editar ficha</button>`;
   }
+}
+function mostrarLogin(){
+  document.getElementById('login-nome').value='';
+  document.getElementById('login-senha').value='';
+  document.getElementById('login-err').style.display='none';
+  document.getElementById('login-wrap').style.display='block';
+  document.getElementById('ficha-wrap').style.display='none';
+}
+function sairJogador(){
+  jogadorLogado=null;cancelarEdicao();atualizarTopBar();
 }
 
 // ─── Init ─────────────────────────────────────────────
