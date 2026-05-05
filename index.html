@@ -807,6 +807,8 @@ const dbDel  = (t,q)           => sb(`${t}?${q}`,{method:'DELETE',prefer:'return
 // ══════════════════════════════════════
 let admins=[], players=[], personagens=[], biomas=[], pokemonDB=[], historico=[];
 let admLogado=null, playerLogado=null, histPagina=0;
+// restaura sessão do player se existir
+try{ const s=localStorage.getItem('pchapters_player'); if(s) playerLogado=JSON.parse(s); }catch(e){}
 const HIST_POR_PAG=10;
 
 function slugify(str){
@@ -1065,6 +1067,7 @@ async function fazerLoginPlayer(){
   const pl=res&&res[0];
   if(!pl||pl.senha!==senha){errEl.style.display='block';return;}
   playerLogado={id:pl.id,nome:pl.nome};
+  localStorage.setItem('pchapters_player',JSON.stringify(playerLogado));
   await renderAreaPlayer();
   await goTo('player',null,true);
 }
@@ -1092,6 +1095,7 @@ async function renderAreaPlayer(){
 }
 async function sairPlayer(){
   playerLogado=null;
+  localStorage.removeItem('pchapters_player');
   document.getElementById('player-nome-input').value='';
   document.getElementById('player-senha-input').value='';
   await goTo('login',null,true);
