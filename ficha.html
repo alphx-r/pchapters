@@ -880,14 +880,14 @@ function fecharHistorico(){
 async function init(){
   const pid=personagemSlug;
   if(!pid){
-    document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ ID do personagem não encontrado na URL.</div>';
+    document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">Não encontrei esse contato no nosso sistema.</div>';
     return;
   }
   try{
     // busca personagem pelo slug
     const ps=await apiGet('personagens',`slug=eq.${pid}`);
     if(!ps||!ps[0]){
-      document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:14px">❌ Personagem "<strong>${pid}</strong>" não encontrado.<br><small>Verifique se o slug foi gerado no banco.</small></div>`;
+      document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:14px">Não encontrei "<strong>${pid}</strong>" no nosso sistema.<br><small>Você anotou o contato delu corretamente?</small></div>`;
       return;
     }
     personagem=ps[0];
