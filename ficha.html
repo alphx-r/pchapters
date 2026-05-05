@@ -116,11 +116,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 @media(max-width:600px){
   .ficha-wrap{padding:10px 8px 60px}
-  .header-body{grid-template-columns:1fr}
-  .header-photo-col{display:none}
+  .header-body{grid-template-columns:1fr 120px}
+  .header-photo-col img{width:120px}
   .header-banner-col{min-height:120px}
+  /* stats e dados: 2 colunas, remove borda direita da col 2 */
   .stats-row,.stat-val-row{grid-template-columns:repeat(2,1fr)}
   .dados-row,.dado-val-row{grid-template-columns:repeat(2,1fr)}
+  .stat-header:nth-child(2),.stat-val:nth-child(2){border-right:none}
+  .dado-header:nth-child(2),.dado-val:nth-child(2){border-right:none}
   .time-grid{grid-template-columns:repeat(2,1fr)}
   .stat-header,.dado-header{font-size:9px;padding:4px 6px}
   .stat-val,.dado-val{font-size:11px;padding:5px 6px}
