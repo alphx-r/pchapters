@@ -97,7 +97,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .poke-slot-img-wrap img{width:80px;height:80px;object-fit:contain;image-rendering:pixelated}
 /* nome */
 .poke-slot-nome-row{background:var(--cor-poke,#1a1a1a);padding:3px 6px;text-align:center}
-.poke-slot-nome-lbl{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title);text-transform:uppercase;letter-spacing:.4px}
+.poke-slot-nome-lbl{font-size:12px;font-weight:700;color:#fff;font-family:var(--font-title);text-transform:uppercase;letter-spacing:.4px}
 /* infos */
 .poke-slot-info{font-size:9px;color:var(--text);line-height:1.7;font-family:var(--font-body);padding:5px 6px;flex:1}
 .poke-slot-info strong{font-weight:700;color:var(--cor-poke,#1a1a1a)}
@@ -554,11 +554,13 @@ function renderTime(){
       </div>
       <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome}</div></div>
       <div class="poke-slot-info">
-        <strong>Nv.</strong> ${pk.level||'—'}<br>
-        <strong>Habilidade:</strong> ${pk.ability||'—'}<br>
+        <strong>Ability:</strong> ${pk.ability||'—'}<br>
+        <strong>Lv.</strong> ${pk.level||'—'}<br>
+        <strong>Gender:</strong> ${pk.gender||'—'}<br>
+        <strong>Feature:</strong> ${pk.feature||'Normal'}<br>
         <strong>Nature:</strong> ${pk.nature||'—'}<br>
         <strong>Hold:</strong> ${pk.item||'None'}<br>
-        <strong>Happy:</strong> ${happyFmt}<br>
+        <strong>Happiness:</strong> ${happyFmt}<br>
         ${moveset?`<br>${moveset}`:''}
       </div>
     </div>`;
@@ -585,10 +587,23 @@ function slotEdit(i,pk){
     ${pk.img?`<img class="poke-slot-edit-img-preview" src="${pk.img}" id="pk-img-prev-${i}"/>`:`<img class="poke-slot-edit-img-preview" src="" id="pk-img-prev-${i}" style="display:none"/>`}
     <button class="poke-slot-edit-img-btn" onclick="document.getElementById('pk-img-file-${i}').click()">📷 Escolher imagem</button>
     <input type="file" id="pk-img-file-${i}" accept="image/*" style="display:none" onchange="onPokeImg(${i},this)"/>
+    <label>Ability</label>
+    <input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="pk-ability-${i}"/>
     <label>Nível</label>
     <input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="90" id="pk-level-${i}"/>
-    <label>Habilidade</label>
-    <input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="pk-ability-${i}"/>
+    <label>Gender</label>
+    <select id="pk-gender-${i}">
+      <option value="">—</option>
+      <option value="♂" ${pk.gender==='♂'?'selected':''}>♂ Macho</option>
+      <option value="♀" ${pk.gender==='♀'?'selected':''}>♀ Fêmea</option>
+      <option value="—" ${pk.gender==='—'?'selected':''}>— Sem gênero</option>
+    </select>
+    <label>Feature</label>
+    <select id="pk-feature-${i}">
+      <option value="Normal" ${(!pk.feature||pk.feature==='Normal')?'selected':''}>Normal</option>
+      <option value="Shiny" ${pk.feature==='Shiny'?'selected':''}>Shiny</option>
+      <option value="Color" ${pk.feature==='Color'?'selected':''}>Color</option>
+    </select>
     <label>Nature</label>
     <input value="${pk.nature||''}" placeholder="Ex: Adamant" id="pk-nature-${i}"/>
     <label>Hold Item</label>
@@ -669,13 +684,15 @@ async function salvarFicha(){
     const t1=document.getElementById(`pk-tipo1-${i}`)?.value||'';
     const tipos=[t0,t1].filter(Boolean);
     const img=window._pokeImgs?.[i]||(ficha.time?.[i]?.img||'');
-    const level=document.getElementById(`pk-level-${i}`)?.value||'';
     const ability=(document.getElementById(`pk-ability-${i}`)?.value||'').trim();
+    const level=document.getElementById(`pk-level-${i}`)?.value||'';
+    const gender=document.getElementById(`pk-gender-${i}`)?.value||'';
+    const feature=document.getElementById(`pk-feature-${i}`)?.value||'Normal';
     const nature=(document.getElementById(`pk-nature-${i}`)?.value||'').trim();
     const item=(document.getElementById(`pk-item-${i}`)?.value||'').trim();
     const happy=(document.getElementById(`pk-happy-${i}`)?.value||'').trim();
     const moveset=(document.getElementById(`pk-moveset-${i}`)?.value||'').trim();
-    time.push(nome?{nome,ball,tipos,img,level,ability,nature,item,happy,moveset}:{});
+    time.push(nome?{nome,ball,tipos,img,level,ability,gender,feature,nature,item,happy,moveset}:{});
   }
   window._pokeImgs={};
   const rels=ficha.relacionamentos||[];
