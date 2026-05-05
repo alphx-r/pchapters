@@ -120,17 +120,20 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .header-body{grid-template-columns:1fr 120px}
   .header-photo-col img{width:120px}
   .header-banner-col{min-height:120px}
-  /* no mobile: 2 colunas, cada par header+valor lado a lado */
   .dados-grid-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:none}
+  /* Par 1: H1 H2 → V1 V2 */
   .dados-grid-wrap .dado-header:nth-child(1){order:1}
-  .dados-grid-wrap .dado-val:nth-child(5){order:2}
-  .dados-grid-wrap .dado-header:nth-child(2){order:3}
+  .dados-grid-wrap .dado-header:nth-child(2){order:2}
+  .dados-grid-wrap .dado-val:nth-child(5){order:3}
   .dados-grid-wrap .dado-val:nth-child(6){order:4}
+  /* Par 2: H3 H4 → V3 V4 */
   .dados-grid-wrap .dado-header:nth-child(3){order:5}
-  .dados-grid-wrap .dado-val:nth-child(7){order:6}
-  .dados-grid-wrap .dado-header:nth-child(4){order:7}
+  .dados-grid-wrap .dado-header:nth-child(4){order:6}
+  .dados-grid-wrap .dado-val:nth-child(7){order:7}
   .dados-grid-wrap .dado-val:nth-child(8){order:8}
-  .dado-header:nth-child(2),.dado-val:nth-child(6),.dado-header:nth-child(4),.dado-val:nth-child(8){border-right:none}
+  /* bordas */
+  .dados-grid-wrap .dado-header:nth-child(2),.dados-grid-wrap .dado-val:nth-child(6),
+  .dados-grid-wrap .dado-header:nth-child(4),.dados-grid-wrap .dado-val:nth-child(8){border-right:none}
   .time-grid{grid-template-columns:repeat(2,1fr)}
   .stat-header,.dado-header{font-size:9px;padding:4px 8px}
   .stat-val,.dado-val{font-size:11px;padding:5px 8px}
