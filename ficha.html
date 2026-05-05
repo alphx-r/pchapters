@@ -317,28 +317,24 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="cores-modal-title">🎨 Personalizar Cores</div>
     <div class="cores-row">
       <div class="cores-field">
-        <label>Cabeçalho (nome)</label>
-        <input type="color" id="cor-cabecalho" value="#1a1a1a" oninput="previewCores()"/>
+        <label>Cor primária<br/><span style="font-size:9px;color:#888;font-weight:400">Cabeçalho · Dados · Títulos de seção</span></label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div id="preview-primaria" style="width:28px;height:28px;border-radius:3px;border:1.5px solid #ccc;flex-shrink:0"></div>
+          <span style="font-size:12px;color:#555">#</span>
+          <input type="text" id="cor-primaria" maxlength="6" placeholder="1a1a1a"
+            style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase"
+            oninput="onHexInput('primaria')"/>
+        </div>
       </div>
       <div class="cores-field">
-        <label>Slogan</label>
-        <input type="color" id="cor-slogan" value="#3a3a3a" oninput="previewCores()"/>
-      </div>
-      <div class="cores-field">
-        <label>Títulos de seção</label>
-        <input type="color" id="cor-secao" value="#1a1a1a" oninput="previewCores()"/>
-      </div>
-      <div class="cores-field">
-        <label>Cabeçalho dos dados</label>
-        <input type="color" id="cor-dados" value="#1a1a1a" oninput="previewCores()"/>
-      </div>
-      <div class="cores-field">
-        <label>Relacionamentos</label>
-        <input type="color" id="cor-rel" value="#000000" oninput="previewCores()"/>
-      </div>
-      <div class="cores-field">
-        <label>Header dos Pokémon</label>
-        <input type="color" id="cor-poke" value="#000000" oninput="previewCores()"/>
+        <label>Cor secundária<br/><span style="font-size:9px;color:#888;font-weight:400">Slogan · Relacionamentos · Header Pokémon</span></label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div id="preview-secundaria" style="width:28px;height:28px;border-radius:3px;border:1.5px solid #ccc;flex-shrink:0"></div>
+          <span style="font-size:12px;color:#555">#</span>
+          <input type="text" id="cor-secundaria" maxlength="6" placeholder="3a3a3a"
+            style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase"
+            oninput="onHexInput('secundaria')"/>
+        </div>
       </div>
     </div>
     <div class="cores-modal-btns">
@@ -608,65 +604,73 @@ function sairJogador(){
 }
 
 // ─── Modal de cores ────────────────────────────────────
-const CORES_DEFAULT={cabecalho:'#1a1a1a',slogan:'#3a3a3a',secao:'#1a1a1a',dados:'#1a1a1a',rel:'#000000',poke:'#000000'};
+const CORES_DEFAULT={primaria:'#1a1a1a',secundaria:'#3a3a3a'};
 
 function aplicarCoresFicha(c){
-  document.documentElement.style.setProperty('--cor-cabecalho', c.cabecalho||CORES_DEFAULT.cabecalho);
-  document.documentElement.style.setProperty('--cor-slogan',    c.slogan||CORES_DEFAULT.slogan);
-  document.documentElement.style.setProperty('--cor-secao',     c.secao||CORES_DEFAULT.secao);
-  document.documentElement.style.setProperty('--cor-dados',     c.dados||CORES_DEFAULT.dados);
-  document.documentElement.style.setProperty('--cor-rel',       c.rel||CORES_DEFAULT.rel);
-  document.documentElement.style.setProperty('--cor-poke',      c.poke||CORES_DEFAULT.poke);
+  // suporta formato antigo (cabecalho/slogan/etc) e novo (primaria/secundaria)
+  const p=c.primaria||c.cabecalho||CORES_DEFAULT.primaria;
+  const s=c.secundaria||c.slogan||CORES_DEFAULT.secundaria;
+  document.documentElement.style.setProperty('--cor-cabecalho',p);
+  document.documentElement.style.setProperty('--cor-secao',p);
+  document.documentElement.style.setProperty('--cor-dados',p);
+  document.documentElement.style.setProperty('--cor-slogan',s);
+  document.documentElement.style.setProperty('--cor-rel',s);
+  document.documentElement.style.setProperty('--cor-poke',s);
 }
+
 function abrirModalCores(){
   const c=ficha.cores||CORES_DEFAULT;
-  document.getElementById('cor-cabecalho').value=c.cabecalho||CORES_DEFAULT.cabecalho;
-  document.getElementById('cor-slogan').value=c.slogan||CORES_DEFAULT.slogan;
-  document.getElementById('cor-secao').value=c.secao||CORES_DEFAULT.secao;
-  document.getElementById('cor-dados').value=c.dados||CORES_DEFAULT.dados;
-  document.getElementById('cor-rel').value=c.rel||CORES_DEFAULT.rel;
-  document.getElementById('cor-poke').value=c.poke||CORES_DEFAULT.poke;
+  const p=(c.primaria||CORES_DEFAULT.primaria).replace('#','');
+  const s=(c.secundaria||CORES_DEFAULT.secundaria).replace('#','');
+  document.getElementById('cor-primaria').value=p.toUpperCase();
+  document.getElementById('cor-secundaria').value=s.toUpperCase();
+  document.getElementById('preview-primaria').style.background='#'+p;
+  document.getElementById('preview-secundaria').style.background='#'+s;
   document.getElementById('cores-modal-overlay').style.display='flex';
 }
+
 function fecharModalCores(){
   document.getElementById('cores-modal-overlay').style.display='none';
-  // reverte preview para cores salvas
   aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
 }
+
+function onHexInput(tipo){
+  const input=document.getElementById(`cor-${tipo}`);
+  let val=input.value.replace(/[^0-9a-fA-F]/g,'').toUpperCase();
+  input.value=val;
+  if(val.length===6){
+    document.getElementById(`preview-${tipo}`).style.background='#'+val;
+    previewCores();
+  }
+}
+
 function previewCores(){
-  aplicarCoresFicha({
-    cabecalho:document.getElementById('cor-cabecalho').value,
-    slogan:   document.getElementById('cor-slogan').value,
-    secao:    document.getElementById('cor-secao').value,
-    dados:    document.getElementById('cor-dados').value,
-    rel:      document.getElementById('cor-rel').value,
-    poke:     document.getElementById('cor-poke').value,
-  });
+  const p=document.getElementById('cor-primaria').value;
+  const s=document.getElementById('cor-secundaria').value;
+  if(p.length===6) aplicarCoresFicha({primaria:'#'+p,secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria});
+  else if(s.length===6) aplicarCoresFicha({primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,secundaria:'#'+s});
 }
+
 async function salvarCores(){
-  const c={
-    cabecalho:document.getElementById('cor-cabecalho').value,
-    slogan:   document.getElementById('cor-slogan').value,
-    secao:    document.getElementById('cor-secao').value,
-    dados:    document.getElementById('cor-dados').value,
-    rel:      document.getElementById('cor-rel').value,
-    poke:     document.getElementById('cor-poke').value,
-  };
-  ficha.cores=c;
+  const p=document.getElementById('cor-primaria').value;
+  const s=document.getElementById('cor-secundaria').value;
+  if(p.length!==6||s.length!==6){alert('Insira cores válidas (6 caracteres hex).');return;}
+  const c={primaria:'#'+p,secundaria:'#'+s};
   aplicarCoresFicha(c);
-  document.getElementById('cores-modal-overlay').style.display='none';
-  // salva no banco junto com a ficha (o campo cores será incluído no próximo salvar)
-  // se a ficha já existe, salva imediatamente
-  if(ficha.id) await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c});
+  ficha.cores=c;
+  if(ficha.id){
+    await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c,updated_at:new Date().toISOString()});
+  }
+  fecharModalCores();
 }
+
 function resetarCores(){
-  document.getElementById('cor-cabecalho').value=CORES_DEFAULT.cabecalho;
-  document.getElementById('cor-slogan').value=CORES_DEFAULT.slogan;
-  document.getElementById('cor-secao').value=CORES_DEFAULT.secao;
-  document.getElementById('cor-dados').value=CORES_DEFAULT.dados;
-  document.getElementById('cor-rel').value=CORES_DEFAULT.rel;
-  document.getElementById('cor-poke').value=CORES_DEFAULT.poke;
+  document.getElementById('cor-primaria').value='1A1A1A';
+  document.getElementById('cor-secundaria').value='3A3A3A';
+  document.getElementById('preview-primaria').style.background=CORES_DEFAULT.primaria;
+  document.getElementById('preview-secundaria').style.background=CORES_DEFAULT.secundaria;
   previewCores();
+}
 }
 
 // ─── Init ─────────────────────────────────────────────
