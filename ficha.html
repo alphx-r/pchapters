@@ -117,9 +117,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 @media(max-width:600px){
   .ficha-wrap{padding:10px 8px 60px}
-  .header-body{grid-template-columns:1fr;grid-template-rows:160px 120px;height:auto}
-  .header-photo-col{border-left:none;border-top:2px solid var(--bg);width:100%}
-  .header-photo-col img{width:100%;height:120px;object-fit:cover}
+  .header-body{grid-template-columns:1fr;grid-template-rows:200px;height:auto}
+  .header-photo-col{display:none}
+  .header-banner-col{height:200px}
+  .header-banner-edit-btn{opacity:1}
   .dados-grid-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:none}
   /* Par 1: H1 H2 → V1 V2 */
   .dados-grid-wrap .dado-header:nth-child(1){order:1}
@@ -393,10 +394,23 @@ function renderFicha(){
 
 // ─── Banner ───────────────────────────────────────────
 function editarBanner(){document.getElementById('banner-file-input').click();}
-function onBannerFile(input){
+async function onBannerFile(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
-  reader.onload=e=>{ficha.banner=e.target.result;renderFicha();};
+  reader.onload=async e=>{
+    const btn=document.getElementById('btn-banner-edit');
+    const prev=btn.textContent;
+    btn.textContent='Salvando...';btn.disabled=true;
+    ficha.banner=e.target.result;
+    if(ficha.id){
+      await apiPatch('fichas',`id=eq.${ficha.id}`,{banner:ficha.banner});
+    } else {
+      const res=await apiPost('fichas',{personagem_slug:personagemSlug,banner:ficha.banner});
+      if(res&&res[0]) ficha.id=res[0].id;
+    }
+    btn.textContent=prev;btn.disabled=false;
+    renderFicha();
+  };
   reader.readAsDataURL(file);input.value='';
 }
 
@@ -459,6 +473,7 @@ function ativarEdicao(){
   modoEdicao=true;
   document.getElementById('edit-bar').style.display='flex';
   document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
+  document.getElementById('btn-banner-edit').style.display='block';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
   renderTime();renderRelEdit();
@@ -467,6 +482,7 @@ function ativarEdicao(){
 function cancelarEdicao(){
   modoEdicao=false;
   document.getElementById('edit-bar').style.display='none';
+  document.getElementById('btn-banner-edit').style.display='none';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
   renderFicha();
