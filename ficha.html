@@ -85,12 +85,29 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 /* TIME */
 .time-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
-.poke-slot{background:var(--surface);border:1.5px solid var(--bg);padding:8px;min-height:80px}
-.poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body)}
-.poke-slot-header{background:var(--cor-poke,#000);padding:4px 6px;text-align:center;margin:-8px -8px 6px -8px}
-.poke-slot-nome-lbl{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title)}
-.poke-slot-info{font-size:10px;color:var(--muted);line-height:1.6;font-family:var(--font-body)}
-.poke-slot-dados{background:var(--surface2);padding:4px 6px;font-size:9px;font-weight:700;text-align:center;margin:4px -8px -8px -8px;font-family:var(--font-body)}
+.poke-slot{background:var(--surface);border:1px solid var(--bg);display:flex;flex-direction:column;min-height:220px}
+.poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body);min-height:220px}
+/* cabeçalho: pokeball + tipos */
+.poke-slot-topbar{background:var(--cor-poke,#1a1a1a);padding:4px 6px;display:flex;align-items:center;justify-content:space-between;gap:4px}
+.poke-slot-ball{width:16px;height:16px;object-fit:contain;flex-shrink:0}
+.poke-slot-tipos{display:flex;gap:3px;align-items:center}
+.poke-slot-tipo-img{width:28px;height:14px;object-fit:contain}
+/* imagem */
+.poke-slot-img-wrap{background:#f5f5f5;display:flex;align-items:center;justify-content:center;height:80px;overflow:hidden;border-bottom:1px solid var(--bg)}
+.poke-slot-img-wrap img{width:80px;height:80px;object-fit:contain;image-rendering:pixelated}
+/* nome */
+.poke-slot-nome-row{background:var(--cor-poke,#1a1a1a);padding:3px 6px;text-align:center}
+.poke-slot-nome-lbl{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title);text-transform:uppercase;letter-spacing:.4px}
+/* infos */
+.poke-slot-info{font-size:9px;color:var(--text);line-height:1.7;font-family:var(--font-body);padding:5px 6px;flex:1}
+.poke-slot-info strong{font-weight:700;color:var(--cor-poke,#1a1a1a)}
+/* edit */
+.poke-slot-edit{border:1.5px solid var(--accent);padding:6px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
+.poke-slot-edit label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-top:2px}
+.poke-slot-edit input,.poke-slot-edit textarea,.poke-slot-edit select{width:100%;padding:3px 6px;border:1px solid #ccc;border-radius:2px;font-size:10px;font-family:var(--font-body);resize:vertical;outline:none;background:#fff}
+.poke-slot-edit input:focus,.poke-slot-edit textarea:focus,.poke-slot-edit select:focus{border-color:var(--accent)}
+.poke-slot-edit-img-preview{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;border:1px solid #eee;border-radius:2px;display:block;margin:2px auto}
+.poke-slot-edit-img-btn{width:100%;padding:3px;border:1px dashed #ccc;border-radius:2px;background:#fafafa;font-size:10px;font-family:var(--font-body);cursor:pointer;text-align:center;color:var(--muted)}
 
 /* RELACIONAMENTOS */
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
@@ -109,9 +126,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .edit-input:focus{border-color:var(--accent)}
 .edit-input-sm{height:32px;resize:none}
 .fb-ok{background:#f0f0f0;color:#1a1a1a;border:1px solid #ccc;border-radius:3px;padding:6px 12px;font-size:12px;font-weight:600;font-family:var(--font-body)}
-.poke-slot-fields{display:flex;flex-direction:column;gap:4px}
-.poke-slot-fields input,.poke-slot-fields textarea{width:100%;padding:4px 6px;border:1px solid #ccc;border-radius:2px;font-size:10px;font-family:var(--font-body);resize:vertical;outline:none}
-.poke-slot-fields input:focus,.poke-slot-fields textarea:focus{border-color:var(--accent)}
+
 .view-content{display:block}
 .edit-content{display:none}
 /* MODAL DE CORES */
@@ -477,36 +492,124 @@ async function onBannerFile(input){
   reader.readAsDataURL(file);input.value='';
 }
 
+const POKEBALLS=[
+  {val:'pokeball',  label:'Poké Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/poke.png'},
+  {val:'greatball', label:'Great Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/great.png'},
+  {val:'ultraball', label:'Ultra Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/ultra.png'},
+  {val:'masterball',label:'Master Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/master.png'},
+  {val:'safariball',label:'Safari Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/safari.png'},
+  {val:'fastball',  label:'Fast Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/fast.png'},
+  {val:'levelball', label:'Level Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/level.png'},
+  {val:'lureball',  label:'Lure Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/lure.png'},
+  {val:'heavyball', label:'Heavy Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heavy.png'},
+  {val:'loveball',  label:'Love Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/love.png'},
+  {val:'friendball',label:'Friend Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/friend.png'},
+  {val:'moonball',  label:'Moon Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/moon.png'},
+  {val:'sportball', label:'Sport Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/sport.png'},
+  {val:'healball',  label:'Heal Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heal.png'},
+  {val:'quickball', label:'Quick Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/quick.png'},
+  {val:'duskball',  label:'Dusk Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dusk.png'},
+  {val:'cherish',   label:'Cherish Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/cherish.png'},
+  {val:'diveball',  label:'Dive Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dive.png'},
+  {val:'luxuryball',label:'Luxury Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/luxury.png'},
+  {val:'nestball',  label:'Nest Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/nest.png'},
+  {val:'netball',   label:'Net Ball',    img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/net.png'},
+  {val:'premierball',label:'Premier Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/premier.png'},
+  {val:'repeatball',label:'Repeat Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/repeat.png'},
+  {val:'timerball', label:'Timer Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/timer.png'},
+];
+const TIPOS_POKE=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+const TIPO_SVG_BASE='https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/5781623f147f1bf850f426cfe1874ba56a9b75ee/icons';
+
+function ballImg(val){
+  return POKEBALLS.find(b=>b.val===val)?.img||POKEBALLS[0].img;
+}
+function tipoImg(tipo){
+  return`${TIPO_SVG_BASE}/${tipo}.svg`;
+}
+
 function renderTime(){
   const time=ficha.time||[{},{},{},{},{},{}];
   while(time.length<6)time.push({});
   document.getElementById('time-grid').innerHTML=time.map((pk,i)=>{
     if(!pk||!pk.nome){
-      if(modoEdicao) return slotEditVazio(i,pk||{});
-      return`<div class="poke-slot vazio">Slot ${i+1} vazio</div>`;
+      if(modoEdicao) return slotEdit(i,{});
+      return`<div class="poke-slot vazio">Slot ${i+1}</div>`;
     }
     if(modoEdicao) return slotEdit(i,pk);
+    const ball=ballImg(pk.ball||'pokeball');
+    const tipos=(pk.tipos||[]).filter(Boolean);
+    const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
     return`<div class="poke-slot">
-      <div class="poke-slot-header"><div class="poke-slot-nome-lbl">${pk.nome}</div></div>
+      <div class="poke-slot-topbar">
+        <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
+        <div class="poke-slot-tipos">
+          ${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}
+        </div>
+      </div>
+      <div class="poke-slot-img-wrap">
+        <img src="${pk.img||''}" alt="${pk.nome}" onerror="this.style.opacity='.15'" style="${pk.img?'':'opacity:.1'}" id="pks-img-${i}"/>
+      </div>
+      <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome}</div></div>
       <div class="poke-slot-info">
-        ${pk.level?`<strong>Nv. ${pk.level}</strong><br>`:''}
-        ${pk.ability?`${pk.ability}<br>`:''}
-        ${pk.moveset?pk.moveset.split('\n').filter(Boolean).map(m=>`• ${m}`).join('<br>'):''}
+        ${pk.level?`<strong>Nv.</strong> ${pk.level}<br>`:''}
+        ${pk.ability?`<strong>Habilidade:</strong> ${pk.ability}<br>`:''}
+        ${pk.nature?`<strong>Nature:</strong> ${pk.nature}<br>`:''}
+        ${pk.item?`<strong>Hold:</strong> ${pk.item}<br>`:''}
+        ${pk.happy?`<strong>Happy:</strong> ${pk.happy}<br>`:''}
+        ${moveset?`<br>${moveset}`:''}
       </div>
     </div>`;
   }).join('');
 }
+
 function slotEdit(i,pk){
-  return`<div class="poke-slot" style="border-color:var(--accent)">
-    <div class="poke-slot-fields">
-      <input value="${pk.nome||''}" placeholder="Nome do Pokémon" id="pk-nome-${i}"/>
-      <input value="${pk.level||''}" placeholder="Nível" id="pk-level-${i}" type="number" min="1" max="90"/>
-      <input value="${pk.ability||''}" placeholder="Habilidade" id="pk-ability-${i}"/>
-      <textarea rows="4" placeholder="Moveset (1 por linha)" id="pk-moveset-${i}">${pk.moveset||''}</textarea>
-    </div>
+  const ballOpts=POKEBALLS.map(b=>`<option value="${b.val}" ${(pk.ball||'pokeball')===b.val?'selected':''}>${b.label}</option>`).join('');
+  const tipoOpts=[''].concat(TIPOS_POKE).map(t=>`<option value="${t}" selected="${false}">${t||'— nenhum —'}</option>`).join('');
+  const t0=(pk.tipos||[])[0]||'';
+  const t1=(pk.tipos||[])[1]||'';
+  const tipo1Opts=TIPOS_POKE.map(t=>`<option value="${t}" ${t0===t?'selected':''}>${t}</option>`).join('');
+  const tipo2Opts=['<option value="">— nenhum —</option>'].concat(TIPOS_POKE.map(t=>`<option value="${t}" ${t1===t?'selected':''}>${t}</option>`)).join('');
+  return`<div class="poke-slot-edit">
+    <label>Pokémon</label>
+    <input value="${pk.nome||''}" placeholder="Nome" id="pk-nome-${i}"/>
+    <label>Pokéball</label>
+    <select id="pk-ball-${i}">${ballOpts}</select>
+    <label>Tipo 1</label>
+    <select id="pk-tipo0-${i}"><option value="">— nenhum —</option>${tipo1Opts}</select>
+    <label>Tipo 2</label>
+    <select id="pk-tipo1-${i}">${tipo2Opts}</select>
+    <label>Imagem</label>
+    ${pk.img?`<img class="poke-slot-edit-img-preview" src="${pk.img}" id="pk-img-prev-${i}"/>`:`<img class="poke-slot-edit-img-preview" src="" id="pk-img-prev-${i}" style="display:none"/>`}
+    <button class="poke-slot-edit-img-btn" onclick="document.getElementById('pk-img-file-${i}').click()">📷 Escolher imagem</button>
+    <input type="file" id="pk-img-file-${i}" accept="image/*" style="display:none" onchange="onPokeImg(${i},this)"/>
+    <label>Nível</label>
+    <input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="90" id="pk-level-${i}"/>
+    <label>Habilidade</label>
+    <input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="pk-ability-${i}"/>
+    <label>Nature</label>
+    <input value="${pk.nature||''}" placeholder="Ex: Adamant" id="pk-nature-${i}"/>
+    <label>Hold Item</label>
+    <input value="${pk.item||''}" placeholder="Ex: Life Orb" id="pk-item-${i}"/>
+    <label>Happiness</label>
+    <input value="${pk.happy||''}" placeholder="Ex: 255" id="pk-happy-${i}"/>
+    <label>Moveset (1 por linha)</label>
+    <textarea rows="5" id="pk-moveset-${i}" placeholder="Tackle&#10;Growl&#10;...">${pk.moveset||''}</textarea>
   </div>`;
 }
-function slotEditVazio(i,pk){return slotEdit(i,pk);}
+
+function onPokeImg(i, input){
+  const file=input.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const prev=document.getElementById(`pk-img-prev-${i}`);
+    if(prev){prev.src=e.target.result;prev.style.display='block';}
+    // guarda no dataset para coletar no salvar
+    if(!window._pokeImgs) window._pokeImgs={};
+    window._pokeImgs[i]=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
 function renderRel(){
   const rels=ficha.relacionamentos||[];
@@ -559,11 +662,20 @@ async function salvarFicha(){
   const time=[];
   for(let i=0;i<6;i++){
     const nome=(document.getElementById(`pk-nome-${i}`)?.value||'').trim();
+    const ball=document.getElementById(`pk-ball-${i}`)?.value||'pokeball';
+    const t0=document.getElementById(`pk-tipo0-${i}`)?.value||'';
+    const t1=document.getElementById(`pk-tipo1-${i}`)?.value||'';
+    const tipos=[t0,t1].filter(Boolean);
+    const img=window._pokeImgs?.[i]||(ficha.time?.[i]?.img||'');
     const level=document.getElementById(`pk-level-${i}`)?.value||'';
     const ability=(document.getElementById(`pk-ability-${i}`)?.value||'').trim();
+    const nature=(document.getElementById(`pk-nature-${i}`)?.value||'').trim();
+    const item=(document.getElementById(`pk-item-${i}`)?.value||'').trim();
+    const happy=(document.getElementById(`pk-happy-${i}`)?.value||'').trim();
     const moveset=(document.getElementById(`pk-moveset-${i}`)?.value||'').trim();
-    time.push(nome?{nome,level,ability,moveset}:{});
+    time.push(nome?{nome,ball,tipos,img,level,ability,nature,item,happy,moveset}:{});
   }
+  window._pokeImgs={};
   const rels=ficha.relacionamentos||[];
   const relacionamentos=rels.map((_,i)=>({
     nome:(document.getElementById(`rel-nome-${i}`)?.value||'').trim(),
@@ -675,8 +787,6 @@ function onPickerInput(tipo){
   const hex=picker.value.replace('#','').toUpperCase();
   document.getElementById(`cor-${tipo}`).value=hex;
   document.getElementById(`preview-${tipo}`).style.background=picker.value;
-  previewCores();
-}
   previewCores();
 }
 
