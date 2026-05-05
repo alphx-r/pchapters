@@ -139,12 +139,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 <!-- LOGIN DO JOGADOR -->
 <div id="login-wrap" style="display:none">
   <div class="login-wrap">
-    <h2>Editar Ficha</h2>
-    <p>Entre com seu nome de player e senha para editar qualquer ficha vinculada ao seu player.</p>
-    <div class="field"><label>Nome do Player</label><input type="text" id="login-nome" placeholder="Ex: Lucas" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
-    <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
-    <button class="btn btn-primary" style="width:100%" onclick="fazerLogin()">Entrar</button>
-    <div class="fb-err" id="login-err" style="display:none">Nome ou senha incorretos.</div>
+    <h2>Acesso necessário</h2>
+    <p>Você precisa estar logado como player para editar esta ficha.</p>
+    <a href="/login" class="btn btn-primary" style="display:block;width:100%;text-align:center;text-decoration:none;margin-bottom:10px">Ir para o Login</a>
+    <div style="font-size:11px;color:var(--muted);text-align:center">Após logar, volte para esta ficha e clique em "✏️ Editar".</div>
   </div>
 </div>
 
@@ -503,42 +501,26 @@ async function salvarFicha(){
   cancelarEdicao();
 }
 
-// ─── Login — 3 passos ─────────────────────────────────
-
-
-async function fazerLogin(){
-  const nome=document.getElementById('login-nome').value.trim();
-  const senha=document.getElementById('login-senha').value;
-  const err=document.getElementById('login-err');
-  err.style.display='none';
-  // Busca player pelo nome e verifica senha
-  const res=await apiGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`);
-  const pl=res&&res[0];
-  if(!pl||pl.senha!==senha){err.style.display='block';return;}
-  // Verifica se o player é dono de algum personagem desta ficha
-  const playerDaFicha=personagem.player.toLowerCase()===nome.toLowerCase();
-  if(!playerDaFicha){err.textContent='Este player não tem acesso a esta ficha.';err.style.display='block';return;}
-  jogadorLogado={nome,player:nome};
-  document.getElementById('login-wrap').style.display='none';
-  document.getElementById('ficha-wrap').style.display='block';
-  document.getElementById('top-bar').style.display='flex';
-  atualizarTopBar();ativarEdicao();
+// ─── Sessão do player (vem do index.html via localStorage) ───
+function lerSessaoPlayer(){
+  try{
+    const s=localStorage.getItem('pchapters_player');
+    return s?JSON.parse(s):null;
+  }catch(e){return null;}
 }
+
 function atualizarTopBar(){
   const actions=document.getElementById('top-bar-actions');
   if(jogadorLogado){
     actions.innerHTML=`
       <span style="font-size:11px;color:#fff;opacity:.8">${modoEdicao?'Editando como':'Logado como'} <strong>${jogadorLogado.nome}</strong></span>
       ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">✏️ Editar</button>`}
-      <button class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)" onclick="sairJogador()">Sair</button>`;
+      <a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);text-decoration:none">Sair</a>`;
   } else {
-    actions.innerHTML=`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="mostrarLogin()">✏️ Editar ficha</button>`;
+    actions.innerHTML=`<a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);text-decoration:none">✏️ Editar ficha</a>`;
   }
 }
 function mostrarLogin(){
-  document.getElementById('login-nome').value='';
-  document.getElementById('login-senha').value='';
-  document.getElementById('login-err').style.display='none';
   document.getElementById('login-wrap').style.display='block';
   document.getElementById('ficha-wrap').style.display='none';
 }
@@ -573,6 +555,11 @@ async function init(){
       if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];
     });
     document.title=`Ficha — ${personagem.nome}`;
+    // lê sessão do player salva no index.html
+    const sessao=lerSessaoPlayer();
+    if(sessao && personagem.player.toLowerCase()===sessao.nome.toLowerCase()){
+      jogadorLogado={nome:sessao.nome,player:sessao.nome};
+    }
     renderFicha();
     document.getElementById('loading-overlay').style.display='none';
     document.getElementById('top-bar').style.display='flex';
