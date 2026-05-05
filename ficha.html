@@ -69,13 +69,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .stat-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:12px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
 .stat-val:last-child{border-right:none}
 
-/* DADOS ROW */
-.dados-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
-.dado-header{background:#1a1a1a;padding:5px 8px;text-align:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
-.dado-header:last-child{border-right:none}
-.dado-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:8px}
-.dado-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:11px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
-.dado-val:last-child{border-right:none}
+/* DADOS GRID */
+.dados-grid-wrap{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;margin-bottom:1px}
+.dados-grid-wrap .dado-header{border-bottom:1px solid var(--bg)}
+.dados-grid-wrap .dado-val{border-bottom:1.5px solid var(--bg)}
 
 /* SECTION */
 .ficha-section{margin-bottom:4px}
@@ -119,14 +116,22 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .header-body{grid-template-columns:1fr 120px}
   .header-photo-col img{width:120px}
   .header-banner-col{min-height:120px}
-  /* stats e dados: 2 colunas, remove borda direita da col 2 */
-  .stats-row,.stat-val-row{grid-template-columns:repeat(2,1fr)}
-  .dados-row,.dado-val-row{grid-template-columns:repeat(2,1fr)}
-  .stat-header:nth-child(2),.stat-val:nth-child(2){border-right:none}
-  .dado-header:nth-child(2),.dado-val:nth-child(2){border-right:none}
+  /* no mobile: cada coluna vira uma linha — header imediatamente seguido do valor */
+  .dados-grid-wrap{grid-template-columns:1fr;grid-template-rows:none}
+  /* reordena os 8 itens: h1,v1,h2,v2,h3,v3,h4,v4 */
+  .dados-grid-wrap .dado-header:nth-child(1){order:1}
+  .dados-grid-wrap .dado-val:nth-child(5){order:2}
+  .dados-grid-wrap .dado-header:nth-child(2){order:3}
+  .dados-grid-wrap .dado-val:nth-child(6){order:4}
+  .dados-grid-wrap .dado-header:nth-child(3){order:5}
+  .dados-grid-wrap .dado-val:nth-child(7){order:6}
+  .dados-grid-wrap .dado-header:nth-child(4){order:7}
+  .dados-grid-wrap .dado-val:nth-child(8){order:8}
+  .dados-grid-wrap{display:flex;flex-direction:column}
+  .dado-header,.dado-val{border-right:none}
   .time-grid{grid-template-columns:repeat(2,1fr)}
-  .stat-header,.dado-header{font-size:9px;padding:4px 6px}
-  .stat-val,.dado-val{font-size:11px;padding:5px 6px}
+  .stat-header,.dado-header{font-size:9px;padding:4px 8px}
+  .stat-val,.dado-val{font-size:11px;padding:5px 8px}
   .ficha-title{font-size:15px}
   .ficha-section-title{font-size:12px;padding:7px 10px}
   .ficha-section-body{padding:10px}
@@ -192,40 +197,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
   </div>
 
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-header">Reputação</div>
-    <div class="stat-header">C$</div>
-    <div class="stat-header">PV</div>
-    <div class="stat-header">CA</div>
-  </div>
-  <div class="stat-val-row">
-    <div class="stat-val">
-      <div id="f-rep-view" class="view-content"><span id="f-rep-txt">0</span></div>
-      <div id="f-rep-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-rep-input" type="number" style="text-align:center"/></div>
-    </div>
-    <div class="stat-val">
-      <div id="f-cs-view" class="view-content"><span id="f-cs-txt">0</span></div>
-      <div id="f-cs-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-cs-input" type="number" style="text-align:center"/></div>
-    </div>
-    <div class="stat-val">
-      <div id="f-pv-view" class="view-content"><span id="f-pv-txt">0</span></div>
-      <div id="f-pv-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pv-input" type="number" style="text-align:center"/></div>
-    </div>
-    <div class="stat-val">
-      <div id="f-ca-view" class="view-content"><span id="f-ca-txt">0</span></div>
-      <div id="f-ca-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-ca-input" type="number" style="text-align:center"/></div>
-    </div>
-  </div>
-
-  <!-- DADOS PESSOAIS -->
-  <div class="dados-row">
+  <!-- DADOS: grid unificado — header e valor intercalados no mobile -->
+  <div class="dados-grid-wrap">
     <div class="dado-header">Idade</div>
     <div class="dado-header">Ocupação</div>
     <div class="dado-header">Origem</div>
-    <div class="dado-header">Player</div>
-  </div>
-  <div class="dado-val-row">
+    <div class="dado-header">C$</div>
     <div class="dado-val">
       <div id="f-idade-view" class="view-content"><span id="f-idade-txt">—</span></div>
       <div id="f-idade-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-idade-input" placeholder="Ex: 17"/></div>
@@ -238,6 +215,25 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div id="f-orig-view" class="view-content"><span id="f-orig-txt">—</span></div>
       <div id="f-orig-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-orig-input" placeholder="Ex: Pallet Town"/></div>
     </div>
+    <div class="dado-val">
+      <div id="f-cs-view" class="view-content"><span id="f-cs-txt">0</span></div>
+      <div id="f-cs-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-cs-input" type="number" style="text-align:center"/></div>
+    </div>
+  </div>
+  <div class="dados-grid-wrap" style="margin-bottom:8px">
+    <div class="dado-header">Reputação</div>
+    <div class="dado-header">PV</div>
+    <div class="dado-header">Photoplayer</div>
+    <div class="dado-header">Player</div>
+    <div class="dado-val">
+      <div id="f-rep-view" class="view-content"><span id="f-rep-txt">0</span></div>
+      <div id="f-rep-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-rep-input" type="number" style="text-align:center"/></div>
+    </div>
+    <div class="dado-val">
+      <div id="f-pv-view" class="view-content"><span id="f-pv-txt">0</span></div>
+      <div id="f-pv-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pv-input" type="number" style="text-align:center"/></div>
+    </div>
+    <div class="dado-val" id="f-photoplayer-dado">—</div>
     <div class="dado-val" id="f-player-dado">—</div>
   </div>
 
@@ -338,6 +334,8 @@ function renderFicha(){
   document.getElementById('f-nome').textContent=p.nome;
   document.getElementById('f-player-badge').textContent=`${p.player}`;
   document.getElementById('f-player-dado').textContent=p.player;
+  const ppDado=document.getElementById('f-photoplayer-dado');
+  if(ppDado) ppDado.textContent=p.photoplayer||'—';
   // Banner
   const bannerCol=document.getElementById('header-banner-col');
   const bannerPlaceholder=document.getElementById('f-banner-placeholder');
@@ -366,7 +364,7 @@ function renderFicha(){
   document.getElementById('f-pe-view').textContent=`${f.pe||0} PE`;
   document.getElementById('f-pe-input').value=f.pe||0;
   // Stats
-  ['rep','cs','pv','ca'].forEach(k=>{
+  ['rep','cs','pv'].forEach(k=>{
     document.getElementById(`f-${k}-txt`).textContent=f[k]||0;
     document.getElementById(`f-${k}-input`).value=f[k]||0;
   });
@@ -494,7 +492,6 @@ async function salvarFicha(){
     rep:parseInt(document.getElementById('f-rep-input').value)||0,
     cs:parseInt(document.getElementById('f-cs-input').value)||0,
     pv:parseInt(document.getElementById('f-pv-input').value)||0,
-    ca:parseInt(document.getElementById('f-ca-input').value)||0,
     idade:document.getElementById('f-idade-input').value.trim(),
     ocupacao:document.getElementById('f-ocup-input').value.trim(),
     origem:document.getElementById('f-orig-input').value.trim(),
