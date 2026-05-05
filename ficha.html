@@ -49,14 +49,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .ficha-title{font-family:var(--font-title);font-size:18px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase}
 .pe-badge{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body);white-space:nowrap}
 .header-slogan-row{background:#3a3a3a;padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.ficha-slogan{font-size:10px;font-style:italic;color:#444;font-family:var(--font-body)}
+.ficha-slogan{font-size:10px;font-style:normal;color:#fff;font-family:var(--font-body)}
 /* grid: banner ocupa tudo menos coluna direita de foto */
-.header-body{display:grid;grid-template-columns:1fr 200px;min-height:160px;border-top:2px solid var(--bg)}
-.header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#eee;position:relative;cursor:pointer}
+.header-body{display:grid;grid-template-columns:1fr 200px;height:240px;border-top:2px solid var(--bg)}
+.header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#2a2a2a;position:relative;cursor:pointer}
 .header-banner-col img{width:100%;height:100%;object-fit:cover;display:block}
-.header-banner-placeholder{font-size:12px;color:#aaa;font-family:var(--font-body);text-align:center;padding:20px}
-.header-banner-edit-btn{position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:3px;font-size:10px;font-family:var(--font-body);padding:3px 8px;cursor:pointer;display:none}
-.header-banner-col:hover .header-banner-edit-btn{display:block}
+.header-banner-placeholder{font-size:12px;color:#888;font-family:var(--font-body);text-align:center;padding:20px;pointer-events:none}
+.header-banner-edit-btn{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:3px;font-size:10px;font-family:var(--font-body);padding:4px 10px;cursor:pointer;opacity:0;transition:opacity .2s}
+.header-banner-col:hover .header-banner-edit-btn{opacity:1}
 .header-photo-col{border-left:2px solid var(--bg);overflow:hidden;display:flex;align-items:center;justify-content:center;background:#ddd;position:relative}
 .header-photo-col img{width:200px;height:100%;object-fit:cover;display:block}
 .header-photo-placeholder{font-size:11px;color:#aaa;font-family:var(--font-body);text-align:center;padding:10px}
@@ -117,9 +117,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 @media(max-width:600px){
   .ficha-wrap{padding:10px 8px 60px}
-  .header-body{grid-template-columns:1fr 120px}
-  .header-photo-col img{width:120px}
-  .header-banner-col{min-height:120px}
+  .header-body{grid-template-columns:1fr;grid-template-rows:160px 120px;height:auto}
+  .header-photo-col{border-left:none;border-top:2px solid var(--bg);width:100%}
+  .header-photo-col img{width:100%;height:120px;object-fit:cover}
   .dados-grid-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:none}
   /* Par 1: H1 H2 → V1 V2 */
   .dados-grid-wrap .dado-header:nth-child(1){order:1}
