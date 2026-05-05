@@ -305,8 +305,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 <div class="edit-bar" id="edit-bar" style="display:none">
   <div class="edit-bar-info" id="edit-bar-info"></div>
   <div style="display:flex;gap:8px">
-    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirModalCores()">🎨 Cores</button>
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirHistorico()">Histórico</button>
+    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirModalCores()">🎨 Cores</button>
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
     <button class="btn btn-primary btn-sm" id="btn-salvar" onclick="salvarFicha()">💾 Salvar</button>
   </div>
@@ -622,6 +622,7 @@ function atualizarTopBar(){
   if(jogadorLogado){
     actions.innerHTML=`
       <span style="font-size:11px;color:#fff;opacity:.8">${modoEdicao?'Editando como':'Logado como'} <strong>${jogadorLogado.nome}</strong></span>
+      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="abrirHistorico()">Histórico</button>`}
       ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">Editar</button>`}
       <a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);text-decoration:none">Sair</a>`;
   } else {
@@ -659,6 +660,8 @@ function abrirModalCores(){
   document.getElementById('cor-secundaria').value=s.toUpperCase();
   document.getElementById('color-picker-primaria').value='#'+p;
   document.getElementById('color-picker-secundaria').value='#'+s;
+  document.getElementById('preview-primaria').style.background='#'+p;
+  document.getElementById('preview-secundaria').style.background='#'+s;
   document.getElementById('cores-modal-overlay').style.display='flex';
 }
 
@@ -668,8 +671,12 @@ function fecharModalCores(){
 }
 
 function onPickerInput(tipo){
-  const hex=document.getElementById(`color-picker-${tipo}`).value.replace('#','').toUpperCase();
+  const picker=document.getElementById(`color-picker-${tipo}`);
+  const hex=picker.value.replace('#','').toUpperCase();
   document.getElementById(`cor-${tipo}`).value=hex;
+  document.getElementById(`preview-${tipo}`).style.background=picker.value;
+  previewCores();
+}
   previewCores();
 }
 
