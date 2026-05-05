@@ -45,14 +45,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 /* CABEÇALHO */
 .ficha-header{background:var(--bg);margin-bottom:1px}
-.header-name-row{background:#1a1a1a;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-name-row{background:var(--cor-cabecalho,#1a1a1a);padding:7px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ficha-title{font-family:var(--font-title);font-size:18px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase}
 .pe-badge{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body);white-space:nowrap}
-.header-slogan-row{background:#3a3a3a;padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-slogan-row{background:var(--cor-slogan,#3a3a3a);padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ficha-slogan{font-size:10px;font-style:normal;color:#fff;font-family:var(--font-body)}
 /* grid: banner ocupa tudo menos coluna direita de foto */
 .header-body{display:grid;grid-template-columns:1fr 200px;height:240px;border-top:2px solid var(--bg)}
-.header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#2a2a2a;position:relative;cursor:pointer}
+.header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#2a2a2a;position:relative}
 .header-banner-col img{width:100%;height:100%;object-fit:cover;display:block}
 .header-banner-placeholder{font-size:12px;color:#888;font-family:var(--font-body);text-align:center;padding:20px;pointer-events:none}
 .header-banner-edit-btn{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:3px;font-size:10px;font-family:var(--font-body);padding:4px 10px;cursor:pointer;opacity:0;transition:opacity .2s}
@@ -63,7 +63,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 /* STATS ROW */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
-.stat-header{background:#1a1a1a;padding:5px 8px;text-align:center;font-size:10px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
+.stat-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:10px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
 .stat-header:last-child{border-right:none}
 .stat-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:4px}
 .stat-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:12px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
@@ -71,7 +71,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 /* DADOS GRID */
 .dados-grid-wrap{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;margin-bottom:1px}
-.dado-header{background:#1a1a1a;padding:5px 8px;text-align:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
+.dado-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
 .dado-header:last-child{border-right:none}
 .dado-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:11px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
 .dado-val:last-child{border-right:none}
@@ -80,23 +80,23 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 /* SECTION */
 .ficha-section{margin-bottom:4px}
-.ficha-section-title{background:var(--accent);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
+.ficha-section-title{background:var(--cor-secao,#1a1a1a);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
 .ficha-section-body{background:var(--surface);border:1.5px solid var(--bg);padding:12px}
 
 /* TIME */
 .time-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
 .poke-slot{background:var(--surface);border:1.5px solid var(--bg);padding:8px;min-height:80px}
 .poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body)}
-.poke-slot-header{background:#000;padding:4px 6px;text-align:center;margin:-8px -8px 6px -8px}
+.poke-slot-header{background:var(--cor-poke,#000);padding:4px 6px;text-align:center;margin:-8px -8px 6px -8px}
 .poke-slot-nome-lbl{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title)}
 .poke-slot-info{font-size:10px;color:var(--muted);line-height:1.6;font-family:var(--font-body)}
 .poke-slot-dados{background:var(--surface2);padding:4px 6px;font-size:9px;font-weight:700;text-align:center;margin:4px -8px -8px -8px;font-family:var(--font-body)}
 
 /* RELACIONAMENTOS */
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
-.rel-item{background:#000;padding:5px 8px;text-align:center;border:1px solid var(--bg)}
+.rel-item{background:var(--cor-rel,#000);padding:5px 8px;text-align:center;border:1px solid var(--bg)}
 .rel-nome{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body)}
-.rel-tipo{font-size:10px;color:var(--accent);font-family:var(--font-body)}
+.rel-tipo{font-size:10px;color:#fff;font-family:var(--font-body)}
 
 /* TEXTO */
 .bio-text{font-size:12px;color:var(--text);line-height:1.8;white-space:pre-wrap;font-family:var(--font-body);text-align:justify;text-indent:28px}
@@ -114,6 +114,15 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .poke-slot-fields input:focus,.poke-slot-fields textarea:focus{border-color:var(--accent)}
 .view-content{display:block}
 .edit-content{display:none}
+/* MODAL DE CORES */
+.cores-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.cores-modal{background:#fff;border-radius:4px;padding:24px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.cores-modal-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:16px;text-align:center}
+.cores-row{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.cores-field{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cores-field label{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;font-family:var(--font-body)}
+.cores-field input[type=color]{width:44px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none}
+.cores-modal-btns{display:flex;gap:8px;justify-content:flex-end}
 
 @media(max-width:600px){
   .ficha-wrap{padding:10px 8px 60px}
@@ -296,8 +305,47 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 <div class="edit-bar" id="edit-bar" style="display:none">
   <div class="edit-bar-info" id="edit-bar-info"></div>
   <div style="display:flex;gap:8px">
+    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirModalCores()">🎨 Cores</button>
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
     <button class="btn btn-primary btn-sm" id="btn-salvar" onclick="salvarFicha()">💾 Salvar</button>
+  </div>
+</div>
+
+<!-- MODAL DE CORES -->
+<div class="cores-modal-overlay" id="cores-modal-overlay" style="display:none" onclick="if(event.target===this)fecharModalCores()">
+  <div class="cores-modal">
+    <div class="cores-modal-title">🎨 Personalizar Cores</div>
+    <div class="cores-row">
+      <div class="cores-field">
+        <label>Cabeçalho (nome)</label>
+        <input type="color" id="cor-cabecalho" value="#1a1a1a" oninput="previewCores()"/>
+      </div>
+      <div class="cores-field">
+        <label>Slogan</label>
+        <input type="color" id="cor-slogan" value="#3a3a3a" oninput="previewCores()"/>
+      </div>
+      <div class="cores-field">
+        <label>Títulos de seção</label>
+        <input type="color" id="cor-secao" value="#1a1a1a" oninput="previewCores()"/>
+      </div>
+      <div class="cores-field">
+        <label>Cabeçalho dos dados</label>
+        <input type="color" id="cor-dados" value="#1a1a1a" oninput="previewCores()"/>
+      </div>
+      <div class="cores-field">
+        <label>Relacionamentos</label>
+        <input type="color" id="cor-rel" value="#000000" oninput="previewCores()"/>
+      </div>
+      <div class="cores-field">
+        <label>Header dos Pokémon</label>
+        <input type="color" id="cor-poke" value="#000000" oninput="previewCores()"/>
+      </div>
+    </div>
+    <div class="cores-modal-btns">
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="resetarCores()">↺ Padrão</button>
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharModalCores()">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="salvarCores()">Aplicar</button>
+    </div>
   </div>
 </div>
 
@@ -519,7 +567,7 @@ async function salvarFicha(){
     inventario:document.getElementById('f-inv-input').value.trim(),
     biografia:document.getElementById('f-bio-input').value.trim(),
     anotacoes:document.getElementById('f-anot-input').value.trim(),
-    time,relacionamentos,updated_at:new Date().toISOString()
+    time,relacionamentos,cores:ficha.cores||null,updated_at:new Date().toISOString()
   };
   if(ficha.id){
     await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
@@ -559,6 +607,68 @@ function sairJogador(){
   jogadorLogado=null;cancelarEdicao();atualizarTopBar();
 }
 
+// ─── Modal de cores ────────────────────────────────────
+const CORES_DEFAULT={cabecalho:'#1a1a1a',slogan:'#3a3a3a',secao:'#1a1a1a',dados:'#1a1a1a',rel:'#000000',poke:'#000000'};
+
+function aplicarCoresFicha(c){
+  document.documentElement.style.setProperty('--cor-cabecalho', c.cabecalho||CORES_DEFAULT.cabecalho);
+  document.documentElement.style.setProperty('--cor-slogan',    c.slogan||CORES_DEFAULT.slogan);
+  document.documentElement.style.setProperty('--cor-secao',     c.secao||CORES_DEFAULT.secao);
+  document.documentElement.style.setProperty('--cor-dados',     c.dados||CORES_DEFAULT.dados);
+  document.documentElement.style.setProperty('--cor-rel',       c.rel||CORES_DEFAULT.rel);
+  document.documentElement.style.setProperty('--cor-poke',      c.poke||CORES_DEFAULT.poke);
+}
+function abrirModalCores(){
+  const c=ficha.cores||CORES_DEFAULT;
+  document.getElementById('cor-cabecalho').value=c.cabecalho||CORES_DEFAULT.cabecalho;
+  document.getElementById('cor-slogan').value=c.slogan||CORES_DEFAULT.slogan;
+  document.getElementById('cor-secao').value=c.secao||CORES_DEFAULT.secao;
+  document.getElementById('cor-dados').value=c.dados||CORES_DEFAULT.dados;
+  document.getElementById('cor-rel').value=c.rel||CORES_DEFAULT.rel;
+  document.getElementById('cor-poke').value=c.poke||CORES_DEFAULT.poke;
+  document.getElementById('cores-modal-overlay').style.display='flex';
+}
+function fecharModalCores(){
+  document.getElementById('cores-modal-overlay').style.display='none';
+  // reverte preview para cores salvas
+  aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
+}
+function previewCores(){
+  aplicarCoresFicha({
+    cabecalho:document.getElementById('cor-cabecalho').value,
+    slogan:   document.getElementById('cor-slogan').value,
+    secao:    document.getElementById('cor-secao').value,
+    dados:    document.getElementById('cor-dados').value,
+    rel:      document.getElementById('cor-rel').value,
+    poke:     document.getElementById('cor-poke').value,
+  });
+}
+async function salvarCores(){
+  const c={
+    cabecalho:document.getElementById('cor-cabecalho').value,
+    slogan:   document.getElementById('cor-slogan').value,
+    secao:    document.getElementById('cor-secao').value,
+    dados:    document.getElementById('cor-dados').value,
+    rel:      document.getElementById('cor-rel').value,
+    poke:     document.getElementById('cor-poke').value,
+  };
+  ficha.cores=c;
+  aplicarCoresFicha(c);
+  document.getElementById('cores-modal-overlay').style.display='none';
+  // salva no banco junto com a ficha (o campo cores será incluído no próximo salvar)
+  // se a ficha já existe, salva imediatamente
+  if(ficha.id) await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c});
+}
+function resetarCores(){
+  document.getElementById('cor-cabecalho').value=CORES_DEFAULT.cabecalho;
+  document.getElementById('cor-slogan').value=CORES_DEFAULT.slogan;
+  document.getElementById('cor-secao').value=CORES_DEFAULT.secao;
+  document.getElementById('cor-dados').value=CORES_DEFAULT.dados;
+  document.getElementById('cor-rel').value=CORES_DEFAULT.rel;
+  document.getElementById('cor-poke').value=CORES_DEFAULT.poke;
+  previewCores();
+}
+
 // ─── Init ─────────────────────────────────────────────
 async function init(){
   const pid=personagemSlug;
@@ -585,6 +695,8 @@ async function init(){
       if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];}}
       if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];
     });
+    if(typeof ficha.cores==='string'){try{ficha.cores=JSON.parse(ficha.cores);}catch{ficha.cores=null;}}
+    aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
     document.title=`Ficha — ${personagem.nome}`;
     // lê sessão do player salva no index.html
     const sessao=lerSessaoPlayer();
