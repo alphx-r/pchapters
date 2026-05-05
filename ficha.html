@@ -306,6 +306,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div class="edit-bar-info" id="edit-bar-info"></div>
   <div style="display:flex;gap:8px">
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirModalCores()">🎨 Cores</button>
+    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirHistorico()">Histórico</button>
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
     <button class="btn btn-primary btn-sm" id="btn-salvar" onclick="salvarFicha()">💾 Salvar</button>
   </div>
@@ -319,7 +320,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div class="cores-field">
         <label>Cor primária<br/><span style="font-size:9px;color:#888;font-weight:400">Cabeçalho · Dados · Títulos de seção</span></label>
         <div style="display:flex;align-items:center;gap:6px">
-          <div id="preview-primaria" style="width:28px;height:28px;border-radius:3px;border:1.5px solid #ccc;flex-shrink:0"></div>
+          <input type="color" id="color-picker-primaria" value="#1a1a1a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none;flex-shrink:0" oninput="onPickerInput('primaria')"/>
           <span style="font-size:12px;color:#555">#</span>
           <input type="text" id="cor-primaria" maxlength="6" placeholder="1a1a1a"
             style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase"
@@ -329,7 +330,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div class="cores-field">
         <label>Cor secundária<br/><span style="font-size:9px;color:#888;font-weight:400">Slogan · Relacionamentos · Header Pokémon</span></label>
         <div style="display:flex;align-items:center;gap:6px">
-          <div id="preview-secundaria" style="width:28px;height:28px;border-radius:3px;border:1.5px solid #ccc;flex-shrink:0"></div>
+          <input type="color" id="color-picker-secundaria" value="#3a3a3a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none;flex-shrink:0" oninput="onPickerInput('secundaria')"/>
           <span style="font-size:12px;color:#555">#</span>
           <input type="text" id="cor-secundaria" maxlength="6" placeholder="3a3a3a"
             style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase"
@@ -345,7 +346,25 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<!-- MODAL HISTÓRICO -->
+<div class="cores-modal-overlay" id="hist-modal-overlay" style="display:none" onclick="if(event.target===this)fecharHistorico()">
+  <div class="cores-modal" style="max-width:520px;max-height:80vh;display:flex;flex-direction:column">
+    <div class="cores-modal-title">Histórico de Edições</div>
+    <div id="hist-lista" style="flex:1;overflow-y:auto;font-size:12px;font-family:var(--font-body)"></div>
+    <div class="cores-modal-btns" style="margin-top:12px">
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharHistorico()">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.hist-entry{padding:8px 0;border-bottom:1px solid #eee}
+.hist-entry:last-child{border-bottom:none}
+.hist-campo{font-weight:700;color:#333;text-transform:uppercase;font-size:10px;letter-spacing:.4px}
+.hist-data{font-size:10px;color:#888;margin-left:6px}
+.hist-val{margin-top:3px;color:#555;line-height:1.5;word-break:break-word}
+.hist-val span{background:#f4f4f4;border-radius:3px;padding:1px 5px}
+</style>
 <script>
 const SUPA_URL='https://jdgfxsvgxfdkdrzqbgje.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
@@ -566,7 +585,21 @@ async function salvarFicha(){
     time,relacionamentos,cores:ficha.cores||null,updated_at:new Date().toISOString()
   };
   if(ficha.id){
+    // registra histórico de campos alterados
+    const camposSimples=['slogan','pe','rep','cs','pv','idade','ocupacao','origem','inventario','biografia','anotacoes'];
+    const hist=[];
+    const agora=new Date().toISOString();
+    camposSimples.forEach(k=>{
+      const ant=String(ficha[k]??'');
+      const nov=String(novaFicha[k]??'');
+      if(ant!==nov) hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:ant,valor_novo:nov,editado_em:agora});
+    });
+    ['time','relacionamentos'].forEach(k=>{
+      if(JSON.stringify(ficha[k])!==JSON.stringify(novaFicha[k]))
+        hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:'(alterado)',valor_novo:'(alterado)',editado_em:agora});
+    });
     await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
+    if(hist.length>0) await apiPost('fichas_historico',hist).catch(()=>{});
   } else {
     const res=await apiPost('fichas',{...novaFicha,personagem_slug:personagemSlug});
     if(res&&res[0]) ficha.id=res[0].id;
@@ -589,10 +622,10 @@ function atualizarTopBar(){
   if(jogadorLogado){
     actions.innerHTML=`
       <span style="font-size:11px;color:#fff;opacity:.8">${modoEdicao?'Editando como':'Logado como'} <strong>${jogadorLogado.nome}</strong></span>
-      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">✏️ Editar</button>`}
+      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">Editar</button>`}
       <a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);text-decoration:none">Sair</a>`;
   } else {
-    actions.innerHTML=`<a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);text-decoration:none">✏️ Editar ficha</a>`;
+    actions.innerHTML=`<a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);text-decoration:none">Editar ficha</a>`;
   }
 }
 function mostrarLogin(){
@@ -620,12 +653,12 @@ function aplicarCoresFicha(c){
 
 function abrirModalCores(){
   const c=ficha.cores||CORES_DEFAULT;
-  const p=(c.primaria||CORES_DEFAULT.primaria).replace('#','');
-  const s=(c.secundaria||CORES_DEFAULT.secundaria).replace('#','');
+  const p=(c.primaria||c.cabecalho||CORES_DEFAULT.primaria).replace('#','');
+  const s=(c.secundaria||c.slogan||CORES_DEFAULT.secundaria).replace('#','');
   document.getElementById('cor-primaria').value=p.toUpperCase();
   document.getElementById('cor-secundaria').value=s.toUpperCase();
-  document.getElementById('preview-primaria').style.background='#'+p;
-  document.getElementById('preview-secundaria').style.background='#'+s;
+  document.getElementById('color-picker-primaria').value='#'+p;
+  document.getElementById('color-picker-secundaria').value='#'+s;
   document.getElementById('cores-modal-overlay').style.display='flex';
 }
 
@@ -634,12 +667,18 @@ function fecharModalCores(){
   aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
 }
 
+function onPickerInput(tipo){
+  const hex=document.getElementById(`color-picker-${tipo}`).value.replace('#','').toUpperCase();
+  document.getElementById(`cor-${tipo}`).value=hex;
+  previewCores();
+}
+
 function onHexInput(tipo){
   const input=document.getElementById(`cor-${tipo}`);
   let val=input.value.replace(/[^0-9a-fA-F]/g,'').toUpperCase();
   input.value=val;
   if(val.length===6){
-    document.getElementById(`preview-${tipo}`).style.background='#'+val;
+    document.getElementById(`color-picker-${tipo}`).value='#'+val;
     previewCores();
   }
 }
@@ -667,9 +706,38 @@ async function salvarCores(){
 function resetarCores(){
   document.getElementById('cor-primaria').value='1A1A1A';
   document.getElementById('cor-secundaria').value='3A3A3A';
-  document.getElementById('preview-primaria').style.background=CORES_DEFAULT.primaria;
-  document.getElementById('preview-secundaria').style.background=CORES_DEFAULT.secundaria;
+  document.getElementById('color-picker-primaria').value=CORES_DEFAULT.primaria;
+  document.getElementById('color-picker-secundaria').value=CORES_DEFAULT.secundaria;
   previewCores();
+}
+
+// ─── Histórico ────────────────────────────────────────
+async function abrirHistorico(){
+  const lista=document.getElementById('hist-lista');
+  lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Carregando...</div>';
+  document.getElementById('hist-modal-overlay').style.display='flex';
+  if(!ficha.id){lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Nenhum histórico ainda.</div>';return;}
+  const hist=await apiGet('fichas_historico',`ficha_id=eq.${ficha.id}&order=editado_em.desc&limit=50`);
+  if(!hist||hist.length===0){lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Nenhuma edição registrada.</div>';return;}
+  const labels={slogan:'Slogan',pe:'PE',rep:'Reputação',cs:'C$',pv:'PV',idade:'Idade',ocupacao:'Ocupação',origem:'Origem',inventario:'Inventário',biografia:'Biografia',anotacoes:'Anotações',time:'Time',relacionamentos:'Relacionamentos',banner:'Banner',cores:'Cores'};
+  lista.innerHTML=hist.map(h=>{
+    const d=new Date(h.editado_em);
+    const data=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const campo=labels[h.campo]||h.campo;
+    const isJson=h.campo==='time'||h.campo==='relacionamentos'||h.campo==='cores';
+    const anterior=isJson?'(dado complexo)':h.valor_anterior||'—';
+    const novo=isJson?'(dado complexo)':h.valor_novo||'—';
+    return`<div class="hist-entry">
+      <div><span class="hist-campo">${campo}</span><span class="hist-data">${data} · ${h.player_nome||'—'}</span></div>
+      <div class="hist-val">
+        <span style="text-decoration:line-through;opacity:.6">${anterior}</span>
+        → <span>${novo}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+function fecharHistorico(){
+  document.getElementById('hist-modal-overlay').style.display='none';
 }
 
 // ─── Init ─────────────────────────────────────────────
