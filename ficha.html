@@ -120,9 +120,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .header-body{grid-template-columns:1fr 120px}
   .header-photo-col img{width:120px}
   .header-banner-col{min-height:120px}
-  /* no mobile: cada coluna vira uma linha — header imediatamente seguido do valor */
-  .dados-grid-wrap{grid-template-columns:1fr;grid-template-rows:none}
-  /* reordena os 8 itens: h1,v1,h2,v2,h3,v3,h4,v4 */
+  /* no mobile: 2 colunas, cada par header+valor lado a lado */
+  .dados-grid-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:none}
   .dados-grid-wrap .dado-header:nth-child(1){order:1}
   .dados-grid-wrap .dado-val:nth-child(5){order:2}
   .dados-grid-wrap .dado-header:nth-child(2){order:3}
@@ -131,8 +130,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .dados-grid-wrap .dado-val:nth-child(7){order:6}
   .dados-grid-wrap .dado-header:nth-child(4){order:7}
   .dados-grid-wrap .dado-val:nth-child(8){order:8}
-  .dados-grid-wrap{display:flex;flex-direction:column}
-  .dado-header,.dado-val{border-right:none}
+  .dado-header:nth-child(2),.dado-val:nth-child(6),.dado-header:nth-child(4),.dado-val:nth-child(8){border-right:none}
   .time-grid{grid-template-columns:repeat(2,1fr)}
   .stat-header,.dado-header{font-size:9px;padding:4px 8px}
   .stat-val,.dado-val{font-size:11px;padding:5px 8px}
