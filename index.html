@@ -103,6 +103,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .ficha-photoplayer{font-size:11px;color:#aab0be;font-style:italic;line-height:1.3;margin-top:2px}
 /* ADM */
 .adm-login-wrap{max-width:380px;margin:40px auto}
+.login-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
 .adm-login-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:32px 28px}
 .adm-login-icon{width:56px;height:56px;background:var(--brand-light);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:26px}
 .adm-login-title{font-family:var(--font-title);font-size:18px;color:var(--brand);text-align:center;margin-bottom:4px}
@@ -222,6 +223,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .ficha-card-avatar img{width:40px;height:40px}
   .ficha-name{font-size:11px}
   .adm-login-wrap{margin:20px auto;padding:0 4px}
+  .login-cols{grid-template-columns:1fr}
   .adm-layout{grid-template-columns:1fr;gap:12px}
   .adm-sidebar{position:static;padding:10px}
   .adm-sidebar-user{display:none}
@@ -395,7 +397,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div style="font-family:var(--font-title);font-size:20px;color:var(--brand);font-weight:700">Área de Acesso</div>
       <div style="font-size:13px;color:var(--muted);margin-top:6px">Escolha seu tipo de acesso</div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+    <div class="login-cols">
 
       <!-- JANELA ADM -->
       <div class="box" style="padding:28px 24px">
