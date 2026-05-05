@@ -115,10 +115,20 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .edit-content{display:none}
 
 @media(max-width:600px){
-  .time-grid{grid-template-columns:repeat(3,1fr)}
+  .ficha-wrap{padding:10px 8px 60px}
   .header-body{grid-template-columns:1fr}
-  .header-mid-col,.header-right-col{display:none}
-  .stats-row,.stat-val-row,.dados-row,.dado-val-row{grid-template-columns:repeat(2,1fr)}
+  .header-photo-col{display:none}
+  .header-banner-col{min-height:120px}
+  .stats-row,.stat-val-row{grid-template-columns:repeat(2,1fr)}
+  .dados-row,.dado-val-row{grid-template-columns:repeat(2,1fr)}
+  .time-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-header,.dado-header{font-size:9px;padding:4px 6px}
+  .stat-val,.dado-val{font-size:11px;padding:5px 6px}
+  .ficha-title{font-size:15px}
+  .ficha-section-title{font-size:12px;padding:7px 10px}
+  .ficha-section-body{padding:10px}
+  .bio-text{font-size:11px}
+  .rel-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
