@@ -715,8 +715,16 @@ function onPokeImg(prefix,i,input){
 function renderRel(){
   const rels=ficha.relacionamentos||[];
   const grid=document.getElementById('f-rel-grid');
-  if(rels.length===0){grid.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px">Nenhum relacionamento registrado.</div>';return;}
-  grid.innerHTML=rels.map(r=>`<div class="rel-item"><div class="rel-nome">${r.nome}</div><div class="rel-tipo">${r.tipo||''}</div></div>`).join('');
+  // garante mínimo de 9 slots visíveis
+  const MIN=9;
+  const slots=rels.length<MIN
+    ?[...rels,...Array(MIN-rels.length).fill({nome:'',tipo:''})]
+    :rels;
+  grid.innerHTML=slots.map(r=>`
+    <div class="rel-item" style="${!r.nome?'opacity:.35':''}">
+      <div class="rel-nome">${r.nome||'NOME'}</div>
+      <div class="rel-tipo">${r.tipo||'Relacionamento'}</div>
+    </div>`).join('');
   renderRelEdit();
 }
 function renderRelEdit(){
