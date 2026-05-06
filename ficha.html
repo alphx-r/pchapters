@@ -554,14 +554,14 @@ function renderTime(){
       </div>
       <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome}</div></div>
       <div class="poke-slot-info">
-        <strong>Ability:</strong> ${pk.ability||'—'}<br>
-        <strong>Lv.</strong> ${pk.level||'—'}<br>
-        <strong>Gender:</strong> ${pk.gender||'—'}<br>
-        <strong>Feature:</strong> ${pk.feature||'Normal'}<br>
-        <strong>Nature:</strong> ${pk.nature||'—'}<br>
-        <strong>Hold:</strong> ${pk.item||'None'}<br>
-        <strong>Happiness:</strong> ${happyFmt}<br>
-        ${moveset?`<br>${moveset}`:''}
+        <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
+        <strong>LV.</strong> ${pk.level||'—'}<br>
+        <strong>GENDER:</strong> ${pk.gender||'—'}<br>
+        <strong>FEATURE:</strong> ${pk.feature||'Normal'}<br>
+        <strong>NATURE:</strong> ${pk.nature||'—'}<br>
+        <strong>HOLD:</strong> ${pk.item||'None'}<br>
+        <strong>HAPPINESS:</strong> ${happyFmt}<br>
+        ${moveset?`<strong>MOVESET:</strong><br>${moveset}`:''}
       </div>
     </div>`;
   }).join('');
