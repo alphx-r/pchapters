@@ -36,7 +36,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .fb-err{background:#fee2e2;color:#c00;border:1px solid #fca5a5;border-radius:3px;padding:8px 12px;font-size:12px;font-weight:600;margin-top:10px}
 
 /* TOP BAR */
-.top-bar{background:var(--accent);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
+.top-bar{background:var(--cor-cabecalho,#1a1a1a);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
 .top-bar-title{font-family:var(--font-title);font-size:14px;color:#fff;font-weight:700}
 .top-bar-actions{display:flex;gap:8px;align-items:center}
 
@@ -266,23 +266,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="dado-val" id="f-player-dado">—</div>
   </div>
 
-  <!-- TIME PRINCIPAL -->
-  <div class="ficha-section">
-    <div class="ficha-section-title">Time Principal</div>
-    <div class="ficha-section-body" style="padding:0">
-      <div class="time-grid" id="time-grid"></div>
-    </div>
-  </div>
-
-  <!-- INVENTÁRIO -->
-  <div class="ficha-section">
-    <div class="ficha-section-title">Inventário</div>
-    <div class="ficha-section-body">
-      <div id="f-inv-view" class="view-content"><div class="bio-text" id="f-inv-txt" style="color:var(--muted)">Nenhum item registrado.</div></div>
-      <div id="f-inv-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-inv-input" rows="4" placeholder="Liste os itens do personagem..."></textarea></div>
-    </div>
-  </div>
-
   <!-- RELACIONAMENTOS -->
   <div class="ficha-section">
     <div class="ficha-section-title">Relacionamentos</div>
@@ -301,6 +284,23 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="ficha-section-body">
       <div id="f-bio-view" class="view-content"><div class="bio-text" id="f-bio-txt" style="color:var(--muted)">Nenhuma biografia registrada.</div></div>
       <div id="f-bio-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-bio-input" rows="6" placeholder="Escreva a história do personagem..."></textarea></div>
+    </div>
+  </div>
+
+  <!-- TIME PRINCIPAL -->
+  <div class="ficha-section">
+    <div class="ficha-section-title">Time Principal</div>
+    <div class="ficha-section-body" style="padding:0">
+      <div class="time-grid" id="time-grid"></div>
+    </div>
+  </div>
+
+  <!-- INVENTÁRIO -->
+  <div class="ficha-section">
+    <div class="ficha-section-title">Inventário</div>
+    <div class="ficha-section-body">
+      <div id="f-inv-view" class="view-content"><div class="bio-text" id="f-inv-txt" style="color:var(--muted)">Nenhum item registrado.</div></div>
+      <div id="f-inv-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-inv-input" rows="4" placeholder="Liste os itens do personagem..."></textarea></div>
     </div>
   </div>
 
