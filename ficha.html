@@ -792,8 +792,6 @@ function abrirModalCores(){
   document.getElementById('cor-secundaria').value=s.toUpperCase();
   document.getElementById('color-picker-primaria').value='#'+p;
   document.getElementById('color-picker-secundaria').value='#'+s;
-  document.getElementById('preview-primaria').style.background='#'+p;
-  document.getElementById('preview-secundaria').style.background='#'+s;
   document.getElementById('cores-modal-overlay').style.display='flex';
 }
 
@@ -806,7 +804,6 @@ function onPickerInput(tipo){
   const picker=document.getElementById(`color-picker-${tipo}`);
   const hex=picker.value.replace('#','').toUpperCase();
   document.getElementById(`cor-${tipo}`).value=hex;
-  document.getElementById(`preview-${tipo}`).style.background=picker.value;
   previewCores();
 }
 
@@ -823,8 +820,10 @@ function onHexInput(tipo){
 function previewCores(){
   const p=document.getElementById('cor-primaria').value;
   const s=document.getElementById('cor-secundaria').value;
-  if(p.length===6) aplicarCoresFicha({primaria:'#'+p,secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria});
-  else if(s.length===6) aplicarCoresFicha({primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,secundaria:'#'+s});
+  aplicarCoresFicha({
+    primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,
+    secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria
+  });
 }
 
 async function salvarCores(){
