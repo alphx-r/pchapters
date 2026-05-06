@@ -273,7 +273,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div id="f-rel-view" class="view-content"><div class="rel-grid" id="f-rel-grid"></div></div>
       <div id="f-rel-edit" class="edit-content" style="display:none;padding:12px">
         <div id="rel-edit-grid" style="display:flex;flex-direction:column;gap:8px"></div>
-        <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc;margin-top:10px" onclick="addRelSlot()">+ Adicionar relacionamento</button>
+
       </div>
     </div>
   </div>
@@ -714,12 +714,9 @@ function onPokeImg(prefix,i,input){
 
 function renderRel(){
   const rels=ficha.relacionamentos||[];
+  const total=ficha.relTotal||6;
   const grid=document.getElementById('f-rel-grid');
-  // garante mínimo de 9 slots visíveis
-  const MIN=9;
-  const slots=rels.length<MIN
-    ?[...rels,...Array(MIN-rels.length).fill({nome:'',tipo:''})]
-    :rels;
+  const slots=Array.from({length:total},(_,i)=>rels[i]||{nome:'',tipo:''});
   grid.innerHTML=slots.map(r=>`
     <div class="rel-item" style="${!r.nome?'opacity:.35':''}">
       <div class="rel-nome">${r.nome||'NOME'}</div>
@@ -729,19 +726,28 @@ function renderRel(){
 }
 function renderRelEdit(){
   const rels=ficha.relacionamentos||[];
+  const total=ficha.relTotal||6;
   const el=document.getElementById('rel-edit-grid');
-  el.innerHTML=rels.map((r,i)=>`
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Espaços</label>
+      <input type="number" min="6" value="${total}" style="width:60px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:12px;font-family:var(--font-body)" onchange="ficha.relTotal=Math.max(6,parseInt(this.value)||6);renderRel()"/>
+    </div>
+    ${Array.from({length:total},(_,i)=>`
     <div style="display:flex;gap:8px;align-items:center">
-      <input class="edit-input edit-input-sm" style="flex:2" value="${r.nome||''}" placeholder="Nome" id="rel-nome-${i}"/>
-      <input class="edit-input edit-input-sm" style="flex:1" value="${r.tipo||''}" placeholder="Tipo de relação" id="rel-tipo-${i}"/>
-      <button class="btn btn-danger btn-sm" style="padding:4px 8px" onclick="removerRel(${i})">✕</button>
-    </div>`).join('');
+      <input class="edit-input edit-input-sm" style="flex:2" value="${rels[i]?.nome||''}" placeholder="Nome" id="rel-nome-${i}"/>
+      <input class="edit-input edit-input-sm" style="flex:1" value="${rels[i]?.tipo||''}" placeholder="Tipo de relação" id="rel-tipo-${i}"/>
+    </div>`).join('')}`;
 }
 function addRelSlot(){
-  if(!ficha.relacionamentos)ficha.relacionamentos=[];
-  ficha.relacionamentos.push({nome:'',tipo:''});renderRelEdit();
+  ficha.relTotal=(ficha.relTotal||6)+1;
+  renderRel();
 }
-function removerRel(i){ficha.relacionamentos.splice(i,1);renderRelEdit();}
+function removerRel(i){
+  if(ficha.relacionamentos) ficha.relacionamentos.splice(i,1);
+  ficha.relTotal=Math.max(6,(ficha.relTotal||6)-1);
+  renderRel();
+}
 
 // ─── Modo edição ──────────────────────────────────────
 function ativarEdicao(){
@@ -801,11 +807,11 @@ async function salvarFicha(){
   const boxTotal=6+(boxSlotUpgrade*5)+(boxMiniUpgrade*2);
   const box=coletarSlots('box',boxTotal);
   window._pokeImgs={};
-  const rels=ficha.relacionamentos||[];
-  const relacionamentos=rels.map((_,i)=>({
+  const relTotal=ficha.relTotal||6;
+  const relacionamentos=Array.from({length:relTotal},(_,i)=>({
     nome:(document.getElementById(`rel-nome-${i}`)?.value||'').trim(),
     tipo:(document.getElementById(`rel-tipo-${i}`)?.value||'').trim()
-  })).filter(r=>r.nome);
+  }));
   const novaFicha={
     banner:ficha.banner||null,
     slogan:document.getElementById('f-slogan-input').value.trim(),
@@ -819,7 +825,7 @@ async function salvarFicha(){
     inventario:document.getElementById('f-inv-input').value.trim(),
     biografia:document.getElementById('f-bio-input').value.trim(),
     anotacoes:document.getElementById('f-anot-input').value.trim(),
-    time,box,boxSlotUpgrade,boxMiniUpgrade,relacionamentos,cores:ficha.cores||null,updated_at:new Date().toISOString()
+    time,box,boxSlotUpgrade,boxMiniUpgrade,relacionamentos,relTotal,cores:ficha.cores||null,updated_at:new Date().toISOString()
   };
   if(ficha.id){
     // registra histórico de campos alterados
@@ -1035,6 +1041,7 @@ async function init(){
     });
     ficha.boxSlotUpgrade=parseInt(ficha.boxSlotUpgrade)||0;
     ficha.boxMiniUpgrade=parseInt(ficha.boxMiniUpgrade)||0;
+    ficha.relTotal=parseInt(ficha.relTotal)||6;
     if(typeof ficha.cores==='string'){try{ficha.cores=JSON.parse(ficha.cores);}catch{ficha.cores=null;}}
     aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
     document.title=`Ficha — ${personagem.nome}`;
