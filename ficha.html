@@ -311,14 +311,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <!-- upgrades (só visível em modo edição) -->
       <div style="display:none;padding:12px 14px;border-bottom:1px solid var(--bg)" id="box-upgrades-wrap">
         <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Upgrades de Espaço</div>
-        <div style="display:flex;gap:16px;flex-wrap:wrap">
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
-            <input type="checkbox" id="box-slot-upgrade" onchange="renderBox()"/>
-            Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+5 slots)</span>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+            Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+5 slots cada)</span>
+            <input type="number" id="box-slot-upgrade" min="0" value="0" style="width:52px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)" onchange="renderBox()"/>
           </label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
-            <input type="checkbox" id="box-mini-upgrade" onchange="renderBox()"/>
-            Mini Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+2 slots)</span>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+            Mini Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+2 slots cada)</span>
+            <input type="number" id="box-mini-upgrade" min="0" value="0" style="width:52px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)" onchange="renderBox()"/>
           </label>
         </div>
       </div>
@@ -483,8 +483,8 @@ function renderFicha(){
   // restaura checkboxes da box
   const slotCk=document.getElementById('box-slot-upgrade');
   const miniCk=document.getElementById('box-mini-upgrade');
-  if(slotCk) slotCk.checked=!!f.boxSlotUpgrade;
-  if(miniCk) miniCk.checked=!!f.boxMiniUpgrade;
+  if(slotCk) slotCk.value=f.boxSlotUpgrade||0;
+  if(miniCk) miniCk.value=f.boxMiniUpgrade||0;
   renderBox();
   document.getElementById('f-inv-txt').textContent=f.inventario||'Nenhum item registrado.';
   document.getElementById('f-inv-input').value=f.inventario||'';
@@ -592,9 +592,9 @@ function renderTime(){
 
 function renderBox(){
   // calcula tamanho da box
-  const slotUp=document.getElementById('box-slot-upgrade')?.checked||ficha.boxSlotUpgrade||false;
-  const miniUp=document.getElementById('box-mini-upgrade')?.checked||ficha.boxMiniUpgrade||false;
-  const total=6+(slotUp?5:0)+(miniUp?2:0);
+  const slotUp=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||ficha.boxSlotUpgrade||0;
+  const miniUp=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||ficha.boxMiniUpgrade||0;
+  const total=6+(slotUp*5)+(miniUp*2);
   const box=ficha.box||[];
   while(box.length<total)box.push({});
   document.getElementById('box-grid').innerHTML=box.slice(0,total).map((pk,i)=>{
@@ -768,9 +768,9 @@ async function salvarFicha(){
   }
 
   const time=coletarSlots('time',6);
-  const boxSlotUpgrade=document.getElementById('box-slot-upgrade')?.checked||false;
-  const boxMiniUpgrade=document.getElementById('box-mini-upgrade')?.checked||false;
-  const boxTotal=6+(boxSlotUpgrade?5:0)+(boxMiniUpgrade?2:0);
+  const boxSlotUpgrade=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||0;
+  const boxMiniUpgrade=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||0;
+  const boxTotal=6+(boxSlotUpgrade*5)+(boxMiniUpgrade*2);
   const box=coletarSlots('box',boxTotal);
   window._pokeImgs={};
   const rels=ficha.relacionamentos||[];
@@ -1005,8 +1005,8 @@ async function init(){
       if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];}}
       if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];
     });
-    ficha.boxSlotUpgrade=!!ficha.boxSlotUpgrade;
-    ficha.boxMiniUpgrade=!!ficha.boxMiniUpgrade;
+    ficha.boxSlotUpgrade=parseInt(ficha.boxSlotUpgrade)||0;
+    ficha.boxMiniUpgrade=parseInt(ficha.boxMiniUpgrade)||0;
     if(typeof ficha.cores==='string'){try{ficha.cores=JSON.parse(ficha.cores);}catch{ficha.cores=null;}}
     aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
     document.title=`Ficha — ${personagem.nome}`;
