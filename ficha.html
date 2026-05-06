@@ -306,9 +306,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
   <!-- BOX -->
   <div class="ficha-section">
-    <div class="ficha-section-title">Box</div>
+    <div class="ficha-section-title" style="justify-content:space-between">
+      <span>Box</span>
+      <span id="box-counter" style="font-family:var(--font-body);font-size:12px;font-weight:600;opacity:.85"></span>
+    </div>
+    <!-- barra de upgrades (sempre visível) -->
+    <div id="box-upgrade-bar" style="background:var(--surface2);padding:6px 14px;font-size:11px;font-family:var(--font-body);color:var(--muted);border-bottom:1px solid var(--bg);display:none"></div>
     <div class="ficha-section-body" style="padding:0">
-      <!-- upgrades (só visível em modo edição) -->
+      <!-- inputs de upgrade (só em modo edição) -->
       <div style="display:none;padding:12px 14px;border-bottom:1px solid var(--bg)" id="box-upgrades-wrap">
         <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Upgrades de Espaço</div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
@@ -591,12 +596,27 @@ function renderTime(){
 }
 
 function renderBox(){
-  // calcula tamanho da box
   const slotUp=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||ficha.boxSlotUpgrade||0;
   const miniUp=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||ficha.boxMiniUpgrade||0;
   const total=6+(slotUp*5)+(miniUp*2);
   const box=ficha.box||[];
   while(box.length<total)box.push({});
+  const preenchidos=box.slice(0,total).filter(pk=>pk&&pk.nome).length;
+
+  // atualiza contador no título
+  document.getElementById('box-counter').textContent=`${preenchidos}/${total}`;
+
+  // atualiza barra de upgrades (sempre visível se houver algum)
+  const bar=document.getElementById('box-upgrade-bar');
+  if(slotUp>0||miniUp>0){
+    const partes=[];
+    if(slotUp>0) partes.push(`${slotUp}x UPGRADE (+${slotUp*5})`);
+    if(miniUp>0) partes.push(`${miniUp}x MINI SLOT UPGRADE (+${miniUp*2})`);
+    bar.textContent=partes.join(' | ');
+    bar.style.display='block';
+  } else {
+    bar.style.display='none';
+  }
   document.getElementById('box-grid').innerHTML=box.slice(0,total).map((pk,i)=>{
     pk=pk||{};
     if(modoEdicao) return slotEdit(i,pk,'box');
