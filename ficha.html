@@ -655,7 +655,7 @@ function removerRel(i){ficha.relacionamentos.splice(i,1);renderRelEdit();}
 function ativarEdicao(){
   modoEdicao=true;
   document.getElementById('edit-bar').style.display='flex';
-  document.getElementById('edit-bar-info').innerHTML='';
+  document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
   document.getElementById('btn-banner-edit').style.display='block';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
@@ -753,7 +753,7 @@ function atualizarTopBar(){
   const actions=document.getElementById('top-bar-actions');
   if(jogadorLogado){
     actions.innerHTML=`
-      <span style="font-size:11px;color:#fff;opacity:.8">${modoEdicao?'Editando como':'Logado como'} <strong>${jogadorLogado.nome}</strong></span>
+      ${modoEdicao?'':`<span style="font-size:11px;color:#fff;opacity:.8">Logado como <strong>${jogadorLogado.nome}</strong></span>`}
       ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="abrirHistorico()">Histórico</button>`}
       ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">Editar</button>`}
       <a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);text-decoration:none">Sair</a>`;
