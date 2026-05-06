@@ -655,7 +655,7 @@ function removerRel(i){ficha.relacionamentos.splice(i,1);renderRelEdit();}
 function ativarEdicao(){
   modoEdicao=true;
   document.getElementById('edit-bar').style.display='flex';
-  document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
+  document.getElementById('edit-bar-info').innerHTML='';
   document.getElementById('btn-banner-edit').style.display='block';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
@@ -665,6 +665,7 @@ function ativarEdicao(){
 function cancelarEdicao(){
   modoEdicao=false;
   document.getElementById('edit-bar').style.display='none';
+  document.getElementById('top-bar').style.display='flex';
   document.getElementById('btn-banner-edit').style.display='none';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
