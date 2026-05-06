@@ -89,9 +89,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body);min-height:220px}
 /* cabeçalho: pokeball + tipos */
 .poke-slot-topbar{background:var(--cor-poke,#1a1a1a);padding:4px 6px;display:flex;align-items:center;justify-content:space-between;gap:4px}
-.poke-slot-ball{width:16px;height:16px;object-fit:contain;flex-shrink:0}
+.poke-slot-ball{width:19px;height:19px;object-fit:contain;flex-shrink:0}
 .poke-slot-tipos{display:flex;gap:3px;align-items:center}
-.poke-slot-tipo-img{width:28px;height:14px;object-fit:contain}
+.poke-slot-tipo-img{width:34px;height:17px;object-fit:contain}
 /* imagem */
 .poke-slot-img-wrap{background:#f5f5f5;display:flex;align-items:center;justify-content:center;height:100px;overflow:hidden;border-bottom:1px solid var(--bg)}
 .poke-slot-img-wrap img{width:100px;height:100px;object-fit:contain;image-rendering:pixelated}
@@ -409,7 +409,7 @@ const personagemSlug=(()=>{
 })();
 
 // ─── Render ───────────────────────────────────────────
-const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
+const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10027.png';
 
 function renderFicha(){
   try{
@@ -725,7 +725,7 @@ async function salvarFicha(){
     });
     ['time','relacionamentos'].forEach(k=>{
       if(JSON.stringify(ficha[k])!==JSON.stringify(novaFicha[k]))
-        hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:'(alterado)',valor_novo:'(alterado)',editado_em:agora});
+        hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:JSON.stringify(ficha[k]),valor_novo:JSON.stringify(novaFicha[k]),editado_em:agora});
     });
     await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
     if(hist.length>0) await apiPost('fichas_historico',hist).catch(()=>{});
@@ -857,9 +857,32 @@ async function abrirHistorico(){
     const d=new Date(h.editado_em);
     const data=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     const campo=labels[h.campo]||h.campo;
-    const isJson=h.campo==='time'||h.campo==='relacionamentos'||h.campo==='cores';
-    const anterior=isJson?'(dado complexo)':h.valor_anterior||'—';
-    const novo=isJson?'(dado complexo)':h.valor_novo||'—';
+
+    function formatVal(campo, raw){
+      if(!raw||raw==='(alterado)'||raw==='(dado complexo)') return '—';
+      if(campo==='time'){
+        try{
+          const arr=JSON.parse(raw);
+          return arr.filter(pk=>pk&&pk.nome).map(pk=>pk.nome).join(', ')||'(vazio)';
+        }catch{return raw;}
+      }
+      if(campo==='relacionamentos'){
+        try{
+          const arr=JSON.parse(raw);
+          return arr.filter(r=>r&&r.nome).map(r=>r.nome+(r.tipo?` (${r.tipo})`:'')).join(', ')||'(vazio)';
+        }catch{return raw;}
+      }
+      if(campo==='cores'){
+        try{
+          const c=JSON.parse(raw);
+          return `primária: ${c.primaria||'—'} · secundária: ${c.secundaria||'—'}`;
+        }catch{return raw;}
+      }
+      return raw||'—';
+    }
+
+    const anterior=formatVal(h.campo, h.valor_anterior);
+    const novo=formatVal(h.campo, h.valor_novo);
     return`<div class="hist-entry">
       <div><span class="hist-campo">${campo}</span><span class="hist-data">${data} · ${h.player_nome||'—'}</span></div>
       <div class="hist-val">
