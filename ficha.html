@@ -304,6 +304,28 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
   </div>
 
+  <!-- BOX -->
+  <div class="ficha-section">
+    <div class="ficha-section-title">Box</div>
+    <div class="ficha-section-body" style="padding:0">
+      <!-- upgrades (só visível em modo edição) -->
+      <div style="display:none;padding:12px 14px;border-bottom:1px solid var(--bg)" id="box-upgrades-wrap">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Upgrades de Espaço</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+            <input type="checkbox" id="box-slot-upgrade" onchange="renderBox()"/>
+            Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+5 slots)</span>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+            <input type="checkbox" id="box-mini-upgrade" onchange="renderBox()"/>
+            Mini Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+2 slots)</span>
+          </label>
+        </div>
+      </div>
+      <div class="time-grid" id="box-grid"></div>
+    </div>
+  </div>
+
   <!-- ANOTAÇÕES -->
   <div class="ficha-section" style="margin-bottom:80px">
     <div class="ficha-section-title">Anotações e Conquistas</div>
@@ -458,6 +480,12 @@ function renderFicha(){
   document.getElementById('f-orig-txt').textContent=f.origem||'—';
   document.getElementById('f-orig-input').value=f.origem||'';
   renderTime();
+  // restaura checkboxes da box
+  const slotCk=document.getElementById('box-slot-upgrade');
+  const miniCk=document.getElementById('box-mini-upgrade');
+  if(slotCk) slotCk.checked=!!f.boxSlotUpgrade;
+  if(miniCk) miniCk.checked=!!f.boxMiniUpgrade;
+  renderBox();
   document.getElementById('f-inv-txt').textContent=f.inventario||'Nenhum item registrado.';
   document.getElementById('f-inv-input').value=f.inventario||'';
   renderRel();
@@ -531,7 +559,7 @@ function renderTime(){
   while(time.length<6)time.push({});
   document.getElementById('time-grid').innerHTML=time.map((pk,i)=>{
     pk=pk||{};
-    if(modoEdicao) return slotEdit(i,pk);
+    if(modoEdicao) return slotEdit(i,pk,'time');
     const ball=ballImg(pk.ball||'pokeball');
     const tipos=(pk.tipos||[]).filter(Boolean);
     const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
@@ -562,63 +590,104 @@ function renderTime(){
   }).join('');
 }
 
-function slotEdit(i,pk){
+function renderBox(){
+  // calcula tamanho da box
+  const slotUp=document.getElementById('box-slot-upgrade')?.checked||ficha.boxSlotUpgrade||false;
+  const miniUp=document.getElementById('box-mini-upgrade')?.checked||ficha.boxMiniUpgrade||false;
+  const total=6+(slotUp?5:0)+(miniUp?2:0);
+  const box=ficha.box||[];
+  while(box.length<total)box.push({});
+  document.getElementById('box-grid').innerHTML=box.slice(0,total).map((pk,i)=>{
+    pk=pk||{};
+    if(modoEdicao) return slotEdit(i,pk,'box');
+    const ball=ballImg(pk.ball||'pokeball');
+    const tipos=(pk.tipos||[]).filter(Boolean);
+    const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
+    const imgSrc=pk.img||FALLBACK;
+    const happyFmt=pk.happy?`${pk.happy}/1000`:'000/1000';
+    return`<div class="poke-slot">
+      <div class="poke-slot-topbar">
+        <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
+        <div class="poke-slot-tipos">
+          ${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}
+        </div>
+      </div>
+      <div class="poke-slot-img-wrap">
+        <img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/>
+      </div>
+      <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome||'(POKÉMON)'}</div></div>
+      <div class="poke-slot-info">
+        <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
+        <strong>LV.</strong> ${pk.level||'000'}<br>
+        <strong>GENDER:</strong> ${pk.gender||'—'}<br>
+        <strong>FEATURE:</strong> ${pk.feature||'—'}<br>
+        <strong>NATURE:</strong> ${pk.nature||'—'}<br>
+        <strong>HOLD:</strong> ${pk.item||'—'}<br>
+        <strong>HAPPINESS:</strong> ${happyFmt}<br>
+        <strong>MOVESET:</strong><br>${moveset||'—'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function slotEdit(i,pk,prefix='time'){
+  const pfx=`${prefix}-pk`;
   const ballOpts=POKEBALLS.map(b=>`<option value="${b.val}" ${(pk.ball||'pokeball')===b.val?'selected':''}>${b.label}</option>`).join('');
-  const tipoOpts=[''].concat(TIPOS_POKE).map(t=>`<option value="${t}" selected="${false}">${t||'— nenhum —'}</option>`).join('');
   const t0=(pk.tipos||[])[0]||'';
   const t1=(pk.tipos||[])[1]||'';
   const tipo1Opts=TIPOS_POKE.map(t=>`<option value="${t}" ${t0===t?'selected':''}>${t}</option>`).join('');
   const tipo2Opts=['<option value="">— nenhum —</option>'].concat(TIPOS_POKE.map(t=>`<option value="${t}" ${t1===t?'selected':''}>${t}</option>`)).join('');
   return`<div class="poke-slot-edit">
     <label>Pokémon</label>
-    <input value="${pk.nome||''}" placeholder="Nome" id="pk-nome-${i}"/>
+    <input value="${pk.nome||''}" placeholder="Nome" id="${pfx}-nome-${i}"/>
     <label>Pokéball</label>
-    <select id="pk-ball-${i}">${ballOpts}</select>
+    <select id="${pfx}-ball-${i}">${ballOpts}</select>
     <label>Tipo 1</label>
-    <select id="pk-tipo0-${i}"><option value="">— nenhum —</option>${tipo1Opts}</select>
+    <select id="${pfx}-tipo0-${i}"><option value="">— nenhum —</option>${tipo1Opts}</select>
     <label>Tipo 2</label>
-    <select id="pk-tipo1-${i}">${tipo2Opts}</select>
+    <select id="${pfx}-tipo1-${i}">${tipo2Opts}</select>
     <label>Imagem</label>
-    ${pk.img?`<img class="poke-slot-edit-img-preview" src="${pk.img}" id="pk-img-prev-${i}"/>`:`<img class="poke-slot-edit-img-preview" src="" id="pk-img-prev-${i}" style="display:none"/>`}
-    <button class="poke-slot-edit-img-btn" onclick="document.getElementById('pk-img-file-${i}').click()">📷 Escolher imagem</button>
-    <input type="file" id="pk-img-file-${i}" accept="image/*" style="display:none" onchange="onPokeImg(${i},this)"/>
+    ${pk.img?`<img class="poke-slot-edit-img-preview" src="${pk.img}" id="${pfx}-img-prev-${i}"/>`:`<img class="poke-slot-edit-img-preview" src="" id="${pfx}-img-prev-${i}" style="display:none"/>`}
+    <button class="poke-slot-edit-img-btn" onclick="document.getElementById('${pfx}-img-file-${i}').click()">📷 Escolher imagem</button>
+    <input type="file" id="${pfx}-img-file-${i}" accept="image/*" style="display:none" onchange="onPokeImg('${prefix}',${i},this)"/>
     <label>Ability</label>
-    <input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="pk-ability-${i}"/>
+    <input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="${pfx}-ability-${i}"/>
     <label>Nível</label>
-    <input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="90" id="pk-level-${i}"/>
+    <input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="100" id="${pfx}-level-${i}"/>
     <label>Gender</label>
-    <select id="pk-gender-${i}">
+    <select id="${pfx}-gender-${i}">
       <option value="">—</option>
       <option value="♂" ${pk.gender==='♂'?'selected':''}>♂ Macho</option>
       <option value="♀" ${pk.gender==='♀'?'selected':''}>♀ Fêmea</option>
       <option value="—" ${pk.gender==='—'?'selected':''}>— Sem gênero</option>
     </select>
     <label>Feature</label>
-    <select id="pk-feature-${i}">
+    <select id="${pfx}-feature-${i}">
       <option value="Normal" ${(!pk.feature||pk.feature==='Normal')?'selected':''}>Normal</option>
       <option value="Shiny" ${pk.feature==='Shiny'?'selected':''}>Shiny</option>
       <option value="Color" ${pk.feature==='Color'?'selected':''}>Color</option>
     </select>
     <label>Nature</label>
-    <input value="${pk.nature||''}" placeholder="Ex: Adamant" id="pk-nature-${i}"/>
+    <input value="${pk.nature||''}" placeholder="Ex: Adamant" id="${pfx}-nature-${i}"/>
     <label>Hold Item</label>
-    <input value="${pk.item||''}" placeholder="Ex: Life Orb" id="pk-item-${i}"/>
+    <input value="${pk.item||''}" placeholder="Ex: Life Orb" id="${pfx}-item-${i}"/>
     <label>Happiness</label>
-    <input value="${pk.happy||''}" placeholder="Ex: 255" id="pk-happy-${i}"/>
+    <input value="${pk.happy||''}" placeholder="Ex: 255" id="${pfx}-happy-${i}"/>
     <label>Moveset (1 por linha)</label>
-    <textarea rows="5" id="pk-moveset-${i}" placeholder="Tackle&#10;Growl&#10;...">${pk.moveset||''}</textarea>
+    <textarea rows="5" id="${pfx}-moveset-${i}" placeholder="Tackle&#10;Growl&#10;...">${pk.moveset||''}</textarea>
   </div>`;
 }
 
-function onPokeImg(i, input){
+function onPokeImg(prefix,i,input){
+  const pfx=`${prefix}-pk`;
   const file=input.files[0]; if(!file)return;
   const reader=new FileReader();
   reader.onload=e=>{
-    const prev=document.getElementById(`pk-img-prev-${i}`);
+    const prev=document.getElementById(`${pfx}-img-prev-${i}`);
     if(prev){prev.src=e.target.result;prev.style.display='block';}
-    // guarda no dataset para coletar no salvar
     if(!window._pokeImgs) window._pokeImgs={};
-    window._pokeImgs[i]=e.target.result;
+    if(!window._pokeImgs[prefix]) window._pokeImgs[prefix]={};
+    window._pokeImgs[prefix][i]=e.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -654,7 +723,8 @@ function ativarEdicao(){
   document.getElementById('btn-banner-edit').style.display='block';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
-  renderTime();renderRelEdit();
+  document.getElementById('box-upgrades-wrap').style.display='block';
+  renderTime();renderBox();renderRelEdit();
   atualizarTopBar();
 }
 function cancelarEdicao(){
@@ -664,6 +734,7 @@ function cancelarEdicao(){
   document.getElementById('btn-banner-edit').style.display='none';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
+  document.getElementById('box-upgrades-wrap').style.display='none';
   renderFicha();
   atualizarTopBar();
 }
@@ -672,24 +743,35 @@ function cancelarEdicao(){
 async function salvarFicha(){
   const btn=document.getElementById('btn-salvar');
   btn.textContent='Salvando...';btn.disabled=true;
-  const time=[];
-  for(let i=0;i<6;i++){
-    const nome=(document.getElementById(`pk-nome-${i}`)?.value||'').trim();
-    const ball=document.getElementById(`pk-ball-${i}`)?.value||'pokeball';
-    const t0=document.getElementById(`pk-tipo0-${i}`)?.value||'';
-    const t1=document.getElementById(`pk-tipo1-${i}`)?.value||'';
-    const tipos=[t0,t1].filter(Boolean);
-    const img=window._pokeImgs?.[i]||(ficha.time?.[i]?.img||'');
-    const ability=(document.getElementById(`pk-ability-${i}`)?.value||'').trim();
-    const level=document.getElementById(`pk-level-${i}`)?.value||'';
-    const gender=document.getElementById(`pk-gender-${i}`)?.value||'';
-    const feature=document.getElementById(`pk-feature-${i}`)?.value||'Normal';
-    const nature=(document.getElementById(`pk-nature-${i}`)?.value||'').trim();
-    const item=(document.getElementById(`pk-item-${i}`)?.value||'').trim();
-    const happy=(document.getElementById(`pk-happy-${i}`)?.value||'').trim();
-    const moveset=(document.getElementById(`pk-moveset-${i}`)?.value||'').trim();
-    time.push(nome?{nome,ball,tipos,img,level,ability,gender,feature,nature,item,happy,moveset}:{});
+
+  function coletarSlots(prefix, count){
+    const pfx=`${prefix}-pk`;
+    const arr=[];
+    for(let i=0;i<count;i++){
+      const nome=(document.getElementById(`${pfx}-nome-${i}`)?.value||'').trim();
+      const ball=document.getElementById(`${pfx}-ball-${i}`)?.value||'pokeball';
+      const t0=document.getElementById(`${pfx}-tipo0-${i}`)?.value||'';
+      const t1=document.getElementById(`${pfx}-tipo1-${i}`)?.value||'';
+      const tipos=[t0,t1].filter(Boolean);
+      const img=window._pokeImgs?.[prefix]?.[i]||(ficha[prefix]?.[i]?.img||'');
+      const ability=(document.getElementById(`${pfx}-ability-${i}`)?.value||'').trim();
+      const level=document.getElementById(`${pfx}-level-${i}`)?.value||'';
+      const gender=document.getElementById(`${pfx}-gender-${i}`)?.value||'';
+      const feature=document.getElementById(`${pfx}-feature-${i}`)?.value||'Normal';
+      const nature=(document.getElementById(`${pfx}-nature-${i}`)?.value||'').trim();
+      const item=(document.getElementById(`${pfx}-item-${i}`)?.value||'').trim();
+      const happy=(document.getElementById(`${pfx}-happy-${i}`)?.value||'').trim();
+      const moveset=(document.getElementById(`${pfx}-moveset-${i}`)?.value||'').trim();
+      arr.push(nome?{nome,ball,tipos,img,level,ability,gender,feature,nature,item,happy,moveset}:{});
+    }
+    return arr;
   }
+
+  const time=coletarSlots('time',6);
+  const boxSlotUpgrade=document.getElementById('box-slot-upgrade')?.checked||false;
+  const boxMiniUpgrade=document.getElementById('box-mini-upgrade')?.checked||false;
+  const boxTotal=6+(boxSlotUpgrade?5:0)+(boxMiniUpgrade?2:0);
+  const box=coletarSlots('box',boxTotal);
   window._pokeImgs={};
   const rels=ficha.relacionamentos||[];
   const relacionamentos=rels.map((_,i)=>({
@@ -709,7 +791,7 @@ async function salvarFicha(){
     inventario:document.getElementById('f-inv-input').value.trim(),
     biografia:document.getElementById('f-bio-input').value.trim(),
     anotacoes:document.getElementById('f-anot-input').value.trim(),
-    time,relacionamentos,cores:ficha.cores||null,updated_at:new Date().toISOString()
+    time,box,boxSlotUpgrade,boxMiniUpgrade,relacionamentos,cores:ficha.cores||null,updated_at:new Date().toISOString()
   };
   if(ficha.id){
     // registra histórico de campos alterados
@@ -919,10 +1001,12 @@ async function init(){
       idade:'',ocupacao:'',origem:'',inventario:'',
       biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
     };
-    ['time','relacionamentos'].forEach(k=>{
-      if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];}}
-      if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];
+    ['time','relacionamentos','box'].forEach(k=>{
+      if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];}}
+      if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];
     });
+    ficha.boxSlotUpgrade=!!ficha.boxSlotUpgrade;
+    ficha.boxMiniUpgrade=!!ficha.boxMiniUpgrade;
     if(typeof ficha.cores==='string'){try{ficha.cores=JSON.parse(ficha.cores);}catch{ficha.cores=null;}}
     aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
     document.title=`Ficha — ${personagem.nome}`;
