@@ -532,16 +532,13 @@ function renderTime(){
   const time=ficha.time||[{},{},{},{},{},{}];
   while(time.length<6)time.push({});
   document.getElementById('time-grid').innerHTML=time.map((pk,i)=>{
-    if(!pk||!pk.nome){
-      if(modoEdicao) return slotEdit(i,{});
-      return`<div class="poke-slot vazio">Slot ${i+1}</div>`;
-    }
+    pk=pk||{};
     if(modoEdicao) return slotEdit(i,pk);
     const ball=ballImg(pk.ball||'pokeball');
     const tipos=(pk.tipos||[]).filter(Boolean);
     const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
     const imgSrc=pk.img||FALLBACK;
-    const happyFmt=pk.happy?`${pk.happy}/1000`:'—/1000';
+    const happyFmt=pk.happy?`${pk.happy}/1000`:'000/1000';
     return`<div class="poke-slot">
       <div class="poke-slot-topbar">
         <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
@@ -550,18 +547,18 @@ function renderTime(){
         </div>
       </div>
       <div class="poke-slot-img-wrap">
-        <img src="${imgSrc}" alt="${pk.nome}" onerror="this.src='${FALLBACK}'"/>
+        <img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/>
       </div>
-      <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome}</div></div>
+      <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome||'(POKÉMON)'}</div></div>
       <div class="poke-slot-info">
         <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
         <strong>LV.</strong> ${pk.level||'—'}<br>
         <strong>GENDER:</strong> ${pk.gender||'—'}<br>
-        <strong>FEATURE:</strong> ${pk.feature||'Normal'}<br>
+        <strong>FEATURE:</strong> ${pk.feature||'—'}<br>
         <strong>NATURE:</strong> ${pk.nature||'—'}<br>
-        <strong>HOLD:</strong> ${pk.item||'None'}<br>
+        <strong>HOLD:</strong> ${pk.item||'—'}<br>
         <strong>HAPPINESS:</strong> ${happyFmt}<br>
-        ${moveset?`<strong>MOVESET:</strong><br>${moveset}`:''}
+        <strong>MOVESET:</strong><br>${moveset||'—'}
       </div>
     </div>`;
   }).join('');
