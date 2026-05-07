@@ -467,7 +467,7 @@ function renderFicha(){
     photoPlaceholder.style.display='none';
     let img=photoCol.querySelector('img.photo-img');
     if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
-    img.src=p.img;img.style.cssText='width:220px;height:100%;object-fit:cover;display:block';
+    img.src=p.img;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
   } else { photoPlaceholder.style.display=''; }
   // Slogan
   document.getElementById('f-slogan-txt').textContent=f.slogan||'';
