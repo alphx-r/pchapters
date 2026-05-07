@@ -947,6 +947,14 @@ async function lazyLoad(page){
     renderPersonagensDatalist();
   }
   if(page==='adm'){
+    if(!admLogado) return;
+    // garante que players e personagens estão carregados
+    const [_players,_personagens] = await Promise.all([
+      players.length===0 ? dbGet('players') : Promise.resolve(players),
+      personagens.length===0 ? dbGet('personagens') : Promise.resolve(personagens),
+    ]);
+    if(players.length===0) players=_players;
+    if(personagens.length===0) personagens=_personagens;
     renderTbodyPersonagens();
     renderTbodyPlayers();
   }
@@ -1023,7 +1031,13 @@ function admTab(sec,el){
   document.getElementById('sec-'+sec).classList.add('active');
   document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
   if(el)el.classList.add('active');
-  if(sec==='personagens'){renderTbodyPersonagens();renderTbodyPlayers();}
+  if(sec==='personagens'){
+    // recarrega se necessário
+    const load=[];
+    if(players.length===0) load.push(dbGet('players').then(r=>{players=r;}));
+    if(personagens.length===0) load.push(dbGet('personagens').then(r=>{personagens=r;}));
+    Promise.all(load).then(()=>{renderTbodyPersonagens();renderTbodyPlayers();});
+  }
   if(sec==='biomas')renderTbodyBiomas();
   if(sec==='pokemons'){syncBiomaSelects();document.getElementById('pk-filtro-wrap').style.display='';renderTbodyPokemons();}
   if(sec==='admins')renderTbodyAdmins();
