@@ -857,7 +857,7 @@ async function salvarFicha(silencioso=false){
   Object.assign(ficha,novaFicha);
   if(silencioso){
     setAutoSaveStatus('✓ Salvo automaticamente','#1a7a1a');
-    setTimeout(()=>setAutoSaveStatus(''),3000);
+    setTimeout(()=>setAutoSaveStatus(''),500);
   } else {
     btn.textContent='💾 Salvar';btn.disabled=false;
     cancelarEdicao();
@@ -1035,7 +1035,7 @@ function agendarAutoSave(){
   _autoSaveTimer=setTimeout(async()=>{
     setAutoSaveStatus('Salvando...','var(--muted)');
     await salvarFicha(true);
-  },3000);
+  },500);
 }
 function iniciarAutoSave(){
   // observa inputs, selects e textareas dentro do ficha-wrap
