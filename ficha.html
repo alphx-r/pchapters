@@ -616,7 +616,7 @@ function renderTime(){
     const tipos=(pk.tipos||[]).filter(Boolean);
     const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
     const imgSrc=pk.img||FALLBACK;
-    const happyFmt=pk.happy?`${pk.happy}/1000`:'000/1000';
+    const happyFmt=pk.happy?`${pk.happy}/1000`:'0000/1000';
     return`<div class="poke-slot">
       <div class="poke-slot-topbar">
         <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
@@ -671,7 +671,7 @@ function renderBox(){
     const tipos=(pk.tipos||[]).filter(Boolean);
     const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
     const imgSrc=pk.img||FALLBACK;
-    const happyFmt=pk.happy?`${pk.happy}/1000`:'000/1000';
+    const happyFmt=pk.happy?`${pk.happy}/1000`:'0000/1000';
     return`<div class="poke-slot">
       <div class="poke-slot-topbar">
         <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
