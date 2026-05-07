@@ -71,7 +71,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 /* DADOS GRID */
 .dados-grid-wrap{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;margin-bottom:1px}
-.dado-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
+.dado-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
 .dado-header:last-child{border-right:none}
 .dado-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:13px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
 .dado-val:last-child{border-right:none}
@@ -438,7 +438,7 @@ const personagemSlug=(()=>{
 })();
 
 // ─── Render ───────────────────────────────────────────
-const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10027.png';
+const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 
 function renderFicha(){
   try{
@@ -467,7 +467,7 @@ function renderFicha(){
     photoPlaceholder.style.display='none';
     let img=photoCol.querySelector('img.photo-img');
     if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
-    img.src=p.img;img.style.cssText='width:220px;height:100%;object-fit:cover;display:block';
+    img.src=p.img;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
   } else { photoPlaceholder.style.display=''; }
   // Slogan
   document.getElementById('f-slogan-txt').textContent=f.slogan||'';
@@ -1035,7 +1035,7 @@ function agendarAutoSave(){
   _autoSaveTimer=setTimeout(async()=>{
     setAutoSaveStatus('Salvando...','var(--muted)');
     await salvarFicha(true);
-  },1000);
+  },3000);
 }
 function iniciarAutoSave(){
   // observa inputs, selects e textareas dentro do ficha-wrap
