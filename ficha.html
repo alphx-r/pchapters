@@ -79,6 +79,23 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .dados-grid-wrap .dado-val{border-bottom:1.5px solid var(--bg)}
 
 /* SECTION */
+/* INVENTÁRIO */
+.inv-tabela{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-body)}
+.inv-tabela th{background:var(--cor-dados,#1a1a1a);color:#fff;padding:6px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.inv-tabela td{padding:7px 10px;border-bottom:1px solid var(--bg);vertical-align:top}
+.inv-tabela tr.inv-row:hover td{background:#f9f9f9;cursor:pointer}
+.inv-cat-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;background:#e8e8e8;color:#555;margin-left:4px;text-transform:uppercase;letter-spacing:.3px}
+.inv-desc-row td{font-size:11px;color:#666;padding:4px 10px 8px 28px;background:#fafafa;border-bottom:1px solid #eee}
+.inv-modal-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid #eee;transition:background .1s}
+.inv-modal-item:hover{background:#f5f5f5}
+.inv-modal-info{flex:1;min-width:0}
+.inv-modal-nome{font-size:13px;font-weight:700;font-family:var(--font-body);color:#1a1a1a}
+.inv-modal-cat{font-size:10px;color:#888;font-family:var(--font-body);text-transform:uppercase;letter-spacing:.3px;margin-top:1px}
+.inv-modal-desc{font-size:11px;color:#666;margin-top:3px;line-height:1.4}
+.inv-modal-qty{display:flex;align-items:center;gap:6px;flex-shrink:0;padding-top:2px}
+.inv-qty-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid #ccc;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-weight:700;transition:all .15s}
+.inv-qty-btn:hover{background:var(--cor-cabecalho,#1a1a1a);color:#fff;border-color:var(--cor-cabecalho,#1a1a1a)}
+.inv-qty-num{width:28px;text-align:center;font-size:13px;font-weight:700;font-family:var(--font-body)}
 .ficha-section{margin-bottom:4px}
 .ficha-section-title{background:var(--cor-secao,#1a1a1a);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
 .ficha-section-body{background:var(--surface);border:1.5px solid var(--bg);padding:12px}
@@ -297,10 +314,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
   <!-- INVENTÁRIO -->
   <div class="ficha-section">
-    <div class="ficha-section-title">Inventário</div>
-    <div class="ficha-section-body">
-      <div id="f-inv-view" class="view-content"><div class="bio-text" id="f-inv-txt" style="color:var(--muted)">Nenhum item registrado.</div></div>
-      <div id="f-inv-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-inv-input" rows="4" placeholder="Liste os itens do personagem..."></textarea></div>
+    <div class="ficha-section-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Inventário</span>
+      <button id="btn-inv-gerenciar" class="btn btn-sm edit-content" style="display:none;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);font-size:11px" onclick="abrirModalInventario()">+ Gerenciar</button>
+    </div>
+    <div class="ficha-section-body" style="padding:0">
+      <div id="f-inv-view">
+        <div id="inv-lista-view" style="width:100%"></div>
+      </div>
     </div>
   </div>
 
@@ -353,6 +374,29 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirModalCores()">🎨 Cores</button>
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
     <button class="btn btn-primary btn-sm" id="btn-salvar" onclick="salvarFicha()">💾 Salvar</button>
+  </div>
+</div>
+
+<!-- MODAL INVENTÁRIO -->
+<div class="cores-modal-overlay" id="inv-modal-overlay" style="display:none" onclick="if(event.target===this)fecharModalInventario()">
+  <div class="cores-modal" style="max-width:660px;width:95vw;max-height:85vh;display:flex;flex-direction:column">
+    <div class="cores-modal-title">🎒 Gerenciar Inventário</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <input type="text" id="inv-busca" placeholder="Buscar item..." oninput="filtrarItensModal()"
+        style="flex:1;min-width:140px;padding:7px 10px;border:1.5px solid #ccc;border-radius:4px;font-size:13px;font-family:var(--font-body)"/>
+      <select id="inv-filtro-cat" onchange="filtrarItensModal()"
+        style="padding:7px 10px;border:1.5px solid #ccc;border-radius:4px;font-size:13px;font-family:var(--font-body)">
+        <option value="">Todas as categorias</option>
+        <option>Pokéball</option><option>Snack</option><option>Medicine</option>
+        <option>Itens de Treinador</option><option>Z-Crystal</option>
+        <option>Hold Item</option><option>Props</option><option>Fóssil</option>
+        <option>Megastone</option><option>Treasure Item</option>
+      </select>
+    </div>
+    <div id="inv-modal-lista" style="flex:1;overflow-y:auto;border:1.5px solid #eee;border-radius:4px"></div>
+    <div class="cores-modal-btns" style="margin-top:12px">
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharModalInventario()">Fechar</button>
+    </div>
   </div>
 </div>
 
@@ -1041,6 +1085,132 @@ function iniciarAutoSave(){
   // observa inputs, selects e textareas dentro do ficha-wrap
   document.getElementById('ficha-wrap').addEventListener('input',agendarAutoSave);
   document.getElementById('ficha-wrap').addEventListener('change',agendarAutoSave);
+}
+
+// ══════════════════════════════════════
+// INVENTÁRIO
+// ══════════════════════════════════════
+let todosItens=[], inventarioFicha={}; // {item_id: {quantidade, id, nome, categoria, descricao}}
+
+async function carregarInventario(){
+  if(!ficha.id) return;
+  const [itensDB, invDB] = await Promise.all([
+    apiGet('itens','order=categoria.asc,nome.asc'),
+    apiGet('inventario_ficha',`ficha_id=eq.${ficha.id}&select=id,item_id,quantidade`)
+  ]);
+  todosItens = itensDB||[];
+  inventarioFicha = {};
+  (invDB||[]).forEach(row=>{
+    const item = todosItens.find(i=>i.id===row.item_id);
+    if(item) inventarioFicha[row.item_id]={...item, quantidade:row.quantidade, inv_id:row.id};
+  });
+  renderInventario();
+}
+
+function renderInventario(){
+  const lista = document.getElementById('inv-lista-view');
+  const itens = Object.values(inventarioFicha).filter(i=>i.quantidade>0);
+  if(itens.length===0){
+    lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';
+    return;
+  }
+  // agrupa por categoria
+  const grupos={};
+  itens.forEach(i=>{
+    if(!grupos[i.categoria]) grupos[i.categoria]=[];
+    grupos[i.categoria].push(i);
+  });
+  lista.innerHTML=`<table class="inv-tabela"><thead><tr>
+    <th>Item</th><th style="width:60px;text-align:center">Qtd</th>
+  </tr></thead><tbody>${
+    Object.entries(grupos).map(([cat,items])=>
+      items.map((item,idx)=>`
+        <tr class="inv-row" onclick="toggleInvDesc('${item.id}')">
+          <td><strong>${item.nome}</strong><span class="inv-cat-badge">${item.categoria}</span></td>
+          <td style="text-align:center;font-weight:700">${item.quantidade}</td>
+        </tr>
+        <tr id="inv-desc-${item.id}" style="display:none">
+          <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px 14px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao}</td>
+        </tr>`).join('')
+    ).join('')
+  }</tbody></table>`;
+}
+
+function toggleInvDesc(id){
+  const row=document.getElementById(`inv-desc-${id}`);
+  if(row) row.style.display=row.style.display==='none'?'':'none';
+}
+
+async function abrirModalInventario(){
+  if(todosItens.length===0){
+    const itensDB=await apiGet('itens','order=categoria.asc,nome.asc');
+    todosItens=itensDB||[];
+  }
+  document.getElementById('inv-busca').value='';
+  document.getElementById('inv-filtro-cat').value='';
+  renderItensModal();
+  document.getElementById('inv-modal-overlay').style.display='flex';
+}
+
+function fecharModalInventario(){
+  document.getElementById('inv-modal-overlay').style.display='none';
+}
+
+function filtrarItensModal(){
+  renderItensModal();
+}
+
+function renderItensModal(){
+  const busca=document.getElementById('inv-busca').value.toLowerCase();
+  const cat=document.getElementById('inv-filtro-cat').value;
+  let lista=todosItens;
+  if(cat) lista=lista.filter(i=>i.categoria===cat);
+  if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||i.descricao.toLowerCase().includes(busca));
+  const el=document.getElementById('inv-modal-lista');
+  if(!lista.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#aaa;font-size:13px">Nenhum item encontrado.</div>';return;}
+  el.innerHTML=lista.map(item=>{
+    const qty=inventarioFicha[item.id]?.quantidade||0;
+    return`<div class="inv-modal-item">
+      <div class="inv-modal-info">
+        <div class="inv-modal-nome">${item.nome} ${item.evento?'<span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>':''}</div>
+        <div class="inv-modal-cat">${item.categoria}</div>
+        <div class="inv-modal-desc">${item.descricao}</div>
+      </div>
+      <div class="inv-modal-qty">
+        <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',-1)">−</button>
+        <span class="inv-qty-num" id="inv-qty-${item.id}">${qty}</span>
+        <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',+1)">+</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function ajustarQty(itemId, delta){
+  const item=todosItens.find(i=>i.id===itemId);
+  if(!item) return;
+  const atual=inventarioFicha[itemId]?.quantidade||0;
+  const nova=Math.max(0, atual+delta);
+  const numEl=document.getElementById(`inv-qty-${itemId}`);
+  if(numEl) numEl.textContent=nova;
+  if(nova===0 && inventarioFicha[itemId]){
+    // remove
+    await apiDel('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`);
+    delete inventarioFicha[itemId];
+  } else if(nova>0 && !inventarioFicha[itemId]){
+    // insert
+    const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:nova});
+    if(res&&res[0]) inventarioFicha[itemId]={...item,quantidade:nova,inv_id:res[0].id};
+  } else if(nova>0 && inventarioFicha[itemId]){
+    // update
+    await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`,{quantidade:nova});
+    inventarioFicha[itemId].quantidade=nova;
+  }
+  renderInventario();
+}
+
+// helper apiDel para ficha (usa mesma base do apiGet/apiPost/apiPatch)
+function apiDel(table, query){
+  return api(`${table}?${query}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});
 }
 
 // ─── Init ─────────────────────────────────────────────
