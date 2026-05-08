@@ -322,8 +322,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <h2>Rolador de Dados</h2>
       <p>Escolha o dado, o personagem e o motivo da rolagem</p>
     </div>
-
-    <!-- Atalhos de dado -->
     <div style="margin-bottom:14px">
       <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Dados rápidos</div>
       <div class="dice-sides-wrap">
@@ -336,8 +334,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="dice-side-btn active" onclick="setLados(100)">d100</button>
       </div>
     </div>
-
-    <!-- Controles -->
     <div class="dice-controls">
       <div class="ctrl-group">
         <label>Personagem</label>
@@ -352,11 +348,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <input type="text" id="dice-motivo" placeholder="Ex: Ataque, Fuga..." required/>
       </div>
     </div>
-
-    <!-- Botão rolar -->
     <button class="roll-btn" onclick="rolarDado()">Rolar dado</button>
-
-    <!-- Histórico de dados -->
     <div id="dice-hist-wrap" style="display:none;margin-top:8px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
         <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Histórico de Rolagens</div>
@@ -380,7 +372,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div id="fichas-container"></div>
 </div>
 
-<!-- ADM -->
 <!-- POR BIOMA -->
 <div class="page" id="page-bioma">
   <div style="padding-top:8px;margin-bottom:20px">
@@ -398,8 +389,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div style="font-size:13px;color:var(--muted);margin-top:6px">Escolha seu tipo de acesso</div>
     </div>
     <div class="login-cols">
-
-      <!-- JANELA ADM -->
       <div class="box" style="padding:28px 24px">
         <div style="text-align:center;margin-bottom:20px">
           <div style="font-size:32px;margin-bottom:8px">🔐</div>
@@ -411,8 +400,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="btn btn-primary btn-full" onclick="fazerLogin()">Entrar como ADM</button>
         <div class="fb fb-err" id="login-erro" style="margin-top:10px">Usuário ou senha incorretos.</div>
       </div>
-
-      <!-- JANELA PLAYER -->
       <div class="box" style="padding:28px 24px">
         <div style="text-align:center;margin-bottom:20px">
           <div style="font-size:32px;margin-bottom:8px">🎮</div>
@@ -431,7 +418,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="btn btn-primary btn-full" onclick="fazerLoginPlayer()" id="player-login-btn">Entrar como Player</button>
         <div class="fb fb-err" id="player-login-erro" style="margin-top:10px">Nome ou senha incorretos.</div>
       </div>
-
     </div>
   </div>
 </div>
@@ -459,6 +445,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="adm-nav-btn active" onclick="admTab('personagens',this)">👥 Personagens</button>
         <button class="adm-nav-btn" onclick="admTab('biomas',this)">🗺️ Biomas</button>
         <button class="adm-nav-btn" onclick="admTab('pokemons',this)">⚡ Pokémon</button>
+        <button class="adm-nav-btn" onclick="admTab('itens',this)">🎒 Itens</button>
         <div class="adm-nav-sep"></div>
         <button class="adm-nav-btn" onclick="admTab('admins',this)">🔑 Admins</button>
         <button class="adm-nav-btn" onclick="admTab('editor',this)">🎨 Editor Visual</button>
@@ -615,6 +602,55 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           </table></div>
         </div>
 
+        <!-- ITENS -->
+        <div class="adm-section" id="sec-itens">
+          <div class="sec-title">Itens</div>
+          <div class="sec-sub">Gerencie o catálogo de itens disponíveis no inventário das fichas</div>
+          <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
+            <div class="field" style="flex:1;min-width:160px;margin-bottom:0">
+              <label>Filtrar por categoria</label>
+              <select id="itens-filtro-cat" onchange="renderTbodyItens()">
+                <option value="">Todas</option>
+                <option>Pokéball</option>
+                <option>Snack</option>
+                <option>Medicine</option>
+                <option>Itens de Treinador</option>
+                <option>Z-Crystal</option>
+                <option>Hold Item</option>
+                <option>Props</option>
+                <option>Fóssil</option>
+                <option>Megastone</option>
+                <option>Treasure Item</option>
+              </select>
+            </div>
+            <div class="field" style="flex:1;min-width:160px;margin-bottom:0">
+              <label>Buscar por nome</label>
+              <input type="text" id="itens-busca" placeholder="Ex: Potion..." oninput="renderTbodyItens()"/>
+            </div>
+            <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:2px">
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap">
+                <input type="checkbox" id="itens-filtro-evento" onchange="renderTbodyItens()"/> Só eventos
+              </label>
+            </div>
+            <button class="btn btn-primary btn-sm" style="align-self:flex-end" onclick="abrirModalItem()">+ Novo item</button>
+          </div>
+          <div id="itens-contagem" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
+          <div class="adm-table-wrap">
+            <table class="adm-table">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Categoria</th>
+                  <th>Descrição</th>
+                  <th style="text-align:center">Evento</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tbody-itens"></tbody>
+            </table>
+          </div>
+        </div>
+
         <!-- ADMINS -->
         <div class="adm-section" id="sec-admins">
           <div class="sec-title">Administradores</div>
@@ -747,10 +783,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           </div>
         </div>
 
-      </div>
-    </div>
-  </div>
-</div>
+      </div><!-- /adm-content -->
+    </div><!-- /adm-layout -->
+  </div><!-- /adm-painel -->
+</div><!-- /page-adm -->
+
+<!-- MODAL PLAYER -->
 <div class="modal-overlay" id="modal-player" style="display:none">
   <div class="modal-box">
     <button class="modal-close" onclick="fecharModalPlayer()">✕</button>
@@ -769,6 +807,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
 </div>
 
+<!-- MODAL PERSONAGEM -->
 <div class="modal-overlay" id="modal-personagem" style="display:none">
   <div class="modal-box">
     <button class="modal-close" onclick="fecharModal()">✕</button>
@@ -797,6 +836,54 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
 </div>
 
+<!-- MODAL ITEM -->
+<div class="modal-overlay" id="modal-item" style="display:none">
+  <div class="modal-box" style="max-width:480px">
+    <button class="modal-close" onclick="fecharModalItem()">✕</button>
+    <div class="modal-title" id="modal-item-title">Novo Item</div>
+    <input type="hidden" id="modal-item-id"/>
+    <div class="g2">
+      <div class="field">
+        <label>Nome</label>
+        <input type="text" id="modal-item-nome" placeholder="Ex: Potion"/>
+      </div>
+      <div class="field">
+        <label>Categoria</label>
+        <select id="modal-item-cat">
+          <option>Pokéball</option>
+          <option>Snack</option>
+          <option>Medicine</option>
+          <option>Itens de Treinador</option>
+          <option>Z-Crystal</option>
+          <option>Hold Item</option>
+          <option>Props</option>
+          <option>Fóssil</option>
+          <option>Megastone</option>
+          <option>Treasure Item</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Descrição</label>
+      <textarea id="modal-item-desc" rows="3" placeholder="Descreva o efeito ou uso do item..."
+        style="padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);width:100%;resize:vertical"></textarea>
+    </div>
+    <div class="field">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--text)">
+        <input type="checkbox" id="modal-item-evento"/>
+        Item de Evento
+        <span style="font-size:11px;color:var(--muted);font-weight:400">(aparece destacado no inventário)</span>
+      </label>
+    </div>
+    <div class="fb fb-err" id="modal-item-err" style="margin-bottom:8px">—</div>
+    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="salvarItem()">Salvar</button>
+      <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharModalItem()">Cancelar</button>
+      <button class="btn btn-danger" id="modal-item-del-btn" style="margin-left:auto;display:none" onclick="removerItemDoModal()">🗑 Excluir</button>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 // ══════════════════════════════════════
@@ -806,7 +893,6 @@ const SUPA_URL = 'https://jdgfxsvgxfdkdrzqbgje.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
 
 async function sb(path, opts={}){
-  // usa token da sessão Auth se disponível, senão anon key
   const session = supabaseClient?.auth ? (await supabaseClient.auth.getSession()).data.session : null;
   const token = session?.access_token || SUPA_KEY;
   const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
@@ -825,19 +911,17 @@ async function sb(path, opts={}){
   try{ return JSON.parse(text); }catch(e){ return []; }
 }
 
-// cliente Supabase JS para Auth
 const supabaseClient = supabase.createClient(SUPA_URL, SUPA_KEY);
-const dbGet  = (t,q='')        => sb(`${t}?${q}&order=created_at.asc`);
-const dbPost = (t,b)           => sb(t,{method:'POST',body:JSON.stringify(b)});
-const dbPatch= (t,q,b)         => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
-const dbDel  = (t,q)           => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
+const dbGet  = (t,q='')   => sb(`${t}?${q}&order=created_at.asc`);
+const dbPost = (t,b)      => sb(t,{method:'POST',body:JSON.stringify(b)});
+const dbPatch= (t,q,b)    => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
+const dbDel  = (t,q)      => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
 
 // ══════════════════════════════════════
 // STATE
 // ══════════════════════════════════════
-let admins=[], players=[], personagens=[], biomas=[], pokemonDB=[], historico=[];
+let admins=[], players=[], personagens=[], biomas=[], pokemonDB=[], historico=[], itensDB=[];
 let admLogado=null, playerLogado=null, histPagina=0;
-// restaura sessão do player se existir
 try{ const s=localStorage.getItem('pchapters_player'); if(s) playerLogado=JSON.parse(s); }catch(e){}
 const HIST_POR_PAG=10;
 
@@ -852,7 +936,6 @@ const rlbl={comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
 const rcls={comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
 const glbl={'1d2':'1d2 (50/50)',macho:'100% Macho',femea:'100% Fêmea',genderless:'Sem gênero'};
 
-// Unown ?
 const FALLBACK_SPRITE_DEFAULT='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
 let FALLBACK_SPRITE=FALLBACK_SPRITE_DEFAULT, FALLBACK_AVATAR=FALLBACK_SPRITE_DEFAULT;
 fetch('https://pokeapi.co/api/v2/pokemon-form/10027/')
@@ -882,27 +965,22 @@ async function carregarFichasHist(){
 }
 
 // ══════════════════════════════════════
-// INIT — carrega tudo do Supabase
+// INIT
 // ══════════════════════════════════════
 async function init(){
   loading(true);
   try{
-    // verifica sessão ativa
     const {data:{session}}=await supabaseClient.auth.getSession();
     if(session){
       admLogado={email:session.user.email};
       document.getElementById('adm-user-label').textContent=session.user.email;
     }
 
-    // descobre qual aba abrir pelo pathname
     const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
     let paginaInicial=PATH_PAGES[pathSeg]||'roller';
-    // se tentou acessar /adm sem estar logado, redireciona para /login
     if(paginaInicial==='adm'&&!admLogado) paginaInicial='login';
-    // se tentou acessar /player sem estar logado como player, redireciona para /login
     if(paginaInicial==='player'&&!playerLogado) paginaInicial='login';
 
-    // dados sempre necessários (base compartilhada)
     const [_players,_personagens,_biomas,_pokemons,_admins,estilo] = await Promise.all([
       dbGet('players'),
       dbGet('personagens'),
@@ -918,10 +996,8 @@ async function init(){
 
     loading(false);
 
-    // navega para a aba correta sem pushState (já está na URL certa)
     await goTo(paginaInicial, null, false);
 
-    // destaca o botão da nav correto
     const navBtns=document.querySelectorAll('.nav-link');
     navBtns.forEach(b=>{
       const pageKey=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
@@ -937,7 +1013,6 @@ async function init(){
 // ══════════════════════════════════════
 // NAVEGAÇÃO
 // ══════════════════════════════════════
-// mapa aba → path e path → aba
 const PAGE_PATHS={roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm'};
 const PATH_PAGES=Object.fromEntries(Object.entries(PAGE_PATHS).map(([k,v])=>[v,k]));
 const pagesLoaded={roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false};
@@ -951,9 +1026,6 @@ async function goTo(page,el,pushState=true){
   if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
   if(pushState) history.pushState({page},'','/'+PAGE_PATHS[page]);
   await lazyLoad(page);
-}
-async function goToAdm(pushState=true){
-  await goTo('adm',null,pushState);
 }
 
 async function lazyLoad(page){
@@ -976,7 +1048,6 @@ async function lazyLoad(page){
   }
   if(page==='adm'){
     if(!admLogado) return;
-    // garante que players e personagens estão carregados
     const [_players,_personagens] = await Promise.all([
       players.length===0 ? dbGet('players') : Promise.resolve(players),
       personagens.length===0 ? dbGet('personagens') : Promise.resolve(personagens),
@@ -990,7 +1061,6 @@ async function lazyLoad(page){
 
 function tryParse(str,def){try{return JSON.parse(str);}catch{return def;}}
 
-// botão voltar do browser
 window.addEventListener('popstate',e=>{
   const page=e.state?.page||(PATH_PAGES[location.pathname.replace(/^\/+/,'').replace(/\/+$/,'')])|| 'roller';
   goTo(page,null,false);
@@ -1009,9 +1079,7 @@ function renderBiomaPage(){
   const tabs  = document.getElementById('bioma-tabs');
   const cont  = document.getElementById('bioma-content');
   if(!biomas.length){ cont.innerHTML='<div style="color:var(--muted);padding:20px">Nenhum bioma cadastrado.</div>'; return; }
-  // define bioma ativo na primeira visita
   if(!biomaAtivo || !biomas.find(b=>b.nome===biomaAtivo)) biomaAtivo = biomas[0].nome;
-  // tabs
   tabs.innerHTML = biomas.map(b=>`
     <button class="bioma-tab-btn${b.nome===biomaAtivo?' active':''}" onclick="selecionarBioma('${b.nome}',this)">
       ${b.nome}
@@ -1054,13 +1122,13 @@ function renderBiomaConteudo(){
     </div>`;
   }).join('');
 }
+
 function admTab(sec,el){
   document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('active'));
   document.getElementById('sec-'+sec).classList.add('active');
   document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
   if(el)el.classList.add('active');
   if(sec==='personagens'){
-    // recarrega se necessário
     const load=[];
     if(players.length===0) load.push(dbGet('players').then(r=>{players=r;}));
     if(personagens.length===0) load.push(dbGet('personagens').then(r=>{personagens=r;}));
@@ -1068,6 +1136,13 @@ function admTab(sec,el){
   }
   if(sec==='biomas')renderTbodyBiomas();
   if(sec==='pokemons'){syncBiomaSelects();document.getElementById('pk-filtro-wrap').style.display='';renderTbodyPokemons();}
+  if(sec==='itens'){
+    if(itensDB.length===0){
+      carregarItens().then(()=>renderTbodyItens());
+    } else {
+      renderTbodyItens();
+    }
+  }
   if(sec==='admins')renderTbodyAdmins();
   if(sec==='editor'){carregarEstiloSalvo().then(e=>carregarEditorUI(e));}
   if(sec==='historicos'){
@@ -1090,7 +1165,7 @@ async function fazerLogin(){
   if(error||!data.session){errEl.style.display='block';return;}
   admLogado={email:data.user.email};
   document.getElementById('adm-user-label').textContent=data.user.email;
-  pagesLoaded['adm']=false; // força reload do painel
+  pagesLoaded['adm']=false;
   await goTo('adm',null,true);
 }
 async function fazerLogout(){
@@ -1101,7 +1176,6 @@ async function fazerLogout(){
   await goTo('login',null,true);
 }
 
-// ── LOGIN PLAYER ──────────────────────────────────────
 function resetPlayerLoginForm(){
   document.getElementById('player-confirma-field').style.display='none';
   document.getElementById('player-primeiro-aviso').style.display='none';
@@ -1109,8 +1183,6 @@ function resetPlayerLoginForm(){
   document.getElementById('player-login-erro').style.display='none';
   document.getElementById('player-confirma-input').value='';
 }
-
-// chamado ao digitar o nome — revela campo de confirmação se for primeiro acesso
 function onPlayerNomeInput(){
   resetPlayerLoginForm();
   const nome=document.getElementById('player-nome-input').value.trim();
@@ -1122,7 +1194,6 @@ function onPlayerNomeInput(){
     document.getElementById('player-login-btn').textContent='Definir senha e entrar';
   }
 }
-
 async function fazerLoginPlayer(){
   const nome=document.getElementById('player-nome-input').value.trim();
   const senha=document.getElementById('player-senha-input').value;
@@ -1130,12 +1201,10 @@ async function fazerLoginPlayer(){
   errEl.style.display='none';
   if(!nome){errEl.textContent='Preencha o nome do player.';errEl.style.display='block';return;}
   if(!senha){errEl.textContent='Preencha a senha.';errEl.style.display='block';return;}
-  // busca no cache local (já carregado no init) — case-insensitive
   const pl=players.find(p=>p.nome.toLowerCase()===nome.toLowerCase());
   if(!pl){
     errEl.textContent='Player não encontrado. Peça ao ADM para te cadastrar.';errEl.style.display='block';return;
   }
-  // primeiro login — sem senha definida ainda
   if(!pl.senha){
     const confirma=document.getElementById('player-confirma-input').value;
     if(!confirma){errEl.textContent='Preencha a confirmação de senha.';errEl.style.display='block';return;}
@@ -1217,14 +1286,6 @@ function renderTbodyAdmins(){
 // ══════════════════════════════════════
 // PLAYERS
 // ══════════════════════════════════════
-async function editarPontosPlayer(id,nome){
-  const pl=players.find(p=>p.id===id);if(!pl)return;
-  const val=prompt(`Pontos de "${nome}":`,pl.pontos);if(val===null)return;
-  const n=parseInt(val);if(isNaN(n)){alert('Valor inválido.');return;}
-  await dbPatch('players',`id=eq.${id}`,{pontos:n});
-  pl.pontos=n;
-  renderTbodyPlayers();renderFichario();
-}
 async function removerPlayer(id,nome){
   const qtd=personagens.filter(p=>p.player===nome).length;
   if(!confirm(`Remover o player "${nome}"?${qtd>0?`\n\nOs ${qtd} personagem(ns) deste player também serão removidos.`:''}`))return;
@@ -1381,6 +1442,7 @@ async function salvarEdicaoPersonagem(){
   fecharModal();
   renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
 }
+
 // ══════════════════════════════════════
 // BIOMAS
 // ══════════════════════════════════════
@@ -1441,15 +1503,15 @@ function previewPokeSprite(input){
   reader.readAsDataURL(file);
 }
 async function adicionarPokemon(){
-  const nome          =document.getElementById('pk-nome').value.trim();
-  const habilidade    =document.getElementById('pk-habilidade').value.trim();
-  const habilidade2   =document.getElementById('pk-habilidade2').value.trim();
-  const raridade      =document.getElementById('pk-raridade').value;
-  const genero        =document.getElementById('pk-genero').value;
-  const bioma         =document.getElementById('pk-bioma').value;
-  const tipos         =[...document.querySelectorAll('#tipos-wrap .tipo-tag.sel')].map(t=>t.dataset.tipo);
-  const prev          =document.getElementById('pk-sprite-preview');
-  const sprite        =prev.dataset.b64||null;
+  const nome       =document.getElementById('pk-nome').value.trim();
+  const habilidade =document.getElementById('pk-habilidade').value.trim();
+  const habilidade2=document.getElementById('pk-habilidade2').value.trim();
+  const raridade   =document.getElementById('pk-raridade').value;
+  const genero     =document.getElementById('pk-genero').value;
+  const bioma      =document.getElementById('pk-bioma').value;
+  const tipos      =[...document.querySelectorAll('#tipos-wrap .tipo-tag.sel')].map(t=>t.dataset.tipo);
+  const prev       =document.getElementById('pk-sprite-preview');
+  const sprite     =prev.dataset.b64||null;
   if(!nome||tipos.length===0){alert('Preencha o nome e selecione ao menos 1 tipo.');return;}
   const res=await dbPost('pokemons',{nome,emoji:'❓',sprite,tipos,habilidade,habilidade2,raridade,genero,bioma});
   if(res&&res[0])pokemonDB.push(res[0]);
@@ -1563,9 +1625,118 @@ async function importarDaPokeAPI(){
 }
 
 // ══════════════════════════════════════
+// ITENS
+// ══════════════════════════════════════
+async function carregarItens(){
+  const res = await dbGet('itens', 'order=categoria.asc,nome.asc');
+  itensDB = res || [];
+}
+
+function renderTbodyItens(){
+  const cat    = document.getElementById('itens-filtro-cat')?.value || '';
+  const busca  = (document.getElementById('itens-busca')?.value || '').toLowerCase();
+  const soloEv = document.getElementById('itens-filtro-evento')?.checked || false;
+
+  let lista = itensDB;
+  if(cat)    lista = lista.filter(i => i.categoria === cat);
+  if(busca)  lista = lista.filter(i =>
+    i.nome.toLowerCase().includes(busca) ||
+    (i.descricao||'').toLowerCase().includes(busca)
+  );
+  if(soloEv) lista = lista.filter(i => i.evento);
+
+  const contEl = document.getElementById('itens-contagem');
+  if(contEl) contEl.textContent = `${lista.length} item${lista.length !== 1 ? 's' : ''} encontrado${lista.length !== 1 ? 's' : ''}`;
+
+  document.getElementById('tbody-itens').innerHTML = lista.length === 0
+    ? `<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">Nenhum item encontrado.</td></tr>`
+    : lista.map(item => `
+      <tr>
+        <td><strong>${item.nome}</strong></td>
+        <td>
+          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;
+            padding:2px 8px;font-size:11px;font-weight:700;color:var(--muted)">
+            ${item.categoria}
+          </span>
+        </td>
+        <td style="font-size:12px;color:var(--muted);max-width:260px;
+          overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+          title="${(item.descricao||'').replace(/"/g,'&quot;')}">
+          ${item.descricao || '—'}
+        </td>
+        <td style="text-align:center">
+          ${item.evento
+            ? '<span style="font-size:11px;font-weight:700;color:#e07020;background:#fff3e0;padding:2px 8px;border-radius:5px">EVENTO</span>'
+            : '<span style="color:var(--muted);font-size:12px">—</span>'}
+        </td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-xs"
+            style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px"
+            onclick="abrirModalItem('${item.id}')">✏️ Editar</button>
+        </td>
+      </tr>`).join('');
+}
+
+function abrirModalItem(id){
+  const item = id ? itensDB.find(i => i.id === id) : null;
+  document.getElementById('modal-item-id').value    = id || '';
+  document.getElementById('modal-item-title').textContent = item ? 'Editar Item' : 'Novo Item';
+  document.getElementById('modal-item-nome').value  = item?.nome || '';
+  document.getElementById('modal-item-cat').value   = item?.categoria || 'Pokéball';
+  document.getElementById('modal-item-desc').value  = item?.descricao || '';
+  document.getElementById('modal-item-evento').checked = !!item?.evento;
+  document.getElementById('modal-item-err').style.display = 'none';
+  document.getElementById('modal-item-del-btn').style.display = item ? 'inline-block' : 'none';
+  document.getElementById('modal-item').style.display = 'flex';
+}
+
+function fecharModalItem(){
+  document.getElementById('modal-item').style.display = 'none';
+}
+
+async function salvarItem(){
+  const id    = document.getElementById('modal-item-id').value;
+  const nome  = document.getElementById('modal-item-nome').value.trim();
+  const cat   = document.getElementById('modal-item-cat').value;
+  const desc  = document.getElementById('modal-item-desc').value.trim();
+  const evento= document.getElementById('modal-item-evento').checked;
+  const errEl = document.getElementById('modal-item-err');
+  errEl.style.display = 'none';
+
+  if(!nome){
+    errEl.textContent = 'Preencha o nome do item.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  if(id){
+    const patch = {nome, categoria:cat, descricao:desc, evento};
+    await dbPatch('itens', `id=eq.${id}`, patch);
+    const i = itensDB.find(x => x.id === id);
+    if(i) Object.assign(i, patch);
+  } else {
+    const res = await dbPost('itens', {nome, categoria:cat, descricao:desc, evento});
+    if(res && res[0]) itensDB.push(res[0]);
+  }
+
+  fecharModalItem();
+  renderTbodyItens();
+}
+
+async function removerItemDoModal(){
+  const id = document.getElementById('modal-item-id').value;
+  if(!id) return;
+  const item = itensDB.find(i => i.id === id);
+  if(!confirm(`Remover o item "${item?.nome}"?\n\nEle será removido do catálogo e dos inventários de todas as fichas.`)) return;
+  await dbDel('itens', `id=eq.${id}`);
+  itensDB = itensDB.filter(i => i.id !== id);
+  fecharModalItem();
+  renderTbodyItens();
+}
+
+// ══════════════════════════════════════
 // FICHÁRIO
 // ══════════════════════════════════════
-// ── MODAL PLAYER ──────────────────────────────────────
 function abrirModalPlayer(id){
   const pl=players.find(p=>p.id===id);if(!pl)return;
   document.getElementById('modal-pl-id').value=id;
@@ -1600,7 +1771,6 @@ async function removerPlayerDoModal(){
   renderTbodyPlayers();renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
 }
 
-// ── DESATIVAR / REATIVAR PERSONAGEM ───────────────────
 async function toggleDesativarPersonagem(){
   const id=document.getElementById('modal-p-id').value;
   const p=personagens.find(x=>x.id===id);if(!p)return;
@@ -1707,12 +1877,10 @@ function spriteHtml(pk){
 function buildCardData(){
   const bioma=document.getElementById('bioma').value;
   const rarity=rollRarity();
-  // comum e incomum nunca revelam o Pokémon específico
   if(rarity==='comum'||rarity==='incomum'){
     const gender=rollGender('1d2');
     return{nome:'???',tipos:['normal'],emoji:'❓',sprite:null,habilidade:'???',rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
   }
-  // raro e raríssimo revelam normalmente
   const pool=pokemonDB.filter(p=>p.bioma===bioma&&p.raridade===rarity);
   const p=pool.length>0
     ? pool[Math.floor(Math.random()*pool.length)]
@@ -1827,7 +1995,6 @@ async function carregarEstiloSalvo(){
   }catch(e){}
   return ESTILO_DEFAULT;
 }
-
 function carregarEditorUI(e){
   const d=e||ESTILO_DEFAULT;
   document.getElementById('ec-brand').value=d.brand;
@@ -1841,7 +2008,6 @@ function carregarEditorUI(e){
   document.getElementById('ec-radius').value=d.radius;
   document.getElementById('ec-custom-css').value=d.customCss||'';
 }
-
 function coletarEstilo(){
   return{
     brand:     document.getElementById('ec-brand').value,
@@ -1856,7 +2022,6 @@ function coletarEstilo(){
     customCss: document.getElementById('ec-custom-css').value,
   };
 }
-
 function aplicarVars(e){
   const r=document.documentElement;
   r.style.setProperty('--brand',e.brand);
@@ -1873,7 +2038,6 @@ function aplicarVars(e){
   tag.textContent=e.customCss||'';
   injectFonts((e.fontTitle||'')+(e.fontBody||''));
 }
-
 function injectFonts(str){
   const map={
     'Playfair':'Playfair+Display:wght@400;600;700',
@@ -1899,9 +2063,7 @@ function injectFonts(str){
     }
   });
 }
-
 function aplicarEstilo(){aplicarVars(coletarEstilo());}
-
 async function salvarEstilo(){
   const e=coletarEstilo();
   aplicarVars(e);
@@ -1912,7 +2074,6 @@ async function salvarEstilo(){
   });
   fb('editor-fb-ok');
 }
-
 async function resetarEstilo(){
   if(!confirm('Restaurar padrão para todos os dispositivos?'))return;
   await sb('configuracoes?chave=eq.estilo',{
@@ -1948,7 +2109,6 @@ async function rolarDado(){
   if(!personagem){alert('Preencha o nome do personagem!');document.getElementById('dice-personagem').focus();return;}
   if(!lados||lados<2){alert('O dado precisa ter ao menos 2 lados.');return;}
   if(!motivo){alert('Preencha o motivo da rolagem!');document.getElementById('dice-motivo').focus();return;}
-
   const resultado=Math.floor(Math.random()*lados)+1;
   const agora=new Date();
   const hora=agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
@@ -1960,13 +2120,11 @@ async function rolarDado(){
   dadosPagina=0;
   renderHistDados();
 }
-
 function mudarPaginaDados(dir){
   const totalPags=Math.ceil(historicoDados.length/DADOS_POR_PAG);
   dadosPagina=Math.max(0,Math.min(dadosPagina+dir,totalPags-1));
   renderHistDados();
 }
-
 function renderHistDados(){
   const wrap=document.getElementById('dice-hist-wrap');
   const lista=document.getElementById('dice-hist-lista');
@@ -1980,18 +2138,15 @@ function renderHistDados(){
   document.getElementById('dice-hist-prev').style.display=dadosPagina>0?'':'none';
   document.getElementById('dice-hist-next').style.display=dadosPagina<totalPags-1?'':'none';
   document.getElementById('dice-hist-paginacao').style.display=totalPags>1?'flex':'none';
-  lista.innerHTML=pagina.map((e,i)=>{
-    const motivoStr=e.motivo?` para <strong>${e.motivo}</strong>`:'';
-    return`<div class="dice-hist-entry" style="animation-delay:${i*0.04}s">
+  lista.innerHTML=pagina.map((e,i)=>`
+    <div class="dice-hist-entry" style="animation-delay:${i*0.04}s">
       <div class="dice-hist-msg">
         [${e.data} ${e.hora}] <strong>${e.personagem}</strong> rolou <strong>1d${e.lados}</strong> para <strong>${e.motivo}</strong> e obteve: <strong>${e.resultado}</strong>
       </div>
       <div class="dice-hist-num" style="display:none">${e.resultado}</div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
-// converte "dd/mm/aaaa" → Date para comparação
 function parseBrDate(str){ const [d,m,a]=str.split('/'); return new Date(`${a}-${m}-${d}`); }
 
 async function limparHistPokemonPorData(){
@@ -2020,7 +2175,6 @@ async function limparHistPokemonPorData(){
   document.getElementById('poke-data-de').value='';
   document.getElementById('poke-data-ate').value='';
 }
-
 async function limparHistDadosPorData(){
   if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
   const de=document.getElementById('dados-data-de').value;
@@ -2047,7 +2201,6 @@ async function limparHistDadosPorData(){
   document.getElementById('dados-data-de').value='';
   document.getElementById('dados-data-ate').value='';
 }
-
 async function limparHistDados(){
   if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
   if(!confirm('Limpar TODO o histórico de dados? Esta ação não pode ser desfeita.'))return;
