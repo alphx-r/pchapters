@@ -1079,9 +1079,27 @@ async function fazerLoginPlayer(){
   const senha=document.getElementById('player-senha-input').value;
   const errEl=document.getElementById('player-login-erro');
   errEl.style.display='none';
-  const res=await dbGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`);
+  if(!nome){errEl.textContent='Preencha o nome do player.';errEl.style.display='block';return;}
+  if(!senha){errEl.textContent='Preencha a senha.';errEl.style.display='block';return;}
+  const res=await sb(`players?nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`,{headers:{'Accept':'application/json'}});
   const pl=res&&res[0];
-  if(!pl||pl.senha!==senha){errEl.style.display='block';return;}
+  if(!pl){
+    errEl.textContent='Player não encontrado. Peça ao ADM para te cadastrar.';errEl.style.display='block';return;
+  }
+  // primeiro login — sem senha definida ainda
+  if(!pl.senha){
+    const confirma=prompt(`Primeiro acesso! Defina sua senha para "${nome}":\n\nConfirme digitando novamente:`);
+    if(confirma===null)return;
+    if(confirma!==senha){errEl.textContent='As senhas não coincidem. Tente novamente.';errEl.style.display='block';return;}
+    if(senha.length<4){errEl.textContent='Use ao menos 4 caracteres.';errEl.style.display='block';return;}
+    await dbPatch('players',`id=eq.${pl.id}`,{senha});
+    pl.senha=senha;
+    // atualiza no cache local também
+    const cached=players.find(p=>p.id===pl.id);
+    if(cached) cached.senha=senha;
+  } else if(pl.senha!==senha){
+    errEl.textContent='Senha incorreta.';errEl.style.display='block';return;
+  }
   playerLogado={id:pl.id,nome:pl.nome};
   localStorage.setItem('pchapters_player',JSON.stringify(playerLogado));
   await renderAreaPlayer();
@@ -1311,24 +1329,6 @@ async function salvarEdicaoPersonagem(){
   fecharModal();
   renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
 }
-function renderTbodyPersonagens(){
-  document.getElementById('tbody-personagens').innerHTML=personagens.length===0
-    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:20px">Nenhum personagem cadastrado.</td></tr>'
-    :personagens.map(p=>`
-      <tr>
-        <td style="display:flex;align-items:center;gap:8px">
-          <div style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center">
-            ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
-          </div><strong>${p.nome}</strong>
-        </td>
-        <td>${p.player}</td>
-        <td style="white-space:nowrap">
-          <button class="btn btn-primary btn-xs" style="padding:3px 8px;font-size:11px" onclick="abrirModalPersonagem('${p.id}')">✏️ Editar</button>
-          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px;margin-left:4px" onclick="removerPersonagem('${p.id}')">Remover</button>
-        </td>
-      </tr>`).join('');
-}
-
 // ══════════════════════════════════════
 // BIOMAS
 // ══════════════════════════════════════
