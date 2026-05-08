@@ -1081,8 +1081,8 @@ async function fazerLoginPlayer(){
   errEl.style.display='none';
   if(!nome){errEl.textContent='Preencha o nome do player.';errEl.style.display='block';return;}
   if(!senha){errEl.textContent='Preencha a senha.';errEl.style.display='block';return;}
-  const res=await sb(`players?nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`,{headers:{'Accept':'application/json'}});
-  const pl=res&&res[0];
+  // busca no cache local (já carregado no init) — case-insensitive
+  const pl=players.find(p=>p.nome.toLowerCase()===nome.toLowerCase());
   if(!pl){
     errEl.textContent='Player não encontrado. Peça ao ADM para te cadastrar.';errEl.style.display='block';return;
   }
