@@ -419,9 +419,16 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--brand)">Player</div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px">Acesso às suas fichas de personagem</div>
         </div>
-        <div class="field"><label>Nome do Player</label><input type="text" id="player-nome-input" placeholder="Seu nome de player" onkeydown="if(event.key==='Enter')fazerLoginPlayer()"/></div>
+        <div class="field"><label>Nome do Player</label><input type="text" id="player-nome-input" placeholder="Seu nome de player" onkeydown="if(event.key==='Enter')fazerLoginPlayer()" oninput="onPlayerNomeInput()"/></div>
         <div class="field"><label>Senha</label><input type="password" id="player-senha-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLoginPlayer()"/></div>
-        <button class="btn btn-primary btn-full" onclick="fazerLoginPlayer()">Entrar como Player</button>
+        <div class="field" id="player-confirma-field" style="display:none">
+          <label style="color:var(--brand)">Confirmar Senha <span style="font-size:11px;font-weight:400;color:var(--muted)">(primeiro acesso)</span></label>
+          <input type="password" id="player-confirma-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLoginPlayer()"/>
+        </div>
+        <div id="player-primeiro-aviso" style="display:none;font-size:12px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:10px">
+          🔐 Primeiro acesso! Defina uma senha para entrar.
+        </div>
+        <button class="btn btn-primary btn-full" onclick="fazerLoginPlayer()" id="player-login-btn">Entrar como Player</button>
         <div class="fb fb-err" id="player-login-erro" style="margin-top:10px">Nome ou senha incorretos.</div>
       </div>
 
@@ -1074,6 +1081,27 @@ async function fazerLogout(){
 }
 
 // ── LOGIN PLAYER ──────────────────────────────────────
+function resetPlayerLoginForm(){
+  document.getElementById('player-confirma-field').style.display='none';
+  document.getElementById('player-primeiro-aviso').style.display='none';
+  document.getElementById('player-login-btn').textContent='Entrar como Player';
+  document.getElementById('player-login-erro').style.display='none';
+  document.getElementById('player-confirma-input').value='';
+}
+
+// chamado ao digitar o nome — revela campo de confirmação se for primeiro acesso
+function onPlayerNomeInput(){
+  resetPlayerLoginForm();
+  const nome=document.getElementById('player-nome-input').value.trim();
+  if(!nome) return;
+  const pl=players.find(p=>p.nome.toLowerCase()===nome.toLowerCase());
+  if(pl && !pl.senha){
+    document.getElementById('player-confirma-field').style.display='block';
+    document.getElementById('player-primeiro-aviso').style.display='block';
+    document.getElementById('player-login-btn').textContent='Definir senha e entrar';
+  }
+}
+
 async function fazerLoginPlayer(){
   const nome=document.getElementById('player-nome-input').value.trim();
   const senha=document.getElementById('player-senha-input').value;
@@ -1088,13 +1116,12 @@ async function fazerLoginPlayer(){
   }
   // primeiro login — sem senha definida ainda
   if(!pl.senha){
-    const confirma=prompt(`Primeiro acesso! Defina sua senha para "${nome}":\n\nConfirme digitando novamente:`);
-    if(confirma===null)return;
+    const confirma=document.getElementById('player-confirma-input').value;
+    if(!confirma){errEl.textContent='Preencha a confirmação de senha.';errEl.style.display='block';return;}
     if(confirma!==senha){errEl.textContent='As senhas não coincidem. Tente novamente.';errEl.style.display='block';return;}
     if(senha.length<4){errEl.textContent='Use ao menos 4 caracteres.';errEl.style.display='block';return;}
     await dbPatch('players',`id=eq.${pl.id}`,{senha});
     pl.senha=senha;
-    // atualiza no cache local também
     const cached=players.find(p=>p.id===pl.id);
     if(cached) cached.senha=senha;
   } else if(pl.senha!==senha){
