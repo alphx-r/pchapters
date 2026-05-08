@@ -36,101 +36,66 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .fb-err{background:#fee2e2;color:#c00;border:1px solid #fca5a5;border-radius:3px;padding:8px 12px;font-size:12px;font-weight:600;margin-top:10px}
 
 /* TOP BAR */
-.top-bar{background:var(--cor-cabecalho,#1a1a1a);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
+.top-bar{background:var(--accent);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
 .top-bar-title{font-family:var(--font-title);font-size:14px;color:#fff;font-weight:700}
 .top-bar-actions{display:flex;gap:8px;align-items:center}
 
 /* FICHA WRAP */
-.ficha-wrap{max-width:1000px;margin:0 auto;padding:16px 12px 60px}
+.ficha-wrap{max-width:860px;margin:0 auto;padding:16px 12px 60px}
 
 /* CABEÇALHO */
 .ficha-header{background:var(--bg);margin-bottom:1px}
-.header-name-row{background:var(--cor-cabecalho,#1a1a1a);padding:7px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.header-name-row{background:#1a1a1a;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ficha-title{font-family:var(--font-title);font-size:18px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase}
 .pe-badge{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body);white-space:nowrap}
-.header-slogan-row{background:var(--cor-slogan,#3a3a3a);padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.ficha-slogan{font-size:10px;font-style:normal;color:#fff;font-family:var(--font-body)}
+.header-slogan-row{background:#3a3a3a;padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ficha-slogan{font-size:10px;font-style:italic;color:#444;font-family:var(--font-body)}
 /* grid: banner ocupa tudo menos coluna direita de foto */
-.header-body{display:grid;grid-template-columns:1fr 220px;height:264px;border-top:2px solid var(--bg)}
-.header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#2a2a2a;position:relative}
+.header-body{display:grid;grid-template-columns:1fr 200px;min-height:160px;border-top:2px solid var(--bg)}
+.header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#eee;position:relative;cursor:pointer}
 .header-banner-col img{width:100%;height:100%;object-fit:cover;display:block}
-.header-banner-placeholder{font-size:12px;color:#888;font-family:var(--font-body);text-align:center;padding:20px;pointer-events:none}
-.header-banner-edit-btn{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:3px;font-size:10px;font-family:var(--font-body);padding:4px 10px;cursor:pointer;opacity:0;transition:opacity .2s}
-.header-banner-col:hover .header-banner-edit-btn{opacity:1}
+.header-banner-placeholder{font-size:12px;color:#aaa;font-family:var(--font-body);text-align:center;padding:20px}
+.header-banner-edit-btn{position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:3px;font-size:10px;font-family:var(--font-body);padding:3px 8px;cursor:pointer;display:none}
+.header-banner-col:hover .header-banner-edit-btn{display:block}
 .header-photo-col{border-left:2px solid var(--bg);overflow:hidden;display:flex;align-items:center;justify-content:center;background:#ddd;position:relative}
-.header-photo-col img{width:220px;height:100%;object-fit:cover;display:block}
+.header-photo-col img{width:200px;height:100%;object-fit:cover;display:block}
 .header-photo-placeholder{font-size:11px;color:#aaa;font-family:var(--font-body);text-align:center;padding:10px}
 
 /* STATS ROW */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
-.stat-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:10px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
+.stat-header{background:#1a1a1a;padding:5px 8px;text-align:center;font-size:10px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
 .stat-header:last-child{border-right:none}
 .stat-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:4px}
 .stat-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:12px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
 .stat-val:last-child{border-right:none}
 
-/* DADOS GRID */
-.dados-grid-wrap{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;margin-bottom:1px}
-.dado-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
+/* DADOS ROW */
+.dados-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
+.dado-header{background:#1a1a1a;padding:5px 8px;text-align:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
 .dado-header:last-child{border-right:none}
-.dado-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:13px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
+.dado-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:8px}
+.dado-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:11px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
 .dado-val:last-child{border-right:none}
-.dados-grid-wrap .dado-header{border-bottom:1px solid var(--bg)}
-.dados-grid-wrap .dado-val{border-bottom:1.5px solid var(--bg)}
 
 /* SECTION */
-/* INVENTÁRIO */
-.inv-tabela{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-body)}
-.inv-tabela th{background:var(--cor-dados,#1a1a1a);color:#fff;padding:6px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.inv-tabela td{padding:7px 10px;border-bottom:1px solid var(--bg);vertical-align:top}
-.inv-tabela tr.inv-row:hover td{background:#f9f9f9;cursor:pointer}
-.inv-cat-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;background:#e8e8e8;color:#555;margin-left:4px;text-transform:uppercase;letter-spacing:.3px}
-.inv-desc-row td{font-size:11px;color:#666;padding:4px 10px 8px 28px;background:#fafafa;border-bottom:1px solid #eee}
-.inv-modal-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid #eee;transition:background .1s}
-.inv-modal-item:hover{background:#f5f5f5}
-.inv-modal-info{flex:1;min-width:0}
-.inv-modal-nome{font-size:13px;font-weight:700;font-family:var(--font-body);color:#1a1a1a}
-.inv-modal-cat{font-size:10px;color:#888;font-family:var(--font-body);text-transform:uppercase;letter-spacing:.3px;margin-top:1px}
-.inv-modal-desc{font-size:11px;color:#666;margin-top:3px;line-height:1.4}
-.inv-modal-qty{display:flex;align-items:center;gap:6px;flex-shrink:0;padding-top:2px}
-.inv-qty-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid #ccc;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-weight:700;transition:all .15s}
-.inv-qty-btn:hover{background:var(--cor-cabecalho,#1a1a1a);color:#fff;border-color:var(--cor-cabecalho,#1a1a1a)}
-.inv-qty-num{width:28px;text-align:center;font-size:13px;font-weight:700;font-family:var(--font-body)}
 .ficha-section{margin-bottom:4px}
-.ficha-section-title{background:var(--cor-secao,#1a1a1a);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
+.ficha-section-title{background:var(--accent);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
 .ficha-section-body{background:var(--surface);border:1.5px solid var(--bg);padding:12px}
 
 /* TIME */
 .time-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
-.poke-slot{background:var(--surface);border:1px solid var(--bg);display:flex;flex-direction:column;min-height:220px}
-.poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body);min-height:220px}
-/* cabeçalho: pokeball + tipos */
-.poke-slot-topbar{background:var(--cor-poke,#1a1a1a);padding:4px 6px;display:flex;align-items:center;justify-content:space-between;gap:4px}
-.poke-slot-ball{width:19px;height:19px;object-fit:contain;flex-shrink:0}
-.poke-slot-tipos{display:flex;gap:3px;align-items:center}
-.poke-slot-tipo-img{width:34px;height:17px;object-fit:contain}
-/* imagem */
-.poke-slot-img-wrap{background:#f5f5f5;display:flex;align-items:center;justify-content:center;height:100px;overflow:hidden;border-bottom:1px solid var(--bg)}
-.poke-slot-img-wrap img{width:100px;height:100px;object-fit:contain;image-rendering:pixelated}
-/* nome */
-.poke-slot-nome-row{background:var(--cor-poke,#1a1a1a);padding:3px 6px;text-align:center}
-.poke-slot-nome-lbl{font-size:13px;font-weight:700;color:#fff;font-family:var(--font-title);text-transform:uppercase;letter-spacing:.4px}
-/* infos */
-.poke-slot-info{font-size:12px;color:var(--text);line-height:1.7;font-family:var(--font-body);padding:5px 6px;flex:1}
-.poke-slot-info strong{font-weight:700;color:var(--cor-poke,#1a1a1a)}
-/* edit */
-.poke-slot-edit{border:1.5px solid var(--accent);padding:6px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
-.poke-slot-edit label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-top:2px}
-.poke-slot-edit input,.poke-slot-edit textarea,.poke-slot-edit select{width:100%;padding:3px 6px;border:1px solid #ccc;border-radius:2px;font-size:10px;font-family:var(--font-body);resize:vertical;outline:none;background:#fff}
-.poke-slot-edit input:focus,.poke-slot-edit textarea:focus,.poke-slot-edit select:focus{border-color:var(--accent)}
-.poke-slot-edit-img-preview{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;border:1px solid #eee;border-radius:2px;display:block;margin:2px auto}
-.poke-slot-edit-img-btn{width:100%;padding:3px;border:1px dashed #ccc;border-radius:2px;background:#fafafa;font-size:10px;font-family:var(--font-body);cursor:pointer;text-align:center;color:var(--muted)}
+.poke-slot{background:var(--surface);border:1.5px solid var(--bg);padding:8px;min-height:80px}
+.poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body)}
+.poke-slot-header{background:#000;padding:4px 6px;text-align:center;margin:-8px -8px 6px -8px}
+.poke-slot-nome-lbl{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title)}
+.poke-slot-info{font-size:10px;color:var(--muted);line-height:1.6;font-family:var(--font-body)}
+.poke-slot-dados{background:var(--surface2);padding:4px 6px;font-size:9px;font-weight:700;text-align:center;margin:4px -8px -8px -8px;font-family:var(--font-body)}
 
 /* RELACIONAMENTOS */
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
-.rel-item{background:var(--cor-rel,#000);padding:5px 8px;text-align:center;border:1px solid var(--bg)}
+.rel-item{background:#000;padding:5px 8px;text-align:center;border:1px solid var(--bg)}
 .rel-nome{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body)}
-.rel-tipo{font-size:10px;color:#fff;font-family:var(--font-body)}
+.rel-tipo{font-size:10px;color:var(--accent);font-family:var(--font-body)}
 
 /* TEXTO */
 .bio-text{font-size:12px;color:var(--text);line-height:1.8;white-space:pre-wrap;font-family:var(--font-body);text-align:justify;text-indent:28px}
@@ -143,47 +108,35 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .edit-input:focus{border-color:var(--accent)}
 .edit-input-sm{height:32px;resize:none}
 .fb-ok{background:#f0f0f0;color:#1a1a1a;border:1px solid #ccc;border-radius:3px;padding:6px 12px;font-size:12px;font-weight:600;font-family:var(--font-body)}
-
+.poke-slot-fields{display:flex;flex-direction:column;gap:4px}
+.poke-slot-fields input,.poke-slot-fields textarea{width:100%;padding:4px 6px;border:1px solid #ccc;border-radius:2px;font-size:10px;font-family:var(--font-body);resize:vertical;outline:none}
+.poke-slot-fields input:focus,.poke-slot-fields textarea:focus{border-color:var(--accent)}
 .view-content{display:block}
 .edit-content{display:none}
-/* MODAL DE CORES */
-.cores-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
-.cores-modal{background:#fff;border-radius:4px;padding:24px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
-.cores-modal-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:16px;text-align:center}
-.cores-row{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
-.cores-field{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.cores-field label{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;font-family:var(--font-body)}
-.cores-field input[type=color]{width:44px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none}
-.cores-modal-btns{display:flex;gap:8px;justify-content:flex-end}
+
+/* INVENTÁRIO */
+.inv-tabela{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-body)}
+.inv-tabela th{background:var(--cor-dados,#1a1a1a);color:#fff;padding:6px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.inv-tabela td{padding:7px 10px;border-bottom:1px solid var(--bg);vertical-align:top}
+.inv-tabela tr.inv-row{cursor:pointer}
+.inv-tabela tr.inv-row:hover td{background:#f9f9f9}
+.inv-cat-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;background:#e8e8e8;color:#555;margin-left:4px;text-transform:uppercase;letter-spacing:.3px}
+.inv-modal-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid #eee;transition:background .1s}
+.inv-modal-item:hover{background:#f5f5f5}
+.inv-modal-info{flex:1;min-width:0}
+.inv-modal-nome{font-size:13px;font-weight:700;font-family:var(--font-body);color:#1a1a1a}
+.inv-modal-cat{font-size:10px;color:#888;font-family:var(--font-body);text-transform:uppercase;letter-spacing:.3px;margin-top:1px}
+.inv-modal-desc{font-size:11px;color:#666;margin-top:3px;line-height:1.4}
+.inv-modal-qty{display:flex;align-items:center;gap:6px;flex-shrink:0;padding-top:2px}
+.inv-qty-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid #ccc;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all .15s}
+.inv-qty-btn:hover{background:var(--cor-cabecalho,#1a1a1a);color:#fff;border-color:var(--cor-cabecalho,#1a1a1a)}
+.inv-qty-num{width:28px;text-align:center;font-size:13px;font-weight:700;font-family:var(--font-body)}
 
 @media(max-width:600px){
-  .ficha-wrap{padding:10px 8px 60px}
-  .header-body{grid-template-columns:1fr;grid-template-rows:200px;height:auto}
-  .header-photo-col{display:none}
-  .header-banner-col{height:200px}
-  .header-banner-edit-btn{opacity:1}
-  .dados-grid-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:none}
-  /* Par 1: H1 H2 → V1 V2 */
-  .dados-grid-wrap .dado-header:nth-child(1){order:1}
-  .dados-grid-wrap .dado-header:nth-child(2){order:2}
-  .dados-grid-wrap .dado-val:nth-child(5){order:3}
-  .dados-grid-wrap .dado-val:nth-child(6){order:4}
-  /* Par 2: H3 H4 → V3 V4 */
-  .dados-grid-wrap .dado-header:nth-child(3){order:5}
-  .dados-grid-wrap .dado-header:nth-child(4){order:6}
-  .dados-grid-wrap .dado-val:nth-child(7){order:7}
-  .dados-grid-wrap .dado-val:nth-child(8){order:8}
-  /* bordas */
-  .dados-grid-wrap .dado-header:nth-child(2),.dados-grid-wrap .dado-val:nth-child(6),
-  .dados-grid-wrap .dado-header:nth-child(4),.dados-grid-wrap .dado-val:nth-child(8){border-right:none}
-  .time-grid{grid-template-columns:repeat(2,1fr)}
-  .stat-header,.dado-header{font-size:9px;padding:4px 8px}
-  .stat-val,.dado-val{font-size:11px;padding:5px 8px}
-  .ficha-title{font-size:15px}
-  .ficha-section-title{font-size:12px;padding:7px 10px}
-  .ficha-section-body{padding:10px}
-  .bio-text{font-size:11px}
-  .rel-grid{grid-template-columns:1fr 1fr}
+  .time-grid{grid-template-columns:repeat(3,1fr)}
+  .header-body{grid-template-columns:1fr}
+  .header-mid-col,.header-right-col{display:none}
+  .stats-row,.stat-val-row,.dados-row,.dado-val-row{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
@@ -204,10 +157,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 <!-- LOGIN DO JOGADOR -->
 <div id="login-wrap" style="display:none">
   <div class="login-wrap">
-    <h2>Acesso necessário</h2>
-    <p>Você precisa estar logado como player para editar esta ficha.</p>
-    <a href="/login" class="btn btn-primary" style="display:block;width:100%;text-align:center;text-decoration:none;margin-bottom:10px">Ir para o Login</a>
-    <div style="font-size:11px;color:var(--muted);text-align:center">Após logar, volte para esta ficha e clique em "✏️ Editar".</div>
+    <h2>Editar Ficha</h2>
+    <p>Entre com seu nome de player e senha para editar qualquer ficha vinculada ao seu player.</p>
+    <div class="field"><label>Nome do Player</label><input type="text" id="login-nome" placeholder="Ex: Lucas" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+    <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
+    <button class="btn btn-primary" style="width:100%" onclick="fazerLogin()">Entrar</button>
+    <div class="fb-err" id="login-err" style="display:none">Nome ou senha incorretos.</div>
   </div>
 </div>
 
@@ -226,6 +181,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="header-slogan-row">
       <span class="view-content ficha-slogan" id="f-slogan-txt"></span>
       <span class="edit-content" id="f-slogan-edit" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></span>
+      <span style="font-size:10px;color:#fff;font-family:var(--font-body);white-space:nowrap" id="f-player-badge"></span>
     </div>
     <div class="header-body">
       <!-- BANNER (editável pelo player) -->
@@ -243,12 +199,40 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
   </div>
 
-  <!-- DADOS: grid unificado — header e valor intercalados no mobile -->
-  <div class="dados-grid-wrap">
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-header">Reputação</div>
+    <div class="stat-header">C$</div>
+    <div class="stat-header">PV</div>
+    <div class="stat-header">CA</div>
+  </div>
+  <div class="stat-val-row">
+    <div class="stat-val">
+      <div id="f-rep-view" class="view-content"><span id="f-rep-txt">0</span></div>
+      <div id="f-rep-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-rep-input" type="number" style="text-align:center"/></div>
+    </div>
+    <div class="stat-val">
+      <div id="f-cs-view" class="view-content"><span id="f-cs-txt">0</span></div>
+      <div id="f-cs-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-cs-input" type="number" style="text-align:center"/></div>
+    </div>
+    <div class="stat-val">
+      <div id="f-pv-view" class="view-content"><span id="f-pv-txt">0</span></div>
+      <div id="f-pv-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pv-input" type="number" style="text-align:center"/></div>
+    </div>
+    <div class="stat-val">
+      <div id="f-ca-view" class="view-content"><span id="f-ca-txt">0</span></div>
+      <div id="f-ca-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-ca-input" type="number" style="text-align:center"/></div>
+    </div>
+  </div>
+
+  <!-- DADOS PESSOAIS -->
+  <div class="dados-row">
     <div class="dado-header">Idade</div>
     <div class="dado-header">Ocupação</div>
     <div class="dado-header">Origem</div>
-    <div class="dado-header">C$</div>
+    <div class="dado-header">Player</div>
+  </div>
+  <div class="dado-val-row">
     <div class="dado-val">
       <div id="f-idade-view" class="view-content"><span id="f-idade-txt">—</span></div>
       <div id="f-idade-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-idade-input" placeholder="Ex: 17"/></div>
@@ -261,47 +245,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div id="f-orig-view" class="view-content"><span id="f-orig-txt">—</span></div>
       <div id="f-orig-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-orig-input" placeholder="Ex: Pallet Town"/></div>
     </div>
-    <div class="dado-val">
-      <div id="f-cs-view" class="view-content"><span id="f-cs-txt">0</span></div>
-      <div id="f-cs-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-cs-input" type="number" style="text-align:center"/></div>
-    </div>
-  </div>
-  <div class="dados-grid-wrap" style="margin-bottom:8px">
-    <div class="dado-header">Reputação</div>
-    <div class="dado-header">PV</div>
-    <div class="dado-header">Photoplayer</div>
-    <div class="dado-header">Player</div>
-    <div class="dado-val">
-      <div id="f-rep-view" class="view-content"><span id="f-rep-txt">0</span></div>
-      <div id="f-rep-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-rep-input" type="number" style="text-align:center"/></div>
-    </div>
-    <div class="dado-val">
-      <div id="f-pv-view" class="view-content"><span id="f-pv-txt">0</span></div>
-      <div id="f-pv-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pv-input" type="number" style="text-align:center"/></div>
-    </div>
-    <div class="dado-val" id="f-photoplayer-dado">—</div>
     <div class="dado-val" id="f-player-dado">—</div>
-  </div>
-
-  <!-- RELACIONAMENTOS -->
-  <div class="ficha-section">
-    <div class="ficha-section-title">Relacionamentos</div>
-    <div class="ficha-section-body" style="padding:0">
-      <div id="f-rel-view" class="view-content"><div class="rel-grid" id="f-rel-grid"></div></div>
-      <div id="f-rel-edit" class="edit-content" style="display:none;padding:12px">
-        <div id="rel-edit-grid" style="display:flex;flex-direction:column;gap:8px"></div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- BIOGRAFIA -->
-  <div class="ficha-section">
-    <div class="ficha-section-title">Biografia</div>
-    <div class="ficha-section-body">
-      <div id="f-bio-view" class="view-content"><div class="bio-text" id="f-bio-txt" style="color:var(--muted)">Nenhuma biografia registrada.</div></div>
-      <div id="f-bio-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-bio-input" rows="6" placeholder="Escreva a história do personagem..."></textarea></div>
-    </div>
   </div>
 
   <!-- TIME PRINCIPAL -->
@@ -319,36 +263,28 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <button id="btn-inv-gerenciar" class="btn btn-sm edit-content" style="display:none;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);font-size:11px" onclick="abrirModalInventario()">+ Gerenciar</button>
     </div>
     <div class="ficha-section-body" style="padding:0">
-      <div id="f-inv-view">
-        <div id="inv-lista-view" style="width:100%"></div>
+      <div id="inv-lista-view"></div>
+    </div>
+  </div>
+
+  <!-- RELACIONAMENTOS -->
+  <div class="ficha-section">
+    <div class="ficha-section-title">Relacionamentos</div>
+    <div class="ficha-section-body" style="padding:0">
+      <div id="f-rel-view" class="view-content"><div class="rel-grid" id="f-rel-grid"></div></div>
+      <div id="f-rel-edit" class="edit-content" style="display:none;padding:12px">
+        <div id="rel-edit-grid" style="display:flex;flex-direction:column;gap:8px"></div>
+        <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc;margin-top:10px" onclick="addRelSlot()">+ Adicionar relacionamento</button>
       </div>
     </div>
   </div>
 
-  <!-- BOX -->
+  <!-- BIOGRAFIA -->
   <div class="ficha-section">
-    <div class="ficha-section-title" style="justify-content:space-between">
-      <span>Box</span>
-      <span id="box-counter" style="font-family:var(--font-body);font-size:12px;font-weight:600;opacity:.85"></span>
-    </div>
-    <!-- barra de upgrades (sempre visível) -->
-    <div id="box-upgrade-bar" style="background:var(--surface2);padding:6px 14px;font-size:11px;font-family:var(--font-body);color:var(--muted);border-bottom:1px solid var(--bg);display:none"></div>
-    <div class="ficha-section-body" style="padding:0">
-      <!-- inputs de upgrade (só em modo edição) -->
-      <div style="display:none;padding:12px 14px;border-bottom:1px solid var(--bg)" id="box-upgrades-wrap">
-        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Upgrades de Espaço</div>
-        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px">
-            Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+5 slots cada)</span>
-            <input type="number" id="box-slot-upgrade" min="0" value="0" style="width:52px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)" onchange="renderBox()"/>
-          </label>
-          <label style="display:flex;align-items:center;gap:6px;font-size:13px">
-            Mini Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+2 slots cada)</span>
-            <input type="number" id="box-mini-upgrade" min="0" value="0" style="width:52px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)" onchange="renderBox()"/>
-          </label>
-        </div>
-      </div>
-      <div class="time-grid" id="box-grid"></div>
+    <div class="ficha-section-title">Biografia</div>
+    <div class="ficha-section-body">
+      <div id="f-bio-view" class="view-content"><div class="bio-text" id="f-bio-txt" style="color:var(--muted)">Nenhuma biografia registrada.</div></div>
+      <div id="f-bio-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-bio-input" rows="6" placeholder="Escreva a história do personagem..."></textarea></div>
     </div>
   </div>
 
@@ -370,7 +306,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div id="autosave-status" style="font-size:11px;color:var(--muted)"></div>
   </div>
   <div style="display:flex;gap:8px">
-    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirHistorico()">Histórico</button>
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirModalCores()">🎨 Cores</button>
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
     <button class="btn btn-primary btn-sm" id="btn-salvar" onclick="salvarFicha()">💾 Salvar</button>
@@ -378,9 +313,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 </div>
 
 <!-- MODAL INVENTÁRIO -->
-<div class="cores-modal-overlay" id="inv-modal-overlay" style="display:none" onclick="if(event.target===this)fecharModalInventario()">
-  <div class="cores-modal" style="max-width:660px;width:95vw;max-height:85vh;display:flex;flex-direction:column">
-    <div class="cores-modal-title">🎒 Gerenciar Inventário</div>
+<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px" id="inv-modal-overlay" onclick="if(event.target===this)fecharModalInventario()">
+  <div style="background:#fff;border-radius:4px;padding:24px;width:95vw;max-width:660px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+    <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:16px;text-align:center">🎒 Gerenciar Inventário</div>
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
       <input type="text" id="inv-busca" placeholder="Buscar item..." oninput="filtrarItensModal()"
         style="flex:1;min-width:140px;padding:7px 10px;border:1.5px solid #ccc;border-radius:4px;font-size:13px;font-family:var(--font-body)"/>
@@ -394,39 +329,35 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       </select>
     </div>
     <div id="inv-modal-lista" style="flex:1;overflow-y:auto;border:1.5px solid #eee;border-radius:4px"></div>
-    <div class="cores-modal-btns" style="margin-top:12px">
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
       <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharModalInventario()">Fechar</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL DE CORES -->
-<div class="cores-modal-overlay" id="cores-modal-overlay" style="display:none" onclick="if(event.target===this)fecharModalCores()">
-  <div class="cores-modal">
-    <div class="cores-modal-title">🎨 Personalizar Cores</div>
-    <div class="cores-row">
-      <div class="cores-field">
-        <label>Cor primária<br/><span style="font-size:9px;color:#888;font-weight:400">Cabeçalho · Dados · Títulos de seção</span></label>
+<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px" id="cores-modal-overlay" onclick="if(event.target===this)fecharModalCores()">
+  <div style="background:#fff;border-radius:4px;padding:24px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+    <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:16px;text-align:center">🎨 Personalizar Cores</div>
+    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <label style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;font-family:var(--font-body)">Cor primária<br/><span style="font-size:9px;color:#888;font-weight:400">Cabeçalho · Dados · Títulos</span></label>
         <div style="display:flex;align-items:center;gap:6px">
-          <input type="color" id="color-picker-primaria" value="#1a1a1a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none;flex-shrink:0" oninput="onPickerInput('primaria')"/>
+          <input type="color" id="color-picker-primaria" value="#1a1a1a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer" oninput="onPickerInput('primaria')"/>
           <span style="font-size:12px;color:#555">#</span>
-          <input type="text" id="cor-primaria" maxlength="6" placeholder="1a1a1a"
-            style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase"
-            oninput="onHexInput('primaria')"/>
+          <input type="text" id="cor-primaria" maxlength="6" placeholder="1a1a1a" style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase" oninput="onHexInput('primaria')"/>
         </div>
       </div>
-      <div class="cores-field">
-        <label>Cor secundária<br/><span style="font-size:9px;color:#888;font-weight:400">Slogan · Relacionamentos · Header Pokémon</span></label>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <label style="font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;font-family:var(--font-body)">Cor secundária<br/><span style="font-size:9px;color:#888;font-weight:400">Slogan · Relacionamentos · Pokémon</span></label>
         <div style="display:flex;align-items:center;gap:6px">
-          <input type="color" id="color-picker-secundaria" value="#3a3a3a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none;flex-shrink:0" oninput="onPickerInput('secundaria')"/>
+          <input type="color" id="color-picker-secundaria" value="#3a3a3a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer" oninput="onPickerInput('secundaria')"/>
           <span style="font-size:12px;color:#555">#</span>
-          <input type="text" id="cor-secundaria" maxlength="6" placeholder="3a3a3a"
-            style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase"
-            oninput="onHexInput('secundaria')"/>
+          <input type="text" id="cor-secundaria" maxlength="6" placeholder="3a3a3a" style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase" oninput="onHexInput('secundaria')"/>
         </div>
       </div>
     </div>
-    <div class="cores-modal-btns">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
       <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="resetarCores()">↺ Padrão</button>
       <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharModalCores()">Cancelar</button>
       <button class="btn btn-primary btn-sm" onclick="salvarCores()">Aplicar</button>
@@ -434,25 +365,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
 </div>
 
-<!-- MODAL HISTÓRICO -->
-<div class="cores-modal-overlay" id="hist-modal-overlay" style="display:none" onclick="if(event.target===this)fecharHistorico()">
-  <div class="cores-modal" style="max-width:520px;max-height:80vh;display:flex;flex-direction:column">
-    <div class="cores-modal-title">Histórico de Edições</div>
-    <div id="hist-lista" style="flex:1;overflow-y:auto;font-size:12px;font-family:var(--font-body)"></div>
-    <div class="cores-modal-btns" style="margin-top:12px">
-      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharHistorico()">Fechar</button>
-    </div>
-  </div>
-</div>
-
-<style>
-.hist-entry{padding:8px 0;border-bottom:1px solid #eee}
-.hist-entry:last-child{border-bottom:none}
-.hist-campo{font-weight:700;color:#333;text-transform:uppercase;font-size:10px;letter-spacing:.4px}
-.hist-data{font-size:10px;color:#888;margin-left:6px}
-.hist-val{margin-top:3px;color:#555;line-height:1.5;word-break:break-word}
-.hist-val span{background:#f4f4f4;border-radius:3px;padding:1px 5px}
-</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 const SUPA_URL='https://jdgfxsvgxfdkdrzqbgje.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
@@ -472,26 +385,17 @@ const apiPatch=(p,q,b)=>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)})
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
-let loginPlayerNome='', loginPlayerData=null, loginPersonagemSelecionado=null, loginPersonagensDoPlayer=[];
-const personagemSlug=(()=>{
-  const params=new URLSearchParams(location.search).get('id');
-  if(params) return params;
-  // lê do path: /ficha/hanograssly
-  const match=location.pathname.match(/\/ficha\/([^\/]+)/);
-  return match?match[1]:null;
-})();
 
 // ─── Render ───────────────────────────────────────────
-const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
+const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
 
 function renderFicha(){
   try{
   const p=personagem, f=ficha;
   // Header
   document.getElementById('f-nome').textContent=p.nome;
+  document.getElementById('f-player-badge').textContent=`${p.player}`;
   document.getElementById('f-player-dado').textContent=p.player;
-  const ppDado=document.getElementById('f-photoplayer-dado');
-  if(ppDado) ppDado.textContent=p.photoplayer||'—';
   // Banner
   const bannerCol=document.getElementById('header-banner-col');
   const bannerPlaceholder=document.getElementById('f-banner-placeholder');
@@ -511,7 +415,7 @@ function renderFicha(){
     photoPlaceholder.style.display='none';
     let img=photoCol.querySelector('img.photo-img');
     if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
-    img.src=p.img;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+    img.src=p.img;img.style.cssText='width:200px;height:100%;object-fit:cover;display:block';
   } else { photoPlaceholder.style.display=''; }
   // Slogan
   document.getElementById('f-slogan-txt').textContent=f.slogan||'';
@@ -520,7 +424,7 @@ function renderFicha(){
   document.getElementById('f-pe-view').textContent=`${f.pe||0} PE`;
   document.getElementById('f-pe-input').value=f.pe||0;
   // Stats
-  ['rep','cs','pv'].forEach(k=>{
+  ['rep','cs','pv','ca'].forEach(k=>{
     document.getElementById(`f-${k}-txt`).textContent=f[k]||0;
     document.getElementById(`f-${k}-input`).value=f[k]||0;
   });
@@ -532,14 +436,6 @@ function renderFicha(){
   document.getElementById('f-orig-txt').textContent=f.origem||'—';
   document.getElementById('f-orig-input').value=f.origem||'';
   renderTime();
-  // restaura checkboxes da box
-  const slotCk=document.getElementById('box-slot-upgrade');
-  const miniCk=document.getElementById('box-mini-upgrade');
-  if(slotCk) slotCk.value=f.boxSlotUpgrade||0;
-  if(miniCk) miniCk.value=f.boxMiniUpgrade||0;
-  renderBox();
-  document.getElementById('f-inv-txt').textContent=f.inventario||'Nenhum item registrado.';
-  document.getElementById('f-inv-input').value=f.inventario||'';
   renderRel();
   document.getElementById('f-bio-txt').textContent=f.biografia||'Nenhuma biografia registrada.';
   document.getElementById('f-bio-input').value=f.biografia||'';
@@ -550,319 +446,103 @@ function renderFicha(){
 
 // ─── Banner ───────────────────────────────────────────
 function editarBanner(){document.getElementById('banner-file-input').click();}
-async function onBannerFile(input){
+function onBannerFile(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
-  reader.onload=async e=>{
-    const btn=document.getElementById('btn-banner-edit');
-    const prev=btn.textContent;
-    btn.textContent='Salvando...';btn.disabled=true;
-    ficha.banner=e.target.result;
-    if(ficha.id){
-      await apiPatch('fichas',`id=eq.${ficha.id}`,{banner:ficha.banner});
-    } else {
-      const res=await apiPost('fichas',{personagem_slug:personagemSlug,banner:ficha.banner});
-      if(res&&res[0]) ficha.id=res[0].id;
-    }
-    btn.textContent=prev;btn.disabled=false;
-    renderFicha();
-  };
+  reader.onload=e=>{ficha.banner=e.target.result;renderFicha();};
   reader.readAsDataURL(file);input.value='';
-}
-
-const POKEBALLS=[
-  {val:'pokeball',  label:'Poké Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/poke.png'},
-  {val:'greatball', label:'Great Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/great.png'},
-  {val:'ultraball', label:'Ultra Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/ultra.png'},
-  {val:'masterball',label:'Master Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/master.png'},
-  {val:'safariball',label:'Safari Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/safari.png'},
-  {val:'fastball',  label:'Fast Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/fast.png'},
-  {val:'levelball', label:'Level Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/level.png'},
-  {val:'lureball',  label:'Lure Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/lure.png'},
-  {val:'heavyball', label:'Heavy Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heavy.png'},
-  {val:'loveball',  label:'Love Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/love.png'},
-  {val:'friendball',label:'Friend Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/friend.png'},
-  {val:'moonball',  label:'Moon Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/moon.png'},
-  {val:'sportball', label:'Sport Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/sport.png'},
-  {val:'healball',  label:'Heal Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heal.png'},
-  {val:'quickball', label:'Quick Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/quick.png'},
-  {val:'duskball',  label:'Dusk Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dusk.png'},
-  {val:'cherish',   label:'Cherish Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/cherish.png'},
-  {val:'diveball',  label:'Dive Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dive.png'},
-  {val:'luxuryball',label:'Luxury Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/luxury.png'},
-  {val:'nestball',  label:'Nest Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/nest.png'},
-  {val:'netball',   label:'Net Ball',    img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/net.png'},
-  {val:'premierball',label:'Premier Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/premier.png'},
-  {val:'repeatball',label:'Repeat Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/repeat.png'},
-  {val:'timerball', label:'Timer Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/timer.png'},
-];
-const TIPOS_POKE=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
-const TIPO_SVG_BASE='https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/5781623f147f1bf850f426cfe1874ba56a9b75ee/icons';
-
-function ballImg(val){
-  return POKEBALLS.find(b=>b.val===val)?.img||POKEBALLS[0].img;
-}
-function tipoImg(tipo){
-  return`${TIPO_SVG_BASE}/${tipo}.svg`;
 }
 
 function renderTime(){
   const time=ficha.time||[{},{},{},{},{},{}];
   while(time.length<6)time.push({});
   document.getElementById('time-grid').innerHTML=time.map((pk,i)=>{
-    pk=pk||{};
-    if(modoEdicao) return slotEdit(i,pk,'time');
-    const ball=ballImg(pk.ball||'pokeball');
-    const tipos=(pk.tipos||[]).filter(Boolean);
-    const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
-    const imgSrc=pk.img||FALLBACK;
-    const happyFmt=pk.happy?`${pk.happy}/1000`:'0000/1000';
+    if(!pk||!pk.nome){
+      if(modoEdicao) return slotEditVazio(i,pk||{});
+      return`<div class="poke-slot vazio">Slot ${i+1} vazio</div>`;
+    }
+    if(modoEdicao) return slotEdit(i,pk);
     return`<div class="poke-slot">
-      <div class="poke-slot-topbar">
-        <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
-        <div class="poke-slot-tipos">
-          ${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}
-        </div>
-      </div>
-      <div class="poke-slot-img-wrap">
-        <img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/>
-      </div>
-      <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome||'(POKÉMON)'}</div></div>
+      <div class="poke-slot-header"><div class="poke-slot-nome-lbl">${pk.nome}</div></div>
       <div class="poke-slot-info">
-        <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
-        <strong>LV.</strong> ${pk.level||'000'}<br>
-        <strong>GENDER:</strong> ${pk.gender||'—'}<br>
-        <strong>FEATURE:</strong> ${pk.feature||'—'}<br>
-        <strong>NATURE:</strong> ${pk.nature||'—'}<br>
-        <strong>HOLD:</strong> ${pk.item||'—'}<br>
-        <strong>HAPPINESS:</strong> ${happyFmt}<br>
-        <strong>MOVESET:</strong><br>${moveset||'—'}
+        ${pk.level?`<strong>Nv. ${pk.level}</strong><br>`:''}
+        ${pk.ability?`${pk.ability}<br>`:''}
+        ${pk.moveset?pk.moveset.split('\n').filter(Boolean).map(m=>`• ${m}`).join('<br>'):''}
       </div>
     </div>`;
   }).join('');
 }
-
-function renderBox(){
-  const slotUp=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||ficha.boxSlotUpgrade||0;
-  const miniUp=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||ficha.boxMiniUpgrade||0;
-  const total=6+(slotUp*5)+(miniUp*2);
-  const box=ficha.box||[];
-  while(box.length<total)box.push({});
-  const preenchidos=box.slice(0,total).filter(pk=>pk&&pk.nome).length;
-
-  // atualiza contador no título
-  document.getElementById('box-counter').textContent=`${preenchidos}/${total}`;
-
-  // atualiza barra de upgrades (sempre visível se houver algum)
-  const bar=document.getElementById('box-upgrade-bar');
-  if(slotUp>0||miniUp>0){
-    const partes=[];
-    if(slotUp>0) partes.push(`${slotUp}x UPGRADE (+${slotUp*5})`);
-    if(miniUp>0) partes.push(`${miniUp}x MINI SLOT UPGRADE (+${miniUp*2})`);
-    bar.textContent=partes.join(' | ');
-    bar.style.display='block';
-  } else {
-    bar.style.display='none';
-  }
-  document.getElementById('box-grid').innerHTML=box.slice(0,total).map((pk,i)=>{
-    pk=pk||{};
-    if(modoEdicao) return slotEdit(i,pk,'box');
-    const ball=ballImg(pk.ball||'pokeball');
-    const tipos=(pk.tipos||[]).filter(Boolean);
-    const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
-    const imgSrc=pk.img||FALLBACK;
-    const happyFmt=pk.happy?`${pk.happy}/1000`:'0000/1000';
-    return`<div class="poke-slot">
-      <div class="poke-slot-topbar">
-        <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
-        <div class="poke-slot-tipos">
-          ${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}
-        </div>
-      </div>
-      <div class="poke-slot-img-wrap">
-        <img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/>
-      </div>
-      <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome||'(POKÉMON)'}</div></div>
-      <div class="poke-slot-info">
-        <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
-        <strong>LV.</strong> ${pk.level||'000'}<br>
-        <strong>GENDER:</strong> ${pk.gender||'—'}<br>
-        <strong>FEATURE:</strong> ${pk.feature||'—'}<br>
-        <strong>NATURE:</strong> ${pk.nature||'—'}<br>
-        <strong>HOLD:</strong> ${pk.item||'—'}<br>
-        <strong>HAPPINESS:</strong> ${happyFmt}<br>
-        <strong>MOVESET:</strong><br>${moveset||'—'}
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function slotEdit(i,pk,prefix='time'){
-  const pfx=`${prefix}-pk`;
-  const ballOpts=POKEBALLS.map(b=>`<option value="${b.val}" ${(pk.ball||'pokeball')===b.val?'selected':''}>${b.label}</option>`).join('');
-  const t0=(pk.tipos||[])[0]||'';
-  const t1=(pk.tipos||[])[1]||'';
-  const tipo1Opts=TIPOS_POKE.map(t=>`<option value="${t}" ${t0===t?'selected':''}>${t}</option>`).join('');
-  const tipo2Opts=['<option value="">— nenhum —</option>'].concat(TIPOS_POKE.map(t=>`<option value="${t}" ${t1===t?'selected':''}>${t}</option>`)).join('');
-  return`<div class="poke-slot-edit">
-    <label>Pokémon</label>
-    <input value="${pk.nome||''}" placeholder="Nome" id="${pfx}-nome-${i}"/>
-    <label>Pokéball</label>
-    <select id="${pfx}-ball-${i}">${ballOpts}</select>
-    <label>Tipo 1</label>
-    <select id="${pfx}-tipo0-${i}"><option value="">— nenhum —</option>${tipo1Opts}</select>
-    <label>Tipo 2</label>
-    <select id="${pfx}-tipo1-${i}">${tipo2Opts}</select>
-    <label>Imagem</label>
-    ${pk.img?`<img class="poke-slot-edit-img-preview" src="${pk.img}" id="${pfx}-img-prev-${i}"/>`:`<img class="poke-slot-edit-img-preview" src="" id="${pfx}-img-prev-${i}" style="display:none"/>`}
-    <button class="poke-slot-edit-img-btn" onclick="document.getElementById('${pfx}-img-file-${i}').click()">📷 Escolher imagem</button>
-    <input type="file" id="${pfx}-img-file-${i}" accept="image/*" style="display:none" onchange="onPokeImg('${prefix}',${i},this)"/>
-    <label>Ability</label>
-    <input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="${pfx}-ability-${i}"/>
-    <label>Nível</label>
-    <input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="100" id="${pfx}-level-${i}"/>
-    <label>Gender</label>
-    <select id="${pfx}-gender-${i}">
-      <option value="">—</option>
-      <option value="♂" ${pk.gender==='♂'?'selected':''}>♂ Macho</option>
-      <option value="♀" ${pk.gender==='♀'?'selected':''}>♀ Fêmea</option>
-      <option value="—" ${pk.gender==='—'?'selected':''}>— Sem gênero</option>
-    </select>
-    <label>Feature</label>
-    <select id="${pfx}-feature-${i}">
-      <option value="Normal" ${(!pk.feature||pk.feature==='Normal')?'selected':''}>Normal</option>
-      <option value="Shiny" ${pk.feature==='Shiny'?'selected':''}>Shiny</option>
-      <option value="Color" ${pk.feature==='Color'?'selected':''}>Color</option>
-    </select>
-    <label>Nature</label>
-    <input value="${pk.nature||''}" placeholder="Ex: Adamant" id="${pfx}-nature-${i}"/>
-    <label>Hold Item</label>
-    <input value="${pk.item||''}" placeholder="Ex: Life Orb" id="${pfx}-item-${i}"/>
-    <label>Happiness</label>
-    <input value="${pk.happy||''}" placeholder="Ex: 255" id="${pfx}-happy-${i}"/>
-    <label>Moveset (1 por linha)</label>
-    <textarea rows="5" id="${pfx}-moveset-${i}" placeholder="Tackle&#10;Growl&#10;...">${pk.moveset||''}</textarea>
+function slotEdit(i,pk){
+  return`<div class="poke-slot" style="border-color:var(--accent)">
+    <div class="poke-slot-fields">
+      <input value="${pk.nome||''}" placeholder="Nome do Pokémon" id="pk-nome-${i}"/>
+      <input value="${pk.level||''}" placeholder="Nível" id="pk-level-${i}" type="number" min="1" max="90"/>
+      <input value="${pk.ability||''}" placeholder="Habilidade" id="pk-ability-${i}"/>
+      <textarea rows="4" placeholder="Moveset (1 por linha)" id="pk-moveset-${i}">${pk.moveset||''}</textarea>
+    </div>
   </div>`;
 }
-
-function onPokeImg(prefix,i,input){
-  const pfx=`${prefix}-pk`;
-  const file=input.files[0]; if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const prev=document.getElementById(`${pfx}-img-prev-${i}`);
-    if(prev){prev.src=e.target.result;prev.style.display='block';}
-    if(!window._pokeImgs) window._pokeImgs={};
-    if(!window._pokeImgs[prefix]) window._pokeImgs[prefix]={};
-    window._pokeImgs[prefix][i]=e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
+function slotEditVazio(i,pk){return slotEdit(i,pk);}
 
 function renderRel(){
   const rels=ficha.relacionamentos||[];
-  const total=ficha.relTotal||6;
   const grid=document.getElementById('f-rel-grid');
-  const slots=Array.from({length:total},(_,i)=>rels[i]||{nome:'',tipo:''});
-  grid.innerHTML=slots.map(r=>`
-    <div class="rel-item" style="${!r.nome?'opacity:.35':''}">
-      <div class="rel-nome">${r.nome||'NOME'}</div>
-      <div class="rel-tipo">${r.tipo||'Relacionamento'}</div>
-    </div>`).join('');
+  if(rels.length===0){grid.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px">Nenhum relacionamento registrado.</div>';return;}
+  grid.innerHTML=rels.map(r=>`<div class="rel-item"><div class="rel-nome">${r.nome}</div><div class="rel-tipo">${r.tipo||''}</div></div>`).join('');
   renderRelEdit();
 }
 function renderRelEdit(){
   const rels=ficha.relacionamentos||[];
-  const total=ficha.relTotal||6;
   const el=document.getElementById('rel-edit-grid');
-  el.innerHTML=`
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-      <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Espaços</label>
-      <input type="number" min="6" value="${total}" style="width:60px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:12px;font-family:var(--font-body)" onchange="ficha.relTotal=Math.max(6,parseInt(this.value)||6);renderRel()"/>
-    </div>
-    ${Array.from({length:total},(_,i)=>`
+  el.innerHTML=rels.map((r,i)=>`
     <div style="display:flex;gap:8px;align-items:center">
-      <input class="edit-input edit-input-sm" style="flex:2" value="${rels[i]?.nome||''}" placeholder="Nome" id="rel-nome-${i}"/>
-      <input class="edit-input edit-input-sm" style="flex:1" value="${rels[i]?.tipo||''}" placeholder="Tipo de relação" id="rel-tipo-${i}"/>
-    </div>`).join('')}`;
+      <input class="edit-input edit-input-sm" style="flex:2" value="${r.nome||''}" placeholder="Nome" id="rel-nome-${i}"/>
+      <input class="edit-input edit-input-sm" style="flex:1" value="${r.tipo||''}" placeholder="Tipo de relação" id="rel-tipo-${i}"/>
+      <button class="btn btn-danger btn-sm" style="padding:4px 8px" onclick="removerRel(${i})">✕</button>
+    </div>`).join('');
 }
 function addRelSlot(){
-  ficha.relTotal=(ficha.relTotal||6)+1;
-  renderRel();
+  if(!ficha.relacionamentos)ficha.relacionamentos=[];
+  ficha.relacionamentos.push({nome:'',tipo:''});renderRelEdit();
 }
-function removerRel(i){
-  if(ficha.relacionamentos) ficha.relacionamentos.splice(i,1);
-  ficha.relTotal=Math.max(6,(ficha.relTotal||6)-1);
-  renderRel();
-}
+function removerRel(i){ficha.relacionamentos.splice(i,1);renderRelEdit();}
 
 // ─── Modo edição ──────────────────────────────────────
 function ativarEdicao(){
   modoEdicao=true;
   document.getElementById('edit-bar').style.display='flex';
   document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
-  document.getElementById('btn-banner-edit').style.display='block';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
-  document.getElementById('box-upgrades-wrap').style.display='block';
-  renderTime();renderBox();renderRelEdit();
-  atualizarTopBar();
-  iniciarAutoSave();
+  
+  renderTime();renderRelEdit();
 }
 function cancelarEdicao(){
-  clearTimeout(_autoSaveTimer);
-  setAutoSaveStatus('');
   modoEdicao=false;
   document.getElementById('edit-bar').style.display='none';
-  document.getElementById('top-bar').style.display='flex';
-  document.getElementById('btn-banner-edit').style.display='none';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
-  document.getElementById('box-upgrades-wrap').style.display='none';
+  
   renderFicha();
-  atualizarTopBar();
 }
 
 // ─── Salvar ───────────────────────────────────────────
-async function salvarFicha(silencioso=false){
+async function salvarFicha(){
   const btn=document.getElementById('btn-salvar');
-  if(!silencioso){btn.textContent='Salvando...';btn.disabled=true;}
-  else setAutoSaveStatus('Salvando...','var(--muted)');
-
-  function coletarSlots(prefix, count){
-    const pfx=`${prefix}-pk`;
-    const arr=[];
-    for(let i=0;i<count;i++){
-      const nome=(document.getElementById(`${pfx}-nome-${i}`)?.value||'').trim();
-      const ball=document.getElementById(`${pfx}-ball-${i}`)?.value||'pokeball';
-      const t0=document.getElementById(`${pfx}-tipo0-${i}`)?.value||'';
-      const t1=document.getElementById(`${pfx}-tipo1-${i}`)?.value||'';
-      const tipos=[t0,t1].filter(Boolean);
-      const img=window._pokeImgs?.[prefix]?.[i]||(ficha[prefix]?.[i]?.img||'');
-      const ability=(document.getElementById(`${pfx}-ability-${i}`)?.value||'').trim();
-      const level=document.getElementById(`${pfx}-level-${i}`)?.value||'';
-      const gender=document.getElementById(`${pfx}-gender-${i}`)?.value||'';
-      const feature=document.getElementById(`${pfx}-feature-${i}`)?.value||'Normal';
-      const nature=(document.getElementById(`${pfx}-nature-${i}`)?.value||'').trim();
-      const item=(document.getElementById(`${pfx}-item-${i}`)?.value||'').trim();
-      const happy=(document.getElementById(`${pfx}-happy-${i}`)?.value||'').trim();
-      const moveset=(document.getElementById(`${pfx}-moveset-${i}`)?.value||'').trim();
-      arr.push(nome?{nome,ball,tipos,img,level,ability,gender,feature,nature,item,happy,moveset}:{});
-    }
-    return arr;
+  btn.textContent='Salvando...';btn.disabled=true;
+  const time=[];
+  for(let i=0;i<6;i++){
+    const nome=(document.getElementById(`pk-nome-${i}`)?.value||'').trim();
+    const level=document.getElementById(`pk-level-${i}`)?.value||'';
+    const ability=(document.getElementById(`pk-ability-${i}`)?.value||'').trim();
+    const moveset=(document.getElementById(`pk-moveset-${i}`)?.value||'').trim();
+    time.push(nome?{nome,level,ability,moveset}:{});
   }
-
-  const time=coletarSlots('time',6);
-  const boxSlotUpgrade=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||0;
-  const boxMiniUpgrade=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||0;
-  const boxTotal=6+(boxSlotUpgrade*5)+(boxMiniUpgrade*2);
-  const box=coletarSlots('box',boxTotal);
-  window._pokeImgs={};
-  const relTotal=ficha.relTotal||6;
-  const relacionamentos=Array.from({length:relTotal},(_,i)=>({
+  const rels=ficha.relacionamentos||[];
+  const relacionamentos=rels.map((_,i)=>({
     nome:(document.getElementById(`rel-nome-${i}`)?.value||'').trim(),
     tipo:(document.getElementById(`rel-tipo-${i}`)?.value||'').trim()
-  }));
+  })).filter(r=>r.nome);
   const novaFicha={
     banner:ficha.banner||null,
     slogan:document.getElementById('f-slogan-input').value.trim(),
@@ -870,65 +550,59 @@ async function salvarFicha(silencioso=false){
     rep:parseInt(document.getElementById('f-rep-input').value)||0,
     cs:parseInt(document.getElementById('f-cs-input').value)||0,
     pv:parseInt(document.getElementById('f-pv-input').value)||0,
+    ca:parseInt(document.getElementById('f-ca-input').value)||0,
     idade:document.getElementById('f-idade-input').value.trim(),
     ocupacao:document.getElementById('f-ocup-input').value.trim(),
     origem:document.getElementById('f-orig-input').value.trim(),
-    inventario:document.getElementById('f-inv-input').value.trim(),
     biografia:document.getElementById('f-bio-input').value.trim(),
     anotacoes:document.getElementById('f-anot-input').value.trim(),
-    time,box,boxSlotUpgrade,boxMiniUpgrade,relacionamentos,relTotal,cores:ficha.cores||null,updated_at:new Date().toISOString()
+    time,relacionamentos,updated_at:new Date().toISOString()
   };
   if(ficha.id){
-    // registra histórico de campos alterados
-    const camposSimples=['slogan','pe','rep','cs','pv','idade','ocupacao','origem','inventario','biografia','anotacoes'];
-    const hist=[];
-    const agora=new Date().toISOString();
-    camposSimples.forEach(k=>{
-      const ant=String(ficha[k]??'');
-      const nov=String(novaFicha[k]??'');
-      if(ant!==nov) hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:ant,valor_novo:nov,editado_em:agora});
-    });
-    ['time','relacionamentos'].forEach(k=>{
-      if(JSON.stringify(ficha[k])!==JSON.stringify(novaFicha[k]))
-        hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:JSON.stringify(ficha[k]),valor_novo:JSON.stringify(novaFicha[k]),editado_em:agora});
-    });
     await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
-    if(hist.length>0) await apiPost('fichas_historico',hist).catch(()=>{});
   } else {
-    const res=await apiPost('fichas',{...novaFicha,personagem_slug:personagemSlug});
+    const res=await apiPost('fichas',{...novaFicha,personagem_id:new URLSearchParams(location.search).get('id')});
     if(res&&res[0]) ficha.id=res[0].id;
   }
   Object.assign(ficha,novaFicha);
-  if(silencioso){
-    setAutoSaveStatus('✓ Salvo automaticamente','#1a7a1a');
-    setTimeout(()=>setAutoSaveStatus(''),500);
-  } else {
-    btn.textContent='💾 Salvar';btn.disabled=false;
-    cancelarEdicao();
-  }
+  btn.textContent='💾 Salvar';btn.disabled=false;
+  cancelarEdicao();
 }
 
-// ─── Sessão do player (vem do index.html via localStorage) ───
-function lerSessaoPlayer(){
-  try{
-    const s=localStorage.getItem('pchapters_player');
-    return s?JSON.parse(s):null;
-  }catch(e){return null;}
-}
+// ─── Login — 3 passos ─────────────────────────────────
 
+
+async function fazerLogin(){
+  const nome=document.getElementById('login-nome').value.trim();
+  const senha=document.getElementById('login-senha').value;
+  const err=document.getElementById('login-err');
+  err.style.display='none';
+  // Busca player pelo nome e verifica senha
+  const res=await apiGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`);
+  const pl=res&&res[0];
+  if(!pl||pl.senha!==senha){err.style.display='block';return;}
+  // Verifica se o player é dono de algum personagem desta ficha
+  const playerDaFicha=personagem.player.toLowerCase()===nome.toLowerCase();
+  if(!playerDaFicha){err.textContent='Este player não tem acesso a esta ficha.';err.style.display='block';return;}
+  jogadorLogado={nome,player:nome};
+  document.getElementById('login-wrap').style.display='none';
+  document.getElementById('ficha-wrap').style.display='block';
+  document.getElementById('top-bar').style.display='flex';
+  atualizarTopBar();ativarEdicao();
+}
 function atualizarTopBar(){
   const actions=document.getElementById('top-bar-actions');
   if(jogadorLogado){
-    actions.innerHTML=`
-      ${modoEdicao?'':`<span style="font-size:11px;color:#fff;opacity:.8">Logado como <strong>${jogadorLogado.nome}</strong></span>`}
-      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="abrirHistorico()">Histórico</button>`}
-      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">Editar</button>`}
-      <a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);text-decoration:none">Sair</a>`;
+    actions.innerHTML=`<span style="font-size:11px;color:#fff;opacity:.8">Editando como <strong>${jogadorLogado.nome}</strong></span>
+      <button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="sairJogador()">Sair</button>`;
   } else {
-    actions.innerHTML=`<a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);text-decoration:none">Editar ficha</a>`;
+    actions.innerHTML=`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="mostrarLogin()">✏️ Editar ficha</button>`;
   }
 }
 function mostrarLogin(){
+  document.getElementById('login-nome').value='';
+  document.getElementById('login-senha').value='';
+  document.getElementById('login-err').style.display='none';
   document.getElementById('login-wrap').style.display='block';
   document.getElementById('ficha-wrap').style.display='none';
 }
@@ -936,201 +610,46 @@ function sairJogador(){
   jogadorLogado=null;cancelarEdicao();atualizarTopBar();
 }
 
-// ─── Modal de cores ────────────────────────────────────
-const CORES_DEFAULT={primaria:'#1a1a1a',secundaria:'#3a3a3a'};
-
-function aplicarCoresFicha(c){
-  // suporta formato antigo (cabecalho/slogan/etc) e novo (primaria/secundaria)
-  const p=c.primaria||c.cabecalho||CORES_DEFAULT.primaria;
-  const s=c.secundaria||c.slogan||CORES_DEFAULT.secundaria;
-  document.documentElement.style.setProperty('--cor-cabecalho',p);
-  document.documentElement.style.setProperty('--cor-secao',p);
-  document.documentElement.style.setProperty('--cor-dados',p);
-  document.documentElement.style.setProperty('--cor-slogan',s);
-  document.documentElement.style.setProperty('--cor-rel',s);
-  document.documentElement.style.setProperty('--cor-poke',s);
-}
-
-function abrirModalCores(){
-  const c=ficha.cores||CORES_DEFAULT;
-  const p=(c.primaria||c.cabecalho||CORES_DEFAULT.primaria).replace('#','');
-  const s=(c.secundaria||c.slogan||CORES_DEFAULT.secundaria).replace('#','');
-  document.getElementById('cor-primaria').value=p.toUpperCase();
-  document.getElementById('cor-secundaria').value=s.toUpperCase();
-  document.getElementById('color-picker-primaria').value='#'+p;
-  document.getElementById('color-picker-secundaria').value='#'+s;
-  document.getElementById('cores-modal-overlay').style.display='flex';
-}
-
-function fecharModalCores(){
-  document.getElementById('cores-modal-overlay').style.display='none';
-  aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
-}
-
-function onPickerInput(tipo){
-  const picker=document.getElementById(`color-picker-${tipo}`);
-  const hex=picker.value.replace('#','').toUpperCase();
-  document.getElementById(`cor-${tipo}`).value=hex;
-  previewCores();
-}
-
-function onHexInput(tipo){
-  const input=document.getElementById(`cor-${tipo}`);
-  let val=input.value.replace(/[^0-9a-fA-F]/g,'').toUpperCase();
-  input.value=val;
-  if(val.length===6){
-    document.getElementById(`color-picker-${tipo}`).value='#'+val;
-    previewCores();
-  }
-}
-
-function previewCores(){
-  const p=document.getElementById('cor-primaria').value;
-  const s=document.getElementById('cor-secundaria').value;
-  aplicarCoresFicha({
-    primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,
-    secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria
-  });
-}
-
-async function salvarCores(){
-  const p=document.getElementById('cor-primaria').value;
-  const s=document.getElementById('cor-secundaria').value;
-  if(p.length!==6||s.length!==6){alert('Insira cores válidas (6 caracteres hex).');return;}
-  const c={primaria:'#'+p,secundaria:'#'+s};
-  aplicarCoresFicha(c);
-  ficha.cores=c;
-  if(ficha.id){
-    await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c,updated_at:new Date().toISOString()});
-  }
-  fecharModalCores();
-}
-
-function resetarCores(){
-  document.getElementById('cor-primaria').value='1A1A1A';
-  document.getElementById('cor-secundaria').value='3A3A3A';
-  document.getElementById('color-picker-primaria').value=CORES_DEFAULT.primaria;
-  document.getElementById('color-picker-secundaria').value=CORES_DEFAULT.secundaria;
-  previewCores();
-}
-
-// ─── Histórico ────────────────────────────────────────
-async function abrirHistorico(){
-  const lista=document.getElementById('hist-lista');
-  lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Carregando...</div>';
-  document.getElementById('hist-modal-overlay').style.display='flex';
-  if(!ficha.id){lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Nenhum histórico ainda.</div>';return;}
-  const hist=await apiGet('fichas_historico',`ficha_id=eq.${ficha.id}&order=editado_em.desc&limit=50`);
-  if(!hist||hist.length===0){lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Nenhuma edição registrada.</div>';return;}
-  const labels={slogan:'Slogan',pe:'PE',rep:'Reputação',cs:'C$',pv:'PV',idade:'Idade',ocupacao:'Ocupação',origem:'Origem',inventario:'Inventário',biografia:'Biografia',anotacoes:'Anotações',time:'Time',relacionamentos:'Relacionamentos',banner:'Banner',cores:'Cores'};
-  lista.innerHTML=hist.map(h=>{
-    const d=new Date(h.editado_em);
-    const data=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    const campo=labels[h.campo]||h.campo;
-
-    function formatVal(campo, raw){
-      if(!raw||raw==='(alterado)'||raw==='(dado complexo)') return '—';
-      if(campo==='time'){
-        try{
-          const arr=JSON.parse(raw);
-          return arr.filter(pk=>pk&&pk.nome).map(pk=>pk.nome).join(', ')||'(vazio)';
-        }catch{return raw;}
-      }
-      if(campo==='relacionamentos'){
-        try{
-          const arr=JSON.parse(raw);
-          return arr.filter(r=>r&&r.nome).map(r=>r.nome+(r.tipo?` (${r.tipo})`:'')).join(', ')||'(vazio)';
-        }catch{return raw;}
-      }
-      if(campo==='cores'){
-        try{
-          const c=JSON.parse(raw);
-          return `primária: ${c.primaria||'—'} · secundária: ${c.secundaria||'—'}`;
-        }catch{return raw;}
-      }
-      return raw||'—';
-    }
-
-    const anterior=formatVal(h.campo, h.valor_anterior);
-    const novo=formatVal(h.campo, h.valor_novo);
-    return`<div class="hist-entry">
-      <div><span class="hist-campo">${campo}</span><span class="hist-data">${data} · ${h.player_nome||'—'}</span></div>
-      <div class="hist-val">
-        <span style="text-decoration:line-through;opacity:.6">${anterior}</span>
-        → <span>${novo}</span>
-      </div>
-    </div>`;
-  }).join('');
-}
-function fecharHistorico(){
-  document.getElementById('hist-modal-overlay').style.display='none';
-}
-
-// ─── Autosave ─────────────────────────────────────────
-let _autoSaveTimer=null;
-function setAutoSaveStatus(msg,cor='var(--muted)'){
-  const el=document.getElementById('autosave-status');
-  if(el){el.textContent=msg;el.style.color=cor;}
-}
-function agendarAutoSave(){
-  if(!modoEdicao)return;
-  clearTimeout(_autoSaveTimer);
-  setAutoSaveStatus('Alterações não salvas...','#e8a020');
-  _autoSaveTimer=setTimeout(async()=>{
-    setAutoSaveStatus('Salvando...','var(--muted)');
-    await salvarFicha(true);
-  },500);
-}
-function iniciarAutoSave(){
-  // observa inputs, selects e textareas dentro do ficha-wrap
-  document.getElementById('ficha-wrap').addEventListener('input',agendarAutoSave);
-  document.getElementById('ficha-wrap').addEventListener('change',agendarAutoSave);
-}
-
 // ══════════════════════════════════════
 // INVENTÁRIO
 // ══════════════════════════════════════
-let todosItens=[], inventarioFicha={}; // {item_id: {quantidade, id, nome, categoria, descricao}}
+let todosItens=[], inventarioFicha={};
 
 async function carregarInventario(){
   if(!ficha.id) return;
-  const [itensDB, invDB] = await Promise.all([
+  const [itensDB,invDB]=await Promise.all([
     apiGet('itens','order=categoria.asc,nome.asc'),
     apiGet('inventario_ficha',`ficha_id=eq.${ficha.id}&select=id,item_id,quantidade`)
   ]);
-  todosItens = itensDB||[];
-  inventarioFicha = {};
+  todosItens=itensDB||[];
+  inventarioFicha={};
   (invDB||[]).forEach(row=>{
-    const item = todosItens.find(i=>i.id===row.item_id);
-    if(item) inventarioFicha[row.item_id]={...item, quantidade:row.quantidade, inv_id:row.id};
+    const item=todosItens.find(i=>i.id===row.item_id);
+    if(item) inventarioFicha[row.item_id]={...item,quantidade:row.quantidade,inv_id:row.id};
   });
   renderInventario();
 }
 
 function renderInventario(){
-  const lista = document.getElementById('inv-lista-view');
-  const itens = Object.values(inventarioFicha).filter(i=>i.quantidade>0);
+  const lista=document.getElementById('inv-lista-view');
+  const itens=Object.values(inventarioFicha).filter(i=>i.quantidade>0);
   if(itens.length===0){
     lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';
     return;
   }
-  // agrupa por categoria
   const grupos={};
-  itens.forEach(i=>{
-    if(!grupos[i.categoria]) grupos[i.categoria]=[];
-    grupos[i.categoria].push(i);
-  });
+  itens.forEach(i=>{if(!grupos[i.categoria])grupos[i.categoria]=[];grupos[i.categoria].push(i);});
   lista.innerHTML=`<table class="inv-tabela"><thead><tr>
     <th>Item</th><th style="width:60px;text-align:center">Qtd</th>
   </tr></thead><tbody>${
     Object.entries(grupos).map(([cat,items])=>
-      items.map((item,idx)=>`
+      items.map(item=>`
         <tr class="inv-row" onclick="toggleInvDesc('${item.id}')">
           <td><strong>${item.nome}</strong><span class="inv-cat-badge">${item.categoria}</span></td>
           <td style="text-align:center;font-weight:700">${item.quantidade}</td>
         </tr>
         <tr id="inv-desc-${item.id}" style="display:none">
-          <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px 14px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao}</td>
+          <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px 14px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao||'—'}</td>
         </tr>`).join('')
     ).join('')
   }</tbody></table>`;
@@ -1151,30 +670,25 @@ async function abrirModalInventario(){
   renderItensModal();
   document.getElementById('inv-modal-overlay').style.display='flex';
 }
-
-function fecharModalInventario(){
-  document.getElementById('inv-modal-overlay').style.display='none';
-}
-
-function filtrarItensModal(){
-  renderItensModal();
-}
+function fecharModalInventario(){document.getElementById('inv-modal-overlay').style.display='none';}
+function filtrarItensModal(){renderItensModal();}
 
 function renderItensModal(){
   const busca=document.getElementById('inv-busca').value.toLowerCase();
   const cat=document.getElementById('inv-filtro-cat').value;
   let lista=todosItens;
   if(cat) lista=lista.filter(i=>i.categoria===cat);
-  if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||i.descricao.toLowerCase().includes(busca));
+  if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||(i.descricao||'').toLowerCase().includes(busca));
   const el=document.getElementById('inv-modal-lista');
   if(!lista.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#aaa;font-size:13px">Nenhum item encontrado.</div>';return;}
   el.innerHTML=lista.map(item=>{
     const qty=inventarioFicha[item.id]?.quantidade||0;
     return`<div class="inv-modal-item">
       <div class="inv-modal-info">
-        <div class="inv-modal-nome">${item.nome} ${item.evento?'<span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>':''}</div>
+        <div class="inv-modal-nome">${item.nome}${item.evento?` <span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>`:''}
+        </div>
         <div class="inv-modal-cat">${item.categoria}</div>
-        <div class="inv-modal-desc">${item.descricao}</div>
+        <div class="inv-modal-desc">${item.descricao||''}</div>
       </div>
       <div class="inv-modal-qty">
         <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',-1)">−</button>
@@ -1185,74 +699,101 @@ function renderItensModal(){
   }).join('');
 }
 
-async function ajustarQty(itemId, delta){
+async function ajustarQty(itemId,delta){
   const item=todosItens.find(i=>i.id===itemId);
   if(!item) return;
+  // garante que a ficha existe no banco
+  if(!ficha.id){
+    const res=await apiPost('fichas',{personagem_slug:personagemSlug,personagem_id:personagem.id,updated_at:new Date().toISOString()});
+    if(res&&res[0]) ficha.id=res[0].id;
+    else{alert('Erro ao criar ficha. Tente salvar primeiro.');return;}
+  }
   const atual=inventarioFicha[itemId]?.quantidade||0;
-  const nova=Math.max(0, atual+delta);
+  const nova=Math.max(0,atual+delta);
   const numEl=document.getElementById(`inv-qty-${itemId}`);
   if(numEl) numEl.textContent=nova;
-  if(nova===0 && inventarioFicha[itemId]){
-    // remove
-    await apiDel('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`);
+  if(nova===0&&inventarioFicha[itemId]){
+    await api(`inventario_ficha?id=eq.${inventarioFicha[itemId].inv_id}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});
     delete inventarioFicha[itemId];
-  } else if(nova>0 && !inventarioFicha[itemId]){
-    // insert
+  } else if(nova>0&&!inventarioFicha[itemId]){
     const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:nova});
     if(res&&res[0]) inventarioFicha[itemId]={...item,quantidade:nova,inv_id:res[0].id};
-  } else if(nova>0 && inventarioFicha[itemId]){
-    // update
+  } else if(nova>0&&inventarioFicha[itemId]){
     await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`,{quantidade:nova});
     inventarioFicha[itemId].quantidade=nova;
   }
   renderInventario();
 }
 
-// helper apiDel para ficha (usa mesma base do apiGet/apiPost/apiPatch)
-function apiDel(table, query){
-  return api(`${table}?${query}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});
+// ══════════════════════════════════════
+// CORES
+// ══════════════════════════════════════
+const CORES_DEFAULT={primaria:'#1a1a1a',secundaria:'#3a3a3a'};
+
+function aplicarCoresFicha(c){
+  const p=c?.primaria||c?.cabecalho||CORES_DEFAULT.primaria;
+  const s=c?.secundaria||c?.slogan||CORES_DEFAULT.secundaria;
+  document.documentElement.style.setProperty('--cor-cabecalho',p);
+  document.documentElement.style.setProperty('--cor-secao',p);
+  document.documentElement.style.setProperty('--cor-dados',p);
+  document.documentElement.style.setProperty('--cor-slogan',s);
+  document.documentElement.style.setProperty('--cor-rel',s);
+  document.documentElement.style.setProperty('--cor-poke',s);
 }
+function abrirModalCores(){
+  const c=ficha.cores||CORES_DEFAULT;
+  const p=(c.primaria||c.cabecalho||CORES_DEFAULT.primaria).replace('#','');
+  const s=(c.secundaria||c.slogan||CORES_DEFAULT.secundaria).replace('#','');
+  document.getElementById('cor-primaria').value=p.toUpperCase();
+  document.getElementById('cor-secundaria').value=s.toUpperCase();
+  document.getElementById('color-picker-primaria').value='#'+p;
+  document.getElementById('color-picker-secundaria').value='#'+s;
+  document.getElementById('cores-modal-overlay').style.display='flex';
+}
+function fecharModalCores(){document.getElementById('cores-modal-overlay').style.display='none';aplicarCoresFicha(ficha.cores||CORES_DEFAULT);}
+function onPickerInput(tipo){const picker=document.getElementById(`color-picker-${tipo}`);document.getElementById(`cor-${tipo}`).value=picker.value.replace('#','').toUpperCase();previewCores();}
+function onHexInput(tipo){const v=document.getElementById(`cor-${tipo}`).value.replace(/[^0-9a-fA-F]/g,'').toUpperCase();document.getElementById(`cor-${tipo}`).value=v;if(v.length===6){document.getElementById(`color-picker-${tipo}`).value='#'+v;previewCores();}}
+function previewCores(){const p=document.getElementById('cor-primaria').value;const s=document.getElementById('cor-secundaria').value;aplicarCoresFicha({primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria});}
+async function salvarCores(){const p=document.getElementById('cor-primaria').value;const s=document.getElementById('cor-secundaria').value;if(p.length!==6||s.length!==6){alert('Insira cores válidas.');return;}const c={primaria:'#'+p,secundaria:'#'+s};aplicarCoresFicha(c);ficha.cores=c;if(ficha.id)await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c,updated_at:new Date().toISOString()});fecharModalCores();}
+function resetarCores(){document.getElementById('cor-primaria').value='1A1A1A';document.getElementById('cor-secundaria').value='3A3A3A';document.getElementById('color-picker-primaria').value=CORES_DEFAULT.primaria;document.getElementById('color-picker-secundaria').value=CORES_DEFAULT.secundaria;previewCores();}
+
+// ══════════════════════════════════════
+// AUTOSAVE
+// ══════════════════════════════════════
+let _autoSaveTimer=null;
+function setAutoSaveStatus(msg,cor='var(--muted)'){const el=document.getElementById('autosave-status');if(el){el.textContent=msg;el.style.color=cor;}}
+function agendarAutoSave(){if(!modoEdicao)return;clearTimeout(_autoSaveTimer);setAutoSaveStatus('Alterações não salvas...','#e8a020');_autoSaveTimer=setTimeout(async()=>{setAutoSaveStatus('Salvando...','var(--muted)');await salvarFicha(true);},1000);}
+function iniciarAutoSave(){document.getElementById('ficha-wrap').addEventListener('input',agendarAutoSave);document.getElementById('ficha-wrap').addEventListener('change',agendarAutoSave);}
 
 // ─── Init ─────────────────────────────────────────────
 async function init(){
-  const pid=personagemSlug;
+  const pid=new URLSearchParams(location.search).get('id');
   if(!pid){
-    document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">Não encontrei esse contato no nosso sistema.</div>';
+    document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ ID do personagem não encontrado na URL.</div>';
     return;
   }
   try{
-    // busca personagem pelo slug
-    const ps=await apiGet('personagens',`slug=eq.${pid}`);
+    const [ps,fichas]=await Promise.all([
+      apiGet('personagens',`id=eq.${pid}`),
+      apiGet('fichas',`personagem_id=eq.${pid}`)
+    ]);
     if(!ps||!ps[0]){
-      document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:14px">Não encontrei "<strong>${pid}</strong>" no nosso sistema.<br><small>Você anotou o contato delu corretamente?</small></div>`;
+      document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ Personagem não encontrado no banco.</div>';
       return;
     }
     personagem=ps[0];
-    // busca ficha — tenta por slug primeiro, depois por id
-    let fichasRes=await apiGet('fichas',`personagem_slug=eq.${pid}`);
-    if(!fichasRes||fichasRes.length===0){
-      fichasRes=await apiGet('fichas',`personagem_id=eq.${personagem.id}`);
-    }
-    ficha=fichasRes&&fichasRes[0]?fichasRes[0]:{
-      id:null,banner:null,slogan:'',pe:0,rep:0,cs:0,pv:0,
+    ficha=fichas&&fichas[0]?fichas[0]:{
+      id:null,banner:null,slogan:'',pe:0,rep:0,cs:0,pv:0,ca:0,
       idade:'',ocupacao:'',origem:'',inventario:'',
       biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
     };
-    ['time','relacionamentos','box'].forEach(k=>{
-      if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];}}
-      if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];
+    ['time','relacionamentos'].forEach(k=>{
+      if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];}}
+      if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];
     });
-    ficha.boxSlotUpgrade=parseInt(ficha.boxSlotUpgrade)||0;
-    ficha.boxMiniUpgrade=parseInt(ficha.boxMiniUpgrade)||0;
-    ficha.relTotal=parseInt(ficha.relTotal)||6;
-    if(typeof ficha.cores==='string'){try{ficha.cores=JSON.parse(ficha.cores);}catch{ficha.cores=null;}}
-    aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
     document.title=`Ficha — ${personagem.nome}`;
-    const sessao=lerSessaoPlayer();
-    if(sessao && personagem.player.toLowerCase()===sessao.nome.toLowerCase()){
-      jogadorLogado={nome:sessao.nome,player:sessao.nome};
-    }
     renderFicha();
+    await carregarInventario();
     document.getElementById('loading-overlay').style.display='none';
     document.getElementById('top-bar').style.display='flex';
     document.getElementById('ficha-wrap').style.display='block';
