@@ -751,6 +751,24 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
   </div>
 </div>
+<div class="modal-overlay" id="modal-player" style="display:none">
+  <div class="modal-box">
+    <button class="modal-close" onclick="fecharModalPlayer()">✕</button>
+    <div class="modal-title" id="modal-player-title">Editar Player</div>
+    <input type="hidden" id="modal-pl-id"/>
+    <div class="field"><label>Nome</label><input type="text" id="modal-pl-nome" disabled style="opacity:.6;cursor:not-allowed"/></div>
+    <div class="field"><label>Pontos</label><input type="number" id="modal-pl-pontos" min="0" style="width:120px"/></div>
+    <div class="field"><label>Nova Senha <span style="font-size:11px;font-weight:400;color:var(--muted)">(deixe em branco para não alterar)</span></label>
+      <input type="password" id="modal-pl-senha" placeholder="••••••••" autocomplete="new-password"/>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="salvarEdicaoPlayer()">Salvar</button>
+      <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharModalPlayer()">Cancelar</button>
+      <button class="btn btn-danger" style="margin-left:auto" onclick="removerPlayerDoModal()">🗑 Excluir player</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="modal-personagem" style="display:none">
   <div class="modal-box">
     <button class="modal-close" onclick="fecharModal()">✕</button>
@@ -769,9 +787,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         </div>
       </div>
     </div>
-    <div style="display:flex;gap:10px;margin-top:8px">
+    <input type="hidden" id="modal-p-ativo" value="1"/>
+    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
       <button class="btn btn-primary" onclick="salvarEdicaoPersonagem()">Salvar</button>
       <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharModal()">Cancelar</button>
+      <button class="btn" id="modal-p-toggle-btn" style="background:var(--surface2);border:1.5px solid var(--border);margin-left:auto" onclick="toggleDesativarPersonagem()">⏸ Desativar</button>
+      <button class="btn btn-danger" onclick="removerPersonagemDoModal()">🗑 Excluir</button>
     </div>
   </div>
 </div>
@@ -1136,7 +1157,7 @@ async function renderAreaPlayer(){
   const p=playerLogado;
   document.getElementById('player-area-title').textContent=`Olá, ${p.nome}!`;
   document.getElementById('player-area-sub').textContent='Escolha qual ficha você quer editar.';
-  const chars=personagens.filter(c=>c.player===p.nome);
+  const chars=personagens.filter(c=>c.player===p.nome && c.ativo!==false);
   const grid=document.getElementById('player-fichas-grid');
   if(!chars.length){
     grid.innerHTML='<div style="color:var(--muted);font-size:13px">Nenhum personagem vinculado ao seu player.</div>';
@@ -1225,17 +1246,17 @@ function renderAccordionPlayers(){
     const rows=chars.length===0
       ?`<div style="color:var(--muted);font-size:12px;padding:6px 0">Nenhum personagem cadastrado.</div>`
       :chars.map(p=>`
-        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);opacity:${p.ativo===false?'.45':'1'}">
           <div onclick="abrirModalPersonagem('${p.id}')" title="Clique para editar"
             style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .15s"
             onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
             ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
           </div>
           <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:600;color:var(--text)">${p.nome}</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)">${p.nome}${p.ativo===false?' <span style="font-size:10px;color:var(--muted);font-weight:400">(desativado)</span>':''}</div>
             ${p.photoplayer?`<div style="font-size:11px;color:var(--muted)">${p.photoplayer}</div>`:''}
           </div>
-          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px;flex-shrink:0" onclick="removerPersonagem('${p.id}')">Remover</button>
+          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px;flex-shrink:0" onclick="abrirModalPersonagem('${p.id}')">✏ Editar</button>
         </div>`).join('');
     return`<div class="acc-player" id="acc-${pl.id}">
       <div class="acc-player-header" onclick="toggleAcc('${pl.id}')">
@@ -1247,9 +1268,7 @@ function renderAccordionPlayers(){
           ${temSenha?'<span style="color:#1a7a1a;font-size:10px">✓ senha</span>':'<span style="color:var(--muted);font-size:10px">sem senha</span>'}
         </span>
         <span style="display:flex;gap:5px;margin-left:8px" onclick="event.stopPropagation()">
-          <button class="btn btn-warn btn-xs" style="padding:3px 8px;font-size:11px" onclick="editarPontosPlayer('${pl.id}','${pl.nome}')">pts</button>
-          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px" onclick="editarSenhaPlayer('${pl.id}','${pl.nome}')">🔑</button>
-          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px" onclick="removerPlayer('${pl.id}','${pl.nome}')">✕</button>
+          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px" onclick="abrirModalPlayer('${pl.id}')">✏ Editar</button>
         </span>
       </div>
       <div class="acc-player-body" id="acc-body-${pl.id}">${rows}</div>
@@ -1318,6 +1337,12 @@ function abrirModalPersonagem(id){
   prev.innerHTML=p.img?`<img src="${p.img}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`
     :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
   prev.dataset.img=p.img||'';
+  const ativo=p.ativo===false?false:true;
+  document.getElementById('modal-p-ativo').value=ativo?'1':'0';
+  const toggleBtn=document.getElementById('modal-p-toggle-btn');
+  toggleBtn.textContent=ativo?'⏸ Desativar':'▶ Reativar';
+  toggleBtn.style.borderColor=ativo?'var(--border)':'var(--brand-mid)';
+  toggleBtn.style.color=ativo?'':'var(--brand-mid)';
   document.getElementById('modal-personagem').style.display='flex';
 }
 function fecharModal(){document.getElementById('modal-personagem').style.display='none';}
@@ -1540,6 +1565,64 @@ async function importarDaPokeAPI(){
 // ══════════════════════════════════════
 // FICHÁRIO
 // ══════════════════════════════════════
+// ── MODAL PLAYER ──────────────────────────────────────
+function abrirModalPlayer(id){
+  const pl=players.find(p=>p.id===id);if(!pl)return;
+  document.getElementById('modal-pl-id').value=id;
+  document.getElementById('modal-pl-nome').value=pl.nome;
+  document.getElementById('modal-pl-pontos').value=pl.pontos||0;
+  document.getElementById('modal-pl-senha').value='';
+  document.getElementById('modal-player').style.display='flex';
+}
+function fecharModalPlayer(){document.getElementById('modal-player').style.display='none';}
+async function salvarEdicaoPlayer(){
+  const id=document.getElementById('modal-pl-id').value;
+  const pl=players.find(p=>p.id===id);if(!pl)return;
+  const pontos=parseInt(document.getElementById('modal-pl-pontos').value)||0;
+  const novaSenha=document.getElementById('modal-pl-senha').value;
+  const patch={pontos};
+  if(novaSenha) patch.senha=novaSenha;
+  await dbPatch('players',`id=eq.${id}`,patch);
+  pl.pontos=pontos;
+  if(novaSenha) pl.senha=novaSenha;
+  fecharModalPlayer();
+  renderTbodyPlayers();renderFichario();
+}
+async function removerPlayerDoModal(){
+  const id=document.getElementById('modal-pl-id').value;
+  const pl=players.find(p=>p.id===id);if(!pl)return;
+  const qtd=personagens.filter(p=>p.player===pl.nome).length;
+  if(!confirm(`Excluir o player "${pl.nome}"?${qtd>0?`\n\nOs ${qtd} personagem(ns) deste player também serão removidos.`:''}`))return;
+  await dbDel('players',`id=eq.${id}`);
+  players=players.filter(p=>p.id!==id);
+  personagens=personagens.filter(p=>p.player!==pl.nome);
+  fecharModalPlayer();
+  renderTbodyPlayers();renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
+}
+
+// ── DESATIVAR / REATIVAR PERSONAGEM ───────────────────
+async function toggleDesativarPersonagem(){
+  const id=document.getElementById('modal-p-id').value;
+  const p=personagens.find(x=>x.id===id);if(!p)return;
+  const novoAtivo=p.ativo===false?true:false;
+  await dbPatch('personagens',`id=eq.${id}`,{ativo:novoAtivo});
+  p.ativo=novoAtivo;
+  const toggleBtn=document.getElementById('modal-p-toggle-btn');
+  toggleBtn.textContent=novoAtivo?'⏸ Desativar':'▶ Reativar';
+  toggleBtn.style.borderColor=novoAtivo?'var(--border)':'var(--brand-mid)';
+  toggleBtn.style.color=novoAtivo?'':'var(--brand-mid)';
+  document.getElementById('modal-p-ativo').value=novoAtivo?'1':'0';
+  renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
+}
+async function removerPersonagemDoModal(){
+  const id=document.getElementById('modal-p-id').value;
+  if(!confirm('Excluir este personagem permanentemente?'))return;
+  await dbDel('personagens',`id=eq.${id}`);
+  personagens=personagens.filter(p=>p.id!==id);
+  fecharModal();
+  renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
+}
+
 function renderFichario(){
   const container=document.getElementById('fichas-container');
   if(personagens.length===0){
@@ -1547,7 +1630,7 @@ function renderFichario(){
     return;
   }
   const grupos={};
-  personagens.forEach(p=>{ if(!grupos[p.player])grupos[p.player]=[]; grupos[p.player].push(p); });
+  personagens.filter(p=>p.ativo!==false).forEach(p=>{ if(!grupos[p.player])grupos[p.player]=[]; grupos[p.player].push(p); });
   const playersOrdenados=Object.keys(grupos).sort((a,b)=>a.localeCompare(b,'pt'));
   container.innerHTML=playersOrdenados.map(playerNome=>{
     const chars=grupos[playerNome].sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
