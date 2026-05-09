@@ -633,6 +633,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               </label>
             </div>
             <button class="btn btn-primary btn-sm" style="align-self:flex-end" onclick="abrirModalItem()">+ Novo item</button>
+            <button class="btn btn-sm" id="btn-auto-sprite" style="align-self:flex-end;background:#e8f4e8;border:1.5px solid #a8d8a8;color:#1a6a1a" onclick="autoSpriteTodosItens()">✨ Auto-sprite</button>
           </div>
           <div id="itens-contagem" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
           <div class="adm-table-wrap">
@@ -1646,6 +1647,65 @@ async function importarDaPokeAPI(){
 async function carregarItens(){
   const res = await dbGet('itens', 'order=categoria.asc,nome.asc');
   itensDB = res || [];
+}
+
+// Tenta buscar sprite da PokéAPI para todos os itens sem sprite
+async function autoSpriteTodosItens(){
+  const btn = document.getElementById('btn-auto-sprite');
+  const semSprite = itensDB.filter(i => !i.sprite);
+  if(!semSprite.length){ alert('Todos os itens já têm sprite cadastrado!'); return; }
+  btn.disabled = true;
+  btn.textContent = `⏳ Buscando... (0/${semSprite.length})`;
+
+  const BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+  const FALLBACK_SPRITE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
+
+  // Testa se uma URL de imagem existe
+  function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url; }); }
+
+  // Gera variações de slug a partir do nome do item
+  function slugVariacoes(nome){
+    const base = nome.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+      .replace(/[éèê]/g,'e').replace(/[áàâ]/g,'a').replace(/[ó]/g,'o')
+      .replace(/[^a-z0-9\s\-]/g,'')
+      .trim().replace(/\s+/g,'-');
+    const variantes = [base];
+    // Pokébola → poke-ball
+    if(base==='pokebola'||base==='pokeball') variantes.push('poke-ball');
+    // Sem acento alternativo
+    const semAcento = nome.toLowerCase().replace(/[^a-z0-9\s\-]/gi,'').trim().replace(/\s+/g,'-');
+    if(!variantes.includes(semAcento)) variantes.push(semAcento);
+    return variantes;
+  }
+
+  let atualizados = 0, naoEncontrados = [];
+
+  for(let idx=0; idx<semSprite.length; idx++){
+    const item = semSprite[idx];
+    btn.textContent = `⏳ Buscando... (${idx+1}/${semSprite.length})`;
+    const slugs = slugVariacoes(item.nome);
+    let urlEncontrada = null;
+    for(const slug of slugs){
+      const url = await testarUrl(`${BASE}${slug}.png`);
+      if(url){ urlEncontrada=url; break; }
+    }
+    if(urlEncontrada){
+      await dbPatch('itens', `id=eq.${item.id}`, { sprite: urlEncontrada });
+      item.sprite = urlEncontrada;
+      atualizados++;
+    } else {
+      naoEncontrados.push(item.nome);
+    }
+  }
+
+  renderTbodyItens();
+  btn.disabled = false;
+  btn.textContent = '✨ Auto-sprite';
+
+  let msg = `✅ ${atualizados} item${atualizados!==1?'s':''} atualizado${atualizados!==1?'s':''} com sprite.`;
+  if(naoEncontrados.length) msg += `\n\n❌ Sem sprite na PokéAPI:\n${naoEncontrados.join('\n')}`;
+  alert(msg);
 }
 
 function renderTbodyItens(){
