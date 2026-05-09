@@ -946,12 +946,14 @@ async function carregarInventario(){
 function renderInventario(){
   const lista=document.getElementById('inv-lista-view');
   const itens=Object.values(inventarioFicha).filter(i=>i.quantidade>0);
+  // DIAGNÓSTICO — remova depois
+  console.table(itens.map(i=>({nome:i.nome,sprite:i.sprite||'(sem sprite)'})));
   if(!itens.length){lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';return;}
   lista.innerHTML=`<div class="inv-grid">${
     itens.map(item=>`
       <div class="inv-card">
         <div class="inv-card-top">
-          ${item.sprite ? `<img class="inv-card-sprite" src="${item.sprite}" alt="${item.nome}" onerror="this.style.display='none'"/>` : ''}
+          <img class="inv-card-sprite" src="${item.sprite||'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10024.png'}" alt="${item.nome}" onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10024.png'"/>
           <div class="inv-card-nome">${item.nome}</div>
           <div class="inv-card-qty">x${item.quantidade}</div>
         </div>
