@@ -395,6 +395,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
     <div id="inv-modal-lista" style="flex:1;overflow-y:auto;border:1.5px solid #eee;border-radius:4px"></div>
     <div class="cores-modal-btns" style="margin-top:12px">
+      <span id="inv-save-status" style="font-size:12px;font-weight:600;margin-right:auto"></span>
       <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharModalInventario()">Fechar</button>
     </div>
   </div>
@@ -1187,24 +1188,25 @@ function renderItensModal(){
 
 async function ajustarQty(itemId, delta){
   const item=todosItens.find(i=>i.id===itemId);
-  if(!item) return;
+  if(!item||!ficha.id) return;
   const atual=inventarioFicha[itemId]?.quantidade||0;
   const nova=Math.max(0, atual+delta);
+  // atualiza UI imediatamente
   const numEl=document.getElementById(`inv-qty-${itemId}`);
   if(numEl) numEl.textContent=nova;
   if(nova===0 && inventarioFicha[itemId]){
-    // remove
     await apiDel('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`);
     delete inventarioFicha[itemId];
   } else if(nova>0 && !inventarioFicha[itemId]){
-    // insert
     const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:nova});
     if(res&&res[0]) inventarioFicha[itemId]={...item,quantidade:nova,inv_id:res[0].id};
   } else if(nova>0 && inventarioFicha[itemId]){
-    // update
     await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`,{quantidade:nova});
     inventarioFicha[itemId].quantidade=nova;
   }
+  // feedback salvo
+  const statusEl=document.getElementById('inv-save-status');
+  if(statusEl){statusEl.textContent='✓ Salvo';statusEl.style.color='#1a7a1a';setTimeout(()=>statusEl.textContent='',2000);}
   renderInventario();
 }
 
@@ -1253,6 +1255,16 @@ async function init(){
       jogadorLogado={nome:sessao.nome,player:sessao.nome};
     }
     renderFicha();
+    // cria ficha no banco se ainda não existe (necessário para o inventário funcionar)
+    if(!ficha.id){
+      const res=await apiPost('fichas',{personagem_slug:pid,personagem_id:personagem.id,
+        slogan:'',pe:0,rep:0,cs:0,pv:0,idade:'',ocupacao:'',origem:'',
+        biografia:'',anotacoes:'',time:[],box:[],relacionamentos:[],
+        updated_at:new Date().toISOString()
+      });
+      if(res&&res[0]) ficha.id=res[0].id;
+    }
+    await carregarInventario();
     document.getElementById('loading-overlay').style.display='none';
     document.getElementById('top-bar').style.display='flex';
     document.getElementById('ficha-wrap').style.display='block';
