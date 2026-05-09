@@ -34,15 +34,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .btn-danger{background:#fee2e2;color:#c00;border:1px solid #fca5a5}
 .btn-sm{padding:5px 12px;font-size:11px}
 .fb-err{background:#fee2e2;color:#c00;border:1px solid #fca5a5;border-radius:3px;padding:8px 12px;font-size:12px;font-weight:600;margin-top:10px}
-
 /* TOP BAR */
 .top-bar{background:var(--cor-cabecalho,#1a1a1a);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
 .top-bar-title{font-family:var(--font-title);font-size:14px;color:#fff;font-weight:700}
 .top-bar-actions{display:flex;gap:8px;align-items:center}
-
 /* FICHA WRAP */
 .ficha-wrap{max-width:1000px;margin:0 auto;padding:16px 12px 60px}
-
 /* CABEÇALHO */
 .ficha-header{background:var(--bg);margin-bottom:1px}
 .header-name-row{background:var(--cor-cabecalho,#1a1a1a);padding:7px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
@@ -50,7 +47,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .pe-badge{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body);white-space:nowrap}
 .header-slogan-row{background:var(--cor-slogan,#3a3a3a);padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ficha-slogan{font-size:10px;font-style:normal;color:#fff;font-family:var(--font-body)}
-/* grid: banner ocupa tudo menos coluna direita de foto */
 .header-body{display:grid;grid-template-columns:1fr 220px;height:264px;border-top:2px solid var(--bg)}
 .header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#2a2a2a;position:relative}
 .header-banner-col img{width:100%;height:100%;object-fit:cover;display:block}
@@ -60,7 +56,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .header-photo-col{border-left:2px solid var(--bg);overflow:hidden;display:flex;align-items:center;justify-content:center;background:#ddd;position:relative}
 .header-photo-col img{width:220px;height:100%;object-fit:cover;display:block}
 .header-photo-placeholder{font-size:11px;color:#aaa;font-family:var(--font-body);text-align:center;padding:10px}
-
 /* STATS ROW */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
 .stat-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:10px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
@@ -68,7 +63,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .stat-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:4px}
 .stat-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:12px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
 .stat-val:last-child{border-right:none}
-
 /* DADOS GRID */
 .dados-grid-wrap{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;margin-bottom:1px}
 .dado-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
@@ -77,7 +71,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .dado-val:last-child{border-right:none}
 .dados-grid-wrap .dado-header{border-bottom:1px solid var(--bg)}
 .dados-grid-wrap .dado-val{border-bottom:1.5px solid var(--bg)}
-
 /* SECTION */
 /* INVENTÁRIO */
 .inv-tabela{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-body)}
@@ -99,42 +92,33 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .ficha-section{margin-bottom:4px}
 .ficha-section-title{background:var(--cor-secao,#1a1a1a);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
 .ficha-section-body{background:var(--surface);border:1.5px solid var(--bg);padding:12px}
-
 /* TIME */
 .time-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
 .poke-slot{background:var(--surface);border:1px solid var(--bg);display:flex;flex-direction:column;min-height:220px}
 .poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body);min-height:220px}
-/* cabeçalho: pokeball + tipos */
 .poke-slot-topbar{background:var(--cor-poke,#1a1a1a);padding:4px 6px;display:flex;align-items:center;justify-content:space-between;gap:4px}
 .poke-slot-ball{width:19px;height:19px;object-fit:contain;flex-shrink:0}
 .poke-slot-tipos{display:flex;gap:3px;align-items:center}
 .poke-slot-tipo-img{width:34px;height:17px;object-fit:contain}
-/* imagem */
 .poke-slot-img-wrap{background:#f5f5f5;display:flex;align-items:center;justify-content:center;height:100px;overflow:hidden;border-bottom:1px solid var(--bg)}
 .poke-slot-img-wrap img{width:100px;height:100px;object-fit:contain;image-rendering:pixelated}
-/* nome */
 .poke-slot-nome-row{background:var(--cor-poke,#1a1a1a);padding:3px 6px;text-align:center}
 .poke-slot-nome-lbl{font-size:13px;font-weight:700;color:#fff;font-family:var(--font-title);text-transform:uppercase;letter-spacing:.4px}
-/* infos */
 .poke-slot-info{font-size:12px;color:var(--text);line-height:1.7;font-family:var(--font-body);padding:5px 6px;flex:1}
 .poke-slot-info strong{font-weight:700;color:var(--cor-poke,#1a1a1a)}
-/* edit */
 .poke-slot-edit{border:1.5px solid var(--accent);padding:6px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
 .poke-slot-edit label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-top:2px}
 .poke-slot-edit input,.poke-slot-edit textarea,.poke-slot-edit select{width:100%;padding:3px 6px;border:1px solid #ccc;border-radius:2px;font-size:10px;font-family:var(--font-body);resize:vertical;outline:none;background:#fff}
 .poke-slot-edit input:focus,.poke-slot-edit textarea:focus,.poke-slot-edit select:focus{border-color:var(--accent)}
 .poke-slot-edit-img-preview{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;border:1px solid #eee;border-radius:2px;display:block;margin:2px auto}
 .poke-slot-edit-img-btn{width:100%;padding:3px;border:1px dashed #ccc;border-radius:2px;background:#fafafa;font-size:10px;font-family:var(--font-body);cursor:pointer;text-align:center;color:var(--muted)}
-
-/* RELACIONAMENTOS */
+/* RELACIONADOS */
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
 .rel-item{background:var(--cor-rel,#000);padding:5px 8px;text-align:center;border:1px solid var(--bg)}
 .rel-nome{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body)}
 .rel-tipo{font-size:10px;color:#fff;font-family:var(--font-body)}
-
 /* TEXTO */
 .bio-text{font-size:12px;color:var(--text);line-height:1.8;white-space:pre-wrap;font-family:var(--font-body);text-align:justify;text-indent:28px}
-
 /* EDIT */
 .edit-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--accent);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;flex-wrap:wrap}
 .edit-bar-info{font-size:12px;color:var(--muted);font-family:var(--font-body)}
@@ -143,7 +127,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .edit-input:focus{border-color:var(--accent)}
 .edit-input-sm{height:32px;resize:none}
 .fb-ok{background:#f0f0f0;color:#1a1a1a;border:1px solid #ccc;border-radius:3px;padding:6px 12px;font-size:12px;font-weight:600;font-family:var(--font-body)}
-
 .view-content{display:block}
 .edit-content{display:none}
 /* MODAL DE CORES */
@@ -155,7 +138,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .cores-field label{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;font-family:var(--font-body)}
 .cores-field input[type=color]{width:44px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none}
 .cores-modal-btns{display:flex;gap:8px;justify-content:flex-end}
-
 @media(max-width:600px){
   .ficha-wrap{padding:10px 8px 60px}
   .header-body{grid-template-columns:1fr;grid-template-rows:200px;height:auto}
@@ -163,17 +145,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .header-banner-col{height:200px}
   .header-banner-edit-btn{opacity:1}
   .dados-grid-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:none}
-  /* Par 1: H1 H2 → V1 V2 */
   .dados-grid-wrap .dado-header:nth-child(1){order:1}
   .dados-grid-wrap .dado-header:nth-child(2){order:2}
   .dados-grid-wrap .dado-val:nth-child(5){order:3}
   .dados-grid-wrap .dado-val:nth-child(6){order:4}
-  /* Par 2: H3 H4 → V3 V4 */
   .dados-grid-wrap .dado-header:nth-child(3){order:5}
   .dados-grid-wrap .dado-header:nth-child(4){order:6}
   .dados-grid-wrap .dado-val:nth-child(7){order:7}
   .dados-grid-wrap .dado-val:nth-child(8){order:8}
-  /* bordas */
   .dados-grid-wrap .dado-header:nth-child(2),.dados-grid-wrap .dado-val:nth-child(6),
   .dados-grid-wrap .dado-header:nth-child(4),.dados-grid-wrap .dado-val:nth-child(8){border-right:none}
   .time-grid{grid-template-columns:repeat(2,1fr)}
@@ -189,19 +168,16 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 </head>
 <body>
 
-<!-- LOADING -->
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
   <div class="loading-text">Carregando ficha...</div>
 </div>
 
-<!-- TOP BAR -->
 <div class="top-bar" id="top-bar" style="display:none">
   <div class="top-bar-title">Ficha do Personagem</div>
   <div class="top-bar-actions" id="top-bar-actions"></div>
 </div>
 
-<!-- LOGIN DO JOGADOR -->
 <div id="login-wrap" style="display:none">
   <div class="login-wrap">
     <h2>Acesso necessário</h2>
@@ -211,10 +187,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
 </div>
 
-<!-- FICHA -->
 <div id="ficha-wrap" class="ficha-wrap" style="display:none">
 
-  <!-- CABEÇALHO -->
   <div class="ficha-header">
     <div class="header-name-row">
       <div class="ficha-title" id="f-nome"></div>
@@ -228,7 +202,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <span class="edit-content" id="f-slogan-edit" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></span>
     </div>
     <div class="header-body">
-      <!-- BANNER (editável pelo player) -->
       <div class="header-banner-col" id="header-banner-col">
         <div id="f-banner-view">
           <div id="f-banner-placeholder" class="header-banner-placeholder">Sem banner — clique para adicionar</div>
@@ -236,14 +209,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="header-banner-edit-btn" id="btn-banner-edit" onclick="editarBanner()" style="display:none">🖼 Trocar banner</button>
         <input type="file" id="banner-file-input" accept="image/*" style="display:none" onchange="onBannerFile(this)"/>
       </div>
-      <!-- FOTO DO PERSONAGEM (coluna direita) -->
       <div class="header-photo-col" id="header-photo-col">
         <div id="f-photo-placeholder" class="header-photo-placeholder">Sem foto</div>
       </div>
     </div>
   </div>
 
-  <!-- DADOS: grid unificado — header e valor intercalados no mobile -->
   <div class="dados-grid-wrap">
     <div class="dado-header">Idade</div>
     <div class="dado-header">Ocupação</div>
@@ -283,14 +254,13 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="dado-val" id="f-player-dado">—</div>
   </div>
 
-  <!-- RELACIONAMENTOS -->
+  <!-- RELACIONADOS -->
   <div class="ficha-section">
-    <div class="ficha-section-title">Relacionamentos</div>
+    <div class="ficha-section-title">Relacionados</div>
     <div class="ficha-section-body" style="padding:0">
       <div id="f-rel-view" class="view-content"><div class="rel-grid" id="f-rel-grid"></div></div>
       <div id="f-rel-edit" class="edit-content" style="display:none;padding:12px">
         <div id="rel-edit-grid" style="display:flex;flex-direction:column;gap:8px"></div>
-
       </div>
     </div>
   </div>
@@ -331,10 +301,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <span>Box</span>
       <span id="box-counter" style="font-family:var(--font-body);font-size:12px;font-weight:600;opacity:.85"></span>
     </div>
-    <!-- barra de upgrades (sempre visível) -->
     <div id="box-upgrade-bar" style="background:var(--surface2);padding:6px 14px;font-size:11px;font-family:var(--font-body);color:var(--muted);border-bottom:1px solid var(--bg);display:none"></div>
     <div class="ficha-section-body" style="padding:0">
-      <!-- inputs de upgrade (só em modo edição) -->
       <div style="display:none;padding:12px 14px;border-bottom:1px solid var(--bg)" id="box-upgrades-wrap">
         <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Upgrades de Espaço</div>
         <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
@@ -417,7 +385,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         </div>
       </div>
       <div class="cores-field">
-        <label>Cor secundária<br/><span style="font-size:9px;color:#888;font-weight:400">Slogan · Relacionamentos · Header Pokémon</span></label>
+        <label>Cor secundária<br/><span style="font-size:9px;color:#888;font-weight:400">Slogan · Relacionados · Header Pokémon</span></label>
         <div style="display:flex;align-items:center;gap:6px">
           <input type="color" id="color-picker-secundaria" value="#3a3a3a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none;flex-shrink:0" oninput="onPickerInput('secundaria')"/>
           <span style="font-size:12px;color:#555">#</span>
@@ -454,6 +422,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .hist-val{margin-top:3px;color:#555;line-height:1.5;word-break:break-word}
 .hist-val span{background:#f4f4f4;border-radius:3px;padding:1px 5px}
 </style>
+
 <script>
 const SUPA_URL='https://jdgfxsvgxfdkdrzqbgje.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
@@ -470,82 +439,76 @@ async function api(path,opts={}){
 const apiGet =(p,q='')=>api(`${p}?${q}`);
 const apiPost=(p,b)=>api(p,{method:'POST',body:JSON.stringify(b)});
 const apiPatch=(p,q,b)=>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
+function apiDel(table,query){return api(`${table}?${query}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});}
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
-let loginPlayerNome='', loginPlayerData=null, loginPersonagemSelecionado=null, loginPersonagensDoPlayer=[];
 const personagemSlug=(()=>{
   const params=new URLSearchParams(location.search).get('id');
   if(params) return params;
-  // lê do path: /ficha/hanograssly
   const match=location.pathname.match(/\/ficha\/([^\/]+)/);
   return match?match[1]:null;
 })();
 
-// ─── Render ───────────────────────────────────────────
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 
+// ─── Render ───────────────────────────────────────────
 function renderFicha(){
   try{
-  const p=personagem, f=ficha;
-  // Header
-  document.getElementById('f-nome').textContent=p.nome;
-  document.getElementById('f-player-dado').textContent=p.player;
-  const ppDado=document.getElementById('f-photoplayer-dado');
-  if(ppDado) ppDado.textContent=p.photoplayer||'—';
-  // Banner
-  const bannerCol=document.getElementById('header-banner-col');
-  const bannerPlaceholder=document.getElementById('f-banner-placeholder');
-  if(f.banner){
-    bannerPlaceholder.style.display='none';
-    let img=bannerCol.querySelector('img.banner-img');
-    if(!img){img=document.createElement('img');img.className='banner-img';bannerCol.insertBefore(img,bannerCol.firstChild);}
-    img.src=f.banner;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
-  } else {
-    bannerPlaceholder.style.display='';
-    const img=bannerCol.querySelector('img.banner-img');if(img)img.remove();
-  }
-  // Foto do personagem (coluna direita)
-  const photoCol=document.getElementById('header-photo-col');
-  const photoPlaceholder=document.getElementById('f-photo-placeholder');
-  if(p.img){
-    photoPlaceholder.style.display='none';
-    let img=photoCol.querySelector('img.photo-img');
-    if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
-    img.src=p.img;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
-  } else { photoPlaceholder.style.display=''; }
-  // Slogan
-  document.getElementById('f-slogan-txt').textContent=f.slogan||'';
-  document.getElementById('f-slogan-input').value=f.slogan||'';
-  // PE
-  document.getElementById('f-pe-view').textContent=`${f.pe||0} PE`;
-  document.getElementById('f-pe-input').value=f.pe||0;
-  // Stats
-  ['rep','cs','pv'].forEach(k=>{
-    document.getElementById(`f-${k}-txt`).textContent=f[k]||0;
-    document.getElementById(`f-${k}-input`).value=f[k]||0;
-  });
-  // Dados pessoais
-  document.getElementById('f-idade-txt').textContent=f.idade||'—';
-  document.getElementById('f-idade-input').value=f.idade||'';
-  document.getElementById('f-ocup-txt').textContent=f.ocupacao||'—';
-  document.getElementById('f-ocup-input').value=f.ocupacao||'';
-  document.getElementById('f-orig-txt').textContent=f.origem||'—';
-  document.getElementById('f-orig-input').value=f.origem||'';
-  renderTime();
-  // restaura checkboxes da box
-  const slotCk=document.getElementById('box-slot-upgrade');
-  const miniCk=document.getElementById('box-mini-upgrade');
-  if(slotCk) slotCk.value=f.boxSlotUpgrade||0;
-  if(miniCk) miniCk.value=f.boxMiniUpgrade||0;
-  renderBox();
-  document.getElementById('f-inv-txt').textContent=f.inventario||'Nenhum item registrado.';
-  document.getElementById('f-inv-input').value=f.inventario||'';
-  renderRel();
-  document.getElementById('f-bio-txt').textContent=f.biografia||'Nenhuma biografia registrada.';
-  document.getElementById('f-bio-input').value=f.biografia||'';
-  document.getElementById('f-anot-txt').textContent=f.anotacoes||'Nenhuma anotação registrada.';
-  document.getElementById('f-anot-input').value=f.anotacoes||'';
+    const p=personagem, f=ficha;
+    document.getElementById('f-nome').textContent=p.nome;
+    document.getElementById('f-player-dado').textContent=p.player;
+    const ppDado=document.getElementById('f-photoplayer-dado');
+    if(ppDado) ppDado.textContent=p.photoplayer||'—';
+    // Banner
+    const bannerCol=document.getElementById('header-banner-col');
+    const bannerPlaceholder=document.getElementById('f-banner-placeholder');
+    if(f.banner){
+      bannerPlaceholder.style.display='none';
+      let img=bannerCol.querySelector('img.banner-img');
+      if(!img){img=document.createElement('img');img.className='banner-img';bannerCol.insertBefore(img,bannerCol.firstChild);}
+      img.src=f.banner;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+    } else {
+      bannerPlaceholder.style.display='';
+      const img=bannerCol.querySelector('img.banner-img');if(img)img.remove();
+    }
+    // Foto
+    const photoCol=document.getElementById('header-photo-col');
+    const photoPlaceholder=document.getElementById('f-photo-placeholder');
+    if(p.img){
+      photoPlaceholder.style.display='none';
+      let img=photoCol.querySelector('img.photo-img');
+      if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
+      img.src=p.img;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+    } else { photoPlaceholder.style.display=''; }
+    // Slogan / PE
+    document.getElementById('f-slogan-txt').textContent=f.slogan||'';
+    document.getElementById('f-slogan-input').value=f.slogan||'';
+    document.getElementById('f-pe-view').textContent=`${f.pe||0} PE`;
+    document.getElementById('f-pe-input').value=f.pe||0;
+    // Stats
+    ['rep','cs','pv'].forEach(k=>{
+      document.getElementById(`f-${k}-txt`).textContent=f[k]||0;
+      document.getElementById(`f-${k}-input`).value=f[k]||0;
+    });
+    // Dados pessoais
+    document.getElementById('f-idade-txt').textContent=f.idade||'—';
+    document.getElementById('f-idade-input').value=f.idade||'';
+    document.getElementById('f-ocup-txt').textContent=f.ocupacao||'—';
+    document.getElementById('f-ocup-input').value=f.ocupacao||'';
+    document.getElementById('f-orig-txt').textContent=f.origem||'—';
+    document.getElementById('f-orig-input').value=f.origem||'';
+    renderTime();
+    const slotCk=document.getElementById('box-slot-upgrade');
+    const miniCk=document.getElementById('box-mini-upgrade');
+    if(slotCk) slotCk.value=f.boxSlotUpgrade||0;
+    if(miniCk) miniCk.value=f.boxMiniUpgrade||0;
+    renderBox();
+    renderRel();
+    document.getElementById('f-bio-txt').textContent=f.biografia||'Nenhuma biografia registrada.';
+    document.getElementById('f-bio-input').value=f.biografia||'';
+    document.getElementById('f-anot-txt').textContent=f.anotacoes||'Nenhuma anotação registrada.';
+    document.getElementById('f-anot-input').value=f.anotacoes||'';
   }catch(e){console.error('Erro no renderFicha:',e);}
 }
 
@@ -571,42 +534,39 @@ async function onBannerFile(input){
   reader.readAsDataURL(file);input.value='';
 }
 
+// ─── Pokéballs / Tipos ────────────────────────────────
 const POKEBALLS=[
-  {val:'pokeball',  label:'Poké Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/poke.png'},
-  {val:'greatball', label:'Great Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/great.png'},
-  {val:'ultraball', label:'Ultra Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/ultra.png'},
-  {val:'masterball',label:'Master Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/master.png'},
-  {val:'safariball',label:'Safari Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/safari.png'},
-  {val:'fastball',  label:'Fast Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/fast.png'},
-  {val:'levelball', label:'Level Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/level.png'},
-  {val:'lureball',  label:'Lure Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/lure.png'},
-  {val:'heavyball', label:'Heavy Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heavy.png'},
-  {val:'loveball',  label:'Love Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/love.png'},
-  {val:'friendball',label:'Friend Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/friend.png'},
-  {val:'moonball',  label:'Moon Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/moon.png'},
-  {val:'sportball', label:'Sport Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/sport.png'},
-  {val:'healball',  label:'Heal Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heal.png'},
-  {val:'quickball', label:'Quick Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/quick.png'},
-  {val:'duskball',  label:'Dusk Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dusk.png'},
-  {val:'cherish',   label:'Cherish Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/cherish.png'},
-  {val:'diveball',  label:'Dive Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dive.png'},
-  {val:'luxuryball',label:'Luxury Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/luxury.png'},
-  {val:'nestball',  label:'Nest Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/nest.png'},
-  {val:'netball',   label:'Net Ball',    img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/net.png'},
+  {val:'pokeball',label:'Poké Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/poke.png'},
+  {val:'greatball',label:'Great Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/great.png'},
+  {val:'ultraball',label:'Ultra Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/ultra.png'},
+  {val:'masterball',label:'Master Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/master.png'},
+  {val:'safariball',label:'Safari Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/safari.png'},
+  {val:'fastball',label:'Fast Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/fast.png'},
+  {val:'levelball',label:'Level Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/level.png'},
+  {val:'lureball',label:'Lure Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/lure.png'},
+  {val:'heavyball',label:'Heavy Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heavy.png'},
+  {val:'loveball',label:'Love Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/love.png'},
+  {val:'friendball',label:'Friend Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/friend.png'},
+  {val:'moonball',label:'Moon Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/moon.png'},
+  {val:'sportball',label:'Sport Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/sport.png'},
+  {val:'healball',label:'Heal Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heal.png'},
+  {val:'quickball',label:'Quick Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/quick.png'},
+  {val:'duskball',label:'Dusk Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dusk.png'},
+  {val:'cherish',label:'Cherish Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/cherish.png'},
+  {val:'diveball',label:'Dive Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dive.png'},
+  {val:'luxuryball',label:'Luxury Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/luxury.png'},
+  {val:'nestball',label:'Nest Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/nest.png'},
+  {val:'netball',label:'Net Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/net.png'},
   {val:'premierball',label:'Premier Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/premier.png'},
-  {val:'repeatball',label:'Repeat Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/repeat.png'},
-  {val:'timerball', label:'Timer Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/timer.png'},
+  {val:'repeatball',label:'Repeat Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/repeat.png'},
+  {val:'timerball',label:'Timer Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/timer.png'},
 ];
 const TIPOS_POKE=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
 const TIPO_SVG_BASE='https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/5781623f147f1bf850f426cfe1874ba56a9b75ee/icons';
+function ballImg(val){return POKEBALLS.find(b=>b.val===val)?.img||POKEBALLS[0].img;}
+function tipoImg(tipo){return`${TIPO_SVG_BASE}/${tipo}.svg`;}
 
-function ballImg(val){
-  return POKEBALLS.find(b=>b.val===val)?.img||POKEBALLS[0].img;
-}
-function tipoImg(tipo){
-  return`${TIPO_SVG_BASE}/${tipo}.svg`;
-}
-
+// ─── Time / Box ───────────────────────────────────────
 function renderTime(){
   const time=ficha.time||[{},{},{},{},{},{}];
   while(time.length<6)time.push({});
@@ -621,13 +581,9 @@ function renderTime(){
     return`<div class="poke-slot">
       <div class="poke-slot-topbar">
         <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
-        <div class="poke-slot-tipos">
-          ${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}
-        </div>
+        <div class="poke-slot-tipos">${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
-      <div class="poke-slot-img-wrap">
-        <img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/>
-      </div>
+      <div class="poke-slot-img-wrap"><img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/></div>
       <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome||'(POKÉMON)'}</div></div>
       <div class="poke-slot-info">
         <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
@@ -650,21 +606,14 @@ function renderBox(){
   const box=ficha.box||[];
   while(box.length<total)box.push({});
   const preenchidos=box.slice(0,total).filter(pk=>pk&&pk.nome).length;
-
-  // atualiza contador no título
   document.getElementById('box-counter').textContent=`${preenchidos}/${total}`;
-
-  // atualiza barra de upgrades (sempre visível se houver algum)
   const bar=document.getElementById('box-upgrade-bar');
   if(slotUp>0||miniUp>0){
     const partes=[];
     if(slotUp>0) partes.push(`${slotUp}x UPGRADE (+${slotUp*5})`);
     if(miniUp>0) partes.push(`${miniUp}x MINI SLOT UPGRADE (+${miniUp*2})`);
-    bar.textContent=partes.join(' | ');
-    bar.style.display='block';
-  } else {
-    bar.style.display='none';
-  }
+    bar.textContent=partes.join(' | ');bar.style.display='block';
+  } else { bar.style.display='none'; }
   document.getElementById('box-grid').innerHTML=box.slice(0,total).map((pk,i)=>{
     pk=pk||{};
     if(modoEdicao) return slotEdit(i,pk,'box');
@@ -676,13 +625,9 @@ function renderBox(){
     return`<div class="poke-slot">
       <div class="poke-slot-topbar">
         <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
-        <div class="poke-slot-tipos">
-          ${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}
-        </div>
+        <div class="poke-slot-tipos">${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
-      <div class="poke-slot-img-wrap">
-        <img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/>
-      </div>
+      <div class="poke-slot-img-wrap"><img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/></div>
       <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome||'(POKÉMON)'}</div></div>
       <div class="poke-slot-info">
         <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
@@ -706,22 +651,16 @@ function slotEdit(i,pk,prefix='time'){
   const tipo1Opts=TIPOS_POKE.map(t=>`<option value="${t}" ${t0===t?'selected':''}>${t}</option>`).join('');
   const tipo2Opts=['<option value="">— nenhum —</option>'].concat(TIPOS_POKE.map(t=>`<option value="${t}" ${t1===t?'selected':''}>${t}</option>`)).join('');
   return`<div class="poke-slot-edit">
-    <label>Pokémon</label>
-    <input value="${pk.nome||''}" placeholder="Nome" id="${pfx}-nome-${i}"/>
-    <label>Pokéball</label>
-    <select id="${pfx}-ball-${i}">${ballOpts}</select>
-    <label>Tipo 1</label>
-    <select id="${pfx}-tipo0-${i}"><option value="">— nenhum —</option>${tipo1Opts}</select>
-    <label>Tipo 2</label>
-    <select id="${pfx}-tipo1-${i}">${tipo2Opts}</select>
+    <label>Pokémon</label><input value="${pk.nome||''}" placeholder="Nome" id="${pfx}-nome-${i}"/>
+    <label>Pokéball</label><select id="${pfx}-ball-${i}">${ballOpts}</select>
+    <label>Tipo 1</label><select id="${pfx}-tipo0-${i}"><option value="">— nenhum —</option>${tipo1Opts}</select>
+    <label>Tipo 2</label><select id="${pfx}-tipo1-${i}">${tipo2Opts}</select>
     <label>Imagem</label>
     ${pk.img?`<img class="poke-slot-edit-img-preview" src="${pk.img}" id="${pfx}-img-prev-${i}"/>`:`<img class="poke-slot-edit-img-preview" src="" id="${pfx}-img-prev-${i}" style="display:none"/>`}
     <button class="poke-slot-edit-img-btn" onclick="document.getElementById('${pfx}-img-file-${i}').click()">📷 Escolher imagem</button>
     <input type="file" id="${pfx}-img-file-${i}" accept="image/*" style="display:none" onchange="onPokeImg('${prefix}',${i},this)"/>
-    <label>Ability</label>
-    <input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="${pfx}-ability-${i}"/>
-    <label>Nível</label>
-    <input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="100" id="${pfx}-level-${i}"/>
+    <label>Ability</label><input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="${pfx}-ability-${i}"/>
+    <label>Nível</label><input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="100" id="${pfx}-level-${i}"/>
     <label>Gender</label>
     <select id="${pfx}-gender-${i}">
       <option value="">—</option>
@@ -735,12 +674,9 @@ function slotEdit(i,pk,prefix='time'){
       <option value="Shiny" ${pk.feature==='Shiny'?'selected':''}>Shiny</option>
       <option value="Color" ${pk.feature==='Color'?'selected':''}>Color</option>
     </select>
-    <label>Nature</label>
-    <input value="${pk.nature||''}" placeholder="Ex: Adamant" id="${pfx}-nature-${i}"/>
-    <label>Hold Item</label>
-    <input value="${pk.item||''}" placeholder="Ex: Life Orb" id="${pfx}-item-${i}"/>
-    <label>Happiness</label>
-    <input value="${pk.happy||''}" placeholder="Ex: 255" id="${pfx}-happy-${i}"/>
+    <label>Nature</label><input value="${pk.nature||''}" placeholder="Ex: Adamant" id="${pfx}-nature-${i}"/>
+    <label>Hold Item</label><input value="${pk.item||''}" placeholder="Ex: Life Orb" id="${pfx}-item-${i}"/>
+    <label>Happiness</label><input value="${pk.happy||''}" placeholder="Ex: 255" id="${pfx}-happy-${i}"/>
     <label>Moveset (1 por linha)</label>
     <textarea rows="5" id="${pfx}-moveset-${i}" placeholder="Tackle&#10;Growl&#10;...">${pk.moveset||''}</textarea>
   </div>`;
@@ -748,7 +684,7 @@ function slotEdit(i,pk,prefix='time'){
 
 function onPokeImg(prefix,i,input){
   const pfx=`${prefix}-pk`;
-  const file=input.files[0]; if(!file)return;
+  const file=input.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=e=>{
     const prev=document.getElementById(`${pfx}-img-prev-${i}`);
@@ -760,6 +696,7 @@ function onPokeImg(prefix,i,input){
   reader.readAsDataURL(file);
 }
 
+// ─── Relacionados ─────────────────────────────────────
 function renderRel(){
   const rels=ficha.relacionamentos||[];
   const total=ficha.relTotal||6;
@@ -786,15 +723,6 @@ function renderRelEdit(){
       <input class="edit-input edit-input-sm" style="flex:2" value="${rels[i]?.nome||''}" placeholder="Nome" id="rel-nome-${i}"/>
       <input class="edit-input edit-input-sm" style="flex:1" value="${rels[i]?.tipo||''}" placeholder="Tipo de relação" id="rel-tipo-${i}"/>
     </div>`).join('')}`;
-}
-function addRelSlot(){
-  ficha.relTotal=(ficha.relTotal||6)+1;
-  renderRel();
-}
-function removerRel(i){
-  if(ficha.relacionamentos) ficha.relacionamentos.splice(i,1);
-  ficha.relTotal=Math.max(6,(ficha.relTotal||6)-1);
-  renderRel();
 }
 
 // ─── Modo edição ──────────────────────────────────────
@@ -830,83 +758,81 @@ async function salvarFicha(silencioso=false){
   if(!silencioso){btn.textContent='Salvando...';btn.disabled=true;}
   else setAutoSaveStatus('Salvando...','var(--muted)');
   try{
-
-  function coletarSlots(prefix, count){
-    const pfx=`${prefix}-pk`;
-    const arr=[];
-    for(let i=0;i<count;i++){
-      const nome=(document.getElementById(`${pfx}-nome-${i}`)?.value||'').trim();
-      const ball=document.getElementById(`${pfx}-ball-${i}`)?.value||'pokeball';
-      const t0=document.getElementById(`${pfx}-tipo0-${i}`)?.value||'';
-      const t1=document.getElementById(`${pfx}-tipo1-${i}`)?.value||'';
-      const tipos=[t0,t1].filter(Boolean);
-      const img=window._pokeImgs?.[prefix]?.[i]||(ficha[prefix]?.[i]?.img||'');
-      const ability=(document.getElementById(`${pfx}-ability-${i}`)?.value||'').trim();
-      const level=document.getElementById(`${pfx}-level-${i}`)?.value||'';
-      const gender=document.getElementById(`${pfx}-gender-${i}`)?.value||'';
-      const feature=document.getElementById(`${pfx}-feature-${i}`)?.value||'Normal';
-      const nature=(document.getElementById(`${pfx}-nature-${i}`)?.value||'').trim();
-      const item=(document.getElementById(`${pfx}-item-${i}`)?.value||'').trim();
-      const happy=(document.getElementById(`${pfx}-happy-${i}`)?.value||'').trim();
-      const moveset=(document.getElementById(`${pfx}-moveset-${i}`)?.value||'').trim();
-      arr.push(nome?{nome,ball,tipos,img,level,ability,gender,feature,nature,item,happy,moveset}:{});
+    function coletarSlots(prefix,count){
+      const pfx=`${prefix}-pk`;
+      const arr=[];
+      for(let i=0;i<count;i++){
+        const nome=(document.getElementById(`${pfx}-nome-${i}`)?.value||'').trim();
+        const ball=document.getElementById(`${pfx}-ball-${i}`)?.value||'pokeball';
+        const t0=document.getElementById(`${pfx}-tipo0-${i}`)?.value||'';
+        const t1=document.getElementById(`${pfx}-tipo1-${i}`)?.value||'';
+        const tipos=[t0,t1].filter(Boolean);
+        const img=window._pokeImgs?.[prefix]?.[i]||(ficha[prefix]?.[i]?.img||'');
+        const ability=(document.getElementById(`${pfx}-ability-${i}`)?.value||'').trim();
+        const level=document.getElementById(`${pfx}-level-${i}`)?.value||'';
+        const gender=document.getElementById(`${pfx}-gender-${i}`)?.value||'';
+        const feature=document.getElementById(`${pfx}-feature-${i}`)?.value||'Normal';
+        const nature=(document.getElementById(`${pfx}-nature-${i}`)?.value||'').trim();
+        const item=(document.getElementById(`${pfx}-item-${i}`)?.value||'').trim();
+        const happy=(document.getElementById(`${pfx}-happy-${i}`)?.value||'').trim();
+        const moveset=(document.getElementById(`${pfx}-moveset-${i}`)?.value||'').trim();
+        arr.push(nome?{nome,ball,tipos,img,level,ability,gender,feature,nature,item,happy,moveset}:{});
+      }
+      return arr;
     }
-    return arr;
-  }
-
-  const time=coletarSlots('time',6);
-  const boxSlotUpgrade=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||0;
-  const boxMiniUpgrade=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||0;
-  const boxTotal=6+(boxSlotUpgrade*5)+(boxMiniUpgrade*2);
-  const box=coletarSlots('box',boxTotal);
-  window._pokeImgs={};
-  const relTotal=ficha.relTotal||6;
-  const relacionamentos=Array.from({length:relTotal},(_,i)=>({
-    nome:(document.getElementById(`rel-nome-${i}`)?.value||'').trim(),
-    tipo:(document.getElementById(`rel-tipo-${i}`)?.value||'').trim()
-  }));
-  const novaFicha={
-    banner:ficha.banner||null,
-    slogan:document.getElementById('f-slogan-input').value.trim(),
-    pe:parseInt(document.getElementById('f-pe-input').value)||0,
-    rep:parseInt(document.getElementById('f-rep-input').value)||0,
-    cs:parseInt(document.getElementById('f-cs-input').value)||0,
-    pv:parseInt(document.getElementById('f-pv-input').value)||0,
-    idade:document.getElementById('f-idade-input').value.trim(),
-    ocupacao:document.getElementById('f-ocup-input').value.trim(),
-    origem:document.getElementById('f-orig-input').value.trim(),
-    biografia:document.getElementById('f-bio-input').value.trim(),
-    anotacoes:document.getElementById('f-anot-input').value.trim(),
-    time,box,boxSlotUpgrade,boxMiniUpgrade,relacionamentos,relTotal,cores:ficha.cores||null,updated_at:new Date().toISOString()
-  };
-  if(ficha.id){
-    // registra histórico de campos alterados
-    const camposSimples=['slogan','pe','rep','cs','pv','idade','ocupacao','origem','inventario','biografia','anotacoes'];
-    const hist=[];
-    const agora=new Date().toISOString();
-    camposSimples.forEach(k=>{
-      const ant=String(ficha[k]??'');
-      const nov=String(novaFicha[k]??'');
-      if(ant!==nov) hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:ant,valor_novo:nov,editado_em:agora});
-    });
-    ['time','relacionamentos'].forEach(k=>{
-      if(JSON.stringify(ficha[k])!==JSON.stringify(novaFicha[k]))
-        hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:JSON.stringify(ficha[k]),valor_novo:JSON.stringify(novaFicha[k]),editado_em:agora});
-    });
-    await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
-    if(hist.length>0) await apiPost('fichas_historico',hist).catch(()=>{});
-  } else {
-    const res=await apiPost('fichas',{...novaFicha,personagem_slug:personagemSlug});
-    if(res&&res[0]) ficha.id=res[0].id;
-  }
-  Object.assign(ficha,novaFicha);
-  if(silencioso){
-    setAutoSaveStatus('✓ Salvo automaticamente','#1a7a1a');
-    setTimeout(()=>setAutoSaveStatus(''),500);
-  } else {
-    btn.textContent='💾 Salvar';btn.disabled=false;
-    cancelarEdicao();
-  }
+    const time=coletarSlots('time',6);
+    const boxSlotUpgrade=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||0;
+    const boxMiniUpgrade=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||0;
+    const boxTotal=6+(boxSlotUpgrade*5)+(boxMiniUpgrade*2);
+    const box=coletarSlots('box',boxTotal);
+    window._pokeImgs={};
+    const relTotal=ficha.relTotal||6;
+    const relacionamentos=Array.from({length:relTotal},(_,i)=>({
+      nome:(document.getElementById(`rel-nome-${i}`)?.value||'').trim(),
+      tipo:(document.getElementById(`rel-tipo-${i}`)?.value||'').trim()
+    }));
+    const novaFicha={
+      banner:ficha.banner||null,
+      slogan:document.getElementById('f-slogan-input').value.trim(),
+      pe:parseInt(document.getElementById('f-pe-input').value)||0,
+      rep:parseInt(document.getElementById('f-rep-input').value)||0,
+      cs:parseInt(document.getElementById('f-cs-input').value)||0,
+      pv:parseInt(document.getElementById('f-pv-input').value)||0,
+      idade:document.getElementById('f-idade-input').value.trim(),
+      ocupacao:document.getElementById('f-ocup-input').value.trim(),
+      origem:document.getElementById('f-orig-input').value.trim(),
+      biografia:document.getElementById('f-bio-input').value.trim(),
+      anotacoes:document.getElementById('f-anot-input').value.trim(),
+      time,box,boxSlotUpgrade,boxMiniUpgrade,relacionamentos,relTotal,
+      cores:ficha.cores||null,updated_at:new Date().toISOString()
+    };
+    if(ficha.id){
+      const camposSimples=['slogan','pe','rep','cs','pv','idade','ocupacao','origem','biografia','anotacoes'];
+      const hist=[];
+      const agora=new Date().toISOString();
+      camposSimples.forEach(k=>{
+        const ant=String(ficha[k]??'');
+        const nov=String(novaFicha[k]??'');
+        if(ant!==nov) hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:ant,valor_novo:nov,editado_em:agora});
+      });
+      ['time','relacionamentos'].forEach(k=>{
+        if(JSON.stringify(ficha[k])!==JSON.stringify(novaFicha[k]))
+          hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:JSON.stringify(ficha[k]),valor_novo:JSON.stringify(novaFicha[k]),editado_em:agora});
+      });
+      await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
+      if(hist.length>0) await apiPost('fichas_historico',hist).catch(()=>{});
+    } else {
+      const res=await apiPost('fichas',{...novaFicha,personagem_slug:personagemSlug});
+      if(res&&res[0]) ficha.id=res[0].id;
+    }
+    Object.assign(ficha,novaFicha);
+    if(silencioso){
+      setAutoSaveStatus('✓ Salvo automaticamente','#1a7a1a');
+      setTimeout(()=>setAutoSaveStatus(''),500);
+    } else {
+      btn.textContent='💾 Salvar';btn.disabled=false;
+      cancelarEdicao();
+    }
   }catch(e){
     console.error('Erro ao salvar:',e);
     if(!silencioso){btn.textContent='💾 Salvar';btn.disabled=false;alert('Erro ao salvar: '+e.message);}
@@ -914,12 +840,9 @@ async function salvarFicha(silencioso=false){
   }
 }
 
-// ─── Sessão do player (vem do index.html via localStorage) ───
+// ─── Sessão do player ─────────────────────────────────
 function lerSessaoPlayer(){
-  try{
-    const s=localStorage.getItem('pchapters_player');
-    return s?JSON.parse(s):null;
-  }catch(e){return null;}
+  try{const s=localStorage.getItem('pchapters_player');return s?JSON.parse(s):null;}catch(e){return null;}
 }
 
 function atualizarTopBar(){
@@ -934,19 +857,11 @@ function atualizarTopBar(){
     actions.innerHTML=`<a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);text-decoration:none">Editar ficha</a>`;
   }
 }
-function mostrarLogin(){
-  document.getElementById('login-wrap').style.display='block';
-  document.getElementById('ficha-wrap').style.display='none';
-}
-function sairJogador(){
-  jogadorLogado=null;cancelarEdicao();atualizarTopBar();
-}
+function sairJogador(){jogadorLogado=null;cancelarEdicao();atualizarTopBar();}
 
-// ─── Modal de cores ────────────────────────────────────
+// ─── Cores ────────────────────────────────────────────
 const CORES_DEFAULT={primaria:'#1a1a1a',secundaria:'#3a3a3a'};
-
 function aplicarCoresFicha(c){
-  // suporta formato antigo (cabecalho/slogan/etc) e novo (primaria/secundaria)
   const p=c.primaria||c.cabecalho||CORES_DEFAULT.primaria;
   const s=c.secundaria||c.slogan||CORES_DEFAULT.secundaria;
   document.documentElement.style.setProperty('--cor-cabecalho',p);
@@ -956,7 +871,6 @@ function aplicarCoresFicha(c){
   document.documentElement.style.setProperty('--cor-rel',s);
   document.documentElement.style.setProperty('--cor-poke',s);
 }
-
 function abrirModalCores(){
   const c=ficha.cores||CORES_DEFAULT;
   const p=(c.primaria||c.cabecalho||CORES_DEFAULT.primaria).replace('#','');
@@ -967,58 +881,12 @@ function abrirModalCores(){
   document.getElementById('color-picker-secundaria').value='#'+s;
   document.getElementById('cores-modal-overlay').style.display='flex';
 }
-
-function fecharModalCores(){
-  document.getElementById('cores-modal-overlay').style.display='none';
-  aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
-}
-
-function onPickerInput(tipo){
-  const picker=document.getElementById(`color-picker-${tipo}`);
-  const hex=picker.value.replace('#','').toUpperCase();
-  document.getElementById(`cor-${tipo}`).value=hex;
-  previewCores();
-}
-
-function onHexInput(tipo){
-  const input=document.getElementById(`cor-${tipo}`);
-  let val=input.value.replace(/[^0-9a-fA-F]/g,'').toUpperCase();
-  input.value=val;
-  if(val.length===6){
-    document.getElementById(`color-picker-${tipo}`).value='#'+val;
-    previewCores();
-  }
-}
-
-function previewCores(){
-  const p=document.getElementById('cor-primaria').value;
-  const s=document.getElementById('cor-secundaria').value;
-  aplicarCoresFicha({
-    primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,
-    secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria
-  });
-}
-
-async function salvarCores(){
-  const p=document.getElementById('cor-primaria').value;
-  const s=document.getElementById('cor-secundaria').value;
-  if(p.length!==6||s.length!==6){alert('Insira cores válidas (6 caracteres hex).');return;}
-  const c={primaria:'#'+p,secundaria:'#'+s};
-  aplicarCoresFicha(c);
-  ficha.cores=c;
-  if(ficha.id){
-    await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c,updated_at:new Date().toISOString()});
-  }
-  fecharModalCores();
-}
-
-function resetarCores(){
-  document.getElementById('cor-primaria').value='1A1A1A';
-  document.getElementById('cor-secundaria').value='3A3A3A';
-  document.getElementById('color-picker-primaria').value=CORES_DEFAULT.primaria;
-  document.getElementById('color-picker-secundaria').value=CORES_DEFAULT.secundaria;
-  previewCores();
-}
+function fecharModalCores(){document.getElementById('cores-modal-overlay').style.display='none';aplicarCoresFicha(ficha.cores||CORES_DEFAULT);}
+function onPickerInput(tipo){const hex=document.getElementById(`color-picker-${tipo}`).value.replace('#','').toUpperCase();document.getElementById(`cor-${tipo}`).value=hex;previewCores();}
+function onHexInput(tipo){const v=document.getElementById(`cor-${tipo}`).value.replace(/[^0-9a-fA-F]/g,'').toUpperCase();document.getElementById(`cor-${tipo}`).value=v;if(v.length===6){document.getElementById(`color-picker-${tipo}`).value='#'+v;previewCores();}}
+function previewCores(){const p=document.getElementById('cor-primaria').value;const s=document.getElementById('cor-secundaria').value;aplicarCoresFicha({primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria});}
+async function salvarCores(){const p=document.getElementById('cor-primaria').value;const s=document.getElementById('cor-secundaria').value;if(p.length!==6||s.length!==6){alert('Insira cores válidas.');return;}const c={primaria:'#'+p,secundaria:'#'+s};aplicarCoresFicha(c);ficha.cores=c;if(ficha.id)await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c,updated_at:new Date().toISOString()});fecharModalCores();}
+function resetarCores(){document.getElementById('cor-primaria').value='1A1A1A';document.getElementById('cor-secundaria').value='3A3A3A';document.getElementById('color-picker-primaria').value=CORES_DEFAULT.primaria;document.getElementById('color-picker-secundaria').value=CORES_DEFAULT.secundaria;previewCores();}
 
 // ─── Histórico ────────────────────────────────────────
 async function abrirHistorico(){
@@ -1028,159 +896,96 @@ async function abrirHistorico(){
   if(!ficha.id){lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Nenhum histórico ainda.</div>';return;}
   const hist=await apiGet('fichas_historico',`ficha_id=eq.${ficha.id}&order=editado_em.desc&limit=50`);
   if(!hist||hist.length===0){lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Nenhuma edição registrada.</div>';return;}
-  const labels={slogan:'Slogan',pe:'PE',rep:'Reputação',cs:'C$',pv:'PV',idade:'Idade',ocupacao:'Ocupação',origem:'Origem',inventario:'Inventário',biografia:'Biografia',anotacoes:'Anotações',time:'Time',relacionamentos:'Relacionamentos',banner:'Banner',cores:'Cores'};
+  const labels={slogan:'Slogan',pe:'PE',rep:'Reputação',cs:'C$',pv:'PV',idade:'Idade',ocupacao:'Ocupação',origem:'Origem',biografia:'Biografia',anotacoes:'Anotações',time:'Time',relacionamentos:'Relacionados',banner:'Banner',cores:'Cores'};
   lista.innerHTML=hist.map(h=>{
     const d=new Date(h.editado_em);
     const data=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     const campo=labels[h.campo]||h.campo;
-
-    function formatVal(campo, raw){
-      if(!raw||raw==='(alterado)'||raw==='(dado complexo)') return '—';
-      if(campo==='time'){
-        try{
-          const arr=JSON.parse(raw);
-          return arr.filter(pk=>pk&&pk.nome).map(pk=>pk.nome).join(', ')||'(vazio)';
-        }catch{return raw;}
-      }
-      if(campo==='relacionamentos'){
-        try{
-          const arr=JSON.parse(raw);
-          return arr.filter(r=>r&&r.nome).map(r=>r.nome+(r.tipo?` (${r.tipo})`:'')).join(', ')||'(vazio)';
-        }catch{return raw;}
-      }
-      if(campo==='cores'){
-        try{
-          const c=JSON.parse(raw);
-          return `primária: ${c.primaria||'—'} · secundária: ${c.secundaria||'—'}`;
-        }catch{return raw;}
-      }
+    function formatVal(campo,raw){
+      if(!raw)return'—';
+      if(campo==='time'||campo==='relacionamentos'){try{const arr=JSON.parse(raw);return arr.filter(x=>x&&x.nome).map(x=>x.nome+(x.tipo?` (${x.tipo})`:'') ).join(', ')||'(vazio)';}catch{return raw;}}
+      if(campo==='cores'){try{const c=JSON.parse(raw);return`primária: ${c.primaria||'—'} · secundária: ${c.secundaria||'—'}`;}catch{return raw;}}
       return raw||'—';
     }
-
-    const anterior=formatVal(h.campo, h.valor_anterior);
-    const novo=formatVal(h.campo, h.valor_novo);
     return`<div class="hist-entry">
       <div><span class="hist-campo">${campo}</span><span class="hist-data">${data} · ${h.player_nome||'—'}</span></div>
-      <div class="hist-val">
-        <span style="text-decoration:line-through;opacity:.6">${anterior}</span>
-        → <span>${novo}</span>
-      </div>
+      <div class="hist-val"><span style="text-decoration:line-through;opacity:.6">${formatVal(h.campo,h.valor_anterior)}</span> → <span>${formatVal(h.campo,h.valor_novo)}</span></div>
     </div>`;
   }).join('');
 }
-function fecharHistorico(){
-  document.getElementById('hist-modal-overlay').style.display='none';
-}
+function fecharHistorico(){document.getElementById('hist-modal-overlay').style.display='none';}
 
 // ─── Autosave ─────────────────────────────────────────
 let _autoSaveTimer=null;
-function setAutoSaveStatus(msg,cor='var(--muted)'){
-  const el=document.getElementById('autosave-status');
-  if(el){el.textContent=msg;el.style.color=cor;}
-}
-function agendarAutoSave(){
-  if(!modoEdicao)return;
-  clearTimeout(_autoSaveTimer);
-  setAutoSaveStatus('Alterações não salvas...','#e8a020');
-  _autoSaveTimer=setTimeout(async()=>{
-    setAutoSaveStatus('Salvando...','var(--muted)');
-    await salvarFicha(true);
-  },500);
-}
-function iniciarAutoSave(){
-  // observa inputs, selects e textareas dentro do ficha-wrap
-  document.getElementById('ficha-wrap').addEventListener('input',agendarAutoSave);
-  document.getElementById('ficha-wrap').addEventListener('change',agendarAutoSave);
-}
+function setAutoSaveStatus(msg,cor='var(--muted)'){const el=document.getElementById('autosave-status');if(el){el.textContent=msg;el.style.color=cor;}}
+function agendarAutoSave(){if(!modoEdicao)return;clearTimeout(_autoSaveTimer);setAutoSaveStatus('Alterações não salvas...','#e8a020');_autoSaveTimer=setTimeout(async()=>{setAutoSaveStatus('Salvando...','var(--muted)');await salvarFicha(true);},500);}
+function iniciarAutoSave(){document.getElementById('ficha-wrap').addEventListener('input',agendarAutoSave);document.getElementById('ficha-wrap').addEventListener('change',agendarAutoSave);}
 
 // ══════════════════════════════════════
 // INVENTÁRIO
 // ══════════════════════════════════════
-let todosItens=[], inventarioFicha={}; // {item_id: {quantidade, id, nome, categoria, descricao}}
+let todosItens=[], inventarioFicha={};
 
 async function carregarInventario(){
   if(!ficha.id) return;
-  const [itensDB, invDB] = await Promise.all([
+  const [itensDB,invDB]=await Promise.all([
     apiGet('itens','order=categoria.asc,nome.asc'),
     apiGet('inventario_ficha',`ficha_id=eq.${ficha.id}&select=id,item_id,quantidade`)
   ]);
-  todosItens = itensDB||[];
-  inventarioFicha = {};
+  todosItens=itensDB||[];
+  inventarioFicha={};
   (invDB||[]).forEach(row=>{
-    const item = todosItens.find(i=>i.id===row.item_id);
-    if(item) inventarioFicha[row.item_id]={...item, quantidade:row.quantidade, inv_id:row.id};
+    const item=todosItens.find(i=>i.id===row.item_id);
+    if(item) inventarioFicha[row.item_id]={...item,quantidade:row.quantidade,inv_id:row.id};
   });
   renderInventario();
 }
 
 function renderInventario(){
-  const lista = document.getElementById('inv-lista-view');
-  const itens = Object.values(inventarioFicha).filter(i=>i.quantidade>0);
-  if(itens.length===0){
-    lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';
-    return;
-  }
-  // agrupa por categoria
+  const lista=document.getElementById('inv-lista-view');
+  const itens=Object.values(inventarioFicha).filter(i=>i.quantidade>0);
+  if(!itens.length){lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';return;}
   const grupos={};
-  itens.forEach(i=>{
-    if(!grupos[i.categoria]) grupos[i.categoria]=[];
-    grupos[i.categoria].push(i);
-  });
-  lista.innerHTML=`<table class="inv-tabela"><thead><tr>
-    <th>Item</th><th style="width:60px;text-align:center">Qtd</th>
-  </tr></thead><tbody>${
-    Object.entries(grupos).map(([cat,items])=>
-      items.map((item,idx)=>`
-        <tr class="inv-row" onclick="toggleInvDesc('${item.id}')">
-          <td><strong>${item.nome}</strong><span class="inv-cat-badge">${item.categoria}</span></td>
-          <td style="text-align:center;font-weight:700">${item.quantidade}</td>
-        </tr>
-        <tr id="inv-desc-${item.id}" style="display:none">
-          <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px 14px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao}</td>
-        </tr>`).join('')
-    ).join('')
+  itens.forEach(i=>{if(!grupos[i.categoria])grupos[i.categoria]=[];grupos[i.categoria].push(i);});
+  lista.innerHTML=`<table class="inv-tabela"><thead><tr><th>Item</th><th style="width:60px;text-align:center">Qtd</th></tr></thead><tbody>${
+    Object.entries(grupos).map(([cat,items])=>items.map(item=>`
+      <tr class="inv-row" onclick="toggleInvDesc('${item.id}')">
+        <td><strong>${item.nome}</strong><span class="inv-cat-badge">${item.categoria}</span></td>
+        <td style="text-align:center;font-weight:700">${item.quantidade}</td>
+      </tr>
+      <tr id="inv-desc-${item.id}" style="display:none">
+        <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao||'—'}</td>
+      </tr>`).join('')).join('')
   }</tbody></table>`;
 }
 
-function toggleInvDesc(id){
-  const row=document.getElementById(`inv-desc-${id}`);
-  if(row) row.style.display=row.style.display==='none'?'':'none';
-}
+function toggleInvDesc(id){const row=document.getElementById(`inv-desc-${id}`);if(row)row.style.display=row.style.display==='none'?'':'none';}
 
 async function abrirModalInventario(){
-  if(todosItens.length===0){
-    const itensDB=await apiGet('itens','order=categoria.asc,nome.asc');
-    todosItens=itensDB||[];
-  }
+  if(!todosItens.length){const res=await apiGet('itens','order=categoria.asc,nome.asc');todosItens=res||[];}
   document.getElementById('inv-busca').value='';
   document.getElementById('inv-filtro-cat').value='';
   renderItensModal();
   document.getElementById('inv-modal-overlay').style.display='flex';
 }
-
-function fecharModalInventario(){
-  document.getElementById('inv-modal-overlay').style.display='none';
-}
-
-function filtrarItensModal(){
-  renderItensModal();
-}
+function fecharModalInventario(){document.getElementById('inv-modal-overlay').style.display='none';}
+function filtrarItensModal(){renderItensModal();}
 
 function renderItensModal(){
   const busca=document.getElementById('inv-busca').value.toLowerCase();
   const cat=document.getElementById('inv-filtro-cat').value;
   let lista=todosItens;
   if(cat) lista=lista.filter(i=>i.categoria===cat);
-  if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||i.descricao.toLowerCase().includes(busca));
+  if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||(i.descricao||'').toLowerCase().includes(busca));
   const el=document.getElementById('inv-modal-lista');
   if(!lista.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#aaa;font-size:13px">Nenhum item encontrado.</div>';return;}
   el.innerHTML=lista.map(item=>{
     const qty=inventarioFicha[item.id]?.quantidade||0;
     return`<div class="inv-modal-item">
       <div class="inv-modal-info">
-        <div class="inv-modal-nome">${item.nome} ${item.evento?'<span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>':''}</div>
+        <div class="inv-modal-nome">${item.nome}${item.evento?' <span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>':''}</div>
         <div class="inv-modal-cat">${item.categoria}</div>
-        <div class="inv-modal-desc">${item.descricao}</div>
+        <div class="inv-modal-desc">${item.descricao||''}</div>
       </div>
       <div class="inv-modal-qty">
         <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',-1)">−</button>
@@ -1191,33 +996,26 @@ function renderItensModal(){
   }).join('');
 }
 
-async function ajustarQty(itemId, delta){
+async function ajustarQty(itemId,delta){
   const item=todosItens.find(i=>i.id===itemId);
   if(!item||!ficha.id) return;
   const atual=inventarioFicha[itemId]?.quantidade||0;
-  const nova=Math.max(0, atual+delta);
-  // atualiza UI imediatamente
+  const nova=Math.max(0,atual+delta);
   const numEl=document.getElementById(`inv-qty-${itemId}`);
   if(numEl) numEl.textContent=nova;
-  if(nova===0 && inventarioFicha[itemId]){
+  if(nova===0&&inventarioFicha[itemId]){
     await apiDel('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`);
     delete inventarioFicha[itemId];
-  } else if(nova>0 && !inventarioFicha[itemId]){
+  } else if(nova>0&&!inventarioFicha[itemId]){
     const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:nova});
     if(res&&res[0]) inventarioFicha[itemId]={...item,quantidade:nova,inv_id:res[0].id};
-  } else if(nova>0 && inventarioFicha[itemId]){
+  } else if(nova>0&&inventarioFicha[itemId]){
     await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`,{quantidade:nova});
     inventarioFicha[itemId].quantidade=nova;
   }
-  // feedback salvo
   const statusEl=document.getElementById('inv-save-status');
   if(statusEl){statusEl.textContent='✓ Salvo';statusEl.style.color='#1a7a1a';setTimeout(()=>statusEl.textContent='',2000);}
   renderInventario();
-}
-
-// helper apiDel para ficha (usa mesma base do apiGet/apiPost/apiPatch)
-function apiDel(table, query){
-  return api(`${table}?${query}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});
 }
 
 // ─── Init ─────────────────────────────────────────────
@@ -1228,22 +1026,18 @@ async function init(){
     return;
   }
   try{
-    // busca personagem pelo slug
     const ps=await apiGet('personagens',`slug=eq.${pid}`);
     if(!ps||!ps[0]){
-      document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:14px">Não encontrei "<strong>${pid}</strong>" no nosso sistema.<br><small>Você anotou o contato delu corretamente?</small></div>`;
+      document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:14px">Não encontrei "<strong>${pid}</strong>" no nosso sistema.</div>`;
       return;
     }
     personagem=ps[0];
-    // busca ficha — tenta por slug primeiro, depois por id
     let fichasRes=await apiGet('fichas',`personagem_slug=eq.${pid}`);
-    if(!fichasRes||fichasRes.length===0){
-      fichasRes=await apiGet('fichas',`personagem_id=eq.${personagem.id}`);
-    }
+    if(!fichasRes||fichasRes.length===0) fichasRes=await apiGet('fichas',`personagem_id=eq.${personagem.id}`);
     ficha=fichasRes&&fichasRes[0]?fichasRes[0]:{
       id:null,banner:null,slogan:'',pe:0,rep:0,cs:0,pv:0,
-      idade:'',ocupacao:'',origem:'',inventario:'',
-      biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
+      idade:'',ocupacao:'',origem:'',biografia:'',anotacoes:'',
+      time:[{},{},{},{},{},{}],relacionamentos:[]
     };
     ['time','relacionamentos','box'].forEach(k=>{
       if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];}}
@@ -1256,25 +1050,16 @@ async function init(){
     aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
     document.title=`Ficha — ${personagem.nome}`;
     const sessao=lerSessaoPlayer();
-    if(sessao && personagem.player.toLowerCase()===sessao.nome.toLowerCase()){
+    if(sessao&&personagem.player.toLowerCase()===sessao.nome.toLowerCase()){
       jogadorLogado={nome:sessao.nome,player:sessao.nome};
     }
     renderFicha();
-    // cria ficha no banco se ainda não existe (necessário para o inventário funcionar)
-    if(!ficha.id){
-      const res=await apiPost('fichas',{personagem_slug:pid,personagem_id:personagem.id,
-        slogan:'',pe:0,rep:0,cs:0,pv:0,idade:'',ocupacao:'',origem:'',
-        biografia:'',anotacoes:'',time:[],box:[],relacionamentos:[],
-        updated_at:new Date().toISOString()
-      });
-      if(res&&res[0]) ficha.id=res[0].id;
-    }
     await carregarInventario();
     document.getElementById('loading-overlay').style.display='none';
     document.getElementById('top-bar').style.display='flex';
     document.getElementById('ficha-wrap').style.display='block';
     atualizarTopBar();
-  } catch(e){
+  }catch(e){
     console.error('Erro no init da ficha:',e);
     document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:13px;max-width:400px;text-align:center">❌ Erro ao carregar a ficha:<br><code style="font-size:11px">${e.message}</code><br><br><button onclick="location.reload()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:none;background:#2563a8;color:#fff;cursor:pointer">Tentar novamente</button></div>`;
   }
