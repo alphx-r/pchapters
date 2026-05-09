@@ -995,8 +995,7 @@ function renderInventario(){
       <div class="inv-card">
         <div class="inv-card-top">
           <canvas class="inv-card-sprite" width="32" height="32" data-src="${item.sprite||FALLBACK_ITEM_SPRITE}" style="width:32px;height:32px;image-rendering:pixelated"></canvas>
-          <div class="inv-card-nome">${item.nome}</div>
-          <div class="inv-card-qty">x${item.quantidade}</div>
+          <div class="inv-card-nome">${item.nome} <span class="inv-card-qty">x${item.quantidade}</span></div>
         </div>
         <div class="inv-card-desc">${item.descricao||''}</div>
       </div>`).join('')
