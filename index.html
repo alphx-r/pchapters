@@ -633,7 +633,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               </label>
             </div>
             <button class="btn btn-primary btn-sm" style="align-self:flex-end" onclick="abrirModalItem()">+ Novo item</button>
-            <button class="btn btn-sm" id="btn-auto-sprite" style="align-self:flex-end;background:#e8f4e8;border:1.5px solid #a8d8a8;color:#1a6a1a" onclick="autoSpriteTodosItens()">✨ Auto-sprite</button>
+            <button class="btn btn-sm" id="btn-auto-sprite" style="align-self:flex-end;background:#e8f4e8;border:1.5px solid #a8d8a8;color:#1a6a1a" onclick="autoSpriteTodosItens()">🔍 Buscar Sprites</button>
           </div>
           <div id="itens-contagem" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
           <div class="adm-table-wrap">
@@ -643,8 +643,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
                   <th>Sprite</th>
                   <th>Nome</th>
                   <th>Categoria</th>
-                  <th>Descrição</th>
-                  <th style="text-align:center">Evento</th>
                   <th>Ações</th>
                 </tr>
               </thead>
@@ -844,6 +842,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <button class="modal-close" onclick="fecharModalItem()">✕</button>
     <div class="modal-title" id="modal-item-title">Novo Item</div>
     <input type="hidden" id="modal-item-id"/>
+    <input type="hidden" id="modal-item-sprite"/>
     <div class="g2">
       <div class="field">
         <label>Nome</label>
@@ -869,21 +868,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <label>Descrição</label>
       <textarea id="modal-item-desc" rows="3" placeholder="Descreva o efeito ou uso do item..."
         style="padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);width:100%;resize:vertical"></textarea>
-    </div>
-    <!-- Sprite -->
-    <div class="field">
-      <label>Sprite (PokéAPI slug ou URL)</label>
-      <div style="display:flex;gap:8px;align-items:center">
-        <input type="text" id="modal-item-sprite-slug" placeholder="Ex: poke-ball, potion, master-ball..." style="flex:1" oninput="previewItemSprite()"/>
-        <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);white-space:nowrap" onclick="buscarSpritePokeAPI()">🔍 Buscar</button>
-      </div>
-      <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-        <div id="modal-item-sprite-preview" style="width:40px;height:40px;background:var(--surface2);border:1.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden">
-          <span style="font-size:18px">❓</span>
-        </div>
-        <div id="modal-item-sprite-status" style="font-size:11px;color:var(--muted)">Digite o slug do item na PokéAPI e clique em Buscar</div>
-      </div>
-      <input type="hidden" id="modal-item-sprite"/>
     </div>
     <div class="field">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--text)">
@@ -1649,59 +1633,52 @@ async function carregarItens(){
   itensDB = res || [];
 }
 
-// Tenta buscar sprite da PokéAPI para todos os itens sem sprite
+// Tenta buscar sprite da PokéAPI para todos os itens
 async function autoSpriteTodosItens(){
   const btn = document.getElementById('btn-auto-sprite');
-  const semSprite = itensDB.filter(i => !i.sprite);
-  if(!semSprite.length){ alert('Todos os itens já têm sprite cadastrado!'); return; }
+  if(!itensDB.length){ alert('Nenhum item cadastrado.'); return; }
   btn.disabled = true;
-  btn.textContent = `⏳ Buscando... (0/${semSprite.length})`;
+  btn.textContent = `⏳ Buscando... (0/${itensDB.length})`;
 
   const BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
-  const FALLBACK_SPRITE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 
-  // Testa se uma URL de imagem existe
   function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url; }); }
 
-  // Gera variações de slug a partir do nome do item
   function slugVariacoes(nome){
     const base = nome.toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-      .replace(/[éèê]/g,'e').replace(/[áàâ]/g,'a').replace(/[ó]/g,'o')
       .replace(/[^a-z0-9\s\-]/g,'')
       .trim().replace(/\s+/g,'-');
-    const variantes = [base];
-    // Pokébola → poke-ball
-    if(base==='pokebola'||base==='pokeball') variantes.push('poke-ball');
-    // Sem acento alternativo
+    const variantes = new Set([base]);
+    if(base==='pokebola'||base==='pokeball') variantes.add('poke-ball');
     const semAcento = nome.toLowerCase().replace(/[^a-z0-9\s\-]/gi,'').trim().replace(/\s+/g,'-');
-    if(!variantes.includes(semAcento)) variantes.push(semAcento);
-    return variantes;
+    variantes.add(semAcento);
+    return [...variantes];
   }
 
   let atualizados = 0, naoEncontrados = [];
 
-  for(let idx=0; idx<semSprite.length; idx++){
-    const item = semSprite[idx];
-    btn.textContent = `⏳ Buscando... (${idx+1}/${semSprite.length})`;
+  for(let idx=0; idx<itensDB.length; idx++){
+    const item = itensDB[idx];
+    btn.textContent = `⏳ Buscando... (${idx+1}/${itensDB.length})`;
     const slugs = slugVariacoes(item.nome);
     let urlEncontrada = null;
     for(const slug of slugs){
       const url = await testarUrl(`${BASE}${slug}.png`);
       if(url){ urlEncontrada=url; break; }
     }
-    if(urlEncontrada){
+    if(urlEncontrada && urlEncontrada !== item.sprite){
       await dbPatch('itens', `id=eq.${item.id}`, { sprite: urlEncontrada });
       item.sprite = urlEncontrada;
       atualizados++;
-    } else {
+    } else if(!urlEncontrada){
       naoEncontrados.push(item.nome);
     }
   }
 
   renderTbodyItens();
   btn.disabled = false;
-  btn.textContent = '✨ Auto-sprite';
+  btn.textContent = '🔍 Buscar Sprites';
 
   let msg = `✅ ${atualizados} item${atualizados!==1?'s':''} atualizado${atualizados!==1?'s':''} com sprite.`;
   if(naoEncontrados.length) msg += `\n\n❌ Sem sprite na PokéAPI:\n${naoEncontrados.join('\n')}`;
@@ -1719,22 +1696,19 @@ function renderTbodyItens(){
   const contEl = document.getElementById('itens-contagem');
   if(contEl) contEl.textContent = `${lista.length} item${lista.length!==1?'s':''} encontrado${lista.length!==1?'s':''}`;
   document.getElementById('tbody-itens').innerHTML = lista.length === 0
-    ? `<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Nenhum item encontrado.</td></tr>`
+    ? `<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:20px">Nenhum item encontrado.</td></tr>`
     : lista.map(item => `
       <tr>
-        <td style="width:44px;text-align:center">
+        <td style="width:48px;text-align:center">
           ${item.sprite
             ? `<img src="${item.sprite}" style="width:32px;height:32px;object-fit:contain;image-rendering:pixelated" onerror="this.replaceWith(document.createTextNode('—'))"/>`
-            : '<span style="font-size:11px;color:var(--muted)">sem sprite</span>'}
+            : '<span style="font-size:11px;color:var(--muted)">—</span>'}
         </td>
-        <td><strong>${item.nome}</strong></td>
+        <td>
+          <strong>${item.nome}</strong>
+          ${item.evento ? '<span style="font-size:10px;font-weight:700;color:#e07020;background:#fff3e0;padding:1px 6px;border-radius:4px;margin-left:6px">EVENTO</span>' : ''}
+        </td>
         <td><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;color:var(--muted)">${item.categoria}</span></td>
-        <td style="font-size:12px;color:var(--muted);max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(item.descricao||'').replace(/"/g,'&quot;')}">${item.descricao||'—'}</td>
-        <td style="text-align:center">
-          ${item.evento
-            ? '<span style="font-size:11px;font-weight:700;color:#e07020;background:#fff3e0;padding:2px 8px;border-radius:5px">EVENTO</span>'
-            : '<span style="color:var(--muted);font-size:12px">—</span>'}
-        </td>
         <td style="white-space:nowrap">
           <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px" onclick="abrirModalItem('${item.id}')">✏️ Editar</button>
         </td>
@@ -1750,19 +1724,8 @@ function abrirModalItem(id){
   document.getElementById('modal-item-desc').value  = item?.descricao || '';
   document.getElementById('modal-item-evento').checked = !!item?.evento;
   document.getElementById('modal-item-sprite').value = item?.sprite || '';
-  document.getElementById('modal-item-sprite-slug').value = '';
   document.getElementById('modal-item-err').style.display = 'none';
   document.getElementById('modal-item-del-btn').style.display = item ? 'inline-block' : 'none';
-  // preview sprite existente
-  const prev = document.getElementById('modal-item-sprite-preview');
-  const status = document.getElementById('modal-item-sprite-status');
-  if(item?.sprite){
-    prev.innerHTML = `<img src="${item.sprite}" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>`;
-    status.textContent = 'Sprite atual';status.style.color='#1a7a1a';
-  } else {
-    prev.innerHTML = '<span style="font-size:18px">❓</span>';
-    status.textContent = 'Sem sprite — digite o slug e clique em Buscar';status.style.color='var(--muted)';
-  }
   document.getElementById('modal-item').style.display = 'flex';
 }
 
