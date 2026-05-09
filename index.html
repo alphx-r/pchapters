@@ -2,2225 +2,1266 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>pchapters</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Ficha do Personagem</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --brand:#1a3a5c;--brand-mid:#2563a8;--brand-light:#e8f0fb;
-  --accent:#e8a020;--accent-light:#fdf3dc;
-  --bg:#f4f6fa;--surface:#fff;--surface2:#f0f3f8;
-  --border:#dde3ee;--border2:#c8d0e0;
-  --text:#1a1f2e;--muted:#6b7a99;
-  --red:#c03030;--green:#1a7a1a;
-  --r:10px;--font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
+  --accent:#1a1a1a;
+  --bg:#f4f6fa;--surface:#ffffff;--surface2:#f0f0f0;
+  --text:#1a1f2e;--muted:#666666;--border:#d0d0d0;
+  --font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
 }
 html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);color:var(--text)}
-.nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:100}
-.nav-logo{font-family:var(--font-title);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px}
-.nav-logo span{color:var(--accent)}
-.nav-links{display:flex;gap:4px}
-.nav-link{font-size:13px;font-weight:600;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:none;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s}
-.nav-link:hover{background:rgba(255,255,255,.12);color:#fff}
-.nav-link.active{background:rgba(255,255,255,.18);color:#fff}
-.nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;cursor:pointer;transition:all .2s}
-.nav-login:hover{background:var(--accent);border-color:var(--accent)}
-.nav-login.active{background:var(--accent);border-color:var(--accent)}
-.page{display:none;padding:28px;max-width:1000px;margin:0 auto}
-.page.active{display:block}
-.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-.field label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-.field input,.field select,.field textarea{padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);transition:border .2s;width:100%}
-.field input:focus,.field select:focus{outline:none;border-color:var(--brand-mid)}
-.field input[type=color]{height:40px;padding:4px 8px;cursor:pointer}
-.btn{padding:9px 18px;border-radius:8px;border:none;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-block}
-.btn-primary{background:var(--brand-mid);color:#fff}
-.btn-primary:hover{background:var(--brand)}
-.btn-warn{background:#fff8e0;color:#7a5010;border:1px solid #e8d080}
-.btn-warn:hover{background:#fdf0b0}
-.btn-danger{background:#fde8e8;color:var(--red);border:1px solid #f0c0c0}
-.btn-danger:hover{background:#f8c8c8}
-.btn-sm{padding:5px 11px;font-size:12px}
-.btn-full{width:100%}
-.fb{font-size:12px;font-weight:700;text-align:center;padding:7px 10px;border-radius:6px;margin-top:8px;display:none}
-.fb-ok{background:#e0f0e0;color:var(--green)}
-.fb-err{background:#fde8e8;color:var(--red)}
-/* loading overlay */
-.loading-overlay{position:fixed;inset:0;background:var(--bg, #f4f6fa);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:#e53e3e;border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* LOADING */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.loading-spinner{width:36px;height:36px;border:3px solid #ccc;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 .loading-text{font-size:14px;color:var(--muted);font-weight:600}
-/* ROLADOR */
-.roller-header{text-align:center;margin-bottom:28px;padding-top:8px}
-.roller-header h2{font-family:var(--font-title);font-size:22px;color:var(--brand);margin-bottom:6px}
-.roller-header p{font-size:14px;color:var(--muted)}
-.roller-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
-.ctrl-group{display:flex;flex-direction:column;gap:6px}
-.ctrl-group label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
-.ctrl-group select,.ctrl-group input{padding:9px 12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);transition:border .2s;width:100%}
-.ctrl-group select:focus,.ctrl-group input:focus{outline:none;border-color:var(--brand-mid)}
-.badges-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:12px 16px;background:#fff;border-radius:var(--r);border:1.5px solid #e0e0e0}
-.badges-label{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
-.badge-btn{width:34px;height:34px;border-radius:50%;border:2px solid #d0d0d0;background:#f4f4f4;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none;line-height:1}
-.badge-btn.earned{background:#fff8e0;border-color:#e8a020}
-.badges-info{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap;font-weight:600}
-.roll-btn{width:100%;padding:15px;background:var(--brand-mid);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-title);font-size:16px;letter-spacing:1.5px;cursor:pointer;margin-bottom:24px}
-.roll-btn:hover{background:var(--brand-mid)}
-.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:24px}
-.poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:16px;transition:all .25s;animation:fadeUp .35s both}
-.poke-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 14px rgba(37,99,168,.12)}
-.poke-card-left{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0}
-.poke-card-img{width:108px;height:108px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.poke-card-img img{width:108px;height:108px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
-.poke-card-name{font-family:var(--font-title);font-size:12px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
-.poke-card-info{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
-.poke-card-meta{display:flex;flex-wrap:wrap;justify-content:center;gap:3px}
-.poke-rarity{display:inline-block;font-size:10px;font-weight:700;padding:2px 9px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px}
-.rc{background:#e0f0e0;color:#1a6a1a}.ri{background:#dde8f8;color:#1a4a8a}.rr{background:#f0e8ff;color:#5a1a9a}.rrr{background:#fff0d8;color:#8a4a00}
-.type-pill{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.3px;margin:1px}
-.t-fire{background:#ff9b4a;color:#7a2a00}.t-water{background:#6ab8ff;color:#003a6a}.t-grass{background:#78d878;color:#1a5a1a}.t-normal{background:#c8c8a0;color:#4a4a2a}.t-electric{background:#ffe030;color:#5a4a00}.t-psychic{background:#ff8fb0;color:#6a0030}.t-steel{background:#aababb;color:#2a3a3a}.t-fairy{background:#ffaad8;color:#6a0050}.t-ghost{background:#9090c0;color:#1a1a4a}.t-dragon{background:#7060f0;color:#fff}.t-ice{background:#96d8d8;color:#1a4a4a}.t-fighting{background:#c03030;color:#fff}.t-rock{background:#b8a050;color:#3a2a00}.t-ground{background:#e0c060;color:#3a2a00}.t-poison{background:#a060c0;color:#fff}.t-bug{background:#a0c020;color:#2a3a00}.t-dark{background:#705040;color:#fff}.t-flying{background:#88aaee;color:#1a1a5a}
-.gender-icon{font-size:12px;margin-left:3px}
-.poke-lvl,.poke-hab{font-size:11px;color:var(--muted);text-align:center}
-/* FICHÁRIO */
-.ficha-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-top:8px}
-.ficha-header h2{font-family:var(--font-title);font-size:20px;color:var(--text);font-weight:700}
-.search-bar{padding:9px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;width:220px;color:var(--text);transition:border .2s}
-.search-bar:focus{outline:none;border-color:var(--brand-mid)}
-.player-section{margin-bottom:28px}
-.player-section-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.player-section-name{font-family:var(--font-title);font-size:12px;color:var(--text);letter-spacing:.8px;text-transform:uppercase}
-.player-pontos-box{display:flex;align-items:center;gap:5px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:3px 12px}
-.player-pontos-lbl{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.player-pontos-val{font-size:13px;font-weight:700;color:var(--text)}
-.fichas-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
-.ficha-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:all .2s;padding:16px 14px;display:flex;flex-direction:row;align-items:center;gap:12px}
-.ficha-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 14px rgba(37,99,168,.1)}
-.ficha-card-avatar{width:51px;height:51px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
-.ficha-card-avatar img{width:51px;height:51px;object-fit:cover;border-radius:50%}
-.ficha-name{font-family:var(--font-title);font-size:12px;color:var(--text);line-height:1.4;letter-spacing:.3px}
-.ficha-photoplayer{font-size:11px;color:#aab0be;font-style:italic;line-height:1.3;margin-top:2px}
-/* ADM */
-.adm-login-wrap{max-width:380px;margin:40px auto}
-.login-cols{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.adm-login-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:32px 28px}
-.adm-login-icon{width:56px;height:56px;background:var(--brand-light);border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:26px}
-.adm-login-title{font-family:var(--font-title);font-size:18px;color:var(--brand);text-align:center;margin-bottom:4px}
-.adm-login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px}
-.adm-layout{display:grid;grid-template-columns:210px 1fr;gap:20px;padding-top:8px;align-items:start}
-.adm-sidebar{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;height:fit-content;position:sticky;top:78px}
-.adm-sidebar-user{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);word-break:break-all}
-.adm-nav-btn{display:block;width:100%;text-align:left;padding:9px 12px;border-radius:8px;border:none;background:transparent;font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;margin-bottom:3px}
-.adm-nav-btn:hover{background:var(--brand-light);color:var(--brand-mid)}
-.adm-nav-btn.active{background:var(--brand-light);color:var(--brand-mid)}
-.adm-nav-sep{height:1px;background:var(--border);margin:8px 0}
-.adm-nav-danger{color:var(--red)!important}
-.adm-nav-danger:hover{background:#fde8e8!important}
-.adm-content{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:24px;min-height:500px;min-width:0;width:100%}
-.adm-section{display:none}
-.adm-section.active{display:block}
-.sec-title{font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:4px}
-.sec-sub{font-size:13px;color:var(--muted);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
-.box{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px}
-.box-title{font-size:12px;font-weight:700;color:var(--brand-mid);margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px}
-.adm-table{width:100%;border-collapse:collapse;font-size:13px}
-.adm-table th{text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1.5px solid var(--border)}
-.adm-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
-.adm-table tr:last-child td{border-bottom:none}
-.adm-table tr:hover td{background:var(--surface2)}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-.tipos-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
-.tipo-tag{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;user-select:none;transition:all .15px}
-.tipo-tag:hover{border-color:var(--brand-mid)}
-.tipo-tag.sel{background:var(--brand-mid);color:#fff;border-color:var(--brand-mid)}
-/* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999;display:flex;align-items:center;justify-content:center}
-.modal-box{background:var(--surface);border-radius:var(--r);padding:28px;width:100%;max-width:440px;box-shadow:0 8px 40px rgba(0,0,0,.2);position:relative}
-.modal-title{font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:18px}
-.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
-/* HISTÓRICO */
-.hist-entry{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
-.hist-header{padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.hist-body{padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap}
-.hist-poke{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border);min-width:160px}
-/* ROLADOR DE DADOS */
-.dice-roller-wrap{margin:0 auto}
-.dice-header{text-align:center;margin-bottom:28px;padding-top:8px}
-.dice-header h2{font-family:var(--font-title);font-size:22px;color:var(--brand);margin-bottom:6px}
-.dice-header p{font-size:14px;color:var(--muted)}
-.dice-controls{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px}
-.dice-result-box{background:var(--surface);border:2px solid var(--border);border-radius:var(--r);padding:24px 20px;text-align:center;margin-bottom:20px;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;transition:border-color .3s}
-.dice-result-box.rolled{border-color:var(--brand-mid);animation:fadeUp .3s both}
-.dice-result-num{font-family:var(--font-title);font-size:52px;font-weight:700;color:var(--brand);line-height:1}
-.dice-result-label{font-size:13px;color:var(--muted);line-height:1.5}
-.dice-result-max{font-size:12px;color:var(--muted);font-weight:600}
-.dice-hist-entry{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:10px;animation:fadeUp .25s both}
-.dice-hist-entry:hover{border-color:var(--brand-mid);background:var(--surface2)}
-.dice-hist-msg{font-size:13px;color:var(--text);flex:1}
-.dice-hist-msg strong{color:var(--brand-mid)}
-.dice-hist-num{font-family:var(--font-title);font-size:18px;font-weight:700;color:var(--brand);min-width:32px;text-align:right}
-.dice-hist-time{font-size:11px;color:var(--muted);white-space:nowrap}
-.dice-sides-wrap{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px}
-.dice-side-btn{padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
-.dice-side-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
-.dice-side-btn.active{background:var(--brand-mid);border-color:var(--brand-mid);color:#fff}
-.adm-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-/* ACCORDION PLAYERS */
-.acc-player{border:1.5px solid var(--border);border-radius:8px;margin-bottom:8px;overflow:hidden}
-.acc-player-header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);cursor:pointer;user-select:none;transition:background .15s}
-.acc-player-header:hover{background:var(--brand-light)}
-.acc-chevron{font-size:11px;color:var(--muted);transition:transform .2s;flex-shrink:0}
-.acc-player-header.open .acc-chevron{transform:rotate(90deg)}
-.acc-player-nome{font-weight:700;font-size:13px;color:var(--text);flex:1}
-.acc-player-meta{font-size:11px;color:var(--muted);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.acc-player-body{display:none;padding:10px 14px;background:var(--surface)}
-.acc-player-body.open{display:block}
-/* POR BIOMA */
-.bioma-tab-btn{padding:7px 18px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
-.bioma-tab-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
-.bioma-tab-btn.active{background:var(--brand);border-color:var(--brand);color:#fff}
-.bioma-raridade-section{margin-bottom:28px}
-.bioma-raridade-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--border)}
-.bioma-poke-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
-.bioma-poke-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .2s}
-.bioma-poke-card:hover{border-color:var(--brand-mid);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.bioma-poke-sprite{width:64px;height:64px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.bioma-poke-sprite img{width:64px;height:64px;object-fit:contain;image-rendering:pixelated}
-.bioma-poke-name{font-family:var(--font-title);font-size:11px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
-.bioma-poke-tipos{display:flex;flex-wrap:wrap;justify-content:center;gap:2px}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes diceShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(5deg)}}
+/* LOGIN */
+.login-wrap{max-width:380px;margin:80px auto;background:var(--surface);border:2px solid var(--accent);border-radius:4px;padding:32px;text-align:center}
+.login-wrap h2{font-family:var(--font-title);font-size:18px;color:#000;margin-bottom:6px;font-weight:700}
+.login-wrap p{font-size:12px;color:var(--muted);margin-bottom:24px;font-family:var(--font-body)}
+.field{text-align:left;margin-bottom:14px}
+.field label{display:block;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;font-family:var(--font-body)}
+.field input{width:100%;padding:8px 10px;border:1.5px solid #ccc;border-radius:3px;font-family:var(--font-body);font-size:13px;color:var(--text);background:var(--surface);outline:none}
+.field input:focus{border-color:var(--accent)}
+.btn{padding:8px 18px;border-radius:3px;border:none;font-family:var(--font-body);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-danger{background:#fee2e2;color:#c00;border:1px solid #fca5a5}
+.btn-sm{padding:5px 12px;font-size:11px}
+.fb-err{background:#fee2e2;color:#c00;border:1px solid #fca5a5;border-radius:3px;padding:8px 12px;font-size:12px;font-weight:600;margin-top:10px}
 
-@media(max-width:768px){
-  .nav{padding:0 14px;height:52px}
-  .nav-logo{font-size:14px}
-  .nav-link{padding:6px 10px;font-size:12px}
-  .nav-login{padding:6px 12px;font-size:11px}
-  .page{padding:16px}
-  .roller-header{margin-bottom:18px}
-  .roller-header h2{font-size:18px}
-  .roller-controls{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
-  .badges-row{flex-wrap:wrap;row-gap:8px;padding:10px 12px;align-items:center}
-  .badges-label{flex-shrink:0;margin-right:2px}
-  .badge-btn{width:28px;height:28px;font-size:14px;flex-shrink:0}
-  .badges-info{width:100%;text-align:center;margin-left:0;font-size:11px;order:99}
-  .roll-btn{font-size:14px;padding:13px}
-  .results-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
-  .poke-card{padding:12px;gap:12px}
-  .poke-card-img{width:80px;height:80px}
-  .poke-card-img img{width:80px;height:80px}
-  .hist-body{gap:6px;display:grid;grid-template-columns:1fr 1fr}
-  .hist-poke{min-width:0;width:auto}
-  .hist-header{flex-direction:column;align-items:flex-start;gap:4px}
-  .ficha-header{flex-direction:column;align-items:flex-start;gap:10px}
-  .search-bar{width:100%}
-  .fichas-grid{grid-template-columns:1fr 1fr}
-  .ficha-card{padding:12px 10px;gap:8px}
-  .ficha-card-avatar{width:40px;height:40px}
-  .ficha-card-avatar img{width:40px;height:40px}
-  .ficha-name{font-size:11px}
-  .adm-login-wrap{margin:20px auto;padding:0 4px}
-  .login-cols{grid-template-columns:1fr}
-  .adm-layout{grid-template-columns:1fr;gap:12px}
-  .adm-sidebar{position:static;padding:10px}
-  .adm-sidebar-user{display:none}
-  .adm-nav-btn{padding:8px 10px;font-size:12px;display:inline-block;width:auto;margin-right:4px;margin-bottom:4px}
-  .adm-content{padding:16px;min-height:auto}
-  .g2{grid-template-columns:1fr}
-  .g3{grid-template-columns:1fr 1fr}
-  .adm-table{font-size:12px}
-  .adm-table th{padding:6px 8px}
-  .adm-table td{padding:7px 8px}
-  .modal-box{padding:20px 16px;margin:0 12px;max-width:100%}
-  .modal-box .g2{grid-template-columns:1fr}
-  .bioma-poke-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
-  .bioma-tab-btn{padding:6px 12px;font-size:12px}
-  .dice-result-num{font-size:40px}
-  .dice-sides-wrap{gap:4px}
-  .dice-side-btn{padding:5px 10px;font-size:11px}
-  .dice-hist-entry{flex-wrap:wrap;gap:6px}
-  #sec-editor>div[style*="grid"]{display:flex;flex-direction:column;gap:12px}
-}
-@media(max-width:480px){
-  .nav-links{gap:2px}
-  .nav-link{padding:5px 8px;font-size:11px}
-  .fichas-grid{grid-template-columns:1fr}
-  .poke-card-img{width:70px;height:70px}
-  .poke-card-img img{width:70px;height:70px}
-  .g3{grid-template-columns:1fr}
-  .badge-btn{width:26px;height:26px;font-size:13px}
+/* TOP BAR */
+.top-bar{background:var(--cor-cabecalho,#1a1a1a);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
+.top-bar-title{font-family:var(--font-title);font-size:14px;color:#fff;font-weight:700}
+.top-bar-actions{display:flex;gap:8px;align-items:center}
+
+/* FICHA WRAP */
+.ficha-wrap{max-width:1000px;margin:0 auto;padding:16px 12px 60px}
+
+/* CABEÇALHO */
+.ficha-header{background:var(--bg);margin-bottom:1px}
+.header-name-row{background:var(--cor-cabecalho,#1a1a1a);padding:7px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ficha-title{font-family:var(--font-title);font-size:18px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase}
+.pe-badge{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body);white-space:nowrap}
+.header-slogan-row{background:var(--cor-slogan,#3a3a3a);padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ficha-slogan{font-size:10px;font-style:normal;color:#fff;font-family:var(--font-body)}
+/* grid: banner ocupa tudo menos coluna direita de foto */
+.header-body{display:grid;grid-template-columns:1fr 220px;height:264px;border-top:2px solid var(--bg)}
+.header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#2a2a2a;position:relative}
+.header-banner-col img{width:100%;height:100%;object-fit:cover;display:block}
+.header-banner-placeholder{font-size:12px;color:#888;font-family:var(--font-body);text-align:center;padding:20px;pointer-events:none}
+.header-banner-edit-btn{position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,.65);color:#fff;border:none;border-radius:3px;font-size:10px;font-family:var(--font-body);padding:4px 10px;cursor:pointer;opacity:0;transition:opacity .2s}
+.header-banner-col:hover .header-banner-edit-btn{opacity:1}
+.header-photo-col{border-left:2px solid var(--bg);overflow:hidden;display:flex;align-items:center;justify-content:center;background:#ddd;position:relative}
+.header-photo-col img{width:220px;height:100%;object-fit:cover;display:block}
+.header-photo-placeholder{font-size:11px;color:#aaa;font-family:var(--font-body);text-align:center;padding:10px}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
+.stat-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:10px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
+.stat-header:last-child{border-right:none}
+.stat-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:4px}
+.stat-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:12px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
+.stat-val:last-child{border-right:none}
+
+/* DADOS GRID */
+.dados-grid-wrap{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto auto;margin-bottom:1px}
+.dado-header{background:var(--cor-dados,#1a1a1a);padding:5px 8px;text-align:center;font-size:13px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
+.dado-header:last-child{border-right:none}
+.dado-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:13px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
+.dado-val:last-child{border-right:none}
+.dados-grid-wrap .dado-header{border-bottom:1px solid var(--bg)}
+.dados-grid-wrap .dado-val{border-bottom:1.5px solid var(--bg)}
+
+/* SECTION */
+/* INVENTÁRIO */
+.inv-tabela{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-body)}
+.inv-tabela th{background:var(--cor-dados,#1a1a1a);color:#fff;padding:6px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.inv-tabela td{padding:7px 10px;border-bottom:1px solid var(--bg);vertical-align:top}
+.inv-tabela tr.inv-row:hover td{background:#f9f9f9;cursor:pointer}
+.inv-cat-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;background:#e8e8e8;color:#555;margin-left:4px;text-transform:uppercase;letter-spacing:.3px}
+.inv-desc-row td{font-size:11px;color:#666;padding:4px 10px 8px 28px;background:#fafafa;border-bottom:1px solid #eee}
+.inv-modal-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid #eee;transition:background .1s}
+.inv-modal-item:hover{background:#f5f5f5}
+.inv-modal-info{flex:1;min-width:0}
+.inv-modal-nome{font-size:13px;font-weight:700;font-family:var(--font-body);color:#1a1a1a}
+.inv-modal-cat{font-size:10px;color:#888;font-family:var(--font-body);text-transform:uppercase;letter-spacing:.3px;margin-top:1px}
+.inv-modal-desc{font-size:11px;color:#666;margin-top:3px;line-height:1.4}
+.inv-modal-qty{display:flex;align-items:center;gap:6px;flex-shrink:0;padding-top:2px}
+.inv-qty-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid #ccc;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-weight:700;transition:all .15s}
+.inv-qty-btn:hover{background:var(--cor-cabecalho,#1a1a1a);color:#fff;border-color:var(--cor-cabecalho,#1a1a1a)}
+.inv-qty-num{width:28px;text-align:center;font-size:13px;font-weight:700;font-family:var(--font-body)}
+.ficha-section{margin-bottom:4px}
+.ficha-section-title{background:var(--cor-secao,#1a1a1a);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
+.ficha-section-body{background:var(--surface);border:1.5px solid var(--bg);padding:12px}
+
+/* TIME */
+.time-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
+.poke-slot{background:var(--surface);border:1px solid var(--bg);display:flex;flex-direction:column;min-height:220px}
+.poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body);min-height:220px}
+/* cabeçalho: pokeball + tipos */
+.poke-slot-topbar{background:var(--cor-poke,#1a1a1a);padding:4px 6px;display:flex;align-items:center;justify-content:space-between;gap:4px}
+.poke-slot-ball{width:19px;height:19px;object-fit:contain;flex-shrink:0}
+.poke-slot-tipos{display:flex;gap:3px;align-items:center}
+.poke-slot-tipo-img{width:34px;height:17px;object-fit:contain}
+/* imagem */
+.poke-slot-img-wrap{background:#f5f5f5;display:flex;align-items:center;justify-content:center;height:100px;overflow:hidden;border-bottom:1px solid var(--bg)}
+.poke-slot-img-wrap img{width:100px;height:100px;object-fit:contain;image-rendering:pixelated}
+/* nome */
+.poke-slot-nome-row{background:var(--cor-poke,#1a1a1a);padding:3px 6px;text-align:center}
+.poke-slot-nome-lbl{font-size:13px;font-weight:700;color:#fff;font-family:var(--font-title);text-transform:uppercase;letter-spacing:.4px}
+/* infos */
+.poke-slot-info{font-size:12px;color:var(--text);line-height:1.7;font-family:var(--font-body);padding:5px 6px;flex:1}
+.poke-slot-info strong{font-weight:700;color:var(--cor-poke,#1a1a1a)}
+/* edit */
+.poke-slot-edit{border:1.5px solid var(--accent);padding:6px;display:flex;flex-direction:column;gap:4px;background:var(--surface)}
+.poke-slot-edit label{font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-top:2px}
+.poke-slot-edit input,.poke-slot-edit textarea,.poke-slot-edit select{width:100%;padding:3px 6px;border:1px solid #ccc;border-radius:2px;font-size:10px;font-family:var(--font-body);resize:vertical;outline:none;background:#fff}
+.poke-slot-edit input:focus,.poke-slot-edit textarea:focus,.poke-slot-edit select:focus{border-color:var(--accent)}
+.poke-slot-edit-img-preview{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;border:1px solid #eee;border-radius:2px;display:block;margin:2px auto}
+.poke-slot-edit-img-btn{width:100%;padding:3px;border:1px dashed #ccc;border-radius:2px;background:#fafafa;font-size:10px;font-family:var(--font-body);cursor:pointer;text-align:center;color:var(--muted)}
+
+/* RELACIONAMENTOS */
+.rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
+.rel-item{background:var(--cor-rel,#000);padding:5px 8px;text-align:center;border:1px solid var(--bg)}
+.rel-nome{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body)}
+.rel-tipo{font-size:10px;color:#fff;font-family:var(--font-body)}
+
+/* TEXTO */
+.bio-text{font-size:12px;color:var(--text);line-height:1.8;white-space:pre-wrap;font-family:var(--font-body);text-align:justify;text-indent:28px}
+
+/* EDIT */
+.edit-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--accent);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;flex-wrap:wrap}
+.edit-bar-info{font-size:12px;color:var(--muted);font-family:var(--font-body)}
+.edit-bar-info strong{color:var(--accent)}
+.edit-input{width:100%;padding:6px 10px;border:1.5px solid #ccc;border-radius:3px;font-family:var(--font-body);font-size:12px;color:var(--text);background:var(--surface);outline:none;resize:vertical}
+.edit-input:focus{border-color:var(--accent)}
+.edit-input-sm{height:32px;resize:none}
+.fb-ok{background:#f0f0f0;color:#1a1a1a;border:1px solid #ccc;border-radius:3px;padding:6px 12px;font-size:12px;font-weight:600;font-family:var(--font-body)}
+
+.view-content{display:block}
+.edit-content{display:none}
+/* MODAL DE CORES */
+.cores-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.cores-modal{background:#fff;border-radius:4px;padding:24px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.cores-modal-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:16px;text-align:center}
+.cores-row{display:flex;flex-direction:column;gap:12px;margin-bottom:18px}
+.cores-field{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cores-field label{font-size:11px;font-weight:700;color:#555;text-transform:uppercase;letter-spacing:.4px;font-family:var(--font-body)}
+.cores-field input[type=color]{width:44px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none}
+.cores-modal-btns{display:flex;gap:8px;justify-content:flex-end}
+
+@media(max-width:600px){
+  .ficha-wrap{padding:10px 8px 60px}
+  .header-body{grid-template-columns:1fr;grid-template-rows:200px;height:auto}
+  .header-photo-col{display:none}
+  .header-banner-col{height:200px}
+  .header-banner-edit-btn{opacity:1}
+  .dados-grid-wrap{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:none}
+  /* Par 1: H1 H2 → V1 V2 */
+  .dados-grid-wrap .dado-header:nth-child(1){order:1}
+  .dados-grid-wrap .dado-header:nth-child(2){order:2}
+  .dados-grid-wrap .dado-val:nth-child(5){order:3}
+  .dados-grid-wrap .dado-val:nth-child(6){order:4}
+  /* Par 2: H3 H4 → V3 V4 */
+  .dados-grid-wrap .dado-header:nth-child(3){order:5}
+  .dados-grid-wrap .dado-header:nth-child(4){order:6}
+  .dados-grid-wrap .dado-val:nth-child(7){order:7}
+  .dados-grid-wrap .dado-val:nth-child(8){order:8}
+  /* bordas */
+  .dados-grid-wrap .dado-header:nth-child(2),.dados-grid-wrap .dado-val:nth-child(6),
+  .dados-grid-wrap .dado-header:nth-child(4),.dados-grid-wrap .dado-val:nth-child(8){border-right:none}
+  .time-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-header,.dado-header{font-size:9px;padding:4px 8px}
+  .stat-val,.dado-val{font-size:11px;padding:5px 8px}
+  .ficha-title{font-size:15px}
+  .ficha-section-title{font-size:12px;padding:7px 10px}
+  .ficha-section-body{padding:10px}
+  .bio-text{font-size:11px}
+  .rel-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
 
+<!-- LOADING -->
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Carregando...</div>
+  <div class="loading-text">Carregando ficha...</div>
 </div>
 
-<nav class="nav">
-  <div class="nav-logo">P<span>Chapters</span></div>
-  <div class="nav-links">
-    <button class="nav-link active" onclick="goTo('roller',this)">Pokémon</button>
-    <button class="nav-link" onclick="goTo('bioma',this)">Por Bioma</button>
-    <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
-    <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
-  </div>
-  <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
-</nav>
+<!-- TOP BAR -->
+<div class="top-bar" id="top-bar" style="display:none">
+  <div class="top-bar-title">Ficha do Personagem</div>
+  <div class="top-bar-actions" id="top-bar-actions"></div>
+</div>
 
-<!-- ROLADOR -->
-<div class="page active" id="page-roller">
-  <div class="roller-header">
-    <h2>Rolador de Encontro</h2>
-    <p>Selecione o bioma, configure seu personagem e role!</p>
-  </div>
-  <div class="roller-controls">
-    <div class="ctrl-group"><label>Bioma</label><select id="bioma"></select></div>
-    <div class="ctrl-group">
-      <label>Personagem</label>
-      <input type="text" id="personagem" placeholder="Nome do personagem..." list="personagens-lista" required/>
-      <datalist id="personagens-lista"></datalist>
-    </div>
-    <div class="ctrl-group"><label>Pokémon adicionais</label><input type="number" id="n-adicionais" value="0" min="0" max="10"/></div>
-  </div>
-  <div class="badges-row">
-    <span class="badges-label">Provas de valor:</span>
-    <button class="badge-btn" data-idx="0">☆</button>
-    <button class="badge-btn" data-idx="1">☆</button>
-    <button class="badge-btn" data-idx="2">☆</button>
-    <button class="badge-btn" data-idx="3">☆</button>
-    <button class="badge-btn" data-idx="4">☆</button>
-    <button class="badge-btn" data-idx="5">☆</button>
-    <button class="badge-btn" data-idx="6">☆</button>
-    <button class="badge-btn" data-idx="7">☆</button>
-    <span class="badges-info" id="badges-info">0 provas → Nível 1–10</span>
-  </div>
-  <button class="roll-btn" onclick="rolarEncontro()">Rolar Encontro</button>
-  <div id="results-section"></div>
-  <div id="historico-wrap" style="margin-top:32px;display:none">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Histórico de Rolagens</div>
-      <div style="font-size:12px;color:var(--muted)" id="hist-page-label"></div>
-    </div>
-    <div id="historico-lista"></div>
-    <div id="hist-paginacao" style="display:flex;justify-content:center;gap:10px;margin-top:16px">
-      <button id="hist-prev" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaHist(-1)">← Mais recentes</button>
-      <button id="hist-next" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaHist(1)">Mais antigas →</button>
-    </div>
+<!-- LOGIN DO JOGADOR -->
+<div id="login-wrap" style="display:none">
+  <div class="login-wrap">
+    <h2>Acesso necessário</h2>
+    <p>Você precisa estar logado como player para editar esta ficha.</p>
+    <a href="/login" class="btn btn-primary" style="display:block;width:100%;text-align:center;text-decoration:none;margin-bottom:10px">Ir para o Login</a>
+    <div style="font-size:11px;color:var(--muted);text-align:center">Após logar, volte para esta ficha e clique em "✏️ Editar".</div>
   </div>
 </div>
 
-<!-- ROLADOR DE DADOS -->
-<div class="page" id="page-dados">
-  <div class="dice-roller-wrap">
-    <div class="dice-header">
-      <h2>Rolador de Dados</h2>
-      <p>Escolha o dado, o personagem e o motivo da rolagem</p>
-    </div>
-    <div style="margin-bottom:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Dados rápidos</div>
-      <div class="dice-sides-wrap">
-        <button class="dice-side-btn" onclick="setLados(4)">d4</button>
-        <button class="dice-side-btn" onclick="setLados(6)">d6</button>
-        <button class="dice-side-btn" onclick="setLados(8)">d8</button>
-        <button class="dice-side-btn" onclick="setLados(10)">d10</button>
-        <button class="dice-side-btn" onclick="setLados(12)">d12</button>
-        <button class="dice-side-btn" onclick="setLados(20)">d20</button>
-        <button class="dice-side-btn active" onclick="setLados(100)">d100</button>
-      </div>
-    </div>
-    <div class="dice-controls">
-      <div class="ctrl-group">
-        <label>Personagem</label>
-        <input type="text" id="dice-personagem" placeholder="Nome do personagem..." list="personagens-lista"/>
-      </div>
-      <div class="ctrl-group">
-        <label>Lados do dado</label>
-        <input type="number" id="dice-lados" value="100" min="2" max="10000" oninput="sincLadosBtns()"/>
-      </div>
-      <div class="ctrl-group">
-        <label>Motivo</label>
-        <input type="text" id="dice-motivo" placeholder="Ex: Ataque, Fuga..." required/>
-      </div>
-    </div>
-    <button class="roll-btn" onclick="rolarDado()">Rolar dado</button>
-    <div id="dice-hist-wrap" style="display:none;margin-top:8px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Histórico de Rolagens</div>
-        <span style="font-size:12px;color:var(--muted)" id="dice-hist-label"></span>
-      </div>
-      <div id="dice-hist-lista"></div>
-      <div id="dice-hist-paginacao" style="display:flex;justify-content:center;gap:10px;margin-top:16px">
-        <button id="dice-hist-prev" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaDados(-1)">← Mais recentes</button>
-        <button id="dice-hist-next" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaDados(1)">Mais antigas →</button>
-      </div>
-    </div>
-  </div>
-</div>
+<!-- FICHA -->
+<div id="ficha-wrap" class="ficha-wrap" style="display:none">
 
-<!-- FICHÁRIO -->
-<div class="page" id="page-ficha">
+  <!-- CABEÇALHO -->
   <div class="ficha-header">
-    <h2>Fichário de Personagens</h2>
-    <input class="search-bar" type="text" placeholder="Buscar personagem..." oninput="filtrarFichas(this.value)"/>
-  </div>
-  <div id="fichas-container"></div>
-</div>
-
-<!-- POR BIOMA -->
-<div class="page" id="page-bioma">
-  <div style="padding-top:8px;margin-bottom:20px">
-    <h2 style="font-family:var(--font-title);font-size:20px;color:var(--text);font-weight:700;margin-bottom:16px">Por Bioma</h2>
-    <div id="bioma-tabs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px"></div>
-  </div>
-  <div id="bioma-content"></div>
-</div>
-
-<!-- LOGIN -->
-<div class="page" id="page-login">
-  <div style="max-width:700px;margin:40px auto;padding:0 16px">
-    <div style="text-align:center;margin-bottom:28px">
-      <div style="font-family:var(--font-title);font-size:20px;color:var(--brand);font-weight:700">Área de Acesso</div>
-      <div style="font-size:13px;color:var(--muted);margin-top:6px">Escolha seu tipo de acesso</div>
-    </div>
-    <div class="login-cols">
-      <div class="box" style="padding:28px 24px">
-        <div style="text-align:center;margin-bottom:20px">
-          <div style="font-size:32px;margin-bottom:8px">🔐</div>
-          <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--brand)">Administrador</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">Acesso ao painel de controle</div>
-        </div>
-        <div class="field"><label>Usuário</label><input type="text" id="login-email" placeholder="usuário" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
-        <div class="field"><label>Senha</label><input type="password" id="login-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLogin()"/></div>
-        <button class="btn btn-primary btn-full" onclick="fazerLogin()">Entrar como ADM</button>
-        <div class="fb fb-err" id="login-erro" style="margin-top:10px">Usuário ou senha incorretos.</div>
+    <div class="header-name-row">
+      <div class="ficha-title" id="f-nome"></div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="view-content pe-badge" id="f-pe-view"></span>
+        <span class="edit-content" id="f-pe-edit" style="display:none"><input class="edit-input edit-input-sm" id="f-pe-input" type="number" min="0" style="width:70px;text-align:center"/></span>
       </div>
-      <div class="box" style="padding:28px 24px">
-        <div style="text-align:center;margin-bottom:20px">
-          <div style="font-size:32px;margin-bottom:8px">🎮</div>
-          <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--brand)">Player</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:4px">Acesso às suas fichas de personagem</div>
+    </div>
+    <div class="header-slogan-row">
+      <span class="view-content ficha-slogan" id="f-slogan-txt"></span>
+      <span class="edit-content" id="f-slogan-edit" style="display:none;flex:1"><input class="edit-input edit-input-sm" id="f-slogan-input" placeholder="Slogan do personagem..." style="width:100%"/></span>
+    </div>
+    <div class="header-body">
+      <!-- BANNER (editável pelo player) -->
+      <div class="header-banner-col" id="header-banner-col">
+        <div id="f-banner-view">
+          <div id="f-banner-placeholder" class="header-banner-placeholder">Sem banner — clique para adicionar</div>
         </div>
-        <div class="field"><label>Nome do Player</label><input type="text" id="player-nome-input" placeholder="Seu nome de player" onkeydown="if(event.key==='Enter')fazerLoginPlayer()" oninput="onPlayerNomeInput()"/></div>
-        <div class="field"><label>Senha</label><input type="password" id="player-senha-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLoginPlayer()"/></div>
-        <div class="field" id="player-confirma-field" style="display:none">
-          <label style="color:var(--brand)">Confirmar Senha <span style="font-size:11px;font-weight:400;color:var(--muted)">(primeiro acesso)</span></label>
-          <input type="password" id="player-confirma-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')fazerLoginPlayer()"/>
-        </div>
-        <div id="player-primeiro-aviso" style="display:none;font-size:12px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:10px">
-          🔐 Defina uma senha para entrar.
-        </div>
-        <button class="btn btn-primary btn-full" onclick="fazerLoginPlayer()" id="player-login-btn">Entrar como Player</button>
-        <div class="fb fb-err" id="player-login-erro" style="margin-top:10px">Nome ou senha incorretos.</div>
+        <button class="header-banner-edit-btn" id="btn-banner-edit" onclick="editarBanner()" style="display:none">🖼 Trocar banner</button>
+        <input type="file" id="banner-file-input" accept="image/*" style="display:none" onchange="onBannerFile(this)"/>
+      </div>
+      <!-- FOTO DO PERSONAGEM (coluna direita) -->
+      <div class="header-photo-col" id="header-photo-col">
+        <div id="f-photo-placeholder" class="header-photo-placeholder">Sem foto</div>
       </div>
     </div>
   </div>
+
+  <!-- DADOS: grid unificado — header e valor intercalados no mobile -->
+  <div class="dados-grid-wrap">
+    <div class="dado-header">Idade</div>
+    <div class="dado-header">Ocupação</div>
+    <div class="dado-header">Origem</div>
+    <div class="dado-header">C$</div>
+    <div class="dado-val">
+      <div id="f-idade-view" class="view-content"><span id="f-idade-txt">—</span></div>
+      <div id="f-idade-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-idade-input" placeholder="Ex: 17"/></div>
+    </div>
+    <div class="dado-val">
+      <div id="f-ocup-view" class="view-content"><span id="f-ocup-txt">—</span></div>
+      <div id="f-ocup-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-ocup-input" placeholder="Ex: Treinador"/></div>
+    </div>
+    <div class="dado-val">
+      <div id="f-orig-view" class="view-content"><span id="f-orig-txt">—</span></div>
+      <div id="f-orig-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-orig-input" placeholder="Ex: Pallet Town"/></div>
+    </div>
+    <div class="dado-val">
+      <div id="f-cs-view" class="view-content"><span id="f-cs-txt">0</span></div>
+      <div id="f-cs-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-cs-input" type="number" style="text-align:center"/></div>
+    </div>
+  </div>
+  <div class="dados-grid-wrap" style="margin-bottom:8px">
+    <div class="dado-header">Reputação</div>
+    <div class="dado-header">PV</div>
+    <div class="dado-header">Photoplayer</div>
+    <div class="dado-header">Player</div>
+    <div class="dado-val">
+      <div id="f-rep-view" class="view-content"><span id="f-rep-txt">0</span></div>
+      <div id="f-rep-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-rep-input" type="number" style="text-align:center"/></div>
+    </div>
+    <div class="dado-val">
+      <div id="f-pv-view" class="view-content"><span id="f-pv-txt">0</span></div>
+      <div id="f-pv-edit" class="edit-content" style="display:none"><input class="edit-input edit-input-sm" id="f-pv-input" type="number" style="text-align:center"/></div>
+    </div>
+    <div class="dado-val" id="f-photoplayer-dado">—</div>
+    <div class="dado-val" id="f-player-dado">—</div>
+  </div>
+
+  <!-- RELACIONAMENTOS -->
+  <div class="ficha-section">
+    <div class="ficha-section-title">Relacionamentos</div>
+    <div class="ficha-section-body" style="padding:0">
+      <div id="f-rel-view" class="view-content"><div class="rel-grid" id="f-rel-grid"></div></div>
+      <div id="f-rel-edit" class="edit-content" style="display:none;padding:12px">
+        <div id="rel-edit-grid" style="display:flex;flex-direction:column;gap:8px"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- BIOGRAFIA -->
+  <div class="ficha-section">
+    <div class="ficha-section-title">Biografia</div>
+    <div class="ficha-section-body">
+      <div id="f-bio-view" class="view-content"><div class="bio-text" id="f-bio-txt" style="color:var(--muted)">Nenhuma biografia registrada.</div></div>
+      <div id="f-bio-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-bio-input" rows="6" placeholder="Escreva a história do personagem..."></textarea></div>
+    </div>
+  </div>
+
+  <!-- TIME PRINCIPAL -->
+  <div class="ficha-section">
+    <div class="ficha-section-title">Time Principal</div>
+    <div class="ficha-section-body" style="padding:0">
+      <div class="time-grid" id="time-grid"></div>
+    </div>
+  </div>
+
+  <!-- INVENTÁRIO -->
+  <div class="ficha-section">
+    <div class="ficha-section-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span>Inventário</span>
+      <button id="btn-inv-gerenciar" class="btn btn-sm edit-content" style="display:none;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);font-size:11px" onclick="abrirModalInventario()">+ Gerenciar</button>
+    </div>
+    <div class="ficha-section-body" style="padding:0">
+      <div id="f-inv-view">
+        <div id="inv-lista-view" style="width:100%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOX -->
+  <div class="ficha-section">
+    <div class="ficha-section-title" style="justify-content:space-between">
+      <span>Box</span>
+      <span id="box-counter" style="font-family:var(--font-body);font-size:12px;font-weight:600;opacity:.85"></span>
+    </div>
+    <!-- barra de upgrades (sempre visível) -->
+    <div id="box-upgrade-bar" style="background:var(--surface2);padding:6px 14px;font-size:11px;font-family:var(--font-body);color:var(--muted);border-bottom:1px solid var(--bg);display:none"></div>
+    <div class="ficha-section-body" style="padding:0">
+      <!-- inputs de upgrade (só em modo edição) -->
+      <div style="display:none;padding:12px 14px;border-bottom:1px solid var(--bg)" id="box-upgrades-wrap">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Upgrades de Espaço</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+            Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+5 slots cada)</span>
+            <input type="number" id="box-slot-upgrade" min="0" value="0" style="width:52px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)" onchange="renderBox()"/>
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:13px">
+            Mini Slot Upgrade <span style="font-size:11px;color:var(--muted)">(+2 slots cada)</span>
+            <input type="number" id="box-mini-upgrade" min="0" value="0" style="width:52px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)" onchange="renderBox()"/>
+          </label>
+        </div>
+      </div>
+      <div class="time-grid" id="box-grid"></div>
+    </div>
+  </div>
+
+  <!-- ANOTAÇÕES -->
+  <div class="ficha-section" style="margin-bottom:80px">
+    <div class="ficha-section-title">Anotações e Conquistas</div>
+    <div class="ficha-section-body">
+      <div id="f-anot-view" class="view-content"><div class="bio-text" id="f-anot-txt" style="color:var(--muted)">Nenhuma anotação registrada.</div></div>
+      <div id="f-anot-edit" class="edit-content" style="display:none"><textarea class="edit-input" id="f-anot-input" rows="4" placeholder="Conquistas, tags, notas livres..."></textarea></div>
+    </div>
+  </div>
+
 </div>
 
-<!-- ÁREA DO PLAYER -->
-<div class="page" id="page-player">
-  <div style="max-width:900px;margin:0 auto;padding:24px 16px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
-      <div>
-        <div style="font-family:var(--font-title);font-size:18px;color:var(--brand);font-weight:700" id="player-area-title">Suas Fichas</div>
-        <div style="font-size:13px;color:var(--muted);margin-top:4px" id="player-area-sub"></div>
-      </div>
-      <button class="btn btn-danger btn-sm" onclick="sairPlayer()">Sair</button>
-    </div>
-    <div class="fichas-grid" id="player-fichas-grid"></div>
+<!-- BARRA DE EDIÇÃO -->
+<div class="edit-bar" id="edit-bar" style="display:none">
+  <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+    <div class="edit-bar-info" id="edit-bar-info"></div>
+    <div id="autosave-status" style="font-size:11px;color:var(--muted)"></div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirHistorico()">Histórico</button>
+    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirModalCores()">🎨 Cores</button>
+    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
+    <button class="btn btn-primary btn-sm" id="btn-salvar" onclick="salvarFicha()">💾 Salvar</button>
   </div>
 </div>
 
-<!-- ADM -->
-<div class="page" id="page-adm">
-  <div id="adm-painel">
-    <div class="adm-layout">
-      <div class="adm-sidebar">
-        <div class="adm-sidebar-user" id="adm-user-label">—</div>
-        <button class="adm-nav-btn active" onclick="admTab('personagens',this)">👥 Personagens</button>
-        <button class="adm-nav-btn" onclick="admTab('biomas',this)">🗺️ Biomas</button>
-        <button class="adm-nav-btn" onclick="admTab('pokemons',this)">⚡ Pokémon</button>
-        <button class="adm-nav-btn" onclick="admTab('itens',this)">🎒 Itens</button>
-        <div class="adm-nav-sep"></div>
-        <button class="adm-nav-btn" onclick="admTab('admins',this)">🔑 Admins</button>
-        <button class="adm-nav-btn" onclick="admTab('editor',this)">🎨 Editor Visual</button>
-        <button class="adm-nav-btn" onclick="admTab('historicos',this)">🗑️ Históricos</button>
-        <button class="adm-nav-btn" onclick="admTab('fichas-hist',this)">📋 Fichas</button>
-        <div class="adm-nav-sep"></div>
-        <button class="adm-nav-btn adm-nav-danger" onclick="fazerLogout()">Sair</button>
-      </div>
-      <div class="adm-content">
-
-        <!-- PERSONAGENS -->
-        <div class="adm-section active" id="sec-personagens">
-          <div class="sec-title">Personagens</div>
-          <div class="sec-sub">Adicione, edite e remova personagens do fichário</div>
-          <div class="box">
-            <div class="box-title">Novo personagem</div>
-            <div class="g2">
-              <div class="field"><label>Nome do Player</label><input type="text" id="np-player" placeholder="Ex: Lucas"/></div>
-              <div class="field"><label>Nome do Personagem</label><input type="text" id="np-nome" placeholder="Ex: Ash Ketchum"/></div>
-              <div class="field"><label>Photoplayer</label><input type="text" id="np-photoplayer" placeholder="Ex: Satoshi"/></div>
-              <div class="field"><label>Cor do avatar</label><input type="color" id="np-cor" value="#2563a8"/></div>
-              <div class="field"><label>Imagem do personagem (avatar)</label>
-                <input type="file" id="np-img" accept="image/*" onchange="previewPersonagemImg(this)" style="font-size:13px"/>
-                <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-                  <div id="np-img-preview" style="width:57px;height:57px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center">
-                    <img class="unown-fallback-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>
-                  </div>
-                  <span style="font-size:11px;color:var(--muted)">Pré-visualização</span>
-                </div>
-              </div>
-            </div>
-            <button class="btn btn-primary btn-sm" onclick="adicionarPersonagem()">+ Adicionar</button>
-            <div class="fb fb-ok" id="np-fb">✓ Personagem adicionado!</div>
-          </div>
-          <div class="box">
-            <div class="box-title">Players e Personagens</div>
-            <div id="accordion-players"></div>
-          </div>
-        </div>
-
-        <!-- BIOMAS -->
-        <div class="adm-section" id="sec-biomas">
-          <div class="sec-title">Biomas</div>
-          <div class="sec-sub">Crie e remova biomas disponíveis no rolador</div>
-          <div class="box">
-            <div class="box-title">Novo bioma</div>
-            <div style="display:flex;gap:10px;align-items:flex-end">
-              <div class="field" style="flex:1;margin-bottom:0"><label>Nome do bioma</label><input type="text" id="novo-bioma" placeholder="Ex: Deserto"/></div>
-              <button class="btn btn-primary" onclick="adicionarBioma()">+ Adicionar</button>
-            </div>
-            <div class="fb fb-ok" id="bioma-fb" style="margin-top:10px">✓ Bioma adicionado!</div>
-          </div>
-          <div class="adm-table-wrap"><table class="adm-table">
-            <thead><tr><th>Bioma</th><th>Pokémon</th><th>Ações</th></tr></thead>
-            <tbody id="tbody-biomas"></tbody>
-          </table></div>
-        </div>
-
-        <!-- POKÉMON -->
-        <div class="adm-section" id="sec-pokemons">
-          <div class="sec-title">Pokémon por Bioma</div>
-          <div class="sec-sub">Adicione, edite e remova Pokémon de cada bioma</div>
-          <div class="box" style="border-color:#a0c8e8;background:#eef6fc">
-            <div class="box-title" style="color:#1a5a8a">📥 Importar da PokéAPI</div>
-            <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Busca automaticamente sprite, tipos, habilidades e gênero direto da PokéAPI.</p>
-            <div class="g2" style="margin-bottom:10px">
-              <div class="field"><label>Bioma</label><select id="imp-bioma"></select></div>
-              <div class="field"><label>Raridade</label>
-                <select id="imp-raridade">
-                  <option value="comum">Comum (61–100)</option>
-                  <option value="incomum">Incomum (21–60)</option>
-                  <option value="raro">Raro (8–20)</option>
-                  <option value="rarissimo">Raríssimo (1–7)</option>
-                </select>
-              </div>
-            </div>
-            <div class="field"><label>Nomes dos Pokémon (um por linha)</label><textarea id="imp-lista" rows="5" placeholder="Caterpie&#10;Weedle&#10;Paras&#10;..."></textarea></div>
-            <button class="btn btn-primary btn-sm" id="imp-btn" onclick="importarDaPokeAPI()">⬇ Importar</button>
-            <div id="imp-progress" style="display:none;margin-top:10px">
-              <div style="font-size:12px;font-weight:600;color:var(--brand-mid);margin-bottom:6px" id="imp-status">Importando...</div>
-              <div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden">
-                <div id="imp-bar" style="height:6px;background:var(--brand-mid);width:0%;transition:width .3s;border-radius:4px"></div>
-              </div>
-            </div>
-            <div class="fb fb-ok" id="imp-fb-ok">✓ Importação concluída!</div>
-            <div class="fb fb-err" id="imp-fb-err">—</div>
-          </div>
-          <div class="box">
-            <div class="box-title">✏️ Adicionar manualmente</div>
-            <div class="g3">
-              <div class="field"><label>Nome</label><input type="text" id="pk-nome" placeholder="Ex: Pikachu"/></div>
-              <div class="field"><label>Habilidade 1</label><input type="text" id="pk-habilidade" placeholder="Ex: Static"/></div>
-              <div class="field"><label>Habilidade 2</label><input type="text" id="pk-habilidade2" placeholder="Ex: Lightning Rod"/></div>
-              <div class="field"><label>Raridade</label>
-                <select id="pk-raridade">
-                  <option value="comum">Comum (61–100)</option>
-                  <option value="incomum">Incomum (21–60)</option>
-                  <option value="raro">Raro (8–20)</option>
-                  <option value="rarissimo">Raríssimo (1–7)</option>
-                </select>
-              </div>
-              <div class="field"><label>Gênero</label>
-                <select id="pk-genero">
-                  <option value="1d2">1d2 (50/50)</option>
-                  <option value="macho">100% Macho</option>
-                  <option value="femea">100% Fêmea</option>
-                  <option value="genderless">Sem gênero</option>
-                </select>
-              </div>
-              <div class="field"><label>Bioma</label><select id="pk-bioma"></select></div>
-              <div class="field"><label>Sprite do Pokémon</label>
-                <input type="file" id="pk-sprite-file" accept="image/*" onchange="previewPokeSprite(this)" style="font-size:13px"/>
-                <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-                  <div id="pk-sprite-preview" style="width:53px;height:53px;background:var(--surface2);border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden">
-                    <img class="unown-fallback-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>
-                  </div>
-                  <span style="font-size:11px;color:var(--muted)">Pré-visualização</span>
-                </div>
-              </div>
-            </div>
-            <div class="field">
-              <label>Tipos (clique para selecionar)</label>
-              <div class="tipos-wrap" id="tipos-wrap">
-                <span class="tipo-tag" data-tipo="fire" onclick="toggleTipo(this)">🔥 Fire</span>
-                <span class="tipo-tag" data-tipo="water" onclick="toggleTipo(this)">💧 Water</span>
-                <span class="tipo-tag" data-tipo="grass" onclick="toggleTipo(this)">🌿 Grass</span>
-                <span class="tipo-tag" data-tipo="electric" onclick="toggleTipo(this)">⚡ Electric</span>
-                <span class="tipo-tag" data-tipo="normal" onclick="toggleTipo(this)">⬜ Normal</span>
-                <span class="tipo-tag" data-tipo="psychic" onclick="toggleTipo(this)">🔮 Psychic</span>
-                <span class="tipo-tag" data-tipo="steel" onclick="toggleTipo(this)">⚙️ Steel</span>
-                <span class="tipo-tag" data-tipo="fairy" onclick="toggleTipo(this)">🌸 Fairy</span>
-                <span class="tipo-tag" data-tipo="ghost" onclick="toggleTipo(this)">👻 Ghost</span>
-                <span class="tipo-tag" data-tipo="dragon" onclick="toggleTipo(this)">🐉 Dragon</span>
-                <span class="tipo-tag" data-tipo="ice" onclick="toggleTipo(this)">❄️ Ice</span>
-                <span class="tipo-tag" data-tipo="fighting" onclick="toggleTipo(this)">🥊 Fighting</span>
-                <span class="tipo-tag" data-tipo="rock" onclick="toggleTipo(this)">🪨 Rock</span>
-                <span class="tipo-tag" data-tipo="ground" onclick="toggleTipo(this)">🌍 Ground</span>
-                <span class="tipo-tag" data-tipo="poison" onclick="toggleTipo(this)">☠️ Poison</span>
-                <span class="tipo-tag" data-tipo="bug" onclick="toggleTipo(this)">🐛 Bug</span>
-                <span class="tipo-tag" data-tipo="dark" onclick="toggleTipo(this)">🌑 Dark</span>
-                <span class="tipo-tag" data-tipo="flying" onclick="toggleTipo(this)">🦅 Flying</span>
-              </div>
-            </div>
-            <button class="btn btn-primary btn-sm" onclick="adicionarPokemon()">+ Adicionar Pokémon</button>
-            <div class="fb fb-ok" id="pk-fb">✓ Pokémon adicionado!</div>
-          </div>
-          <div id="pk-filtro-wrap" class="field" style="max-width:240px;margin-bottom:16px;display:none">
-            <label>Filtrar por bioma</label>
-            <select id="pk-filtro" onchange="renderTbodyPokemons()"></select>
-          </div>
-          <div class="adm-table-wrap"><table class="adm-table">
-            <thead><tr><th>Pokémon</th><th>Bioma</th><th>Raridade</th><th>Tipos</th><th>Gênero</th><th>Ações</th></tr></thead>
-            <tbody id="tbody-pokemons"></tbody>
-          </table></div>
-        </div>
-
-        <!-- ITENS -->
-        <div class="adm-section" id="sec-itens">
-          <div class="sec-title">Itens</div>
-          <div class="sec-sub">Gerencie o catálogo de itens disponíveis no inventário das fichas</div>
-          <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px">
-            <div class="field" style="flex:1;min-width:160px;margin-bottom:0">
-              <label>Filtrar por categoria</label>
-              <select id="itens-filtro-cat" onchange="renderTbodyItens()">
-                <option value="">Todas</option>
-                <option>Pokéball</option>
-                <option>Snack</option>
-                <option>Medicine</option>
-                <option>Itens de Treinador</option>
-                <option>Z-Crystal</option>
-                <option>Hold Item</option>
-                <option>Props</option>
-                <option>Fóssil</option>
-                <option>Megastone</option>
-                <option>Treasure Item</option>
-              </select>
-            </div>
-            <div class="field" style="flex:1;min-width:160px;margin-bottom:0">
-              <label>Buscar por nome</label>
-              <input type="text" id="itens-busca" placeholder="Ex: Potion..." oninput="renderTbodyItens()"/>
-            </div>
-            <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:2px">
-              <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap">
-                <input type="checkbox" id="itens-filtro-evento" onchange="renderTbodyItens()"/> Só eventos
-              </label>
-            </div>
-            <button class="btn btn-primary btn-sm" style="align-self:flex-end" onclick="abrirModalItem()">+ Novo item</button>
-          </div>
-          <div id="itens-contagem" style="font-size:12px;color:var(--muted);margin-bottom:8px"></div>
-          <div class="adm-table-wrap">
-            <table class="adm-table">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>Categoria</th>
-                  <th>Descrição</th>
-                  <th style="text-align:center">Evento</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody id="tbody-itens"></tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- ADMINS -->
-        <div class="adm-section" id="sec-admins">
-          <div class="sec-title">Administradores</div>
-          <div class="sec-sub">Gerencie quem tem acesso ao painel ADM</div>
-          <div class="box">
-            <div class="box-title">Novo administrador</div>
-            <div class="g2">
-              <div class="field"><label>Usuário</label><input type="text" id="adm-new-email" placeholder="novo_usuario"/></div>
-              <div class="field"><label>Senha</label><input type="password" id="adm-new-senha" placeholder="Mín. 6 caracteres"/></div>
-            </div>
-            <button class="btn btn-primary btn-sm" onclick="adicionarAdmin()">+ Adicionar Admin</button>
-            <div class="fb fb-ok" id="adm-fb-ok">✓ Admin adicionado!</div>
-            <div class="fb fb-err" id="adm-fb-err">—</div>
-          </div>
-          <div class="adm-table-wrap"><table class="adm-table">
-            <thead><tr><th>Usuário</th><th>Ações</th></tr></thead>
-            <tbody id="tbody-admins"></tbody>
-          </table></div>
-        </div>
-
-        <!-- EDITOR VISUAL -->
-        <div class="adm-section" id="sec-editor">
-          <div class="sec-title">Editor Visual</div>
-          <div class="sec-sub">Edite as variáveis de estilo do site em tempo real.</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-            <div class="box">
-              <div class="box-title">🎨 Cores</div>
-              <div class="field"><label>Cor principal (nav)</label><input type="color" id="ec-brand" value="#1a3a5c" oninput="aplicarEstilo()"/></div>
-              <div class="field"><label>Cor de destaque (botões)</label><input type="color" id="ec-brand-mid" value="#2563a8" oninput="aplicarEstilo()"/></div>
-              <div class="field"><label>Cor de acento (dourado)</label><input type="color" id="ec-accent" value="#e8a020" oninput="aplicarEstilo()"/></div>
-              <div class="field"><label>Cor de fundo da página</label><input type="color" id="ec-bg" value="#f4f6fa" oninput="aplicarEstilo()"/></div>
-              <div class="field"><label>Cor de fundo dos cards</label><input type="color" id="ec-surface" value="#ffffff" oninput="aplicarEstilo()"/></div>
-              <div class="field"><label>Cor do texto principal</label><input type="color" id="ec-text" value="#1a1f2e" oninput="aplicarEstilo()"/></div>
-            </div>
-            <div>
-              <div class="box" style="margin-bottom:16px">
-                <div class="box-title">🔤 Tipografia</div>
-                <div class="field"><label>Fonte dos títulos</label>
-                  <select id="ec-font-title" onchange="aplicarEstilo()">
-                    <option value="'Cinzel',serif">Cinzel (padrão)</option>
-                    <option value="'Playfair Display',serif">Playfair Display</option>
-                    <option value="'Oswald',sans-serif">Oswald</option>
-                    <option value="'Raleway',sans-serif">Raleway</option>
-                    <option value="'Press Start 2P',monospace">Press Start 2P (pixel)</option>
-                    <option value="'Fredoka One',cursive">Fredoka One</option>
-                    <option value="Georgia,serif">Georgia</option>
-                  </select>
-                </div>
-                <div class="field"><label>Fonte do corpo</label>
-                  <select id="ec-font-body" onchange="aplicarEstilo()">
-                    <option value="'Nunito',sans-serif">Nunito (padrão)</option>
-                    <option value="'Poppins',sans-serif">Poppins</option>
-                    <option value="'Inter',sans-serif">Inter</option>
-                    <option value="'Roboto',sans-serif">Roboto</option>
-                    <option value="'Lato',sans-serif">Lato</option>
-                    <option value="'Open Sans',sans-serif">Open Sans</option>
-                  </select>
-                </div>
-              </div>
-              <div class="box">
-                <div class="box-title">⬜ Bordas</div>
-                <div class="field"><label>Arredondamento dos cards</label>
-                  <select id="ec-radius" onchange="aplicarEstilo()">
-                    <option value="6px">Suave (6px)</option>
-                    <option value="10px" selected>Médio (10px)</option>
-                    <option value="16px">Arredondado (16px)</option>
-                    <option value="24px">Muito arredondado (24px)</option>
-                    <option value="0px">Sem arredondamento</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="box">
-            <div class="box-title">💻 CSS Personalizado</div>
-            <textarea id="ec-custom-css" rows="5" placeholder="/* Seu CSS aqui */" style="font-family:monospace;font-size:12px" oninput="aplicarEstilo()"></textarea>
-          </div>
-          <div style="display:flex;gap:10px;margin-top:4px">
-            <button class="btn btn-primary" onclick="salvarEstilo()">💾 Salvar estilo</button>
-            <button class="btn btn-warn" onclick="resetarEstilo()">↺ Restaurar padrão</button>
-          </div>
-          <div class="fb fb-ok" id="editor-fb-ok" style="margin-top:10px;display:none">✓ Estilo salvo!</div>
-        </div>
-
-        <!-- HISTÓRICOS -->
-        <div class="adm-section" id="sec-historicos">
-          <div class="sec-title">Históricos</div>
-          <div class="sec-sub">Limpeza dos históricos de rolagens — disponível apenas para o admin <strong>pchaptersrpg@gmail.com</strong></div>
-          <div id="hist-clear-blocked" style="display:none;background:#fde8e8;border:1.5px solid #f0c0c0;border-radius:8px;padding:16px;color:var(--red);font-size:13px;font-weight:600">
-            🔒 Apenas o admin <strong>pchaptersrpg@gmail.com</strong> pode limpar os históricos.
-          </div>
-          <div id="hist-clear-panel">
-            <div class="box" style="border-color:#f0c0c0">
-              <div class="box-title" style="color:var(--red)">🗑️ Histórico de Encontros Pokémon</div>
-              <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Apaga rolagens de encontro Pokémon no período selecionado, ou tudo de uma vez.</p>
-              <div class="g2" style="margin-bottom:12px">
-                <div class="field"><label>De</label><input type="date" id="poke-data-de"/></div>
-                <div class="field"><label>Até</label><input type="date" id="poke-data-ate"/></div>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-danger btn-sm" onclick="limparHistPokemonPorData()">🗑 Apagar período</button>
-                <button class="btn btn-danger" onclick="limparHistPokemon()">Limpar tudo</button>
-              </div>
-              <div class="fb fb-ok" id="hist-poke-fb" style="margin-top:8px">✓ Registros apagados!</div>
-              <div class="fb fb-err" id="hist-poke-fb-err" style="margin-top:8px">—</div>
-            </div>
-            <div class="box" style="border-color:#f0c0c0">
-              <div class="box-title" style="color:var(--red)">🗑️ Histórico de Dados</div>
-              <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Apaga rolagens de dados no período selecionado, ou tudo de uma vez.</p>
-              <div class="g2" style="margin-bottom:12px">
-                <div class="field"><label>De</label><input type="date" id="dados-data-de"/></div>
-                <div class="field"><label>Até</label><input type="date" id="dados-data-ate"/></div>
-              </div>
-              <div style="display:flex;gap:8px;flex-wrap:wrap">
-                <button class="btn btn-danger btn-sm" onclick="limparHistDadosPorData()">🗑 Apagar período</button>
-                <button class="btn btn-danger" onclick="limparHistDados()">Limpar tudo</button>
-              </div>
-              <div class="fb fb-ok" id="hist-dados-fb" style="margin-top:8px">✓ Registros apagados!</div>
-              <div class="fb fb-err" id="hist-dados-fb-err" style="margin-top:8px">—</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- HISTÓRICO DE FICHAS -->
-        <div class="adm-section" id="sec-fichas-hist">
-          <div class="sec-title">Histórico de Fichas</div>
-          <div class="sec-sub">Todas as edições feitas pelos jogadores nas fichas dos personagens</div>
-          <div class="box">
-            <div id="fichas-hist-lista" style="font-size:13px;color:var(--muted);text-align:center;padding:20px">Clique na aba para carregar.</div>
-          </div>
-        </div>
-
-      </div><!-- /adm-content -->
-    </div><!-- /adm-layout -->
-  </div><!-- /adm-painel -->
-</div><!-- /page-adm -->
-
-<!-- MODAL PLAYER -->
-<div class="modal-overlay" id="modal-player" style="display:none">
-  <div class="modal-box">
-    <button class="modal-close" onclick="fecharModalPlayer()">✕</button>
-    <div class="modal-title" id="modal-player-title">Editar Player</div>
-    <input type="hidden" id="modal-pl-id"/>
-    <div class="field"><label>Nome</label><input type="text" id="modal-pl-nome" disabled style="opacity:.6;cursor:not-allowed"/></div>
-    <div class="field"><label>Pontos</label><input type="number" id="modal-pl-pontos" min="0" style="width:120px"/></div>
-    <div class="field"><label>Nova Senha <span style="font-size:11px;font-weight:400;color:var(--muted)">(deixe em branco para não alterar)</span></label>
-      <input type="password" id="modal-pl-senha" placeholder="••••••••" autocomplete="new-password"/>
+<!-- MODAL INVENTÁRIO -->
+<div class="cores-modal-overlay" id="inv-modal-overlay" style="display:none" onclick="if(event.target===this)fecharModalInventario()">
+  <div class="cores-modal" style="max-width:660px;width:95vw;max-height:85vh;display:flex;flex-direction:column">
+    <div class="cores-modal-title">🎒 Gerenciar Inventário</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <input type="text" id="inv-busca" placeholder="Buscar item..." oninput="filtrarItensModal()"
+        style="flex:1;min-width:140px;padding:7px 10px;border:1.5px solid #ccc;border-radius:4px;font-size:13px;font-family:var(--font-body)"/>
+      <select id="inv-filtro-cat" onchange="filtrarItensModal()"
+        style="padding:7px 10px;border:1.5px solid #ccc;border-radius:4px;font-size:13px;font-family:var(--font-body)">
+        <option value="">Todas as categorias</option>
+        <option>Pokéball</option><option>Snack</option><option>Medicine</option>
+        <option>Itens de Treinador</option><option>Z-Crystal</option>
+        <option>Hold Item</option><option>Props</option><option>Fóssil</option>
+        <option>Megastone</option><option>Treasure Item</option>
+      </select>
     </div>
-    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="salvarEdicaoPlayer()">Salvar</button>
-      <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharModalPlayer()">Cancelar</button>
-      <button class="btn btn-danger" style="margin-left:auto" onclick="removerPlayerDoModal()">🗑 Excluir player</button>
+    <div id="inv-modal-lista" style="flex:1;overflow-y:auto;border:1.5px solid #eee;border-radius:4px"></div>
+    <div class="cores-modal-btns" style="margin-top:12px">
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharModalInventario()">Fechar</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL PERSONAGEM -->
-<div class="modal-overlay" id="modal-personagem" style="display:none">
-  <div class="modal-box">
-    <button class="modal-close" onclick="fecharModal()">✕</button>
-    <div class="modal-title">Editar Personagem</div>
-    <input type="hidden" id="modal-p-id"/>
-    <div class="g2">
-      <div class="field"><label>Nome do Player</label><input type="text" id="modal-p-player"/></div>
-      <div class="field"><label>Nome do Personagem</label><input type="text" id="modal-p-nome"/></div>
-      <div class="field"><label>Photoplayer</label><input type="text" id="modal-p-photoplayer" placeholder="Ex: Satoshi"/></div>
-      <div class="field"><label>Cor do avatar</label><input type="color" id="modal-p-cor"/></div>
-      <div class="field"><label>Imagem do personagem</label>
-        <input type="file" id="modal-p-img" accept="image/*" onchange="modalPreviewImg(this)" style="font-size:13px"/>
-        <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-          <div id="modal-p-img-preview" style="width:52px;height:52px;border-radius:50%;background:var(--surface2);border:2px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center"></div>
-          <button class="btn btn-danger btn-sm" onclick="modalRemoverImg()">Remover imagem</button>
+<!-- MODAL DE CORES -->
+<div class="cores-modal-overlay" id="cores-modal-overlay" style="display:none" onclick="if(event.target===this)fecharModalCores()">
+  <div class="cores-modal">
+    <div class="cores-modal-title">🎨 Personalizar Cores</div>
+    <div class="cores-row">
+      <div class="cores-field">
+        <label>Cor primária<br/><span style="font-size:9px;color:#888;font-weight:400">Cabeçalho · Dados · Títulos de seção</span></label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="color" id="color-picker-primaria" value="#1a1a1a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none;flex-shrink:0" oninput="onPickerInput('primaria')"/>
+          <span style="font-size:12px;color:#555">#</span>
+          <input type="text" id="cor-primaria" maxlength="6" placeholder="1a1a1a"
+            style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase"
+            oninput="onHexInput('primaria')"/>
+        </div>
+      </div>
+      <div class="cores-field">
+        <label>Cor secundária<br/><span style="font-size:9px;color:#888;font-weight:400">Slogan · Relacionamentos · Header Pokémon</span></label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="color" id="color-picker-secundaria" value="#3a3a3a" style="width:32px;height:32px;border:1.5px solid #ccc;border-radius:3px;padding:2px;cursor:pointer;background:none;flex-shrink:0" oninput="onPickerInput('secundaria')"/>
+          <span style="font-size:12px;color:#555">#</span>
+          <input type="text" id="cor-secundaria" maxlength="6" placeholder="3a3a3a"
+            style="width:72px;padding:5px 8px;border:1.5px solid #ccc;border-radius:3px;font-family:monospace;font-size:13px;text-transform:uppercase"
+            oninput="onHexInput('secundaria')"/>
         </div>
       </div>
     </div>
-    <input type="hidden" id="modal-p-ativo" value="1"/>
-    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="salvarEdicaoPersonagem()">Salvar</button>
-      <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharModal()">Cancelar</button>
-      <button class="btn" id="modal-p-toggle-btn" style="background:var(--surface2);border:1.5px solid var(--border);margin-left:auto" onclick="toggleDesativarPersonagem()">⏸ Desativar</button>
-      <button class="btn btn-danger" onclick="removerPersonagemDoModal()">🗑 Excluir</button>
+    <div class="cores-modal-btns">
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="resetarCores()">↺ Padrão</button>
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharModalCores()">Cancelar</button>
+      <button class="btn btn-primary btn-sm" onclick="salvarCores()">Aplicar</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL ITEM -->
-<div class="modal-overlay" id="modal-item" style="display:none">
-  <div class="modal-box" style="max-width:480px">
-    <button class="modal-close" onclick="fecharModalItem()">✕</button>
-    <div class="modal-title" id="modal-item-title">Novo Item</div>
-    <input type="hidden" id="modal-item-id"/>
-    <div class="g2">
-      <div class="field">
-        <label>Nome</label>
-        <input type="text" id="modal-item-nome" placeholder="Ex: Potion"/>
-      </div>
-      <div class="field">
-        <label>Categoria</label>
-        <select id="modal-item-cat">
-          <option>Pokéball</option>
-          <option>Snack</option>
-          <option>Medicine</option>
-          <option>Itens de Treinador</option>
-          <option>Z-Crystal</option>
-          <option>Hold Item</option>
-          <option>Props</option>
-          <option>Fóssil</option>
-          <option>Megastone</option>
-          <option>Treasure Item</option>
-        </select>
-      </div>
-    </div>
-    <div class="field">
-      <label>Descrição</label>
-      <textarea id="modal-item-desc" rows="3" placeholder="Descreva o efeito ou uso do item..."
-        style="padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);width:100%;resize:vertical"></textarea>
-    </div>
-    <div class="field">
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--text)">
-        <input type="checkbox" id="modal-item-evento"/>
-        Item de Evento
-        <span style="font-size:11px;color:var(--muted);font-weight:400">(aparece destacado no inventário)</span>
-      </label>
-    </div>
-    <div class="fb fb-err" id="modal-item-err" style="margin-bottom:8px">—</div>
-    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="salvarItem()">Salvar</button>
-      <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharModalItem()">Cancelar</button>
-      <button class="btn btn-danger" id="modal-item-del-btn" style="margin-left:auto;display:none" onclick="removerItemDoModal()">🗑 Excluir</button>
+<!-- MODAL HISTÓRICO -->
+<div class="cores-modal-overlay" id="hist-modal-overlay" style="display:none" onclick="if(event.target===this)fecharHistorico()">
+  <div class="cores-modal" style="max-width:520px;max-height:80vh;display:flex;flex-direction:column">
+    <div class="cores-modal-title">Histórico de Edições</div>
+    <div id="hist-lista" style="flex:1;overflow-y:auto;font-size:12px;font-family:var(--font-body)"></div>
+    <div class="cores-modal-btns" style="margin-top:12px">
+      <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="fecharHistorico()">Fechar</button>
     </div>
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+.hist-entry{padding:8px 0;border-bottom:1px solid #eee}
+.hist-entry:last-child{border-bottom:none}
+.hist-campo{font-weight:700;color:#333;text-transform:uppercase;font-size:10px;letter-spacing:.4px}
+.hist-data{font-size:10px;color:#888;margin-left:6px}
+.hist-val{margin-top:3px;color:#555;line-height:1.5;word-break:break-word}
+.hist-val span{background:#f4f4f4;border-radius:3px;padding:1px 5px}
+</style>
 <script>
-// ══════════════════════════════════════
-// SUPABASE CONFIG
-// ══════════════════════════════════════
-const SUPA_URL = 'https://jdgfxsvgxfdkdrzqbgje.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
+const SUPA_URL='https://jdgfxsvgxfdkdrzqbgje.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
 
-async function sb(path, opts={}){
-  const session = supabaseClient?.auth ? (await supabaseClient.auth.getSession()).data.session : null;
-  const token = session?.access_token || SUPA_KEY;
-  const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
-    headers:{
-      'apikey': SUPA_KEY,
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'Prefer': opts.prefer || 'return=representation',
-      ...opts.headers
-    },
+async function api(path,opts={}){
+  const res=await fetch(`${SUPA_URL}/rest/v1/${path}`,{
+    headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...opts.headers},
     ...opts
   });
-  if(opts.method==='DELETE'||res.status===204) return [];
-  const text = await res.text();
-  if(!text) return [];
-  try{ return JSON.parse(text); }catch(e){ return []; }
+  if(res.status===204||opts.method==='DELETE')return[];
+  const t=await res.text();
+  try{return JSON.parse(t);}catch{return[];}
 }
+const apiGet =(p,q='')=>api(`${p}?${q}`);
+const apiPost=(p,b)=>api(p,{method:'POST',body:JSON.stringify(b)});
+const apiPatch=(p,q,b)=>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
 
-const supabaseClient = supabase.createClient(SUPA_URL, SUPA_KEY);
-const dbGet  = (t,q='')   => sb(`${t}?${q}&order=created_at.asc`);
-const dbPost = (t,b)      => sb(t,{method:'POST',body:JSON.stringify(b)});
-const dbPatch= (t,q,b)    => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
-const dbDel  = (t,q)      => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
+// ─── Estado ───────────────────────────────────────────
+let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
+let loginPlayerNome='', loginPlayerData=null, loginPersonagemSelecionado=null, loginPersonagensDoPlayer=[];
+const personagemSlug=(()=>{
+  const params=new URLSearchParams(location.search).get('id');
+  if(params) return params;
+  // lê do path: /ficha/hanograssly
+  const match=location.pathname.match(/\/ficha\/([^\/]+)/);
+  return match?match[1]:null;
+})();
 
-// ══════════════════════════════════════
-// STATE
-// ══════════════════════════════════════
-let admins=[], players=[], personagens=[], biomas=[], pokemonDB=[], historico=[], itensDB=[];
-let admLogado=null, playerLogado=null, histPagina=0;
-try{ const s=localStorage.getItem('pchapters_player'); if(s) playerLogado=JSON.parse(s); }catch(e){}
-const HIST_POR_PAG=10;
+// ─── Render ───────────────────────────────────────────
+const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 
-function slugify(str){
-  return str.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-    .replace(/[^a-z0-9]/g,'');
-}
-
-const tcls={fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
-const rlbl={comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
-const rcls={comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
-const glbl={'1d2':'1d2 (50/50)',macho:'100% Macho',femea:'100% Fêmea',genderless:'Sem gênero'};
-
-const FALLBACK_SPRITE_DEFAULT='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
-let FALLBACK_SPRITE=FALLBACK_SPRITE_DEFAULT, FALLBACK_AVATAR=FALLBACK_SPRITE_DEFAULT;
-fetch('https://pokeapi.co/api/v2/pokemon-form/10027/')
-  .then(r=>r.json()).then(d=>{ const u=d?.sprites?.front_default; if(u){FALLBACK_SPRITE=u;FALLBACK_AVATAR=u;document.querySelectorAll('.unown-fallback-img').forEach(i=>i.src=u);} }).catch(()=>{});
-
-function loading(show){ document.getElementById('loading-overlay').style.display=show?'flex':'none'; }
-function fb(id,ms=2500){const el=document.getElementById(id);if(!el)return;el.style.display='block';setTimeout(()=>el.style.display='none',ms);}
-
-// ══════════════════════════════════════
-// HISTÓRICO DE FICHAS (ADM)
-// ══════════════════════════════════════
-async function carregarFichasHist(){
-  const el=document.getElementById('fichas-hist-lista');
-  el.textContent='Carregando...';
-  const data=await dbGet('fichas_historico','order=editado_em.desc&limit=200');
-  if(!data||data.length===0){el.innerHTML='<div style="color:var(--muted);padding:20px;text-align:center">Nenhuma edição registrada ainda.</div>';return;}
-  el.innerHTML=`<table class="adm-table" style="width:100%">
-    <thead><tr><th>Data/Hora</th><th>Personagem</th><th>Player</th><th>Campo</th><th>Novo valor</th></tr></thead>
-    <tbody>${data.map(h=>`<tr>
-      <td style="font-size:11px;white-space:nowrap">${new Date(h.editado_em).toLocaleString('pt-BR')}</td>
-      <td><strong>${h.personagem_nome||'—'}</strong></td>
-      <td style="color:var(--muted)">${h.player_nome||'—'}</td>
-      <td><span style="background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;font-size:11px">${h.campo}</span></td>
-      <td style="font-size:12px;color:var(--muted);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(h.valor_novo||'').replace(/"/g,'&quot;')}">${h.valor_novo||'<em>vazio</em>'}</td>
-    </tr>`).join('')}</tbody>
-  </table>`;
-}
-
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
-async function init(){
-  loading(true);
+function renderFicha(){
   try{
-    const {data:{session}}=await supabaseClient.auth.getSession();
-    if(session){
-      admLogado={email:session.user.email};
-      document.getElementById('adm-user-label').textContent=session.user.email;
-    }
-
-    const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
-    let paginaInicial=PATH_PAGES[pathSeg]||'roller';
-    if(paginaInicial==='adm'&&!admLogado) paginaInicial='login';
-    if(paginaInicial==='player'&&!playerLogado) paginaInicial='login';
-
-    const [_players,_personagens,_biomas,_pokemons,_admins,estilo] = await Promise.all([
-      dbGet('players'),
-      dbGet('personagens'),
-      dbGet('biomas'),
-      dbGet('pokemons'),
-      dbGet('admins'),
-      carregarEstiloSalvo(),
-    ]);
-    players=_players; personagens=_personagens;
-    biomas=_biomas; pokemonDB=_pokemons; admins=_admins;
-    aplicarVars(estilo);
-    syncBiomaSelect();
-
-    loading(false);
-
-    await goTo(paginaInicial, null, false);
-
-    const navBtns=document.querySelectorAll('.nav-link');
-    navBtns.forEach(b=>{
-      const pageKey=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
-      if(pageKey===paginaInicial) b.classList.add('active');
-      else b.classList.remove('active');
-    });
-    if(['login','player','adm'].includes(paginaInicial))
-      document.getElementById('btn-login').classList.add('active');
-
-  } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); loading(false); }
-}
-
-// ══════════════════════════════════════
-// NAVEGAÇÃO
-// ══════════════════════════════════════
-const PAGE_PATHS={roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm'};
-const PATH_PAGES=Object.fromEntries(Object.entries(PAGE_PATHS).map(([k,v])=>[v,k]));
-const pagesLoaded={roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false};
-
-async function goTo(page,el,pushState=true){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
-  document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
-  document.getElementById('btn-login').classList.remove('active');
-  if(el) el.classList.add('active');
-  if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
-  if(pushState) history.pushState({page},'','/'+PAGE_PATHS[page]);
-  await lazyLoad(page);
-}
-
-async function lazyLoad(page){
-  if(pagesLoaded[page]) return;
-  pagesLoaded[page]=true;
-  if(page==='roller'){
-    const raw=await dbGet('historico','order=created_at.desc&limit=100');
-    historico=raw||[];
-    renderHistorico();
-  }
-  if(page==='bioma') renderBiomaPage();
-  if(page==='dados'){
-    const raw=await dbGet('historico_dados','order=created_at.desc&limit=300');
-    historicoDados=raw||[];
-    renderHistDados();
-  }
-  if(page==='ficha'){
-    renderFichario();
-    renderPersonagensDatalist();
-  }
-  if(page==='adm'){
-    if(!admLogado) return;
-    const [_players,_personagens] = await Promise.all([
-      players.length===0 ? dbGet('players') : Promise.resolve(players),
-      personagens.length===0 ? dbGet('personagens') : Promise.resolve(personagens),
-    ]);
-    if(players.length===0) players=_players;
-    if(personagens.length===0) personagens=_personagens;
-    renderTbodyPersonagens();
-    renderTbodyPlayers();
-  }
-}
-
-function tryParse(str,def){try{return JSON.parse(str);}catch{return def;}}
-
-window.addEventListener('popstate',e=>{
-  const page=e.state?.page||(PATH_PAGES[location.pathname.replace(/^\/+/,'').replace(/\/+$/,'')])|| 'roller';
-  goTo(page,null,false);
-  document.querySelectorAll('.nav-link').forEach(b=>{
-    const pk=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
-    if(pk===page)b.classList.add('active');else b.classList.remove('active');
-  });
-  if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
-});
-
-// ══════════════════════════════════════
-// POR BIOMA
-// ══════════════════════════════════════
-let biomaAtivo = null;
-function renderBiomaPage(){
-  const tabs  = document.getElementById('bioma-tabs');
-  const cont  = document.getElementById('bioma-content');
-  if(!biomas.length){ cont.innerHTML='<div style="color:var(--muted);padding:20px">Nenhum bioma cadastrado.</div>'; return; }
-  if(!biomaAtivo || !biomas.find(b=>b.nome===biomaAtivo)) biomaAtivo = biomas[0].nome;
-  tabs.innerHTML = biomas.map(b=>`
-    <button class="bioma-tab-btn${b.nome===biomaAtivo?' active':''}" onclick="selecionarBioma('${b.nome}',this)">
-      ${b.nome}
-    </button>`).join('');
-  renderBiomaConteudo();
-}
-function selecionarBioma(nome, el){
-  biomaAtivo = nome;
-  document.querySelectorAll('.bioma-tab-btn').forEach(b=>b.classList.remove('active'));
-  el.classList.add('active');
-  renderBiomaConteudo();
-}
-function renderBiomaConteudo(){
-  const cont = document.getElementById('bioma-content');
-  const pokes = pokemonDB.filter(p=>p.bioma===biomaAtivo);
-  if(!pokes.length){
-    cont.innerHTML='<div style="color:var(--muted);padding:20px;font-size:14px">Nenhum Pokémon cadastrado neste bioma.</div>';
-    return;
-  }
-  const ordem = ['comum','incomum','raro','rarissimo'];
-  const nomes  = {rarissimo:'Raríssimo',raro:'Raro',incomum:'Incomum',comum:'Comum'};
-  cont.innerHTML = ordem.map(r=>{
-    const grupo = pokes.filter(p=>p.raridade===r).sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
-    if(!grupo.length) return '';
-    const cards = grupo.map(p=>`
-      <div class="bioma-poke-card">
-        <div class="bioma-poke-sprite">
-          <img src="${p.sprite||FALLBACK_SPRITE}" alt="${p.nome}"
-            style="width:64px;height:64px;object-fit:contain;image-rendering:pixelated"
-            onerror="this.src='${FALLBACK_SPRITE}'"/>
-        </div>
-        <div class="bioma-poke-name">${p.nome}</div>
-        <div class="bioma-poke-tipos">
-          ${(p.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}
-        </div>
-      </div>`).join('');
-    return `<div class="bioma-raridade-section">
-      <div class="bioma-raridade-title">${nomes[r]} — ${grupo.length} Pokémon</div>
-      <div class="bioma-poke-grid">${cards}</div>
-    </div>`;
-  }).join('');
-}
-
-function admTab(sec,el){
-  document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('active'));
-  document.getElementById('sec-'+sec).classList.add('active');
-  document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
-  if(el)el.classList.add('active');
-  if(sec==='personagens'){
-    const load=[];
-    if(players.length===0) load.push(dbGet('players').then(r=>{players=r;}));
-    if(personagens.length===0) load.push(dbGet('personagens').then(r=>{personagens=r;}));
-    Promise.all(load).then(()=>{renderTbodyPersonagens();renderTbodyPlayers();});
-  }
-  if(sec==='biomas')renderTbodyBiomas();
-  if(sec==='pokemons'){syncBiomaSelects();document.getElementById('pk-filtro-wrap').style.display='';renderTbodyPokemons();}
-  if(sec==='itens'){
-    if(itensDB.length===0){
-      carregarItens().then(()=>renderTbodyItens());
-    } else {
-      renderTbodyItens();
-    }
-  }
-  if(sec==='admins')renderTbodyAdmins();
-  if(sec==='editor'){carregarEstiloSalvo().then(e=>carregarEditorUI(e));}
-  if(sec==='historicos'){
-    const isGold=admLogado?.email==='pchaptersrpg@gmail.com';
-    document.getElementById('hist-clear-blocked').style.display=isGold?'none':'block';
-    document.getElementById('hist-clear-panel').style.display=isGold?'block':'none';
-  }
-  if(sec==='fichas-hist') carregarFichasHist();
-}
-
-// ══════════════════════════════════════
-// LOGIN
-// ══════════════════════════════════════
-async function fazerLogin(){
-  const email=document.getElementById('login-email').value.trim();
-  const senha=document.getElementById('login-senha').value;
-  const errEl=document.getElementById('login-erro');
-  errEl.style.display='none';
-  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:senha});
-  if(error||!data.session){errEl.style.display='block';return;}
-  admLogado={email:data.user.email};
-  document.getElementById('adm-user-label').textContent=data.user.email;
-  pagesLoaded['adm']=false;
-  await goTo('adm',null,true);
-}
-async function fazerLogout(){
-  await supabaseClient.auth.signOut();
-  admLogado=null;
-  document.getElementById('login-email').value='';
-  document.getElementById('login-senha').value='';
-  await goTo('login',null,true);
-}
-
-function resetPlayerLoginForm(){
-  document.getElementById('player-confirma-field').style.display='none';
-  document.getElementById('player-primeiro-aviso').style.display='none';
-  document.getElementById('player-login-btn').textContent='Entrar como Player';
-  document.getElementById('player-login-erro').style.display='none';
-  document.getElementById('player-confirma-input').value='';
-}
-function onPlayerNomeInput(){
-  resetPlayerLoginForm();
-  const nome=document.getElementById('player-nome-input').value.trim();
-  if(!nome) return;
-  const pl=players.find(p=>p.nome.toLowerCase()===nome.toLowerCase());
-  if(pl && !pl.senha){
-    document.getElementById('player-confirma-field').style.display='block';
-    document.getElementById('player-primeiro-aviso').style.display='block';
-    document.getElementById('player-login-btn').textContent='Definir senha e entrar';
-  }
-}
-async function fazerLoginPlayer(){
-  const nome=document.getElementById('player-nome-input').value.trim();
-  const senha=document.getElementById('player-senha-input').value;
-  const errEl=document.getElementById('player-login-erro');
-  errEl.style.display='none';
-  if(!nome){errEl.textContent='Preencha o nome do player.';errEl.style.display='block';return;}
-  if(!senha){errEl.textContent='Preencha a senha.';errEl.style.display='block';return;}
-  const pl=players.find(p=>p.nome.toLowerCase()===nome.toLowerCase());
-  if(!pl){
-    errEl.textContent='Player não encontrado. Peça ao ADM para te cadastrar.';errEl.style.display='block';return;
-  }
-  if(!pl.senha){
-    const confirma=document.getElementById('player-confirma-input').value;
-    if(!confirma){errEl.textContent='Preencha a confirmação de senha.';errEl.style.display='block';return;}
-    if(confirma!==senha){errEl.textContent='As senhas não coincidem. Tente novamente.';errEl.style.display='block';return;}
-    if(senha.length<4){errEl.textContent='Use ao menos 4 caracteres.';errEl.style.display='block';return;}
-    await dbPatch('players',`id=eq.${pl.id}`,{senha});
-    pl.senha=senha;
-    const cached=players.find(p=>p.id===pl.id);
-    if(cached) cached.senha=senha;
-  } else if(pl.senha!==senha){
-    errEl.textContent='Senha incorreta.';errEl.style.display='block';return;
-  }
-  playerLogado={id:pl.id,nome:pl.nome};
-  localStorage.setItem('pchapters_player',JSON.stringify(playerLogado));
-  await renderAreaPlayer();
-  await goTo('player',null,true);
-}
-async function renderAreaPlayer(){
-  const p=playerLogado;
-  document.getElementById('player-area-title').textContent=`Olá, ${p.nome}!`;
-  document.getElementById('player-area-sub').textContent='Escolha qual ficha você quer editar.';
-  const chars=personagens.filter(c=>c.player===p.nome && c.ativo!==false);
-  const grid=document.getElementById('player-fichas-grid');
-  if(!chars.length){
-    grid.innerHTML='<div style="color:var(--muted);font-size:13px">Nenhum personagem vinculado ao seu player.</div>';
-    return;
-  }
-  grid.innerHTML=chars.map(c=>`
-    <div class="ficha-card" onclick="window.open('ficha/${encodeURIComponent(c.slug||slugify(c.nome))}','_blank')" style="cursor:pointer">
-      <div class="ficha-card-avatar" style="background:${c.cor}22;border:2px solid ${c.cor}">
-        ${c.img?`<img src="${c.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
-          :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}
-      </div>
-      <div>
-        <div class="ficha-name">${c.nome}</div>
-        ${c.photoplayer?`<div class="ficha-photoplayer">${c.photoplayer}</div>`:''}
-      </div>
-    </div>`).join('');
-}
-async function sairPlayer(){
-  playerLogado=null;
-  localStorage.removeItem('pchapters_player');
-  document.getElementById('player-nome-input').value='';
-  document.getElementById('player-senha-input').value='';
-  await goTo('login',null,true);
-}
-
-// ══════════════════════════════════════
-// ADMINS
-// ══════════════════════════════════════
-async function adicionarAdmin(){
-  const email=document.getElementById('adm-new-email').value.trim();
-  const senha=document.getElementById('adm-new-senha').value;
-  const errEl=document.getElementById('adm-fb-err');
-  document.getElementById('adm-fb-ok').style.display='none';errEl.style.display='none';
-  if(!email||senha.length<6){errEl.textContent='Preencha usuário e senha (mín. 6 caracteres).';errEl.style.display='block';return;}
-  if(admins.find(a=>a.email===email)){errEl.textContent='Este usuário já está cadastrado.';errEl.style.display='block';return;}
-  const res=await dbPost('admins',{email,senha});
-  if(res&&res[0]){admins.push(res[0]);fb('adm-fb-ok');}
-  document.getElementById('adm-new-email').value='';document.getElementById('adm-new-senha').value='';
-  renderTbodyAdmins();
-}
-async function removerAdmin(id,email){
-  if(admins.length<=1){alert('Deve existir ao menos 1 administrador.');return;}
-  if(email===admLogado?.email){alert('Você não pode remover a si mesmo.');return;}
-  if(!confirm(`Remover o admin "${email}"?`))return;
-  await dbDel('admins',`id=eq.${id}`);
-  admins=admins.filter(a=>a.id!==id);
-  renderTbodyAdmins();
-}
-function renderTbodyAdmins(){
-  document.getElementById('tbody-admins').innerHTML=admins.map(a=>`
-    <tr>
-      <td>${a.email}${a.email===admLogado?.email?' <span style="font-size:10px;color:var(--muted)">(você)</span>':''}</td>
-      <td><button class="btn btn-danger btn-sm" onclick="removerAdmin('${a.id}','${a.email}')" ${a.email===admLogado?.email?'disabled':''}>Remover</button></td>
-    </tr>`).join('');
-}
-
-// ══════════════════════════════════════
-// PLAYERS
-// ══════════════════════════════════════
-async function removerPlayer(id,nome){
-  const qtd=personagens.filter(p=>p.player===nome).length;
-  if(!confirm(`Remover o player "${nome}"?${qtd>0?`\n\nOs ${qtd} personagem(ns) deste player também serão removidos.`:''}`))return;
-  await dbDel('players',`id=eq.${id}`);
-  players=players.filter(p=>p.id!==id);
-  personagens=personagens.filter(p=>p.player!==nome);
-  renderTbodyPlayers();renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
-}
-function renderTbodyPlayers(){ renderAccordionPlayers(); }
-function renderTbodyPersonagens(){ renderAccordionPlayers(); }
-
-function renderAccordionPlayers(){
-  const el=document.getElementById('accordion-players');if(!el)return;
-  if(players.length===0){el.innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px">Nenhum player cadastrado.</div>';return;}
-  const sorted=[...players].sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
-  el.innerHTML=sorted.map(pl=>{
-    const chars=personagens.filter(p=>p.player===pl.nome).sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
-    const temSenha=!!pl.senha;
-    const rows=chars.length===0
-      ?`<div style="color:var(--muted);font-size:12px;padding:6px 0">Nenhum personagem cadastrado.</div>`
-      :chars.map(p=>`
-        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);opacity:${p.ativo===false?'.45':'1'}">
-          <div onclick="abrirModalPersonagem('${p.id}')" title="Clique para editar"
-            style="width:32px;height:32px;border-radius:50%;overflow:hidden;background:${p.cor}22;border:2px solid ${p.cor};flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:opacity .15s"
-            onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">
-            ${p.img?`<img src="${p.img}" style="width:32px;height:32px;object-fit:cover;border-radius:50%"/>`:`<img src="${FALLBACK_AVATAR}" style="width:26px;height:26px;object-fit:contain;image-rendering:pixelated"/>`}
-          </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:600;color:var(--text)">${p.nome}${p.ativo===false?' <span style="font-size:10px;color:var(--muted);font-weight:400">(desativado)</span>':''}</div>
-            ${p.photoplayer?`<div style="font-size:11px;color:var(--muted)">${p.photoplayer}</div>`:''}
-          </div>
-          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px;flex-shrink:0" onclick="abrirModalPersonagem('${p.id}')">✏ Editar</button>
-        </div>`).join('');
-    return`<div class="acc-player" id="acc-${pl.id}">
-      <div class="acc-player-header" onclick="toggleAcc('${pl.id}')">
-        <span class="acc-chevron">▶</span>
-        <span class="acc-player-nome">${pl.nome}</span>
-        <span class="acc-player-meta">
-          <span>${chars.length} personagem${chars.length!==1?'s':''}</span>
-          <span style="font-weight:700;color:var(--brand-mid)">${pl.pontos} pts</span>
-          ${temSenha?'<span style="color:#1a7a1a;font-size:10px">✓ senha</span>':'<span style="color:var(--muted);font-size:10px">sem senha</span>'}
-        </span>
-        <span style="display:flex;gap:5px;margin-left:8px" onclick="event.stopPropagation()">
-          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px" onclick="abrirModalPlayer('${pl.id}')">✏ Editar</button>
-        </span>
-      </div>
-      <div class="acc-player-body" id="acc-body-${pl.id}">${rows}</div>
-    </div>`;
-  }).join('');
-}
-
-function toggleAcc(id){
-  const header=document.querySelector(`#acc-${id} .acc-player-header`);
-  const body=document.getElementById(`acc-body-${id}`);
-  header.classList.toggle('open');
-  body.classList.toggle('open');
-}
-
-// ══════════════════════════════════════
-// PERSONAGENS
-// ══════════════════════════════════════
-function previewPersonagemImg(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const prev=document.getElementById('np-img-preview');
-    prev.innerHTML=`<img src="${e.target.result}" style="width:57px;height:57px;object-fit:cover;border-radius:50%"/>`;
-    prev.dataset.b64=e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-async function adicionarPersonagem(){
-  const player     =document.getElementById('np-player').value.trim();
-  const nome       =document.getElementById('np-nome').value.trim();
-  const photoplayer=document.getElementById('np-photoplayer').value.trim();
-  const cor        =document.getElementById('np-cor').value;
-  const prev       =document.getElementById('np-img-preview');
-  const img        =prev.dataset.b64||null;
-  if(!player||!nome){alert('Preencha o nome do player e do personagem.');return;}
-  if(!players.find(p=>p.nome===player)){
-    const res=await dbPost('players',{nome:player,pontos:0});
-    if(res&&res[0])players.push(res[0]);
-  }
-  const slug=slugify(nome);
-  const res=await dbPost('personagens',{player,nome,photoplayer:photoplayer||null,cor,img,slug});
-  if(res&&res[0])personagens.push(res[0]);
-  fb('np-fb');
-  document.getElementById('np-player').value='';
-  document.getElementById('np-nome').value='';
-  document.getElementById('np-photoplayer').value='';
-  document.getElementById('np-img').value='';
-  prev.innerHTML=`<img class="unown-fallback-img" src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
-  delete prev.dataset.b64;
-  renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
-}
-async function removerPersonagem(id){
-  if(!confirm('Remover este personagem?'))return;
-  await dbDel('personagens',`id=eq.${id}`);
-  personagens=personagens.filter(p=>p.id!==id);
-  renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
-}
-function abrirModalPersonagem(id){
-  const p=personagens.find(x=>x.id===id);if(!p)return;
-  document.getElementById('modal-p-id').value=id;
-  document.getElementById('modal-p-player').value=p.player;
-  document.getElementById('modal-p-nome').value=p.nome;
-  document.getElementById('modal-p-photoplayer').value=p.photoplayer||'';
-  document.getElementById('modal-p-cor').value=p.cor||'#2563a8';
-  const prev=document.getElementById('modal-p-img-preview');
-  prev.innerHTML=p.img?`<img src="${p.img}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`
-    :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
-  prev.dataset.img=p.img||'';
-  const ativo=p.ativo===false?false:true;
-  document.getElementById('modal-p-ativo').value=ativo?'1':'0';
-  const toggleBtn=document.getElementById('modal-p-toggle-btn');
-  toggleBtn.textContent=ativo?'⏸ Desativar':'▶ Reativar';
-  toggleBtn.style.borderColor=ativo?'var(--border)':'var(--brand-mid)';
-  toggleBtn.style.color=ativo?'':'var(--brand-mid)';
-  document.getElementById('modal-personagem').style.display='flex';
-}
-function fecharModal(){document.getElementById('modal-personagem').style.display='none';}
-function modalPreviewImg(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const prev=document.getElementById('modal-p-img-preview');
-    prev.innerHTML=`<img src="${e.target.result}" style="width:52px;height:52px;object-fit:cover;border-radius:50%"/>`;
-    prev.dataset.img=e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-function modalRemoverImg(){
-  const prev=document.getElementById('modal-p-img-preview');
-  prev.innerHTML=`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
-  prev.dataset.img='';
-  document.getElementById('modal-p-img').value='';
-}
-async function salvarEdicaoPersonagem(){
-  const id=document.getElementById('modal-p-id').value;
-  const p=personagens.find(x=>x.id===id);if(!p)return;
-  const novoPlayer     =document.getElementById('modal-p-player').value.trim();
-  const novoNome       =document.getElementById('modal-p-nome').value.trim();
-  const novoPhotoplayer=document.getElementById('modal-p-photoplayer').value.trim();
-  const novaCor        =document.getElementById('modal-p-cor').value;
-  const novaImg        =document.getElementById('modal-p-img-preview').dataset.img||null;
-  if(!novoPlayer||!novoNome){alert('Preencha todos os campos.');return;}
-  if(novoPlayer!==p.player&&!players.find(x=>x.nome===novoPlayer)){
-    const res=await dbPost('players',{nome:novoPlayer,pontos:0});
-    if(res&&res[0])players.push(res[0]);
-  }
-  const patch={player:novoPlayer,nome:novoNome,photoplayer:novoPhotoplayer||null,cor:novaCor,img:novaImg};
-  await dbPatch('personagens',`id=eq.${id}`,patch);
-  p.player=novoPlayer;p.nome=novoNome;p.photoplayer=novoPhotoplayer||null;p.cor=novaCor;p.img=novaImg;
-  fecharModal();
-  renderTbodyPersonagens();renderTbodyPlayers();renderFichario();renderPersonagensDatalist();
-}
-
-// ══════════════════════════════════════
-// BIOMAS
-// ══════════════════════════════════════
-async function adicionarBioma(){
-  const nome=document.getElementById('novo-bioma').value.trim();
-  if(!nome)return;
-  if(biomas.find(b=>b.nome===nome)){alert('Este bioma já existe.');return;}
-  const res=await dbPost('biomas',{nome});
-  if(res&&res[0])biomas.push(res[0]);
-  document.getElementById('novo-bioma').value='';
-  fb('bioma-fb');
-  syncBiomaSelect();syncBiomaSelects();renderTbodyBiomas();
-}
-async function removerBioma(id,nome){
-  const count=pokemonDB.filter(p=>p.bioma===nome).length;
-  if(!confirm(`Remover o bioma "${nome}"?${count>0?` Os ${count} Pokémon deste bioma também serão removidos.`:''}`))return;
-  await dbDel('biomas',`id=eq.${id}`);
-  biomas=biomas.filter(b=>b.id!==id);
-  pokemonDB=pokemonDB.filter(p=>p.bioma!==nome);
-  syncBiomaSelect();syncBiomaSelects();renderTbodyBiomas();renderTbodyPokemons();
-}
-function renderTbodyBiomas(){
-  document.getElementById('tbody-biomas').innerHTML=biomas.length===0
-    ?'<tr><td colspan="3" style="color:var(--muted);text-align:center;padding:20px">Nenhum bioma cadastrado.</td></tr>'
-    :biomas.map(b=>`
-      <tr>
-        <td><strong>${b.nome}</strong></td>
-        <td>${pokemonDB.filter(p=>p.bioma===b.nome).length} Pokémon</td>
-        <td><button class="btn btn-danger btn-sm" onclick="removerBioma('${b.id}','${b.nome}')">Remover</button></td>
-      </tr>`).join('');
-}
-function syncBiomaSelect(){
-  const sel=document.getElementById('bioma');
-  sel.innerHTML=biomas.map(b=>`<option>${b.nome}</option>`).join('');
-}
-function syncBiomaSelects(){
-  const pks=document.getElementById('pk-bioma');
-  const flt=document.getElementById('pk-filtro');
-  const imp=document.getElementById('imp-bioma');
-  const opts=biomas.map(b=>`<option>${b.nome}</option>`).join('');
-  if(pks)pks.innerHTML=opts;
-  if(imp)imp.innerHTML=opts;
-  if(flt)flt.innerHTML='<option value="">Todos</option>'+opts;
-}
-
-// ══════════════════════════════════════
-// POKÉMON
-// ══════════════════════════════════════
-function toggleTipo(el){el.classList.toggle('sel');}
-function previewPokeSprite(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    const prev=document.getElementById('pk-sprite-preview');
-    prev.innerHTML=`<img src="${e.target.result}" style="width:53px;height:53px;object-fit:contain;image-rendering:pixelated"/>`;
-    prev.dataset.b64=e.target.result;
-  };
-  reader.readAsDataURL(file);
-}
-async function adicionarPokemon(){
-  const nome       =document.getElementById('pk-nome').value.trim();
-  const habilidade =document.getElementById('pk-habilidade').value.trim();
-  const habilidade2=document.getElementById('pk-habilidade2').value.trim();
-  const raridade   =document.getElementById('pk-raridade').value;
-  const genero     =document.getElementById('pk-genero').value;
-  const bioma      =document.getElementById('pk-bioma').value;
-  const tipos      =[...document.querySelectorAll('#tipos-wrap .tipo-tag.sel')].map(t=>t.dataset.tipo);
-  const prev       =document.getElementById('pk-sprite-preview');
-  const sprite     =prev.dataset.b64||null;
-  if(!nome||tipos.length===0){alert('Preencha o nome e selecione ao menos 1 tipo.');return;}
-  const res=await dbPost('pokemons',{nome,emoji:'❓',sprite,tipos,habilidade,habilidade2,raridade,genero,bioma});
-  if(res&&res[0])pokemonDB.push(res[0]);
-  fb('pk-fb');
-  document.getElementById('pk-nome').value='';
-  document.getElementById('pk-habilidade').value='';
-  document.getElementById('pk-habilidade2').value='';
-  document.getElementById('pk-sprite-file').value='';
-  prev.innerHTML=`<img class="unown-fallback-img" src="${FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated"/>`;
-  delete prev.dataset.b64;
-  document.querySelectorAll('#tipos-wrap .tipo-tag').forEach(t=>t.classList.remove('sel'));
-  renderTbodyPokemons();renderTbodyBiomas();
-}
-async function removerPokemon(id){
-  if(!confirm('Remover este Pokémon?'))return;
-  await dbDel('pokemons',`id=eq.${id}`);
-  pokemonDB=pokemonDB.filter(p=>p.id!==id);
-  renderTbodyPokemons();renderTbodyBiomas();
-}
-async function editarNomePokemon(id){
-  const p=pokemonDB.find(x=>String(x.id)===String(id));
-  if(!p)return;
-  const novo=prompt(`Novo nome para "${p.nome}":`,p.nome);
-  if(!novo||novo.trim()===p.nome)return;
-  const novoNome=novo.trim();
-  await dbPatch('pokemons',`id=eq.${id}`,{nome:novoNome});
-  p.nome=novoNome;
-  renderTbodyPokemons();
-}
-function renderTbodyPokemons(){
-  const filtro=document.getElementById('pk-filtro')?.value||'';
-  const lista=(filtro?pokemonDB.filter(p=>p.bioma===filtro):pokemonDB)
-    .slice().sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
-  document.getElementById('tbody-pokemons').innerHTML=lista.length===0
-    ?'<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:20px">Nenhum Pokémon encontrado.</td></tr>'
-    :lista.map(p=>{
-      const habs=[p.habilidade,p.habilidade2].filter(Boolean);
-      const habStr=habs.length>0?habs.join(' / '):'—';
-      return`<tr>
-        <td style="display:flex;align-items:center;gap:8px">
-          <div style="width:40px;height:40px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
-            <img src="${p.sprite||FALLBACK_SPRITE}" style="width:40px;height:40px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>
-          </div>
-          <strong>${p.nome}</strong>
-        </td>
-        <td>${p.bioma}</td>
-        <td><span class="poke-rarity ${rcls[p.raridade]}">${rlbl[p.raridade]}</span></td>
-        <td>${(p.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}</td>
-        <td style="font-size:12px;color:var(--muted)">${glbl[p.genero]||p.genero}</td>
-        <td style="white-space:nowrap">
-          <button class="btn btn-xs" style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px" onclick="editarNomePokemon('${p.id}')">✏️ Nome</button>
-          <button class="btn btn-danger btn-xs" style="padding:3px 8px;font-size:11px;margin-left:4px" onclick="removerPokemon('${p.id}')">Remover</button>
-        </td>
-      </tr>`;
-    }).join('');
-}
-
-// IMPORTADOR
-const SLUG_MAP={'mr. mime':'mr-mime','farfetch\'d':'farfetchd','sirfetch\'d':'sirfetchd','flabébé':'flabebe','nidoran♀':'nidoran-f','nidoran♂':'nidoran-m','squawkabilly (blue plumage)':'squawkabilly','squawkabilly (blue)':'squawkabilly'};
-function toSlug(name){
-  const lower=name.toLowerCase().trim();
-  if(SLUG_MAP[lower])return SLUG_MAP[lower];
-  return lower.replace(/\s*\(.*?\)/g,'').trim().replace(/[^a-z0-9\-]/g,'').replace(/\s+/g,'-');
-}
-async function importarDaPokeAPI(){
-  const lista=document.getElementById('imp-lista').value.trim();
-  const bioma=document.getElementById('imp-bioma').value;
-  const raridade=document.getElementById('imp-raridade').value;
-  if(!lista){alert('Cole ao menos um nome de Pokémon.');return;}
-  const names=lista.split('\n').map(n=>n.trim()).filter(Boolean);
-  const btn=document.getElementById('imp-btn');
-  const progress=document.getElementById('imp-progress');
-  const status=document.getElementById('imp-status');
-  const bar=document.getElementById('imp-bar');
-  btn.disabled=true;progress.style.display='block';
-  document.getElementById('imp-fb-ok').style.display='none';
-  document.getElementById('imp-fb-err').style.display='none';
-  const erros=[];let ok=0;
-  for(let i=0;i<names.length;i++){
-    const raw=names[i];
-    const slug=toSlug(raw);
-    status.textContent=`Buscando ${raw}... (${i+1}/${names.length})`;
-    bar.style.width=`${Math.round((i/names.length)*100)}%`;
-    try{
-      const data=await fetch(`https://pokeapi.co/api/v2/pokemon/${slug}`,{headers:{'Accept':'application/json'}}).then(r=>{if(!r.ok)throw new Error();return r.json();});
-      const species=await fetch(data.species.url).then(r=>r.json());
-      const tipos=data.types.map(t=>t.type.name);
-      const habsNormais=data.abilities.filter(a=>!a.is_hidden).map(a=>a.ability.name.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase()));
-      const habilidade        =habsNormais[0]||'—';
-      const habilidade2       =habsNormais[1]||'';
-      const sprite=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${data.id}.png`;
-      const gr=species.gender_rate??-1;
-      const genero=gr===-1?'genderless':gr===0?'macho':gr===8?'femea':'1d2';
-      const nomeFormatado=raw.trim();
-      if(!pokemonDB.find(p=>p.nome.toLowerCase()===nomeFormatado.toLowerCase()&&p.bioma===bioma)){
-        const res=await dbPost('pokemons',{nome:nomeFormatado,emoji:'❓',sprite,tipos,habilidade,habilidade2,raridade,genero,bioma});
-        if(res&&res[0])pokemonDB.push(res[0]);
-      }
-      ok++;
-    }catch(e){erros.push(raw);}
-    await new Promise(r=>setTimeout(r,250));
-  }
-  bar.style.width='100%';btn.disabled=false;progress.style.display='none';
-  if(erros.length>0){
-    const errEl=document.getElementById('imp-fb-err');
-    errEl.textContent=`⚠ ${ok} importados. Não encontrados: ${erros.join(', ')}`;
-    errEl.style.display='block';setTimeout(()=>errEl.style.display='none',8000);
-  } else { fb('imp-fb-ok'); }
-  document.getElementById('imp-lista').value='';
-  renderTbodyPokemons();renderTbodyBiomas();
-}
-
-// ══════════════════════════════════════
-// ITENS
-// ══════════════════════════════════════
-async function carregarItens(){
-  const res = await dbGet('itens', 'order=categoria.asc,nome.asc');
-  itensDB = res || [];
-}
-
-function renderTbodyItens(){
-  const cat    = document.getElementById('itens-filtro-cat')?.value || '';
-  const busca  = (document.getElementById('itens-busca')?.value || '').toLowerCase();
-  const soloEv = document.getElementById('itens-filtro-evento')?.checked || false;
-
-  let lista = itensDB;
-  if(cat)    lista = lista.filter(i => i.categoria === cat);
-  if(busca)  lista = lista.filter(i =>
-    i.nome.toLowerCase().includes(busca) ||
-    (i.descricao||'').toLowerCase().includes(busca)
-  );
-  if(soloEv) lista = lista.filter(i => i.evento);
-
-  const contEl = document.getElementById('itens-contagem');
-  if(contEl) contEl.textContent = `${lista.length} item${lista.length !== 1 ? 's' : ''} encontrado${lista.length !== 1 ? 's' : ''}`;
-
-  document.getElementById('tbody-itens').innerHTML = lista.length === 0
-    ? `<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">Nenhum item encontrado.</td></tr>`
-    : lista.map(item => `
-      <tr>
-        <td><strong>${item.nome}</strong></td>
-        <td>
-          <span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;
-            padding:2px 8px;font-size:11px;font-weight:700;color:var(--muted)">
-            ${item.categoria}
-          </span>
-        </td>
-        <td style="font-size:12px;color:var(--muted);max-width:260px;
-          overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-          title="${(item.descricao||'').replace(/"/g,'&quot;')}">
-          ${item.descricao || '—'}
-        </td>
-        <td style="text-align:center">
-          ${item.evento
-            ? '<span style="font-size:11px;font-weight:700;color:#e07020;background:#fff3e0;padding:2px 8px;border-radius:5px">EVENTO</span>'
-            : '<span style="color:var(--muted);font-size:12px">—</span>'}
-        </td>
-        <td style="white-space:nowrap">
-          <button class="btn btn-xs"
-            style="background:var(--surface2);border:1.5px solid var(--border);padding:3px 8px;font-size:11px"
-            onclick="abrirModalItem('${item.id}')">✏️ Editar</button>
-        </td>
-      </tr>`).join('');
-}
-
-function abrirModalItem(id){
-  const item = id ? itensDB.find(i => i.id === id) : null;
-  document.getElementById('modal-item-id').value    = id || '';
-  document.getElementById('modal-item-title').textContent = item ? 'Editar Item' : 'Novo Item';
-  document.getElementById('modal-item-nome').value  = item?.nome || '';
-  document.getElementById('modal-item-cat').value   = item?.categoria || 'Pokéball';
-  document.getElementById('modal-item-desc').value  = item?.descricao || '';
-  document.getElementById('modal-item-evento').checked = !!item?.evento;
-  document.getElementById('modal-item-err').style.display = 'none';
-  document.getElementById('modal-item-del-btn').style.display = item ? 'inline-block' : 'none';
-  document.getElementById('modal-item').style.display = 'flex';
-}
-
-function fecharModalItem(){
-  document.getElementById('modal-item').style.display = 'none';
-}
-
-async function salvarItem(){
-  const id    = document.getElementById('modal-item-id').value;
-  const nome  = document.getElementById('modal-item-nome').value.trim();
-  const cat   = document.getElementById('modal-item-cat').value;
-  const desc  = document.getElementById('modal-item-desc').value.trim();
-  const evento= document.getElementById('modal-item-evento').checked;
-  const errEl = document.getElementById('modal-item-err');
-  errEl.style.display = 'none';
-
-  if(!nome){
-    errEl.textContent = 'Preencha o nome do item.';
-    errEl.style.display = 'block';
-    return;
-  }
-
-  if(id){
-    const patch = {nome, categoria:cat, descricao:desc, evento};
-    await dbPatch('itens', `id=eq.${id}`, patch);
-    const i = itensDB.find(x => x.id === id);
-    if(i) Object.assign(i, patch);
+  const p=personagem, f=ficha;
+  // Header
+  document.getElementById('f-nome').textContent=p.nome;
+  document.getElementById('f-player-dado').textContent=p.player;
+  const ppDado=document.getElementById('f-photoplayer-dado');
+  if(ppDado) ppDado.textContent=p.photoplayer||'—';
+  // Banner
+  const bannerCol=document.getElementById('header-banner-col');
+  const bannerPlaceholder=document.getElementById('f-banner-placeholder');
+  if(f.banner){
+    bannerPlaceholder.style.display='none';
+    let img=bannerCol.querySelector('img.banner-img');
+    if(!img){img=document.createElement('img');img.className='banner-img';bannerCol.insertBefore(img,bannerCol.firstChild);}
+    img.src=f.banner;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
   } else {
-    const res = await dbPost('itens', {nome, categoria:cat, descricao:desc, evento});
-    if(res && res[0]) itensDB.push(res[0]);
+    bannerPlaceholder.style.display='';
+    const img=bannerCol.querySelector('img.banner-img');if(img)img.remove();
   }
-
-  fecharModalItem();
-  renderTbodyItens();
+  // Foto do personagem (coluna direita)
+  const photoCol=document.getElementById('header-photo-col');
+  const photoPlaceholder=document.getElementById('f-photo-placeholder');
+  if(p.img){
+    photoPlaceholder.style.display='none';
+    let img=photoCol.querySelector('img.photo-img');
+    if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
+    img.src=p.img;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+  } else { photoPlaceholder.style.display=''; }
+  // Slogan
+  document.getElementById('f-slogan-txt').textContent=f.slogan||'';
+  document.getElementById('f-slogan-input').value=f.slogan||'';
+  // PE
+  document.getElementById('f-pe-view').textContent=`${f.pe||0} PE`;
+  document.getElementById('f-pe-input').value=f.pe||0;
+  // Stats
+  ['rep','cs','pv'].forEach(k=>{
+    document.getElementById(`f-${k}-txt`).textContent=f[k]||0;
+    document.getElementById(`f-${k}-input`).value=f[k]||0;
+  });
+  // Dados pessoais
+  document.getElementById('f-idade-txt').textContent=f.idade||'—';
+  document.getElementById('f-idade-input').value=f.idade||'';
+  document.getElementById('f-ocup-txt').textContent=f.ocupacao||'—';
+  document.getElementById('f-ocup-input').value=f.ocupacao||'';
+  document.getElementById('f-orig-txt').textContent=f.origem||'—';
+  document.getElementById('f-orig-input').value=f.origem||'';
+  renderTime();
+  // restaura checkboxes da box
+  const slotCk=document.getElementById('box-slot-upgrade');
+  const miniCk=document.getElementById('box-mini-upgrade');
+  if(slotCk) slotCk.value=f.boxSlotUpgrade||0;
+  if(miniCk) miniCk.value=f.boxMiniUpgrade||0;
+  renderBox();
+  document.getElementById('f-inv-txt').textContent=f.inventario||'Nenhum item registrado.';
+  document.getElementById('f-inv-input').value=f.inventario||'';
+  renderRel();
+  document.getElementById('f-bio-txt').textContent=f.biografia||'Nenhuma biografia registrada.';
+  document.getElementById('f-bio-input').value=f.biografia||'';
+  document.getElementById('f-anot-txt').textContent=f.anotacoes||'Nenhuma anotação registrada.';
+  document.getElementById('f-anot-input').value=f.anotacoes||'';
+  }catch(e){console.error('Erro no renderFicha:',e);}
 }
 
-async function removerItemDoModal(){
-  const id = document.getElementById('modal-item-id').value;
-  if(!id) return;
-  const item = itensDB.find(i => i.id === id);
-  if(!confirm(`Remover o item "${item?.nome}"?\n\nEle será removido do catálogo e dos inventários de todas as fichas.`)) return;
-  await dbDel('itens', `id=eq.${id}`);
-  itensDB = itensDB.filter(i => i.id !== id);
-  fecharModalItem();
-  renderTbodyItens();
+// ─── Banner ───────────────────────────────────────────
+function editarBanner(){document.getElementById('banner-file-input').click();}
+async function onBannerFile(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const btn=document.getElementById('btn-banner-edit');
+    const prev=btn.textContent;
+    btn.textContent='Salvando...';btn.disabled=true;
+    ficha.banner=e.target.result;
+    if(ficha.id){
+      await apiPatch('fichas',`id=eq.${ficha.id}`,{banner:ficha.banner});
+    } else {
+      const res=await apiPost('fichas',{personagem_slug:personagemSlug,banner:ficha.banner});
+      if(res&&res[0]) ficha.id=res[0].id;
+    }
+    btn.textContent=prev;btn.disabled=false;
+    renderFicha();
+  };
+  reader.readAsDataURL(file);input.value='';
 }
 
-// ══════════════════════════════════════
-// FICHÁRIO
-// ══════════════════════════════════════
-function abrirModalPlayer(id){
-  const pl=players.find(p=>p.id===id);if(!pl)return;
-  document.getElementById('modal-pl-id').value=id;
-  document.getElementById('modal-pl-nome').value=pl.nome;
-  document.getElementById('modal-pl-pontos').value=pl.pontos||0;
-  document.getElementById('modal-pl-senha').value='';
-  document.getElementById('modal-player').style.display='flex';
+const POKEBALLS=[
+  {val:'pokeball',  label:'Poké Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/poke.png'},
+  {val:'greatball', label:'Great Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/great.png'},
+  {val:'ultraball', label:'Ultra Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/ultra.png'},
+  {val:'masterball',label:'Master Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/master.png'},
+  {val:'safariball',label:'Safari Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/safari.png'},
+  {val:'fastball',  label:'Fast Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/fast.png'},
+  {val:'levelball', label:'Level Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/level.png'},
+  {val:'lureball',  label:'Lure Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/lure.png'},
+  {val:'heavyball', label:'Heavy Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heavy.png'},
+  {val:'loveball',  label:'Love Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/love.png'},
+  {val:'friendball',label:'Friend Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/friend.png'},
+  {val:'moonball',  label:'Moon Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/moon.png'},
+  {val:'sportball', label:'Sport Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/sport.png'},
+  {val:'healball',  label:'Heal Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/heal.png'},
+  {val:'quickball', label:'Quick Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/quick.png'},
+  {val:'duskball',  label:'Dusk Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dusk.png'},
+  {val:'cherish',   label:'Cherish Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/cherish.png'},
+  {val:'diveball',  label:'Dive Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/dive.png'},
+  {val:'luxuryball',label:'Luxury Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/luxury.png'},
+  {val:'nestball',  label:'Nest Ball',   img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/nest.png'},
+  {val:'netball',   label:'Net Ball',    img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/net.png'},
+  {val:'premierball',label:'Premier Ball',img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/premier.png'},
+  {val:'repeatball',label:'Repeat Ball', img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/repeat.png'},
+  {val:'timerball', label:'Timer Ball',  img:'https://raw.githubusercontent.com/msikma/pokesprite/master/items/ball/timer.png'},
+];
+const TIPOS_POKE=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+const TIPO_SVG_BASE='https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/5781623f147f1bf850f426cfe1874ba56a9b75ee/icons';
+
+function ballImg(val){
+  return POKEBALLS.find(b=>b.val===val)?.img||POKEBALLS[0].img;
 }
-function fecharModalPlayer(){document.getElementById('modal-player').style.display='none';}
-async function salvarEdicaoPlayer(){
-  const id=document.getElementById('modal-pl-id').value;
-  const pl=players.find(p=>p.id===id);if(!pl)return;
-  const pontos=parseInt(document.getElementById('modal-pl-pontos').value)||0;
-  const novaSenha=document.getElementById('modal-pl-senha').value;
-  const patch={pontos};
-  if(novaSenha) patch.senha=novaSenha;
-  await dbPatch('players',`id=eq.${id}`,patch);
-  pl.pontos=pontos;
-  if(novaSenha) pl.senha=novaSenha;
-  fecharModalPlayer();
-  renderTbodyPlayers();renderFichario();
-}
-async function removerPlayerDoModal(){
-  const id=document.getElementById('modal-pl-id').value;
-  const pl=players.find(p=>p.id===id);if(!pl)return;
-  const qtd=personagens.filter(p=>p.player===pl.nome).length;
-  if(!confirm(`Excluir o player "${pl.nome}"?${qtd>0?`\n\nOs ${qtd} personagem(ns) deste player também serão removidos.`:''}`))return;
-  await dbDel('players',`id=eq.${id}`);
-  players=players.filter(p=>p.id!==id);
-  personagens=personagens.filter(p=>p.player!==pl.nome);
-  fecharModalPlayer();
-  renderTbodyPlayers();renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
+function tipoImg(tipo){
+  return`${TIPO_SVG_BASE}/${tipo}.svg`;
 }
 
-async function toggleDesativarPersonagem(){
-  const id=document.getElementById('modal-p-id').value;
-  const p=personagens.find(x=>x.id===id);if(!p)return;
-  const novoAtivo=p.ativo===false?true:false;
-  await dbPatch('personagens',`id=eq.${id}`,{ativo:novoAtivo});
-  p.ativo=novoAtivo;
-  const toggleBtn=document.getElementById('modal-p-toggle-btn');
-  toggleBtn.textContent=novoAtivo?'⏸ Desativar':'▶ Reativar';
-  toggleBtn.style.borderColor=novoAtivo?'var(--border)':'var(--brand-mid)';
-  toggleBtn.style.color=novoAtivo?'':'var(--brand-mid)';
-  document.getElementById('modal-p-ativo').value=novoAtivo?'1':'0';
-  renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
-}
-async function removerPersonagemDoModal(){
-  const id=document.getElementById('modal-p-id').value;
-  if(!confirm('Excluir este personagem permanentemente?'))return;
-  await dbDel('personagens',`id=eq.${id}`);
-  personagens=personagens.filter(p=>p.id!==id);
-  fecharModal();
-  renderTbodyPersonagens();renderFichario();renderPersonagensDatalist();
-}
-
-function renderFichario(){
-  const container=document.getElementById('fichas-container');
-  if(personagens.length===0){
-    container.innerHTML='<div style="color:var(--muted);font-size:14px;padding:20px">Nenhum personagem cadastrado ainda.</div>';
-    return;
-  }
-  const grupos={};
-  personagens.filter(p=>p.ativo!==false).forEach(p=>{ if(!grupos[p.player])grupos[p.player]=[]; grupos[p.player].push(p); });
-  const playersOrdenados=Object.keys(grupos).sort((a,b)=>a.localeCompare(b,'pt'));
-  container.innerHTML=playersOrdenados.map(playerNome=>{
-    const chars=grupos[playerNome].sort((a,b)=>a.nome.localeCompare(b.nome,'pt'));
-    const pl=players.find(p=>p.nome===playerNome);
-    const pontos=pl?pl.pontos:0;
-    const cards=chars.map(p=>`
-      <div class="ficha-card" data-nome="${p.nome.toLowerCase()}" data-player="${p.player.toLowerCase()}" onclick="window.open('ficha/${encodeURIComponent(p.slug||slugify(p.nome))}','_blank')" style="cursor:pointer">
-        <div class="ficha-card-avatar" style="background:${p.cor}22;border:2px solid ${p.cor}">
-          ${p.img?`<img src="${p.img}" style="width:51px;height:51px;object-fit:cover;border-radius:50%"/>`
-            :`<img src="${FALLBACK_AVATAR}" style="width:44px;height:44px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_AVATAR}'">`}
+function renderTime(){
+  const time=ficha.time||[{},{},{},{},{},{}];
+  while(time.length<6)time.push({});
+  document.getElementById('time-grid').innerHTML=time.map((pk,i)=>{
+    pk=pk||{};
+    if(modoEdicao) return slotEdit(i,pk,'time');
+    const ball=ballImg(pk.ball||'pokeball');
+    const tipos=(pk.tipos||[]).filter(Boolean);
+    const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
+    const imgSrc=pk.img||FALLBACK;
+    const happyFmt=pk.happy?`${pk.happy}/1000`:'0000/1000';
+    return`<div class="poke-slot">
+      <div class="poke-slot-topbar">
+        <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
+        <div class="poke-slot-tipos">
+          ${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}
         </div>
-        <div>
-          <div class="ficha-name">${p.nome}</div>
-          ${p.photoplayer?`<div class="ficha-photoplayer">${p.photoplayer}</div>`:''}
-        </div>
-      </div>`).join('');
-    return`<div class="player-section">
-      <div class="player-section-header">
-        <div class="player-section-name">${playerNome}</div>
-        <div class="player-pontos-box"><span class="player-pontos-lbl">Pontos</span><span class="player-pontos-val">${pontos}</span></div>
       </div>
-      <div class="fichas-grid">${cards}</div>
+      <div class="poke-slot-img-wrap">
+        <img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/>
+      </div>
+      <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome||'(POKÉMON)'}</div></div>
+      <div class="poke-slot-info">
+        <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
+        <strong>LV.</strong> ${pk.level||'000'}<br>
+        <strong>GENDER:</strong> ${pk.gender||'—'}<br>
+        <strong>FEATURE:</strong> ${pk.feature||'—'}<br>
+        <strong>NATURE:</strong> ${pk.nature||'—'}<br>
+        <strong>HOLD:</strong> ${pk.item||'—'}<br>
+        <strong>HAPPINESS:</strong> ${happyFmt}<br>
+        <strong>MOVESET:</strong><br>${moveset||'—'}
+      </div>
     </div>`;
   }).join('');
 }
-function filtrarFichas(q){
-  q=q.toLowerCase();
-  document.querySelectorAll('.player-section').forEach(sec=>{
-    let any=false;
-    sec.querySelectorAll('.ficha-card').forEach(c=>{
-      const match=c.dataset.nome.includes(q)||c.dataset.player.includes(q);
-      c.style.display=match?'':'none';if(match)any=true;
-    });
-    sec.style.display=any?'':'none';
-  });
-}
-function renderPersonagensDatalist(){
-  document.getElementById('personagens-lista').innerHTML=personagens.map(p=>`<option value="${p.nome}"/>`).join('');
-}
 
-// ══════════════════════════════════════
-// BADGES
-// ══════════════════════════════════════
-const badgeBtns=[...document.querySelectorAll('.badge-btn')];
-badgeBtns.forEach(btn=>{
-  btn.addEventListener('click',function(){
-    const idx=parseInt(this.dataset.idx);
-    const currentEarned=badgeBtns.filter(b=>b.classList.contains('earned')).length;
-    if(this.classList.contains('earned')&&currentEarned===idx+1){
-      badgeBtns.forEach((b,i)=>{if(i>=idx){b.classList.remove('earned');b.textContent='☆';}});
-    } else {
-      badgeBtns.forEach((b,i)=>{if(i<=idx){b.classList.add('earned');b.textContent='⭐';}else{b.classList.remove('earned');b.textContent='☆';}});
-    }
-    atualizarBadgeInfo();
-  });
-});
-function atualizarBadgeInfo(){
-  const c=document.querySelectorAll('.badge-btn.earned').length;
-  const min=c===0?1:c*10+1;
-  const max=c===0?10:Math.min(c*10+10,90);
-  document.getElementById('badges-info').textContent=`${c} prova${c!==1?'s':''} → Nível ${min}–${max}`;
-}
+function renderBox(){
+  const slotUp=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||ficha.boxSlotUpgrade||0;
+  const miniUp=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||ficha.boxMiniUpgrade||0;
+  const total=6+(slotUp*5)+(miniUp*2);
+  const box=ficha.box||[];
+  while(box.length<total)box.push({});
+  const preenchidos=box.slice(0,total).filter(pk=>pk&&pk.nome).length;
 
-// ══════════════════════════════════════
-// ROLADOR
-// ══════════════════════════════════════
-function rollRarity(){const r=Math.ceil(Math.random()*100);if(r<=7)return 'rarissimo';if(r<=20)return 'raro';if(r<=60)return 'incomum';return 'comum';}
-function rollGender(g){if(g==='macho')return{s:'♂',c:'#3a80e0'};if(g==='femea')return{s:'♀',c:'#e04090'};if(g==='genderless')return{s:'—',c:'#888'};return Math.random()<.5?{s:'♂',c:'#3a80e0'}:{s:'♀',c:'#e04090'};}
-function rollLevel(){const c=document.querySelectorAll('.badge-btn.earned').length;const min=c===0?1:c*10+1;const max=c===0?10:Math.min(c*10+10,90);return Math.floor(Math.random()*(max-min+1))+min;}
-function spriteHtml(pk){
-  const src=pk.sprite||FALLBACK_SPRITE;
-  return`<img src="${src}" alt="${pk.nome}" style="width:108px;height:108px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges" onerror="this.src='${FALLBACK_SPRITE}'"/>`;
-}
-function buildCardData(){
-  const bioma=document.getElementById('bioma').value;
-  const rarity=rollRarity();
-  if(rarity==='comum'||rarity==='incomum'){
-    const gender=rollGender('1d2');
-    return{nome:'???',tipos:['normal'],emoji:'❓',sprite:null,habilidade:'???',rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
+  // atualiza contador no título
+  document.getElementById('box-counter').textContent=`${preenchidos}/${total}`;
+
+  // atualiza barra de upgrades (sempre visível se houver algum)
+  const bar=document.getElementById('box-upgrade-bar');
+  if(slotUp>0||miniUp>0){
+    const partes=[];
+    if(slotUp>0) partes.push(`${slotUp}x UPGRADE (+${slotUp*5})`);
+    if(miniUp>0) partes.push(`${miniUp}x MINI SLOT UPGRADE (+${miniUp*2})`);
+    bar.textContent=partes.join(' | ');
+    bar.style.display='block';
+  } else {
+    bar.style.display='none';
   }
-  const pool=pokemonDB.filter(p=>p.bioma===bioma&&p.raridade===rarity);
-  const p=pool.length>0
-    ? pool[Math.floor(Math.random()*pool.length)]
-    : {nome:'???',emoji:'❓',tipos:['normal'],habilidade:'???',raridade:rarity,genero:'1d2',sprite:null};
-  const gender=rollGender(p.genero);
-  return{nome:p.nome,tipos:p.tipos||[],emoji:p.emoji||'❓',sprite:p.sprite||null,habilidade:p.habilidade,rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
+  document.getElementById('box-grid').innerHTML=box.slice(0,total).map((pk,i)=>{
+    pk=pk||{};
+    if(modoEdicao) return slotEdit(i,pk,'box');
+    const ball=ballImg(pk.ball||'pokeball');
+    const tipos=(pk.tipos||[]).filter(Boolean);
+    const moveset=(pk.moveset||'').split('\n').filter(Boolean).map(m=>`- ${m}`).join('<br>');
+    const imgSrc=pk.img||FALLBACK;
+    const happyFmt=pk.happy?`${pk.happy}/1000`:'0000/1000';
+    return`<div class="poke-slot">
+      <div class="poke-slot-topbar">
+        <img class="poke-slot-ball" src="${ball}" alt="ball" onerror="this.style.display='none'"/>
+        <div class="poke-slot-tipos">
+          ${tipos.map(t=>`<img class="poke-slot-tipo-img" src="${tipoImg(t)}" alt="${t}" title="${t}"/>`).join('')}
+        </div>
+      </div>
+      <div class="poke-slot-img-wrap">
+        <img src="${imgSrc}" alt="${pk.nome||'—'}" onerror="this.src='${FALLBACK}'"/>
+      </div>
+      <div class="poke-slot-nome-row"><div class="poke-slot-nome-lbl">${pk.nome||'(POKÉMON)'}</div></div>
+      <div class="poke-slot-info">
+        <strong>ABILITY:</strong> ${pk.ability||'—'}<br>
+        <strong>LV.</strong> ${pk.level||'000'}<br>
+        <strong>GENDER:</strong> ${pk.gender||'—'}<br>
+        <strong>FEATURE:</strong> ${pk.feature||'—'}<br>
+        <strong>NATURE:</strong> ${pk.nature||'—'}<br>
+        <strong>HOLD:</strong> ${pk.item||'—'}<br>
+        <strong>HAPPINESS:</strong> ${happyFmt}<br>
+        <strong>MOVESET:</strong><br>${moveset||'—'}
+      </div>
+    </div>`;
+  }).join('');
 }
-function buildCardHtml(pk,delay){
-  const pills=(pk.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('');
-  return`<div class="poke-card" style="animation-delay:${delay}s">
-    <div class="poke-card-left">
-      <div class="poke-card-img">${spriteHtml(pk)}</div>
-      <div class="poke-card-name">${pk.nome} <span class="gender-icon" style="color:${pk.genderC}">${pk.genderS}</span></div>
-    </div>
-    <div class="poke-card-info">
-      <div class="poke-card-meta">${pills}</div>
-      <div><span class="poke-rarity ${rcls[pk.rarity]}">${rlbl[pk.rarity]}</span></div>
-      <div class="poke-lvl">Nível ${pk.lvl}</div>
-      <div class="poke-hab">Hab: ${pk.habilidade}</div>
-    </div>
+
+function slotEdit(i,pk,prefix='time'){
+  const pfx=`${prefix}-pk`;
+  const ballOpts=POKEBALLS.map(b=>`<option value="${b.val}" ${(pk.ball||'pokeball')===b.val?'selected':''}>${b.label}</option>`).join('');
+  const t0=(pk.tipos||[])[0]||'';
+  const t1=(pk.tipos||[])[1]||'';
+  const tipo1Opts=TIPOS_POKE.map(t=>`<option value="${t}" ${t0===t?'selected':''}>${t}</option>`).join('');
+  const tipo2Opts=['<option value="">— nenhum —</option>'].concat(TIPOS_POKE.map(t=>`<option value="${t}" ${t1===t?'selected':''}>${t}</option>`)).join('');
+  return`<div class="poke-slot-edit">
+    <label>Pokémon</label>
+    <input value="${pk.nome||''}" placeholder="Nome" id="${pfx}-nome-${i}"/>
+    <label>Pokéball</label>
+    <select id="${pfx}-ball-${i}">${ballOpts}</select>
+    <label>Tipo 1</label>
+    <select id="${pfx}-tipo0-${i}"><option value="">— nenhum —</option>${tipo1Opts}</select>
+    <label>Tipo 2</label>
+    <select id="${pfx}-tipo1-${i}">${tipo2Opts}</select>
+    <label>Imagem</label>
+    ${pk.img?`<img class="poke-slot-edit-img-preview" src="${pk.img}" id="${pfx}-img-prev-${i}"/>`:`<img class="poke-slot-edit-img-preview" src="" id="${pfx}-img-prev-${i}" style="display:none"/>`}
+    <button class="poke-slot-edit-img-btn" onclick="document.getElementById('${pfx}-img-file-${i}').click()">📷 Escolher imagem</button>
+    <input type="file" id="${pfx}-img-file-${i}" accept="image/*" style="display:none" onchange="onPokeImg('${prefix}',${i},this)"/>
+    <label>Ability</label>
+    <input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="${pfx}-ability-${i}"/>
+    <label>Nível</label>
+    <input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="100" id="${pfx}-level-${i}"/>
+    <label>Gender</label>
+    <select id="${pfx}-gender-${i}">
+      <option value="">—</option>
+      <option value="♂" ${pk.gender==='♂'?'selected':''}>♂ Macho</option>
+      <option value="♀" ${pk.gender==='♀'?'selected':''}>♀ Fêmea</option>
+      <option value="—" ${pk.gender==='—'?'selected':''}>— Sem gênero</option>
+    </select>
+    <label>Feature</label>
+    <select id="${pfx}-feature-${i}">
+      <option value="Normal" ${(!pk.feature||pk.feature==='Normal')?'selected':''}>Normal</option>
+      <option value="Shiny" ${pk.feature==='Shiny'?'selected':''}>Shiny</option>
+      <option value="Color" ${pk.feature==='Color'?'selected':''}>Color</option>
+    </select>
+    <label>Nature</label>
+    <input value="${pk.nature||''}" placeholder="Ex: Adamant" id="${pfx}-nature-${i}"/>
+    <label>Hold Item</label>
+    <input value="${pk.item||''}" placeholder="Ex: Life Orb" id="${pfx}-item-${i}"/>
+    <label>Happiness</label>
+    <input value="${pk.happy||''}" placeholder="Ex: 255" id="${pfx}-happy-${i}"/>
+    <label>Moveset (1 por linha)</label>
+    <textarea rows="5" id="${pfx}-moveset-${i}" placeholder="Tackle&#10;Growl&#10;...">${pk.moveset||''}</textarea>
   </div>`;
 }
-async function rolarEncontro(){
-  const personagem=document.getElementById('personagem').value.trim();
-  if(!personagem){
-    alert('Preencha o nome do personagem antes de rolar!');
-    document.getElementById('personagem').focus();
-    return;
+
+function onPokeImg(prefix,i,input){
+  const pfx=`${prefix}-pk`;
+  const file=input.files[0]; if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const prev=document.getElementById(`${pfx}-img-prev-${i}`);
+    if(prev){prev.src=e.target.result;prev.style.display='block';}
+    if(!window._pokeImgs) window._pokeImgs={};
+    if(!window._pokeImgs[prefix]) window._pokeImgs[prefix]={};
+    window._pokeImgs[prefix][i]=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function renderRel(){
+  const rels=ficha.relacionamentos||[];
+  const total=ficha.relTotal||6;
+  const grid=document.getElementById('f-rel-grid');
+  const slots=Array.from({length:total},(_,i)=>rels[i]||{nome:'',tipo:''});
+  grid.innerHTML=slots.map(r=>`
+    <div class="rel-item" style="${!r.nome?'opacity:.35':''}">
+      <div class="rel-nome">${r.nome||'NOME'}</div>
+      <div class="rel-tipo">${r.tipo||'Relacionamento'}</div>
+    </div>`).join('');
+  renderRelEdit();
+}
+function renderRelEdit(){
+  const rels=ficha.relacionamentos||[];
+  const total=ficha.relTotal||6;
+  const el=document.getElementById('rel-edit-grid');
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+      <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Espaços</label>
+      <input type="number" min="6" value="${total}" style="width:60px;padding:3px 6px;border:1.5px solid var(--border);border-radius:4px;font-size:12px;font-family:var(--font-body)" onchange="ficha.relTotal=Math.max(6,parseInt(this.value)||6);renderRel()"/>
+    </div>
+    ${Array.from({length:total},(_,i)=>`
+    <div style="display:flex;gap:8px;align-items:center">
+      <input class="edit-input edit-input-sm" style="flex:2" value="${rels[i]?.nome||''}" placeholder="Nome" id="rel-nome-${i}"/>
+      <input class="edit-input edit-input-sm" style="flex:1" value="${rels[i]?.tipo||''}" placeholder="Tipo de relação" id="rel-tipo-${i}"/>
+    </div>`).join('')}`;
+}
+function addRelSlot(){
+  ficha.relTotal=(ficha.relTotal||6)+1;
+  renderRel();
+}
+function removerRel(i){
+  if(ficha.relacionamentos) ficha.relacionamentos.splice(i,1);
+  ficha.relTotal=Math.max(6,(ficha.relTotal||6)-1);
+  renderRel();
+}
+
+// ─── Modo edição ──────────────────────────────────────
+function ativarEdicao(){
+  modoEdicao=true;
+  document.getElementById('edit-bar').style.display='flex';
+  document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
+  document.getElementById('btn-banner-edit').style.display='block';
+  document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
+  document.getElementById('box-upgrades-wrap').style.display='block';
+  renderTime();renderBox();renderRelEdit();
+  atualizarTopBar();
+  iniciarAutoSave();
+}
+function cancelarEdicao(){
+  clearTimeout(_autoSaveTimer);
+  setAutoSaveStatus('');
+  modoEdicao=false;
+  document.getElementById('edit-bar').style.display='none';
+  document.getElementById('top-bar').style.display='flex';
+  document.getElementById('btn-banner-edit').style.display='none';
+  document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
+  document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
+  document.getElementById('box-upgrades-wrap').style.display='none';
+  renderFicha();
+  atualizarTopBar();
+}
+
+// ─── Salvar ───────────────────────────────────────────
+async function salvarFicha(silencioso=false){
+  const btn=document.getElementById('btn-salvar');
+  if(!silencioso){btn.textContent='Salvando...';btn.disabled=true;}
+  else setAutoSaveStatus('Salvando...','var(--muted)');
+
+  function coletarSlots(prefix, count){
+    const pfx=`${prefix}-pk`;
+    const arr=[];
+    for(let i=0;i<count;i++){
+      const nome=(document.getElementById(`${pfx}-nome-${i}`)?.value||'').trim();
+      const ball=document.getElementById(`${pfx}-ball-${i}`)?.value||'pokeball';
+      const t0=document.getElementById(`${pfx}-tipo0-${i}`)?.value||'';
+      const t1=document.getElementById(`${pfx}-tipo1-${i}`)?.value||'';
+      const tipos=[t0,t1].filter(Boolean);
+      const img=window._pokeImgs?.[prefix]?.[i]||(ficha[prefix]?.[i]?.img||'');
+      const ability=(document.getElementById(`${pfx}-ability-${i}`)?.value||'').trim();
+      const level=document.getElementById(`${pfx}-level-${i}`)?.value||'';
+      const gender=document.getElementById(`${pfx}-gender-${i}`)?.value||'';
+      const feature=document.getElementById(`${pfx}-feature-${i}`)?.value||'Normal';
+      const nature=(document.getElementById(`${pfx}-nature-${i}`)?.value||'').trim();
+      const item=(document.getElementById(`${pfx}-item-${i}`)?.value||'').trim();
+      const happy=(document.getElementById(`${pfx}-happy-${i}`)?.value||'').trim();
+      const moveset=(document.getElementById(`${pfx}-moveset-${i}`)?.value||'').trim();
+      arr.push(nome?{nome,ball,tipos,img,level,ability,gender,feature,nature,item,happy,moveset}:{});
+    }
+    return arr;
   }
-  const adicionais=Math.max(0,parseInt(document.getElementById('n-adicionais').value)||0);
-  const total=3+adicionais;
-  const bioma=document.getElementById('bioma').value;
-  const section=document.getElementById('results-section');
-  section.innerHTML='';
-  const pokes=[];
-  const grid=document.createElement('div');
-  grid.className='results-grid';
-  for(let i=0;i<total;i++){const pk=buildCardData();pokes.push(pk);grid.innerHTML+=buildCardHtml(pk,i*0.08);}
-  section.appendChild(grid);
-  await salvarNoHistorico(bioma,personagem,pokes);
+
+  const time=coletarSlots('time',6);
+  const boxSlotUpgrade=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||0;
+  const boxMiniUpgrade=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||0;
+  const boxTotal=6+(boxSlotUpgrade*5)+(boxMiniUpgrade*2);
+  const box=coletarSlots('box',boxTotal);
+  window._pokeImgs={};
+  const relTotal=ficha.relTotal||6;
+  const relacionamentos=Array.from({length:relTotal},(_,i)=>({
+    nome:(document.getElementById(`rel-nome-${i}`)?.value||'').trim(),
+    tipo:(document.getElementById(`rel-tipo-${i}`)?.value||'').trim()
+  }));
+  const novaFicha={
+    banner:ficha.banner||null,
+    slogan:document.getElementById('f-slogan-input').value.trim(),
+    pe:parseInt(document.getElementById('f-pe-input').value)||0,
+    rep:parseInt(document.getElementById('f-rep-input').value)||0,
+    cs:parseInt(document.getElementById('f-cs-input').value)||0,
+    pv:parseInt(document.getElementById('f-pv-input').value)||0,
+    idade:document.getElementById('f-idade-input').value.trim(),
+    ocupacao:document.getElementById('f-ocup-input').value.trim(),
+    origem:document.getElementById('f-orig-input').value.trim(),
+    inventario:document.getElementById('f-inv-input').value.trim(),
+    biografia:document.getElementById('f-bio-input').value.trim(),
+    anotacoes:document.getElementById('f-anot-input').value.trim(),
+    time,box,boxSlotUpgrade,boxMiniUpgrade,relacionamentos,relTotal,cores:ficha.cores||null,updated_at:new Date().toISOString()
+  };
+  if(ficha.id){
+    // registra histórico de campos alterados
+    const camposSimples=['slogan','pe','rep','cs','pv','idade','ocupacao','origem','inventario','biografia','anotacoes'];
+    const hist=[];
+    const agora=new Date().toISOString();
+    camposSimples.forEach(k=>{
+      const ant=String(ficha[k]??'');
+      const nov=String(novaFicha[k]??'');
+      if(ant!==nov) hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:ant,valor_novo:nov,editado_em:agora});
+    });
+    ['time','relacionamentos'].forEach(k=>{
+      if(JSON.stringify(ficha[k])!==JSON.stringify(novaFicha[k]))
+        hist.push({ficha_id:ficha.id,personagem_nome:personagem.nome,player_nome:jogadorLogado?.nome||'—',campo:k,valor_anterior:JSON.stringify(ficha[k]),valor_novo:JSON.stringify(novaFicha[k]),editado_em:agora});
+    });
+    await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
+    if(hist.length>0) await apiPost('fichas_historico',hist).catch(()=>{});
+  } else {
+    const res=await apiPost('fichas',{...novaFicha,personagem_slug:personagemSlug});
+    if(res&&res[0]) ficha.id=res[0].id;
+  }
+  Object.assign(ficha,novaFicha);
+  if(silencioso){
+    setAutoSaveStatus('✓ Salvo automaticamente','#1a7a1a');
+    setTimeout(()=>setAutoSaveStatus(''),500);
+  } else {
+    btn.textContent='💾 Salvar';btn.disabled=false;
+    cancelarEdicao();
+  }
+}
+
+// ─── Sessão do player (vem do index.html via localStorage) ───
+function lerSessaoPlayer(){
+  try{
+    const s=localStorage.getItem('pchapters_player');
+    return s?JSON.parse(s):null;
+  }catch(e){return null;}
+}
+
+function atualizarTopBar(){
+  const actions=document.getElementById('top-bar-actions');
+  if(jogadorLogado){
+    actions.innerHTML=`
+      ${modoEdicao?'':`<span style="font-size:11px;color:#fff;opacity:.8">Logado como <strong>${jogadorLogado.nome}</strong></span>`}
+      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="abrirHistorico()">Histórico</button>`}
+      ${modoEdicao?'':`<button class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)" onclick="ativarEdicao()">Editar</button>`}
+      <a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);text-decoration:none">Sair</a>`;
+  } else {
+    actions.innerHTML=`<a href="/login" class="btn btn-sm" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);text-decoration:none">Editar ficha</a>`;
+  }
+}
+function mostrarLogin(){
+  document.getElementById('login-wrap').style.display='block';
+  document.getElementById('ficha-wrap').style.display='none';
+}
+function sairJogador(){
+  jogadorLogado=null;cancelarEdicao();atualizarTopBar();
+}
+
+// ─── Modal de cores ────────────────────────────────────
+const CORES_DEFAULT={primaria:'#1a1a1a',secundaria:'#3a3a3a'};
+
+function aplicarCoresFicha(c){
+  // suporta formato antigo (cabecalho/slogan/etc) e novo (primaria/secundaria)
+  const p=c.primaria||c.cabecalho||CORES_DEFAULT.primaria;
+  const s=c.secundaria||c.slogan||CORES_DEFAULT.secundaria;
+  document.documentElement.style.setProperty('--cor-cabecalho',p);
+  document.documentElement.style.setProperty('--cor-secao',p);
+  document.documentElement.style.setProperty('--cor-dados',p);
+  document.documentElement.style.setProperty('--cor-slogan',s);
+  document.documentElement.style.setProperty('--cor-rel',s);
+  document.documentElement.style.setProperty('--cor-poke',s);
+}
+
+function abrirModalCores(){
+  const c=ficha.cores||CORES_DEFAULT;
+  const p=(c.primaria||c.cabecalho||CORES_DEFAULT.primaria).replace('#','');
+  const s=(c.secundaria||c.slogan||CORES_DEFAULT.secundaria).replace('#','');
+  document.getElementById('cor-primaria').value=p.toUpperCase();
+  document.getElementById('cor-secundaria').value=s.toUpperCase();
+  document.getElementById('color-picker-primaria').value='#'+p;
+  document.getElementById('color-picker-secundaria').value='#'+s;
+  document.getElementById('cores-modal-overlay').style.display='flex';
+}
+
+function fecharModalCores(){
+  document.getElementById('cores-modal-overlay').style.display='none';
+  aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
+}
+
+function onPickerInput(tipo){
+  const picker=document.getElementById(`color-picker-${tipo}`);
+  const hex=picker.value.replace('#','').toUpperCase();
+  document.getElementById(`cor-${tipo}`).value=hex;
+  previewCores();
+}
+
+function onHexInput(tipo){
+  const input=document.getElementById(`cor-${tipo}`);
+  let val=input.value.replace(/[^0-9a-fA-F]/g,'').toUpperCase();
+  input.value=val;
+  if(val.length===6){
+    document.getElementById(`color-picker-${tipo}`).value='#'+val;
+    previewCores();
+  }
+}
+
+function previewCores(){
+  const p=document.getElementById('cor-primaria').value;
+  const s=document.getElementById('cor-secundaria').value;
+  aplicarCoresFicha({
+    primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,
+    secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria
+  });
+}
+
+async function salvarCores(){
+  const p=document.getElementById('cor-primaria').value;
+  const s=document.getElementById('cor-secundaria').value;
+  if(p.length!==6||s.length!==6){alert('Insira cores válidas (6 caracteres hex).');return;}
+  const c={primaria:'#'+p,secundaria:'#'+s};
+  aplicarCoresFicha(c);
+  ficha.cores=c;
+  if(ficha.id){
+    await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c,updated_at:new Date().toISOString()});
+  }
+  fecharModalCores();
+}
+
+function resetarCores(){
+  document.getElementById('cor-primaria').value='1A1A1A';
+  document.getElementById('cor-secundaria').value='3A3A3A';
+  document.getElementById('color-picker-primaria').value=CORES_DEFAULT.primaria;
+  document.getElementById('color-picker-secundaria').value=CORES_DEFAULT.secundaria;
+  previewCores();
+}
+
+// ─── Histórico ────────────────────────────────────────
+async function abrirHistorico(){
+  const lista=document.getElementById('hist-lista');
+  lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Carregando...</div>';
+  document.getElementById('hist-modal-overlay').style.display='flex';
+  if(!ficha.id){lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Nenhum histórico ainda.</div>';return;}
+  const hist=await apiGet('fichas_historico',`ficha_id=eq.${ficha.id}&order=editado_em.desc&limit=50`);
+  if(!hist||hist.length===0){lista.innerHTML='<div style="padding:12px;color:#888;text-align:center">Nenhuma edição registrada.</div>';return;}
+  const labels={slogan:'Slogan',pe:'PE',rep:'Reputação',cs:'C$',pv:'PV',idade:'Idade',ocupacao:'Ocupação',origem:'Origem',inventario:'Inventário',biografia:'Biografia',anotacoes:'Anotações',time:'Time',relacionamentos:'Relacionamentos',banner:'Banner',cores:'Cores'};
+  lista.innerHTML=hist.map(h=>{
+    const d=new Date(h.editado_em);
+    const data=d.toLocaleDateString('pt-BR')+' '+d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const campo=labels[h.campo]||h.campo;
+
+    function formatVal(campo, raw){
+      if(!raw||raw==='(alterado)'||raw==='(dado complexo)') return '—';
+      if(campo==='time'){
+        try{
+          const arr=JSON.parse(raw);
+          return arr.filter(pk=>pk&&pk.nome).map(pk=>pk.nome).join(', ')||'(vazio)';
+        }catch{return raw;}
+      }
+      if(campo==='relacionamentos'){
+        try{
+          const arr=JSON.parse(raw);
+          return arr.filter(r=>r&&r.nome).map(r=>r.nome+(r.tipo?` (${r.tipo})`:'')).join(', ')||'(vazio)';
+        }catch{return raw;}
+      }
+      if(campo==='cores'){
+        try{
+          const c=JSON.parse(raw);
+          return `primária: ${c.primaria||'—'} · secundária: ${c.secundaria||'—'}`;
+        }catch{return raw;}
+      }
+      return raw||'—';
+    }
+
+    const anterior=formatVal(h.campo, h.valor_anterior);
+    const novo=formatVal(h.campo, h.valor_novo);
+    return`<div class="hist-entry">
+      <div><span class="hist-campo">${campo}</span><span class="hist-data">${data} · ${h.player_nome||'—'}</span></div>
+      <div class="hist-val">
+        <span style="text-decoration:line-through;opacity:.6">${anterior}</span>
+        → <span>${novo}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+function fecharHistorico(){
+  document.getElementById('hist-modal-overlay').style.display='none';
+}
+
+// ─── Autosave ─────────────────────────────────────────
+let _autoSaveTimer=null;
+function setAutoSaveStatus(msg,cor='var(--muted)'){
+  const el=document.getElementById('autosave-status');
+  if(el){el.textContent=msg;el.style.color=cor;}
+}
+function agendarAutoSave(){
+  if(!modoEdicao)return;
+  clearTimeout(_autoSaveTimer);
+  setAutoSaveStatus('Alterações não salvas...','#e8a020');
+  _autoSaveTimer=setTimeout(async()=>{
+    setAutoSaveStatus('Salvando...','var(--muted)');
+    await salvarFicha(true);
+  },500);
+}
+function iniciarAutoSave(){
+  // observa inputs, selects e textareas dentro do ficha-wrap
+  document.getElementById('ficha-wrap').addEventListener('input',agendarAutoSave);
+  document.getElementById('ficha-wrap').addEventListener('change',agendarAutoSave);
 }
 
 // ══════════════════════════════════════
-// HISTÓRICO
+// INVENTÁRIO
 // ══════════════════════════════════════
-async function salvarNoHistorico(bioma,personagem,pokes){
-  const agora=new Date();
-  const hora=agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  const data=agora.toLocaleDateString('pt-BR');
-  const entry={bioma,personagem,hora,data,pokes};
-  const res=await dbPost('historico',entry);
-  if(res&&res[0])historico.unshift(res[0]);
-  histPagina=0;
-  renderHistorico();
+let todosItens=[], inventarioFicha={}; // {item_id: {quantidade, id, nome, categoria, descricao}}
+
+async function carregarInventario(){
+  if(!ficha.id) return;
+  const [itensDB, invDB] = await Promise.all([
+    apiGet('itens','order=categoria.asc,nome.asc'),
+    apiGet('inventario_ficha',`ficha_id=eq.${ficha.id}&select=id,item_id,quantidade`)
+  ]);
+  todosItens = itensDB||[];
+  inventarioFicha = {};
+  (invDB||[]).forEach(row=>{
+    const item = todosItens.find(i=>i.id===row.item_id);
+    if(item) inventarioFicha[row.item_id]={...item, quantidade:row.quantidade, inv_id:row.id};
+  });
+  renderInventario();
 }
-function mudarPaginaHist(dir){
-  const totalPags=Math.ceil(historico.length/HIST_POR_PAG);
-  histPagina=Math.max(0,Math.min(histPagina+dir,totalPags-1));
-  renderHistorico();
+
+function renderInventario(){
+  const lista = document.getElementById('inv-lista-view');
+  const itens = Object.values(inventarioFicha).filter(i=>i.quantidade>0);
+  if(itens.length===0){
+    lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';
+    return;
+  }
+  // agrupa por categoria
+  const grupos={};
+  itens.forEach(i=>{
+    if(!grupos[i.categoria]) grupos[i.categoria]=[];
+    grupos[i.categoria].push(i);
+  });
+  lista.innerHTML=`<table class="inv-tabela"><thead><tr>
+    <th>Item</th><th style="width:60px;text-align:center">Qtd</th>
+  </tr></thead><tbody>${
+    Object.entries(grupos).map(([cat,items])=>
+      items.map((item,idx)=>`
+        <tr class="inv-row" onclick="toggleInvDesc('${item.id}')">
+          <td><strong>${item.nome}</strong><span class="inv-cat-badge">${item.categoria}</span></td>
+          <td style="text-align:center;font-weight:700">${item.quantidade}</td>
+        </tr>
+        <tr id="inv-desc-${item.id}" style="display:none">
+          <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px 14px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao}</td>
+        </tr>`).join('')
+    ).join('')
+  }</tbody></table>`;
 }
-function renderHistorico(){
-  const wrap=document.getElementById('historico-wrap');
-  const lista=document.getElementById('historico-lista');
-  if(historico.length===0){wrap.style.display='none';return;}
-  wrap.style.display='block';
-  const totalPags=Math.ceil(historico.length/HIST_POR_PAG);
-  histPagina=Math.max(0,Math.min(histPagina,totalPags-1));
-  const inicio=histPagina*HIST_POR_PAG;
-  const pagina=historico.slice(inicio,inicio+HIST_POR_PAG);
-  document.getElementById('hist-page-label').textContent=`Página ${histPagina+1} de ${totalPags} · ${historico.length} rolagem${historico.length!==1?'s':''}`;
-  document.getElementById('hist-prev').style.display=histPagina>0?'':'none';
-  document.getElementById('hist-next').style.display=histPagina<totalPags-1?'':'none';
-  document.getElementById('hist-paginacao').style.display=totalPags>1?'flex':'none';
-  lista.innerHTML=pagina.map(e=>{
-    const pokes=Array.isArray(e.pokes)?e.pokes:[];
-    const ph=pokes.map(pk=>`
-      <div class="hist-poke">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
-          <div style="width:56px;height:56px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden">
-            <img src="${pk.sprite||FALLBACK_SPRITE}" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated" onerror="this.src='${FALLBACK_SPRITE}'"/>
-          </div>
-          <div style="font-size:10px;font-weight:600;color:var(--text);text-align:center;font-family:var(--font-title);line-height:1.2">${pk.nome} <span style="color:${pk.genderC}">${pk.genderS}</span></div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px">
-          <div>${(pk.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}</div>
-          <div><span class="poke-rarity ${rcls[pk.rarity]||'rc'}" style="font-size:9px;padding:1px 7px">${rlbl[pk.rarity]||''}</span></div>
-          <div style="font-size:10px;color:var(--muted)">Nv.${pk.lvl}</div>
-          <div style="font-size:10px;color:var(--muted)">Hab: ${pk.habilidade}</div>
-        </div>
-      </div>`).join('');
-    return`<div class="hist-entry">
-      <div class="hist-header">
-        <div><span style="font-size:12px;font-weight:700;color:var(--brand)">${e.personagem}</span><span style="font-size:11px;color:var(--muted);margin-left:8px">• ${e.bioma}</span></div>
-        <span style="font-size:11px;color:var(--muted)">${e.hora} · ${e.data}</span>
+
+function toggleInvDesc(id){
+  const row=document.getElementById(`inv-desc-${id}`);
+  if(row) row.style.display=row.style.display==='none'?'':'none';
+}
+
+async function abrirModalInventario(){
+  if(todosItens.length===0){
+    const itensDB=await apiGet('itens','order=categoria.asc,nome.asc');
+    todosItens=itensDB||[];
+  }
+  document.getElementById('inv-busca').value='';
+  document.getElementById('inv-filtro-cat').value='';
+  renderItensModal();
+  document.getElementById('inv-modal-overlay').style.display='flex';
+}
+
+function fecharModalInventario(){
+  document.getElementById('inv-modal-overlay').style.display='none';
+}
+
+function filtrarItensModal(){
+  renderItensModal();
+}
+
+function renderItensModal(){
+  const busca=document.getElementById('inv-busca').value.toLowerCase();
+  const cat=document.getElementById('inv-filtro-cat').value;
+  let lista=todosItens;
+  if(cat) lista=lista.filter(i=>i.categoria===cat);
+  if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||i.descricao.toLowerCase().includes(busca));
+  const el=document.getElementById('inv-modal-lista');
+  if(!lista.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#aaa;font-size:13px">Nenhum item encontrado.</div>';return;}
+  el.innerHTML=lista.map(item=>{
+    const qty=inventarioFicha[item.id]?.quantidade||0;
+    return`<div class="inv-modal-item">
+      <div class="inv-modal-info">
+        <div class="inv-modal-nome">${item.nome} ${item.evento?'<span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>':''}</div>
+        <div class="inv-modal-cat">${item.categoria}</div>
+        <div class="inv-modal-desc">${item.descricao}</div>
       </div>
-      <div class="hist-body">${ph}</div>
+      <div class="inv-modal-qty">
+        <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',-1)">−</button>
+        <span class="inv-qty-num" id="inv-qty-${item.id}">${qty}</span>
+        <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',+1)">+</button>
+      </div>
     </div>`;
   }).join('');
 }
 
-// ══════════════════════════════════════
-// EDITOR VISUAL
-// ══════════════════════════════════════
-const ESTILO_DEFAULT={brand:'#000000',brandMid:'#000000',accent:'#b22a2a',bg:'#f4f6fa',surface:'#ffffff',text:'#1a1f2e',fontTitle:"'Cinzel',serif",fontBody:"'Nunito',sans-serif",radius:'10px',customCss:''};
+async function ajustarQty(itemId, delta){
+  const item=todosItens.find(i=>i.id===itemId);
+  if(!item) return;
+  const atual=inventarioFicha[itemId]?.quantidade||0;
+  const nova=Math.max(0, atual+delta);
+  const numEl=document.getElementById(`inv-qty-${itemId}`);
+  if(numEl) numEl.textContent=nova;
+  if(nova===0 && inventarioFicha[itemId]){
+    // remove
+    await apiDel('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`);
+    delete inventarioFicha[itemId];
+  } else if(nova>0 && !inventarioFicha[itemId]){
+    // insert
+    const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:nova});
+    if(res&&res[0]) inventarioFicha[itemId]={...item,quantidade:nova,inv_id:res[0].id};
+  } else if(nova>0 && inventarioFicha[itemId]){
+    // update
+    await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`,{quantidade:nova});
+    inventarioFicha[itemId].quantidade=nova;
+  }
+  renderInventario();
+}
 
-async function carregarEstiloSalvo(){
+// helper apiDel para ficha (usa mesma base do apiGet/apiPost/apiPatch)
+function apiDel(table, query){
+  return api(`${table}?${query}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});
+}
+
+// ─── Init ─────────────────────────────────────────────
+async function init(){
+  const pid=personagemSlug;
+  if(!pid){
+    document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">Não encontrei esse contato no nosso sistema.</div>';
+    return;
+  }
   try{
-    const res=await sb('configuracoes?chave=eq.estilo&select=valor');
-    if(res&&res[0]&&res[0].valor&&Object.keys(res[0].valor).length>0){
-      return {...ESTILO_DEFAULT,...res[0].valor};
+    // busca personagem pelo slug
+    const ps=await apiGet('personagens',`slug=eq.${pid}`);
+    if(!ps||!ps[0]){
+      document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:14px">Não encontrei "<strong>${pid}</strong>" no nosso sistema.<br><small>Você anotou o contato delu corretamente?</small></div>`;
+      return;
     }
-  }catch(e){}
-  return ESTILO_DEFAULT;
-}
-function carregarEditorUI(e){
-  const d=e||ESTILO_DEFAULT;
-  document.getElementById('ec-brand').value=d.brand;
-  document.getElementById('ec-brand-mid').value=d.brandMid;
-  document.getElementById('ec-accent').value=d.accent;
-  document.getElementById('ec-bg').value=d.bg;
-  document.getElementById('ec-surface').value=d.surface;
-  document.getElementById('ec-text').value=d.text;
-  document.getElementById('ec-font-title').value=d.fontTitle;
-  document.getElementById('ec-font-body').value=d.fontBody;
-  document.getElementById('ec-radius').value=d.radius;
-  document.getElementById('ec-custom-css').value=d.customCss||'';
-}
-function coletarEstilo(){
-  return{
-    brand:     document.getElementById('ec-brand').value,
-    brandMid:  document.getElementById('ec-brand-mid').value,
-    accent:    document.getElementById('ec-accent').value,
-    bg:        document.getElementById('ec-bg').value,
-    surface:   document.getElementById('ec-surface').value,
-    text:      document.getElementById('ec-text').value,
-    fontTitle: document.getElementById('ec-font-title').value,
-    fontBody:  document.getElementById('ec-font-body').value,
-    radius:    document.getElementById('ec-radius').value,
-    customCss: document.getElementById('ec-custom-css').value,
-  };
-}
-function aplicarVars(e){
-  const r=document.documentElement;
-  r.style.setProperty('--brand',e.brand);
-  r.style.setProperty('--brand-mid',e.brandMid);
-  r.style.setProperty('--accent',e.accent);
-  r.style.setProperty('--bg',e.bg);
-  r.style.setProperty('--surface',e.surface);
-  r.style.setProperty('--text',e.text);
-  r.style.setProperty('--font-title',e.fontTitle);
-  r.style.setProperty('--font-body',e.fontBody);
-  r.style.setProperty('--r',e.radius);
-  let tag=document.getElementById('custom-css-tag');
-  if(!tag){tag=document.createElement('style');tag.id='custom-css-tag';document.head.appendChild(tag);}
-  tag.textContent=e.customCss||'';
-  injectFonts((e.fontTitle||'')+(e.fontBody||''));
-}
-function injectFonts(str){
-  const map={
-    'Playfair':'Playfair+Display:wght@400;600;700',
-    'Oswald':'Oswald:wght@400;600;700',
-    'Raleway':'Raleway:wght@400;600;700',
-    'Press Start':'Press+Start+2P',
-    'Fredoka':'Fredoka+One',
-    'Poppins':'Poppins:wght@400;500;600;700',
-    'Inter':'Inter:wght@400;500;600;700',
-    'Roboto':'Roboto:wght@400;500;700',
-    'Lato':'Lato:wght@400;700',
-    'Open Sans':'Open+Sans:wght@400;600;700',
-  };
-  Object.entries(map).forEach(([k,v])=>{
-    if(str.includes(k)){
-      const id='gf-'+k.replace(/\s/g,'-');
-      if(!document.getElementById(id)){
-        const l=document.createElement('link');
-        l.id=id;l.rel='stylesheet';
-        l.href=`https://fonts.googleapis.com/css2?family=${v}&display=swap`;
-        document.head.appendChild(l);
-      }
+    personagem=ps[0];
+    // busca ficha — tenta por slug primeiro, depois por id
+    let fichasRes=await apiGet('fichas',`personagem_slug=eq.${pid}`);
+    if(!fichasRes||fichasRes.length===0){
+      fichasRes=await apiGet('fichas',`personagem_id=eq.${personagem.id}`);
     }
-  });
+    ficha=fichasRes&&fichasRes[0]?fichasRes[0]:{
+      id:null,banner:null,slogan:'',pe:0,rep:0,cs:0,pv:0,
+      idade:'',ocupacao:'',origem:'',inventario:'',
+      biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
+    };
+    ['time','relacionamentos','box'].forEach(k=>{
+      if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];}}
+      if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:k==='box'?[]:[];
+    });
+    ficha.boxSlotUpgrade=parseInt(ficha.boxSlotUpgrade)||0;
+    ficha.boxMiniUpgrade=parseInt(ficha.boxMiniUpgrade)||0;
+    ficha.relTotal=parseInt(ficha.relTotal)||6;
+    if(typeof ficha.cores==='string'){try{ficha.cores=JSON.parse(ficha.cores);}catch{ficha.cores=null;}}
+    aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
+    document.title=`Ficha — ${personagem.nome}`;
+    const sessao=lerSessaoPlayer();
+    if(sessao && personagem.player.toLowerCase()===sessao.nome.toLowerCase()){
+      jogadorLogado={nome:sessao.nome,player:sessao.nome};
+    }
+    renderFicha();
+    document.getElementById('loading-overlay').style.display='none';
+    document.getElementById('top-bar').style.display='flex';
+    document.getElementById('ficha-wrap').style.display='block';
+    atualizarTopBar();
+  } catch(e){
+    console.error('Erro no init da ficha:',e);
+    document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:13px;max-width:400px;text-align:center">❌ Erro ao carregar a ficha:<br><code style="font-size:11px">${e.message}</code><br><br><button onclick="location.reload()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:none;background:#2563a8;color:#fff;cursor:pointer">Tentar novamente</button></div>`;
+  }
 }
-function aplicarEstilo(){aplicarVars(coletarEstilo());}
-async function salvarEstilo(){
-  const e=coletarEstilo();
-  aplicarVars(e);
-  await sb('configuracoes?chave=eq.estilo',{
-    method:'PATCH',
-    body:JSON.stringify({valor:e, updated_at: new Date().toISOString()}),
-    prefer:'return=minimal'
-  });
-  fb('editor-fb-ok');
-}
-async function resetarEstilo(){
-  if(!confirm('Restaurar padrão para todos os dispositivos?'))return;
-  await sb('configuracoes?chave=eq.estilo',{
-    method:'PATCH',
-    body:JSON.stringify({valor:ESTILO_DEFAULT, updated_at: new Date().toISOString()}),
-    prefer:'return=minimal'
-  });
-  carregarEditorUI(ESTILO_DEFAULT);
-  aplicarVars(ESTILO_DEFAULT);
-}
-
-// ══════════════════════════════════════
-// ROLADOR DE DADOS
-// ══════════════════════════════════════
-let historicoDados=[], dadosPagina=0;
-const DADOS_POR_PAG=15;
-
-function setLados(n){
-  document.getElementById('dice-lados').value=n;
-  sincLadosBtns();
-}
-function sincLadosBtns(){
-  const v=parseInt(document.getElementById('dice-lados').value);
-  document.querySelectorAll('.dice-side-btn').forEach(b=>{
-    const lbl=b.textContent.replace('d','');
-    b.classList.toggle('active', parseInt(lbl)===v);
-  });
-}
-async function rolarDado(){
-  const personagem=document.getElementById('dice-personagem').value.trim();
-  const lados=parseInt(document.getElementById('dice-lados').value);
-  const motivo=document.getElementById('dice-motivo').value.trim();
-  if(!personagem){alert('Preencha o nome do personagem!');document.getElementById('dice-personagem').focus();return;}
-  if(!lados||lados<2){alert('O dado precisa ter ao menos 2 lados.');return;}
-  if(!motivo){alert('Preencha o motivo da rolagem!');document.getElementById('dice-motivo').focus();return;}
-  const resultado=Math.floor(Math.random()*lados)+1;
-  const agora=new Date();
-  const hora=agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
-  const data=agora.toLocaleDateString('pt-BR');
-  const entry={personagem,lados,motivo,resultado,hora,data};
-  const res=await dbPost('historico_dados',entry);
-  if(res&&res[0])historicoDados.unshift(res[0]);
-  else historicoDados.unshift({...entry,id:Date.now()});
-  dadosPagina=0;
-  renderHistDados();
-}
-function mudarPaginaDados(dir){
-  const totalPags=Math.ceil(historicoDados.length/DADOS_POR_PAG);
-  dadosPagina=Math.max(0,Math.min(dadosPagina+dir,totalPags-1));
-  renderHistDados();
-}
-function renderHistDados(){
-  const wrap=document.getElementById('dice-hist-wrap');
-  const lista=document.getElementById('dice-hist-lista');
-  if(historicoDados.length===0){wrap.style.display='none';return;}
-  wrap.style.display='block';
-  const totalPags=Math.ceil(historicoDados.length/DADOS_POR_PAG);
-  dadosPagina=Math.max(0,Math.min(dadosPagina,totalPags-1));
-  const inicio=dadosPagina*DADOS_POR_PAG;
-  const pagina=historicoDados.slice(inicio,inicio+DADOS_POR_PAG);
-  document.getElementById('dice-hist-label').textContent=`${historicoDados.length} rolagem${historicoDados.length!==1?'s':''}`;
-  document.getElementById('dice-hist-prev').style.display=dadosPagina>0?'':'none';
-  document.getElementById('dice-hist-next').style.display=dadosPagina<totalPags-1?'':'none';
-  document.getElementById('dice-hist-paginacao').style.display=totalPags>1?'flex':'none';
-  lista.innerHTML=pagina.map((e,i)=>`
-    <div class="dice-hist-entry" style="animation-delay:${i*0.04}s">
-      <div class="dice-hist-msg">
-        [${e.data} ${e.hora}] <strong>${e.personagem}</strong> rolou <strong>1d${e.lados}</strong> para <strong>${e.motivo}</strong> e obteve: <strong>${e.resultado}</strong>
-      </div>
-      <div class="dice-hist-num" style="display:none">${e.resultado}</div>
-    </div>`).join('');
-}
-
-function parseBrDate(str){ const [d,m,a]=str.split('/'); return new Date(`${a}-${m}-${d}`); }
-
-async function limparHistPokemonPorData(){
-  if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
-  const de=document.getElementById('poke-data-de').value;
-  const ate=document.getElementById('poke-data-ate').value;
-  const errEl=document.getElementById('hist-poke-fb-err');
-  errEl.style.display='none';
-  if(!de&&!ate){errEl.textContent='Selecione ao menos uma data.';errEl.style.display='block';return;}
-  const deD=de?new Date(de):null;
-  const ateD=ate?new Date(ate):null;
-  if(deD&&ateD&&deD>ateD){errEl.textContent='A data "De" não pode ser maior que "Até".';errEl.style.display='block';return;}
-  const targets=historico.filter(e=>{
-    const d=parseBrDate(e.data);
-    if(deD&&d<deD)return false;
-    if(ateD&&d>ateD)return false;
-    return true;
-  });
-  if(targets.length===0){errEl.textContent='Nenhum registro encontrado nesse período.';errEl.style.display='block';return;}
-  if(!confirm(`Apagar ${targets.length} registro${targets.length!==1?'s':''} de encontros entre ${de||'início'} e ${ate||'hoje'}?`))return;
-  for(const e of targets) await dbDel('historico',`id=eq.${e.id}`);
-  const ids=new Set(targets.map(e=>e.id));
-  historico=historico.filter(e=>!ids.has(e.id));
-  renderHistorico();
-  fb('hist-poke-fb');
-  document.getElementById('poke-data-de').value='';
-  document.getElementById('poke-data-ate').value='';
-}
-async function limparHistDadosPorData(){
-  if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
-  const de=document.getElementById('dados-data-de').value;
-  const ate=document.getElementById('dados-data-ate').value;
-  const errEl=document.getElementById('hist-dados-fb-err');
-  errEl.style.display='none';
-  if(!de&&!ate){errEl.textContent='Selecione ao menos uma data.';errEl.style.display='block';return;}
-  const deD=de?new Date(de):null;
-  const ateD=ate?new Date(ate):null;
-  if(deD&&ateD&&deD>ateD){errEl.textContent='A data "De" não pode ser maior que "Até".';errEl.style.display='block';return;}
-  const targets=historicoDados.filter(e=>{
-    const d=parseBrDate(e.data);
-    if(deD&&d<deD)return false;
-    if(ateD&&d>ateD)return false;
-    return true;
-  });
-  if(targets.length===0){errEl.textContent='Nenhum registro encontrado nesse período.';errEl.style.display='block';return;}
-  if(!confirm(`Apagar ${targets.length} registro${targets.length!==1?'s':''} de dados entre ${de||'início'} e ${ate||'hoje'}?`))return;
-  for(const e of targets) await dbDel('historico_dados',`id=eq.${e.id}`);
-  const ids=new Set(targets.map(e=>e.id));
-  historicoDados=historicoDados.filter(e=>!ids.has(e.id));
-  renderHistDados();
-  fb('hist-dados-fb');
-  document.getElementById('dados-data-de').value='';
-  document.getElementById('dados-data-ate').value='';
-}
-async function limparHistDados(){
-  if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
-  if(!confirm('Limpar TODO o histórico de dados? Esta ação não pode ser desfeita.'))return;
-  await dbDel('historico_dados','id=gte.0');
-  historicoDados=[];
-  renderHistDados();
-  fb('hist-dados-fb');
-}
-async function limparHistPokemon(){
-  if(admLogado?.email!=='pchaptersrpg@gmail.com'){alert('Apenas o admin gold pode limpar os históricos.');return;}
-  if(!confirm('Limpar TODO o histórico de encontros Pokémon? Esta ação não pode ser desfeita.'))return;
-  await dbDel('historico','id=gte.0');
-  historico=[];
-  renderHistorico();
-  fb('hist-poke-fb');
-}
-
-// ══════════════════════════════════════
-// START
-// ══════════════════════════════════════
 init();
 </script>
 </body>
