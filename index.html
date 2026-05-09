@@ -842,7 +842,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <button class="modal-close" onclick="fecharModalItem()">✕</button>
     <div class="modal-title" id="modal-item-title">Novo Item</div>
     <input type="hidden" id="modal-item-id"/>
-    <input type="hidden" id="modal-item-sprite"/>
     <div class="g2">
       <div class="field">
         <label>Nome</label>
@@ -868,6 +867,27 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <label>Descrição</label>
       <textarea id="modal-item-desc" rows="3" placeholder="Descreva o efeito ou uso do item..."
         style="padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);width:100%;resize:vertical"></textarea>
+    </div>
+    <!-- Sprite manual -->
+    <div class="field">
+      <label>Sprite</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div id="modal-item-sprite-preview" style="width:40px;height:40px;flex-shrink:0;background:var(--surface2);border:1.5px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer" onclick="document.getElementById('modal-item-sprite-file').click()" title="Clique para fazer upload">
+          <span style="font-size:18px">❓</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;gap:6px">
+            <input type="text" id="modal-item-sprite" placeholder="URL do sprite" oninput="previewSpriteManual()" style="flex:1"/>
+            <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);white-space:nowrap;font-size:11px" onclick="document.getElementById('modal-item-sprite-file').click()">📁 Upload</button>
+          </div>
+          <div style="display:flex;gap:6px">
+            <input type="text" id="modal-item-sprite-slug" placeholder="ou slug PokéAPI (ex: poke-ball)" style="flex:1;font-size:12px"/>
+            <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);white-space:nowrap;font-size:11px" onclick="buscarSpriteManual()">🔍 Buscar</button>
+          </div>
+        </div>
+      </div>
+      <input type="file" id="modal-item-sprite-file" accept="image/*" style="display:none" onchange="onSpriteUpload(this)"/>
+      <div id="modal-item-sprite-status" style="font-size:11px;color:var(--muted);margin-top:4px"></div>
     </div>
     <div class="field">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--text)">
@@ -1794,9 +1814,103 @@ function abrirModalItem(id){
   document.getElementById('modal-item-desc').value  = item?.descricao || '';
   document.getElementById('modal-item-evento').checked = !!item?.evento;
   document.getElementById('modal-item-sprite').value = item?.sprite || '';
+  document.getElementById('modal-item-sprite-slug').value = '';
   document.getElementById('modal-item-err').style.display = 'none';
   document.getElementById('modal-item-del-btn').style.display = item ? 'inline-block' : 'none';
+  // preview sprite existente
+  const prev   = document.getElementById('modal-item-sprite-preview');
+  const status = document.getElementById('modal-item-sprite-status');
+  if(item?.sprite){
+    prev.innerHTML = `<img src="${item.sprite}" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>`;
+    status.textContent = '✓ Sprite atual'; status.style.color = '#1a7a1a';
+  } else {
+    prev.innerHTML = '<span style="font-size:18px">❓</span>';
+    status.textContent = ''; 
+  }
   document.getElementById('modal-item').style.display = 'flex';
+}
+
+function onSpriteUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  const prev   = document.getElementById('modal-item-sprite-preview');
+  const status = document.getElementById('modal-item-sprite-status');
+  const urlInput = document.getElementById('modal-item-sprite');
+  status.textContent = '⏳ Processando...'; status.style.color = 'var(--muted)';
+  const reader = new FileReader();
+  reader.onload = e => {
+    // Redimensiona para 32x32 via canvas mantendo proporção
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 32; canvas.height = 32;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      const scale = Math.min(32/img.width, 32/img.height);
+      const w = img.width*scale, h = img.height*scale;
+      ctx.drawImage(img, (32-w)/2, (32-h)/2, w, h);
+      const dataUrl = canvas.toDataURL('image/png');
+      urlInput.value = dataUrl;
+      prev.innerHTML = `<img src="${dataUrl}" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>`;
+      status.textContent = '✓ Imagem carregada (32×32)'; status.style.color = '#1a7a1a';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = ''; // reset para permitir reupar o mesmo arquivo
+}
+
+function previewSpriteManual(){
+  const url    = document.getElementById('modal-item-sprite').value.trim();
+  const prev   = document.getElementById('modal-item-sprite-preview');
+  const status = document.getElementById('modal-item-sprite-status');
+  if(!url){ prev.innerHTML='<span style="font-size:18px">❓</span>'; status.textContent=''; return; }
+  const img = new Image();
+  img.onload = () => {
+    prev.innerHTML = `<img src="${url}" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>`;
+    status.textContent = '✓ Sprite válido'; status.style.color = '#1a7a1a';
+  };
+  img.onerror = () => {
+    prev.innerHTML = '<span style="font-size:18px">❌</span>';
+    status.textContent = 'URL inválida ou imagem não encontrada'; status.style.color = '#c00';
+  };
+  img.src = url;
+}
+
+async function buscarSpriteManual(){
+  const slug   = document.getElementById('modal-item-sprite-slug').value.trim()
+    .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s\-]/g,'').trim().replace(/\s+/g,'-');
+  const prev   = document.getElementById('modal-item-sprite-preview');
+  const status = document.getElementById('modal-item-sprite-status');
+  const input  = document.getElementById('modal-item-sprite');
+  if(!slug){ status.textContent='Digite um slug antes de buscar.'; status.style.color='#c00'; return; }
+  status.textContent = '⏳ Buscando...'; status.style.color = 'var(--muted)';
+
+  const POKESPRITE = 'https://raw.githubusercontent.com/msikma/pokesprite/master/items/';
+  const POKEAPI    = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+
+  function testar(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url; }); }
+
+  // Tenta categorias do PokéSprite
+  const cats = ['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
+    'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr','plate',
+    'incense','gem','shard','mulch','scarf','flute','apricorn','mail','ev-item','storage'];
+  let found = null;
+  for(const cat of cats){
+    found = await testar(`${POKESPRITE}${cat}/${slug}.png`);
+    if(found) break;
+  }
+  // Fallback PokéAPI
+  if(!found) found = await testar(`${POKEAPI}${slug}.png`);
+
+  if(found){
+    input.value = found;
+    prev.innerHTML = `<img src="${found}" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>`;
+    status.textContent = '✓ Sprite encontrado!'; status.style.color = '#1a7a1a';
+  } else {
+    status.textContent = 'Não encontrado. Cole a URL manualmente.'; status.style.color = '#c00';
+  }
 }
 
 function fecharModalItem(){ document.getElementById('modal-item').style.display = 'none'; }
