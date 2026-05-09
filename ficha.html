@@ -951,7 +951,7 @@ function renderInventario(){
     itens.map(item=>`
       <div class="inv-card">
         <div class="inv-card-top">
-          <img class="inv-card-sprite" src="${item.sprite||'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png'}" alt="${item.nome}" onerror="this.style.display='none'"/>
+          ${item.sprite ? `<img class="inv-card-sprite" src="${item.sprite}" alt="${item.nome}" onerror="this.style.display='none'"/>` : ''}
           <div class="inv-card-nome">${item.nome}</div>
           <div class="inv-card-qty">x${item.quantidade}</div>
         </div>
