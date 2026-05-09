@@ -829,6 +829,7 @@ async function salvarFicha(silencioso=false){
   const btn=document.getElementById('btn-salvar');
   if(!silencioso){btn.textContent='Salvando...';btn.disabled=true;}
   else setAutoSaveStatus('Salvando...','var(--muted)');
+  try{
 
   function coletarSlots(prefix, count){
     const pfx=`${prefix}-pk`;
@@ -874,7 +875,6 @@ async function salvarFicha(silencioso=false){
     idade:document.getElementById('f-idade-input').value.trim(),
     ocupacao:document.getElementById('f-ocup-input').value.trim(),
     origem:document.getElementById('f-orig-input').value.trim(),
-    inventario:document.getElementById('f-inv-input').value.trim(),
     biografia:document.getElementById('f-bio-input').value.trim(),
     anotacoes:document.getElementById('f-anot-input').value.trim(),
     time,box,boxSlotUpgrade,boxMiniUpgrade,relacionamentos,relTotal,cores:ficha.cores||null,updated_at:new Date().toISOString()
@@ -906,6 +906,11 @@ async function salvarFicha(silencioso=false){
   } else {
     btn.textContent='💾 Salvar';btn.disabled=false;
     cancelarEdicao();
+  }
+  }catch(e){
+    console.error('Erro ao salvar:',e);
+    if(!silencioso){btn.textContent='💾 Salvar';btn.disabled=false;alert('Erro ao salvar: '+e.message);}
+    else setAutoSaveStatus('Erro ao salvar','#c00');
   }
 }
 
