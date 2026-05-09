@@ -73,12 +73,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .dados-grid-wrap .dado-val{border-bottom:1.5px solid var(--bg)}
 /* SECTION */
 /* INVENTÁRIO */
-.inv-tabela{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-body)}
-.inv-tabela th{background:var(--cor-dados,#1a1a1a);color:#fff;padding:6px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
-.inv-tabela td{padding:7px 10px;border-bottom:1px solid var(--bg);vertical-align:top}
-.inv-tabela tr.inv-row:hover td{background:#f9f9f9;cursor:pointer}
-.inv-cat-badge{display:inline-block;font-size:9px;font-weight:700;padding:1px 6px;border-radius:3px;background:#e8e8e8;color:#555;margin-left:4px;text-transform:uppercase;letter-spacing:.3px}
-.inv-desc-row td{font-size:11px;color:#666;padding:4px 10px 8px 28px;background:#fafafa;border-bottom:1px solid #eee}
+.inv-grid{display:grid;grid-template-columns:repeat(6,1fr);border-left:1px solid var(--border)}
+.inv-card{border-right:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:0}
+.inv-card-top{background:var(--cor-dados,#1a1a1a);width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 6px;gap:4px;border-bottom:1px solid var(--border)}
+.inv-card-sprite{width:36px;height:36px;object-fit:contain;image-rendering:pixelated}
+.inv-card-nome{font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);text-transform:uppercase;letter-spacing:.4px;text-align:center;line-height:1.3}
+.inv-card-qty{font-size:9px;color:rgba(255,255,255,.7);font-family:var(--font-body);font-weight:600}
+.inv-card-desc{font-size:10px;color:var(--muted);font-family:var(--font-body);line-height:1.5;padding:7px 8px;text-align:justify;width:100%}
+@media(max-width:600px){.inv-grid{grid-template-columns:repeat(3,1fr)}}
 .inv-modal-item{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border-bottom:1px solid #eee;transition:background .1s}
 .inv-modal-item:hover{background:#f5f5f5}
 .inv-modal-info{flex:1;min-width:0}
@@ -299,7 +301,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div class="ficha-section">
     <div class="ficha-section-title" style="flex-direction:column;gap:2px">
       <span>Box</span>
-      <span id="box-counter" style="font-family:var(--font-body);font-size:12px;font-weight:600;opacity:.85"></span>
+      <span id="box-counter" style="font-family:var(--font-body);font-size:10px;font-weight:600;opacity:.85"></span>
     </div>
     <div id="box-upgrade-bar" style="background:var(--surface2);padding:6px 14px;font-size:11px;font-family:var(--font-body);color:var(--muted);border-bottom:1px solid var(--bg);display:none"></div>
     <div class="ficha-section-body" style="padding:0">
@@ -945,21 +947,18 @@ function renderInventario(){
   const lista=document.getElementById('inv-lista-view');
   const itens=Object.values(inventarioFicha).filter(i=>i.quantidade>0);
   if(!itens.length){lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';return;}
-  const grupos={};
-  itens.forEach(i=>{if(!grupos[i.categoria])grupos[i.categoria]=[];grupos[i.categoria].push(i);});
-  lista.innerHTML=`<table class="inv-tabela"><thead><tr><th>Item</th><th style="width:60px;text-align:center">Qtd</th></tr></thead><tbody>${
-    Object.entries(grupos).map(([cat,items])=>items.map(item=>`
-      <tr class="inv-row" onclick="toggleInvDesc('${item.id}')">
-        <td><strong>${item.nome}</strong><span class="inv-cat-badge">${item.categoria}</span></td>
-        <td style="text-align:center;font-weight:700">${item.quantidade}</td>
-      </tr>
-      <tr id="inv-desc-${item.id}" style="display:none">
-        <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao||'—'}</td>
-      </tr>`).join('')).join('')
-  }</tbody></table>`;
+  lista.innerHTML=`<div class="inv-grid">${
+    itens.map(item=>`
+      <div class="inv-card">
+        <div class="inv-card-top">
+          <img class="inv-card-sprite" src="${item.sprite||'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png'}" alt="${item.nome}" onerror="this.style.display='none'"/>
+          <div class="inv-card-nome">${item.nome}</div>
+          <div class="inv-card-qty">x${item.quantidade}</div>
+        </div>
+        <div class="inv-card-desc">${item.descricao||''}</div>
+      </div>`).join('')
+  }</div>`;
 }
-
-function toggleInvDesc(id){const row=document.getElementById(`inv-desc-${id}`);if(row)row.style.display=row.style.display==='none'?'':'none';}
 
 async function abrirModalInventario(){
   if(!todosItens.length){const res=await apiGet('itens','order=categoria.asc,nome.asc');todosItens=res||[];}
