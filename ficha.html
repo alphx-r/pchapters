@@ -15,12 +15,10 @@
   --font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
 }
 html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);color:var(--text)}
-/* LOADING */
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
 .loading-spinner{width:36px;height:36px;border:3px solid #ccc;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 .loading-text{font-size:14px;color:var(--muted);font-weight:600}
 @keyframes spin{to{transform:rotate(360deg)}}
-/* LOGIN */
 .login-wrap{max-width:380px;margin:80px auto;background:var(--surface);border:2px solid var(--accent);border-radius:4px;padding:32px;text-align:center}
 .login-wrap h2{font-family:var(--font-title);font-size:18px;color:#000;margin-bottom:6px;font-weight:700}
 .login-wrap p{font-size:12px;color:var(--muted);margin-bottom:24px;font-family:var(--font-body)}
@@ -34,23 +32,16 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .btn-danger{background:#fee2e2;color:#c00;border:1px solid #fca5a5}
 .btn-sm{padding:5px 12px;font-size:11px}
 .fb-err{background:#fee2e2;color:#c00;border:1px solid #fca5a5;border-radius:3px;padding:8px 12px;font-size:12px;font-weight:600;margin-top:10px}
-
-/* TOP BAR */
 .top-bar{background:var(--accent);padding:8px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:0;z-index:100}
 .top-bar-title{font-family:var(--font-title);font-size:14px;color:#fff;font-weight:700}
 .top-bar-actions{display:flex;gap:8px;align-items:center}
-
-/* FICHA WRAP */
 .ficha-wrap{max-width:860px;margin:0 auto;padding:16px 12px 60px}
-
-/* CABEÇALHO */
 .ficha-header{background:var(--bg);margin-bottom:1px}
 .header-name-row{background:#1a1a1a;padding:7px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ficha-title{font-family:var(--font-title);font-size:18px;font-weight:700;color:#fff;letter-spacing:1px;text-transform:uppercase}
 .pe-badge{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body);white-space:nowrap}
 .header-slogan-row{background:#3a3a3a;padding:5px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .ficha-slogan{font-size:10px;font-style:italic;color:#444;font-family:var(--font-body)}
-/* grid: banner ocupa tudo menos coluna direita de foto */
 .header-body{display:grid;grid-template-columns:1fr 200px;min-height:160px;border-top:2px solid var(--bg)}
 .header-banner-col{overflow:hidden;display:flex;align-items:center;justify-content:center;background:#eee;position:relative;cursor:pointer}
 .header-banner-col img{width:100%;height:100%;object-fit:cover;display:block}
@@ -60,29 +51,21 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .header-photo-col{border-left:2px solid var(--bg);overflow:hidden;display:flex;align-items:center;justify-content:center;background:#ddd;position:relative}
 .header-photo-col img{width:200px;height:100%;object-fit:cover;display:block}
 .header-photo-placeholder{font-size:11px;color:#aaa;font-family:var(--font-body);text-align:center;padding:10px}
-
-/* STATS ROW */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
 .stat-header{background:#1a1a1a;padding:5px 8px;text-align:center;font-size:10px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
 .stat-header:last-child{border-right:none}
 .stat-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:4px}
 .stat-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:12px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
 .stat-val:last-child{border-right:none}
-
-/* DADOS ROW */
 .dados-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:1px}
 .dado-header{background:#1a1a1a;padding:5px 8px;text-align:center;font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);border-right:1.5px solid var(--bg)}
 .dado-header:last-child{border-right:none}
 .dado-val-row{display:grid;grid-template-columns:repeat(4,1fr);margin-bottom:8px}
 .dado-val{background:var(--surface);padding:5px 8px;text-align:center;font-size:11px;font-family:var(--font-body);border-right:1.5px solid var(--bg);border-bottom:1.5px solid var(--bg)}
 .dado-val:last-child{border-right:none}
-
-/* SECTION */
 .ficha-section{margin-bottom:4px}
 .ficha-section-title{background:var(--accent);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px}
 .ficha-section-body{background:var(--surface);border:1.5px solid var(--bg);padding:12px}
-
-/* TIME */
 .time-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:0}
 .poke-slot{background:var(--surface);border:1.5px solid var(--bg);padding:8px;min-height:80px}
 .poke-slot.vazio{border-style:dashed;opacity:.4;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-family:var(--font-body)}
@@ -90,17 +73,11 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .poke-slot-nome-lbl{font-size:10px;font-weight:700;color:#fff;font-family:var(--font-title)}
 .poke-slot-info{font-size:10px;color:var(--muted);line-height:1.6;font-family:var(--font-body)}
 .poke-slot-dados{background:var(--surface2);padding:4px 6px;font-size:9px;font-weight:700;text-align:center;margin:4px -8px -8px -8px;font-family:var(--font-body)}
-
-/* RELACIONAMENTOS */
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
 .rel-item{background:#000;padding:5px 8px;text-align:center;border:1px solid var(--bg)}
 .rel-nome{font-size:11px;font-weight:700;color:#fff;font-family:var(--font-body)}
 .rel-tipo{font-size:10px;color:var(--accent);font-family:var(--font-body)}
-
-/* TEXTO */
 .bio-text{font-size:12px;color:var(--text);line-height:1.8;white-space:pre-wrap;font-family:var(--font-body);text-align:justify;text-indent:28px}
-
-/* EDIT */
 .edit-bar{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:2px solid var(--accent);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:100;flex-wrap:wrap}
 .edit-bar-info{font-size:12px;color:var(--muted);font-family:var(--font-body)}
 .edit-bar-info strong{color:var(--accent)}
@@ -113,7 +90,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .poke-slot-fields input:focus,.poke-slot-fields textarea:focus{border-color:var(--accent)}
 .view-content{display:block}
 .edit-content{display:none}
-
 /* INVENTÁRIO */
 .inv-tabela{width:100%;border-collapse:collapse;font-size:12px;font-family:var(--font-body)}
 .inv-tabela th{background:var(--cor-dados,#1a1a1a);color:#fff;padding:6px 10px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
@@ -131,30 +107,26 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .inv-qty-btn{width:26px;height:26px;border-radius:50%;border:1.5px solid #ccc;background:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700;transition:all .15s}
 .inv-qty-btn:hover{background:var(--cor-cabecalho,#1a1a1a);color:#fff;border-color:var(--cor-cabecalho,#1a1a1a)}
 .inv-qty-num{width:28px;text-align:center;font-size:13px;font-weight:700;font-family:var(--font-body)}
-
 @media(max-width:600px){
   .time-grid{grid-template-columns:repeat(3,1fr)}
   .header-body{grid-template-columns:1fr}
-  .header-mid-col,.header-right-col{display:none}
+  .header-photo-col{display:none}
   .stats-row,.stat-val-row,.dados-row,.dado-val-row{grid-template-columns:repeat(2,1fr)}
 }
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
   <div class="loading-text">Carregando ficha...</div>
 </div>
 
-<!-- TOP BAR -->
 <div class="top-bar" id="top-bar" style="display:none">
   <div class="top-bar-title">Ficha do Personagem</div>
   <div class="top-bar-actions" id="top-bar-actions"></div>
 </div>
 
-<!-- LOGIN DO JOGADOR -->
 <div id="login-wrap" style="display:none">
   <div class="login-wrap">
     <h2>Editar Ficha</h2>
@@ -166,10 +138,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
 </div>
 
-<!-- FICHA -->
 <div id="ficha-wrap" class="ficha-wrap" style="display:none">
 
-  <!-- CABEÇALHO -->
   <div class="ficha-header">
     <div class="header-name-row">
       <div class="ficha-title" id="f-nome"></div>
@@ -184,7 +154,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <span style="font-size:10px;color:#fff;font-family:var(--font-body);white-space:nowrap" id="f-player-badge"></span>
     </div>
     <div class="header-body">
-      <!-- BANNER (editável pelo player) -->
       <div class="header-banner-col" id="header-banner-col">
         <div id="f-banner-view">
           <div id="f-banner-placeholder" class="header-banner-placeholder">Sem banner — clique para adicionar</div>
@@ -192,14 +161,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="header-banner-edit-btn" id="btn-banner-edit" onclick="editarBanner()" style="display:none">🖼 Trocar banner</button>
         <input type="file" id="banner-file-input" accept="image/*" style="display:none" onchange="onBannerFile(this)"/>
       </div>
-      <!-- FOTO DO PERSONAGEM (coluna direita) -->
       <div class="header-photo-col" id="header-photo-col">
         <div id="f-photo-placeholder" class="header-photo-placeholder">Sem foto</div>
       </div>
     </div>
   </div>
 
-  <!-- STATS -->
   <div class="stats-row">
     <div class="stat-header">Reputação</div>
     <div class="stat-header">C$</div>
@@ -225,7 +192,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
   </div>
 
-  <!-- DADOS PESSOAIS -->
   <div class="dados-row">
     <div class="dado-header">Idade</div>
     <div class="dado-header">Ocupação</div>
@@ -248,7 +214,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="dado-val" id="f-player-dado">—</div>
   </div>
 
-  <!-- TIME PRINCIPAL -->
   <div class="ficha-section">
     <div class="ficha-section-title">Time Principal</div>
     <div class="ficha-section-body" style="padding:0">
@@ -256,18 +221,19 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
   </div>
 
-  <!-- INVENTÁRIO -->
+  <!-- INVENTÁRIO — sem f-inv-input, só tabela -->
   <div class="ficha-section">
-    <div class="ficha-section-title" style="display:flex;align-items:center;justify-content:space-between">
+    <div class="ficha-section-title" style="justify-content:space-between">
       <span>Inventário</span>
-      <button id="btn-inv-gerenciar" class="btn btn-sm edit-content" style="display:none;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);font-size:11px" onclick="abrirModalInventario()">+ Gerenciar</button>
+      <button id="btn-inv-gerenciar" class="btn btn-sm edit-content"
+        style="display:none;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);font-size:11px"
+        onclick="abrirModalInventario()">+ Gerenciar</button>
     </div>
     <div class="ficha-section-body" style="padding:0">
       <div id="inv-lista-view"></div>
     </div>
   </div>
 
-  <!-- RELACIONAMENTOS -->
   <div class="ficha-section">
     <div class="ficha-section-title">Relacionamentos</div>
     <div class="ficha-section-body" style="padding:0">
@@ -279,7 +245,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
   </div>
 
-  <!-- BIOGRAFIA -->
   <div class="ficha-section">
     <div class="ficha-section-title">Biografia</div>
     <div class="ficha-section-body">
@@ -288,7 +253,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
   </div>
 
-  <!-- ANOTAÇÕES -->
   <div class="ficha-section" style="margin-bottom:80px">
     <div class="ficha-section-title">Anotações e Conquistas</div>
     <div class="ficha-section-body">
@@ -299,7 +263,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 </div>
 
-<!-- BARRA DE EDIÇÃO -->
 <div class="edit-bar" id="edit-bar" style="display:none">
   <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
     <div class="edit-bar-info" id="edit-bar-info"></div>
@@ -307,13 +270,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
   <div style="display:flex;gap:8px">
     <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="abrirModalCores()">🎨 Cores</button>
-    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" id="btn-cancelar" onclick="cancelarEdicao()">Cancelar</button>
+    <button class="btn btn-sm" style="background:#eee;border:1px solid #ccc" onclick="cancelarEdicao()">Cancelar</button>
     <button class="btn btn-primary btn-sm" id="btn-salvar" onclick="salvarFicha()">💾 Salvar</button>
   </div>
 </div>
 
 <!-- MODAL INVENTÁRIO -->
-<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px" id="inv-modal-overlay" onclick="if(event.target===this)fecharModalInventario()">
+<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px"
+  id="inv-modal-overlay" onclick="if(event.target===this)fecharModalInventario()">
   <div style="background:#fff;border-radius:4px;padding:24px;width:95vw;max-width:660px;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,.3)">
     <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:16px;text-align:center">🎒 Gerenciar Inventário</div>
     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
@@ -336,7 +300,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 </div>
 
 <!-- MODAL DE CORES -->
-<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px" id="cores-modal-overlay" onclick="if(event.target===this)fecharModalCores()">
+<div style="position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center;padding:16px"
+  id="cores-modal-overlay" onclick="if(event.target===this)fecharModalCores()">
   <div style="background:#fff;border-radius:4px;padding:24px;width:100%;max-width:360px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
     <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:16px;text-align:center">🎨 Personalizar Cores</div>
     <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:18px">
@@ -379,68 +344,66 @@ async function api(path,opts={}){
   const t=await res.text();
   try{return JSON.parse(t);}catch{return[];}
 }
-const apiGet =(p,q='')=>api(`${p}?${q}`);
-const apiPost=(p,b)=>api(p,{method:'POST',body:JSON.stringify(b)});
-const apiPatch=(p,q,b)=>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
+const apiGet  =(p,q='')=>api(`${p}?${q}`);
+const apiPost =(p,b)   =>api(p,{method:'POST',body:JSON.stringify(b)});
+const apiPatch=(p,q,b) =>api(`${p}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
+const apiDel  =(p,q)   =>api(`${p}?${q}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
-
-// ─── Render ───────────────────────────────────────────
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
 
+// ─── Render principal ─────────────────────────────────
 function renderFicha(){
   try{
-  const p=personagem, f=ficha;
-  // Header
-  document.getElementById('f-nome').textContent=p.nome;
-  document.getElementById('f-player-badge').textContent=`${p.player}`;
-  document.getElementById('f-player-dado').textContent=p.player;
-  // Banner
-  const bannerCol=document.getElementById('header-banner-col');
-  const bannerPlaceholder=document.getElementById('f-banner-placeholder');
-  if(f.banner){
-    bannerPlaceholder.style.display='none';
-    let img=bannerCol.querySelector('img.banner-img');
-    if(!img){img=document.createElement('img');img.className='banner-img';bannerCol.insertBefore(img,bannerCol.firstChild);}
-    img.src=f.banner;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
-  } else {
-    bannerPlaceholder.style.display='';
-    const img=bannerCol.querySelector('img.banner-img');if(img)img.remove();
-  }
-  // Foto do personagem (coluna direita)
-  const photoCol=document.getElementById('header-photo-col');
-  const photoPlaceholder=document.getElementById('f-photo-placeholder');
-  if(p.img){
-    photoPlaceholder.style.display='none';
-    let img=photoCol.querySelector('img.photo-img');
-    if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
-    img.src=p.img;img.style.cssText='width:200px;height:100%;object-fit:cover;display:block';
-  } else { photoPlaceholder.style.display=''; }
-  // Slogan
-  document.getElementById('f-slogan-txt').textContent=f.slogan||'';
-  document.getElementById('f-slogan-input').value=f.slogan||'';
-  // PE
-  document.getElementById('f-pe-view').textContent=`${f.pe||0} PE`;
-  document.getElementById('f-pe-input').value=f.pe||0;
-  // Stats
-  ['rep','cs','pv','ca'].forEach(k=>{
-    document.getElementById(`f-${k}-txt`).textContent=f[k]||0;
-    document.getElementById(`f-${k}-input`).value=f[k]||0;
-  });
-  // Dados pessoais
-  document.getElementById('f-idade-txt').textContent=f.idade||'—';
-  document.getElementById('f-idade-input').value=f.idade||'';
-  document.getElementById('f-ocup-txt').textContent=f.ocupacao||'—';
-  document.getElementById('f-ocup-input').value=f.ocupacao||'';
-  document.getElementById('f-orig-txt').textContent=f.origem||'—';
-  document.getElementById('f-orig-input').value=f.origem||'';
-  renderTime();
-  renderRel();
-  document.getElementById('f-bio-txt').textContent=f.biografia||'Nenhuma biografia registrada.';
-  document.getElementById('f-bio-input').value=f.biografia||'';
-  document.getElementById('f-anot-txt').textContent=f.anotacoes||'Nenhuma anotação registrada.';
-  document.getElementById('f-anot-input').value=f.anotacoes||'';
+    const p=personagem, f=ficha;
+    document.getElementById('f-nome').textContent=p.nome;
+    document.getElementById('f-player-badge').textContent=p.player;
+    document.getElementById('f-player-dado').textContent=p.player;
+    // Banner
+    const bannerCol=document.getElementById('header-banner-col');
+    const bannerPH=document.getElementById('f-banner-placeholder');
+    if(f.banner){
+      bannerPH.style.display='none';
+      let img=bannerCol.querySelector('img.banner-img');
+      if(!img){img=document.createElement('img');img.className='banner-img';bannerCol.insertBefore(img,bannerCol.firstChild);}
+      img.src=f.banner;img.style.cssText='width:100%;height:100%;object-fit:cover;display:block';
+    } else {
+      bannerPH.style.display='';
+      bannerCol.querySelector('img.banner-img')?.remove();
+    }
+    // Foto
+    const photoCol=document.getElementById('header-photo-col');
+    const photoPH=document.getElementById('f-photo-placeholder');
+    if(p.img){
+      photoPH.style.display='none';
+      let img=photoCol.querySelector('img.photo-img');
+      if(!img){img=document.createElement('img');img.className='photo-img';photoCol.insertBefore(img,photoCol.firstChild);}
+      img.src=p.img;img.style.cssText='width:200px;height:100%;object-fit:cover;display:block';
+    } else { photoPH.style.display=''; }
+    // Slogan / PE
+    document.getElementById('f-slogan-txt').textContent=f.slogan||'';
+    document.getElementById('f-slogan-input').value=f.slogan||'';
+    document.getElementById('f-pe-view').textContent=`${f.pe||0} PE`;
+    document.getElementById('f-pe-input').value=f.pe||0;
+    // Stats
+    ['rep','cs','pv','ca'].forEach(k=>{
+      document.getElementById(`f-${k}-txt`).textContent=f[k]||0;
+      document.getElementById(`f-${k}-input`).value=f[k]||0;
+    });
+    // Dados pessoais
+    document.getElementById('f-idade-txt').textContent=f.idade||'—';
+    document.getElementById('f-idade-input').value=f.idade||'';
+    document.getElementById('f-ocup-txt').textContent=f.ocupacao||'—';
+    document.getElementById('f-ocup-input').value=f.ocupacao||'';
+    document.getElementById('f-orig-txt').textContent=f.origem||'—';
+    document.getElementById('f-orig-input').value=f.origem||'';
+    renderTime();
+    renderRel();
+    document.getElementById('f-bio-txt').textContent=f.biografia||'Nenhuma biografia registrada.';
+    document.getElementById('f-bio-input').value=f.biografia||'';
+    document.getElementById('f-anot-txt').textContent=f.anotacoes||'Nenhuma anotação registrada.';
+    document.getElementById('f-anot-input').value=f.anotacoes||'';
   }catch(e){console.error('Erro no renderFicha:',e);}
 }
 
@@ -453,12 +416,13 @@ function onBannerFile(input){
   reader.readAsDataURL(file);input.value='';
 }
 
+// ─── Time ─────────────────────────────────────────────
 function renderTime(){
   const time=ficha.time||[{},{},{},{},{},{}];
   while(time.length<6)time.push({});
   document.getElementById('time-grid').innerHTML=time.map((pk,i)=>{
     if(!pk||!pk.nome){
-      if(modoEdicao) return slotEditVazio(i,pk||{});
+      if(modoEdicao) return slotEdit(i,pk||{});
       return`<div class="poke-slot vazio">Slot ${i+1} vazio</div>`;
     }
     if(modoEdicao) return slotEdit(i,pk);
@@ -482,29 +446,25 @@ function slotEdit(i,pk){
     </div>
   </div>`;
 }
-function slotEditVazio(i,pk){return slotEdit(i,pk);}
 
+// ─── Relacionamentos ──────────────────────────────────
 function renderRel(){
   const rels=ficha.relacionamentos||[];
   const grid=document.getElementById('f-rel-grid');
-  if(rels.length===0){grid.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px">Nenhum relacionamento registrado.</div>';return;}
+  if(!rels.length){grid.innerHTML='<div style="color:var(--muted);font-size:12px;padding:8px">Nenhum relacionamento registrado.</div>';return;}
   grid.innerHTML=rels.map(r=>`<div class="rel-item"><div class="rel-nome">${r.nome}</div><div class="rel-tipo">${r.tipo||''}</div></div>`).join('');
   renderRelEdit();
 }
 function renderRelEdit(){
   const rels=ficha.relacionamentos||[];
-  const el=document.getElementById('rel-edit-grid');
-  el.innerHTML=rels.map((r,i)=>`
+  document.getElementById('rel-edit-grid').innerHTML=rels.map((r,i)=>`
     <div style="display:flex;gap:8px;align-items:center">
       <input class="edit-input edit-input-sm" style="flex:2" value="${r.nome||''}" placeholder="Nome" id="rel-nome-${i}"/>
       <input class="edit-input edit-input-sm" style="flex:1" value="${r.tipo||''}" placeholder="Tipo de relação" id="rel-tipo-${i}"/>
       <button class="btn btn-danger btn-sm" style="padding:4px 8px" onclick="removerRel(${i})">✕</button>
     </div>`).join('');
 }
-function addRelSlot(){
-  if(!ficha.relacionamentos)ficha.relacionamentos=[];
-  ficha.relacionamentos.push({nome:'',tipo:''});renderRelEdit();
-}
+function addRelSlot(){if(!ficha.relacionamentos)ficha.relacionamentos=[];ficha.relacionamentos.push({nome:'',tipo:''});renderRelEdit();}
 function removerRel(i){ficha.relacionamentos.splice(i,1);renderRelEdit();}
 
 // ─── Modo edição ──────────────────────────────────────
@@ -514,22 +474,38 @@ function ativarEdicao(){
   document.getElementById('edit-bar-info').innerHTML=`Editando como <strong>${jogadorLogado.nome}</strong>`;
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='none');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
-  
   renderTime();renderRelEdit();
+  iniciarAutoSave();
 }
 function cancelarEdicao(){
+  clearTimeout(_autoSaveTimer);
+  setAutoSaveStatus('');
   modoEdicao=false;
   document.getElementById('edit-bar').style.display='none';
   document.querySelectorAll('.view-content').forEach(el=>el.style.display='');
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='none');
-  
   renderFicha();
 }
 
+// ─── Garantir ficha no banco antes de salvar inventário ───
+// FIX 2: extraído para reutilizar em ajustarQty
+async function garantirFichaId(){
+  if(ficha.id) return true;
+  const pid=new URLSearchParams(location.search).get('id');
+  const res=await apiPost('fichas',{
+    personagem_id:pid,
+    updated_at:new Date().toISOString()
+  });
+  if(res&&res[0]){ficha.id=res[0].id;return true;}
+  return false;
+}
+
 // ─── Salvar ───────────────────────────────────────────
-async function salvarFicha(){
+async function salvarFicha(silencioso=false){
   const btn=document.getElementById('btn-salvar');
-  btn.textContent='Salvando...';btn.disabled=true;
+  if(!silencioso){btn.textContent='Salvando...';btn.disabled=true;}
+  else setAutoSaveStatus('Salvando...','var(--muted)');
+
   const time=[];
   for(let i=0;i<6;i++){
     const nome=(document.getElementById(`pk-nome-${i}`)?.value||'').trim();
@@ -543,6 +519,7 @@ async function salvarFicha(){
     nome:(document.getElementById(`rel-nome-${i}`)?.value||'').trim(),
     tipo:(document.getElementById(`rel-tipo-${i}`)?.value||'').trim()
   })).filter(r=>r.nome);
+
   const novaFicha={
     banner:ficha.banner||null,
     slogan:document.getElementById('f-slogan-input').value.trim(),
@@ -556,34 +533,40 @@ async function salvarFicha(){
     origem:document.getElementById('f-orig-input').value.trim(),
     biografia:document.getElementById('f-bio-input').value.trim(),
     anotacoes:document.getElementById('f-anot-input').value.trim(),
-    time,relacionamentos,updated_at:new Date().toISOString()
+    time,relacionamentos,cores:ficha.cores||null,
+    updated_at:new Date().toISOString()
   };
+
   if(ficha.id){
     await apiPatch('fichas',`id=eq.${ficha.id}`,novaFicha);
   } else {
-    const res=await apiPost('fichas',{...novaFicha,personagem_id:new URLSearchParams(location.search).get('id')});
+    const pid=new URLSearchParams(location.search).get('id');
+    const res=await apiPost('fichas',{...novaFicha,personagem_id:pid});
     if(res&&res[0]) ficha.id=res[0].id;
   }
   Object.assign(ficha,novaFicha);
-  btn.textContent='💾 Salvar';btn.disabled=false;
-  cancelarEdicao();
+
+  if(silencioso){
+    setAutoSaveStatus('✓ Salvo','#1a7a1a');
+    setTimeout(()=>setAutoSaveStatus(''),2000);
+  } else {
+    btn.textContent='💾 Salvar';btn.disabled=false;
+    cancelarEdicao();
+  }
 }
 
-// ─── Login — 3 passos ─────────────────────────────────
-
-
+// ─── Login ────────────────────────────────────────────
 async function fazerLogin(){
   const nome=document.getElementById('login-nome').value.trim();
   const senha=document.getElementById('login-senha').value;
   const err=document.getElementById('login-err');
   err.style.display='none';
-  // Busca player pelo nome e verifica senha
   const res=await apiGet('players',`nome=eq.${encodeURIComponent(nome)}&select=id,nome,senha`);
   const pl=res&&res[0];
   if(!pl||pl.senha!==senha){err.style.display='block';return;}
-  // Verifica se o player é dono de algum personagem desta ficha
-  const playerDaFicha=personagem.player.toLowerCase()===nome.toLowerCase();
-  if(!playerDaFicha){err.textContent='Este player não tem acesso a esta ficha.';err.style.display='block';return;}
+  if(personagem.player.toLowerCase()!==nome.toLowerCase()){
+    err.textContent='Este player não tem acesso a esta ficha.';err.style.display='block';return;
+  }
   jogadorLogado={nome,player:nome};
   document.getElementById('login-wrap').style.display='none';
   document.getElementById('ficha-wrap').style.display='block';
@@ -606,17 +589,20 @@ function mostrarLogin(){
   document.getElementById('login-wrap').style.display='block';
   document.getElementById('ficha-wrap').style.display='none';
 }
-function sairJogador(){
-  jogadorLogado=null;cancelarEdicao();atualizarTopBar();
-}
+function sairJogador(){jogadorLogado=null;cancelarEdicao();atualizarTopBar();}
 
 // ══════════════════════════════════════
 // INVENTÁRIO
 // ══════════════════════════════════════
 let todosItens=[], inventarioFicha={};
 
+// FIX 1: chamado no init após renderFicha
 async function carregarInventario(){
-  if(!ficha.id) return;
+  if(!ficha.id){
+    // ficha ainda não existe no banco — mostra vazio, sem erro
+    renderInventario();
+    return;
+  }
   const [itensDB,invDB]=await Promise.all([
     apiGet('itens','order=categoria.asc,nome.asc'),
     apiGet('inventario_ficha',`ficha_id=eq.${ficha.id}&select=id,item_id,quantidade`)
@@ -633,7 +619,7 @@ async function carregarInventario(){
 function renderInventario(){
   const lista=document.getElementById('inv-lista-view');
   const itens=Object.values(inventarioFicha).filter(i=>i.quantidade>0);
-  if(itens.length===0){
+  if(!itens.length){
     lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';
     return;
   }
@@ -642,14 +628,14 @@ function renderInventario(){
   lista.innerHTML=`<table class="inv-tabela"><thead><tr>
     <th>Item</th><th style="width:60px;text-align:center">Qtd</th>
   </tr></thead><tbody>${
-    Object.entries(grupos).map(([cat,items])=>
+    Object.values(grupos).map(items=>
       items.map(item=>`
         <tr class="inv-row" onclick="toggleInvDesc('${item.id}')">
           <td><strong>${item.nome}</strong><span class="inv-cat-badge">${item.categoria}</span></td>
           <td style="text-align:center;font-weight:700">${item.quantidade}</td>
         </tr>
         <tr id="inv-desc-${item.id}" style="display:none">
-          <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px 14px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao||'—'}</td>
+          <td colspan="2" style="font-size:11px;color:#666;padding:4px 14px 10px;background:#fafafa;border-bottom:1px solid #eee">${item.descricao||'—'}</td>
         </tr>`).join('')
     ).join('')
   }</tbody></table>`;
@@ -661,9 +647,9 @@ function toggleInvDesc(id){
 }
 
 async function abrirModalInventario(){
-  if(todosItens.length===0){
-    const itensDB=await apiGet('itens','order=categoria.asc,nome.asc');
-    todosItens=itensDB||[];
+  if(!todosItens.length){
+    const res=await apiGet('itens','order=categoria.asc,nome.asc');
+    todosItens=res||[];
   }
   document.getElementById('inv-busca').value='';
   document.getElementById('inv-filtro-cat').value='';
@@ -677,7 +663,7 @@ function renderItensModal(){
   const busca=document.getElementById('inv-busca').value.toLowerCase();
   const cat=document.getElementById('inv-filtro-cat').value;
   let lista=todosItens;
-  if(cat) lista=lista.filter(i=>i.categoria===cat);
+  if(cat)   lista=lista.filter(i=>i.categoria===cat);
   if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||(i.descricao||'').toLowerCase().includes(busca));
   const el=document.getElementById('inv-modal-lista');
   if(!lista.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#aaa;font-size:13px">Nenhum item encontrado.</div>';return;}
@@ -685,8 +671,7 @@ function renderItensModal(){
     const qty=inventarioFicha[item.id]?.quantidade||0;
     return`<div class="inv-modal-item">
       <div class="inv-modal-info">
-        <div class="inv-modal-nome">${item.nome}${item.evento?` <span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>`:''}
-        </div>
+        <div class="inv-modal-nome">${item.nome}${item.evento?` <span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>`:''}</div>
         <div class="inv-modal-cat">${item.categoria}</div>
         <div class="inv-modal-desc">${item.descricao||''}</div>
       </div>
@@ -699,21 +684,21 @@ function renderItensModal(){
   }).join('');
 }
 
+// FIX 2: garante ficha.id antes de qualquer operação no banco
 async function ajustarQty(itemId,delta){
   const item=todosItens.find(i=>i.id===itemId);
   if(!item) return;
-  // garante que a ficha existe no banco
-  if(!ficha.id){
-    const res=await apiPost('fichas',{personagem_slug:personagemSlug,personagem_id:personagem.id,updated_at:new Date().toISOString()});
-    if(res&&res[0]) ficha.id=res[0].id;
-    else{alert('Erro ao criar ficha. Tente salvar primeiro.');return;}
-  }
+
+  const ok=await garantirFichaId();
+  if(!ok){alert('Não foi possível criar a ficha. Tente salvar primeiro.');return;}
+
   const atual=inventarioFicha[itemId]?.quantidade||0;
   const nova=Math.max(0,atual+delta);
   const numEl=document.getElementById(`inv-qty-${itemId}`);
   if(numEl) numEl.textContent=nova;
+
   if(nova===0&&inventarioFicha[itemId]){
-    await api(`inventario_ficha?id=eq.${inventarioFicha[itemId].inv_id}`,{method:'DELETE',headers:{'Prefer':'return=minimal'}});
+    await apiDel('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`);
     delete inventarioFicha[itemId];
   } else if(nova>0&&!inventarioFicha[itemId]){
     const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:nova});
@@ -729,7 +714,6 @@ async function ajustarQty(itemId,delta){
 // CORES
 // ══════════════════════════════════════
 const CORES_DEFAULT={primaria:'#1a1a1a',secundaria:'#3a3a3a'};
-
 function aplicarCoresFicha(c){
   const p=c?.primaria||c?.cabecalho||CORES_DEFAULT.primaria;
   const s=c?.secundaria||c?.slogan||CORES_DEFAULT.secundaria;
@@ -751,7 +735,7 @@ function abrirModalCores(){
   document.getElementById('cores-modal-overlay').style.display='flex';
 }
 function fecharModalCores(){document.getElementById('cores-modal-overlay').style.display='none';aplicarCoresFicha(ficha.cores||CORES_DEFAULT);}
-function onPickerInput(tipo){const picker=document.getElementById(`color-picker-${tipo}`);document.getElementById(`cor-${tipo}`).value=picker.value.replace('#','').toUpperCase();previewCores();}
+function onPickerInput(tipo){document.getElementById(`cor-${tipo}`).value=document.getElementById(`color-picker-${tipo}`).value.replace('#','').toUpperCase();previewCores();}
 function onHexInput(tipo){const v=document.getElementById(`cor-${tipo}`).value.replace(/[^0-9a-fA-F]/g,'').toUpperCase();document.getElementById(`cor-${tipo}`).value=v;if(v.length===6){document.getElementById(`color-picker-${tipo}`).value='#'+v;previewCores();}}
 function previewCores(){const p=document.getElementById('cor-primaria').value;const s=document.getElementById('cor-secundaria').value;aplicarCoresFicha({primaria:p.length===6?'#'+p:CORES_DEFAULT.primaria,secundaria:s.length===6?'#'+s:CORES_DEFAULT.secundaria});}
 async function salvarCores(){const p=document.getElementById('cor-primaria').value;const s=document.getElementById('cor-secundaria').value;if(p.length!==6||s.length!==6){alert('Insira cores válidas.');return;}const c={primaria:'#'+p,secundaria:'#'+s};aplicarCoresFicha(c);ficha.cores=c;if(ficha.id)await apiPatch('fichas',`id=eq.${ficha.id}`,{cores:c,updated_at:new Date().toISOString()});fecharModalCores();}
@@ -762,8 +746,12 @@ function resetarCores(){document.getElementById('cor-primaria').value='1A1A1A';d
 // ══════════════════════════════════════
 let _autoSaveTimer=null;
 function setAutoSaveStatus(msg,cor='var(--muted)'){const el=document.getElementById('autosave-status');if(el){el.textContent=msg;el.style.color=cor;}}
-function agendarAutoSave(){if(!modoEdicao)return;clearTimeout(_autoSaveTimer);setAutoSaveStatus('Alterações não salvas...','#e8a020');_autoSaveTimer=setTimeout(async()=>{setAutoSaveStatus('Salvando...','var(--muted)');await salvarFicha(true);},1000);}
-function iniciarAutoSave(){document.getElementById('ficha-wrap').addEventListener('input',agendarAutoSave);document.getElementById('ficha-wrap').addEventListener('change',agendarAutoSave);}
+function agendarAutoSave(){if(!modoEdicao)return;clearTimeout(_autoSaveTimer);setAutoSaveStatus('Alterações não salvas...','#e8a020');_autoSaveTimer=setTimeout(()=>salvarFicha(true),1000);}
+function iniciarAutoSave(){
+  const wrap=document.getElementById('ficha-wrap');
+  wrap.addEventListener('input',agendarAutoSave);
+  wrap.addEventListener('change',agendarAutoSave);
+}
 
 // ─── Init ─────────────────────────────────────────────
 async function init(){
@@ -784,23 +772,28 @@ async function init(){
     personagem=ps[0];
     ficha=fichas&&fichas[0]?fichas[0]:{
       id:null,banner:null,slogan:'',pe:0,rep:0,cs:0,pv:0,ca:0,
-      idade:'',ocupacao:'',origem:'',inventario:'',
-      biografia:'',anotacoes:'',time:[{},{},{},{},{},{}],relacionamentos:[]
+      idade:'',ocupacao:'',origem:'',
+      biografia:'',anotacoes:'',
+      time:[{},{},{},{},{},{}],relacionamentos:[],cores:null
     };
+    // FIX 3: sem inventario (era caixa de texto), só campos necessários
     ['time','relacionamentos'].forEach(k=>{
       if(typeof ficha[k]==='string'){try{ficha[k]=JSON.parse(ficha[k]);}catch{ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];}}
       if(!ficha[k]) ficha[k]=k==='time'?[{},{},{},{},{},{}]:[];
     });
+    if(typeof ficha.cores==='string'){try{ficha.cores=JSON.parse(ficha.cores);}catch{ficha.cores=null;}}
+    aplicarCoresFicha(ficha.cores||CORES_DEFAULT);
     document.title=`Ficha — ${personagem.nome}`;
     renderFicha();
+    // FIX 1: carregarInventario chamado aqui, após renderFicha
     await carregarInventario();
     document.getElementById('loading-overlay').style.display='none';
     document.getElementById('top-bar').style.display='flex';
     document.getElementById('ficha-wrap').style.display='block';
     atualizarTopBar();
-  } catch(e){
-    console.error('Erro no init da ficha:',e);
-    document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:13px;max-width:400px;text-align:center">❌ Erro ao carregar a ficha:<br><code style="font-size:11px">${e.message}</code><br><br><button onclick="location.reload()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:none;background:#2563a8;color:#fff;cursor:pointer">Tentar novamente</button></div>`;
+  }catch(e){
+    console.error('Erro no init:',e);
+    document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:13px;max-width:400px;text-align:center">❌ Erro ao carregar:<br><code style="font-size:11px">${e.message}</code><br><br><button onclick="location.reload()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:none;background:#2563a8;color:#fff;cursor:pointer">Tentar novamente</button></div>`;
   }
 }
 init();
