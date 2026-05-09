@@ -943,23 +943,79 @@ async function carregarInventario(){
   renderInventario();
 }
 
+const FALLBACK_ITEM_SPRITE='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
+
+// Recorta o espaço transparente de uma imagem e retorna um dataURL 32x32
+function cropSprite(src){
+  return new Promise(resolve=>{
+    const img=new Image();
+    img.crossOrigin='anonymous';
+    img.onload=()=>{
+      // Desenha em canvas auxiliar para ler pixels
+      const aux=document.createElement('canvas');
+      aux.width=img.width; aux.height=img.height;
+      const ctx=aux.getContext('2d');
+      ctx.drawImage(img,0,0);
+      const data=ctx.getImageData(0,0,img.width,img.height).data;
+      let minX=img.width,minY=img.height,maxX=0,maxY=0;
+      for(let y=0;y<img.height;y++){
+        for(let x=0;x<img.width;x++){
+          const a=data[(y*img.width+x)*4+3];
+          if(a>10){
+            if(x<minX)minX=x; if(x>maxX)maxX=x;
+            if(y<minY)minY=y; if(y>maxY)maxY=y;
+          }
+        }
+      }
+      // Se não achou nada visível, usa a imagem inteira
+      if(maxX<minX){minX=0;minY=0;maxX=img.width-1;maxY=img.height-1;}
+      const cw=maxX-minX+1, ch=maxY-minY+1;
+      const out=document.createElement('canvas');
+      out.width=32; out.height=32;
+      const octx=out.getContext('2d');
+      // Mantém proporção dentro de 32x32
+      const scale=Math.min(32/cw,32/ch);
+      const dw=cw*scale, dh=ch*scale;
+      const dx=(32-dw)/2, dy=(32-dh)/2;
+      octx.imageSmoothingEnabled=false;
+      octx.drawImage(aux,minX,minY,cw,ch,dx,dy,dw,dh);
+      resolve(out.toDataURL());
+    };
+    img.onerror=()=>resolve(null);
+    img.src=src;
+  });
+}
+
 function renderInventario(){
   const lista=document.getElementById('inv-lista-view');
   const itens=Object.values(inventarioFicha).filter(i=>i.quantidade>0);
-  // DIAGNÓSTICO — remova depois
-  console.table(itens.map(i=>({nome:i.nome,sprite:i.sprite||'(sem sprite)'})));
   if(!itens.length){lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';return;}
   lista.innerHTML=`<div class="inv-grid">${
     itens.map(item=>`
       <div class="inv-card">
         <div class="inv-card-top">
-          <img class="inv-card-sprite" src="${item.sprite||'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png'}" alt="${item.nome}" onerror="this.src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png'"/>
+          <canvas class="inv-card-sprite" width="32" height="32" data-src="${item.sprite||FALLBACK_ITEM_SPRITE}" style="width:32px;height:32px;image-rendering:pixelated"></canvas>
           <div class="inv-card-nome">${item.nome}</div>
           <div class="inv-card-qty">x${item.quantidade}</div>
         </div>
         <div class="inv-card-desc">${item.descricao||''}</div>
       </div>`).join('')
   }</div>`;
+  // Processa cada canvas com crop
+  document.querySelectorAll('.inv-card-sprite[data-src]').forEach(async canvas=>{
+    const src=canvas.dataset.src;
+    const dataUrl=await cropSprite(src);
+    if(dataUrl){
+      const ctx=canvas.getContext('2d');
+      const img=new Image();
+      img.onload=()=>ctx.drawImage(img,0,0);
+      img.src=dataUrl;
+    } else {
+      // fallback: tenta com o unown
+      const dataUrl2=await cropSprite(FALLBACK_ITEM_SPRITE);
+      if(dataUrl2){const ctx=canvas.getContext('2d');const img=new Image();img.onload=()=>ctx.drawImage(img,0,0);img.src=dataUrl2;}
+    }
+  });
 }
 
 async function abrirModalInventario(){
