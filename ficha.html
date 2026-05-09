@@ -755,15 +755,23 @@ function iniciarAutoSave(){
 
 // ─── Init ─────────────────────────────────────────────
 async function init(){
-  const pid=new URLSearchParams(location.search).get('id');
+  // lê slug do pathname (/ficha/nome) ou ?id= como fallback
+  const pathMatch=location.pathname.match(/\/ficha\/([^\/]+)/);
+  const pid=pathMatch?decodeURIComponent(pathMatch[1]):new URLSearchParams(location.search).get('id');
   if(!pid){
-    document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ ID do personagem não encontrado na URL.</div>';
+    document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ Personagem não encontrado na URL.</div>';
     return;
   }
+  // decide se é slug (texto) ou id numérico/uuid
+  const isSlug=isNaN(pid)&&!pid.includes('-');
   try{
     const [ps,fichas]=await Promise.all([
-      apiGet('personagens',`id=eq.${pid}`),
-      apiGet('fichas',`personagem_id=eq.${pid}`)
+      isSlug
+        ? apiGet('personagens',`slug=eq.${encodeURIComponent(pid)}`)
+        : apiGet('personagens',`id=eq.${pid}`),
+      isSlug
+        ? apiGet('fichas',`personagem_slug=eq.${encodeURIComponent(pid)}`)
+        : apiGet('fichas',`personagem_id=eq.${pid}`)
     ]);
     if(!ps||!ps[0]){
       document.getElementById('loading-overlay').innerHTML='<div style="padding:40px;color:#c00;font-size:14px">❌ Personagem não encontrado no banco.</div>';
