@@ -1633,27 +1633,70 @@ async function carregarItens(){
   itensDB = res || [];
 }
 
-// Tenta buscar sprite da PokéAPI para todos os itens
+// Tenta buscar sprite para todos os itens — PokéSprite (Gen 3–8) + PokéAPI fallback
 async function autoSpriteTodosItens(){
   const btn = document.getElementById('btn-auto-sprite');
   if(!itensDB.length){ alert('Nenhum item cadastrado.'); return; }
   btn.disabled = true;
-  btn.textContent = `⏳ Buscando... (0/${itensDB.length})`;
+  btn.textContent = `⏳ Carregando mapa...`;
 
-  const BASE = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+  // ── 1. Carrega o item-map.json do PokéSprite ──────────────────────────────
+  const POKESPRITE_BASE = 'https://raw.githubusercontent.com/msikma/pokesprite/master/items/';
+  const POKEAPI_BASE    = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+  let itemMap = {}; // "ball/master" → true (apenas para lookup de caminhos disponíveis)
+  let slugToPath = {}; // "master-ball" → "ball/master"
 
-  function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url; }); }
+  try {
+    const res = await fetch('https://raw.githubusercontent.com/msikma/pokesprite/master/data/item-map.json');
+    const data = await res.json();
+    // Constrói lookup: slug do nome → caminho
+    for(const [, path] of Object.entries(data)){
+      const slug = path.split('/').pop(); // "ball/master" → "master"
+      const fullSlug = path.replace('/', '-'); // "ball/master" → "ball-master" (não útil)
+      // guarda o caminho completo pelo slug final
+      slugToPath[slug] = path;
+      // também pelo caminho completo normalizado
+      slugToPath[path.replace('/','-')] = path;
+    }
+  } catch(e) {
+    console.warn('Falha ao carregar item-map.json do PokéSprite, usando só PokéAPI', e);
+  }
 
-  function slugVariacoes(nome){
-    const base = nome.toLowerCase()
+  function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url+'?v='+Date.now(); }); }
+
+  // Gera slugs candidatos a partir do nome do item
+  function slugsDoNome(nome){
+    const norm = nome.toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
-      .replace(/[^a-z0-9\s\-]/g,'')
-      .trim().replace(/\s+/g,'-');
-    const variantes = new Set([base]);
-    if(base==='pokebola'||base==='pokeball') variantes.add('poke-ball');
-    const semAcento = nome.toLowerCase().replace(/[^a-z0-9\s\-]/gi,'').trim().replace(/\s+/g,'-');
-    variantes.add(semAcento);
-    return [...variantes];
+      .replace(/[^a-z0-9\s\-]/g,'').trim().replace(/\s+/g,'-');
+    const slugs = new Set([norm]);
+    // variações comuns PT → EN
+    const ptEn = {
+      'pokebola':'poke-ball','ultra-bola':'ultra-ball','grande-bola':'great-ball',
+      'superbola':'great-ball','bola-de-cura':'heal-ball','bola-rapida':'quick-ball',
+      'bola-noturna':'dusk-ball','bola-aninhada':'nest-ball','bola-de-repetição':'repeat-ball',
+      'bola-temporizadora':'timer-ball','bola-de-imersão':'dive-ball','bola-de-rede':'net-ball',
+      'bola-de-luxo':'luxury-ball','bola-safari':'safari-ball','bola-de-primeira':'premier-ball',
+      'bola-de-amigo':'friend-ball','bola-de-nivel':'level-ball','bola-rapida-2':'fast-ball',
+      'bola-pesada':'heavy-ball','bola-amor':'love-ball','bola-esportiva':'sport-ball',
+      'pedra-fogo':'fire-stone','pedra-agua':'water-stone','pedra-trovao':'thunder-stone',
+      'pedra-folha':'leaf-stone','pedra-lua':'moon-stone','pedra-solar':'sun-stone',
+      'pedra-brilhante':'shiny-stone','pedra-crepusculo':'dusk-stone','pedra-aurora':'dawn-stone',
+      'cura-total':'full-restore','reviver':'revive','max-reviver':'max-revive',
+      'antidoto':'antidote','cura-queimadura':'burn-heal','cura-gelo':'ice-heal',
+      'reanimar':'awakening','cura-paralisia':'paralyze-heal','cura-total-2':'full-heal',
+      'rara-bala':'rare-candy','pp-mais':'pp-up','pp-maximo':'pp-max',
+      'cristal-z-grama':'grassium-z','cristal-z-fogo':'firium-z','cristal-z-agua':'waterium-z',
+      'cristal-z-eletrico':'electrium-z','cristal-z-gelo':'icium-z',
+      'cristal-z-lutador':'fightinium-z','cristal-z-veneno':'poisonium-z',
+      'cristal-z-terra':'groundium-z','cristal-z-voador':'flyinium-z',
+      'cristal-z-psiquico':'psychium-z','cristal-z-inseto':'buginium-z',
+      'cristal-z-pedra':'rockium-z','cristal-z-fantasma':'ghostium-z',
+      'cristal-z-dragao':'dragonium-z','cristal-z-sombrio':'darkinium-z',
+      'cristal-z-aco':'steelium-z','cristal-z-normal':'normalium-z','cristal-z-fada':'fairium-z',
+    };
+    if(ptEn[norm]) slugs.add(ptEn[norm]);
+    return [...slugs];
   }
 
   let atualizados = 0, naoEncontrados = [];
@@ -1661,12 +1704,39 @@ async function autoSpriteTodosItens(){
   for(let idx=0; idx<itensDB.length; idx++){
     const item = itensDB[idx];
     btn.textContent = `⏳ Buscando... (${idx+1}/${itensDB.length})`;
-    const slugs = slugVariacoes(item.nome);
+    const candidatos = slugsDoNome(item.nome);
     let urlEncontrada = null;
-    for(const slug of slugs){
-      const url = await testarUrl(`${BASE}${slug}.png`);
-      if(url){ urlEncontrada=url; break; }
+
+    // Tenta PokéSprite primeiro (lookup no mapa + teste de URL)
+    for(const slug of candidatos){
+      if(slugToPath[slug]){
+        const url = await testarUrl(`${POKESPRITE_BASE}${slugToPath[slug]}.png`);
+        if(url){ urlEncontrada=url.split('?')[0]; break; }
+      }
     }
+
+    // Fallback: testa direto por slug no PokéSprite (sem mapa)
+    if(!urlEncontrada){
+      for(const slug of candidatos){
+        // tenta categorias comuns do PokéSprite
+        const categorias = ['ball','medicine','hold-item','evo-item','berry','fossil',
+          'mega-stone','z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr'];
+        for(const cat of categorias){
+          const url = await testarUrl(`${POKESPRITE_BASE}${cat}/${slug}.png`);
+          if(url){ urlEncontrada=url.split('?')[0]; break; }
+        }
+        if(urlEncontrada) break;
+      }
+    }
+
+    // Fallback final: PokéAPI
+    if(!urlEncontrada){
+      for(const slug of candidatos){
+        const url = await testarUrl(`${POKEAPI_BASE}${slug}.png`);
+        if(url){ urlEncontrada=url.split('?')[0]; break; }
+      }
+    }
+
     if(urlEncontrada && urlEncontrada !== item.sprite){
       await dbPatch('itens', `id=eq.${item.id}`, { sprite: urlEncontrada });
       item.sprite = urlEncontrada;
@@ -1681,7 +1751,7 @@ async function autoSpriteTodosItens(){
   btn.textContent = '🔍 Buscar Sprites';
 
   let msg = `✅ ${atualizados} item${atualizados!==1?'s':''} atualizado${atualizados!==1?'s':''} com sprite.`;
-  if(naoEncontrados.length) msg += `\n\n❌ Sem sprite na PokéAPI:\n${naoEncontrados.join('\n')}`;
+  if(naoEncontrados.length) msg += `\n\n❌ Sem sprite encontrado (${naoEncontrados.length}):\n${naoEncontrados.join('\n')}`;
   alert(msg);
 }
 
