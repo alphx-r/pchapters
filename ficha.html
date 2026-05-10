@@ -1002,29 +1002,34 @@ function abrirSeletorVariante(itemId){
 }
 
 async function ajustarQtyVarianteModal(itemId, varianteNome, delta){
+  console.log('[variante] chamou', {itemId, varianteNome, delta});
   const item = todosItens.find(i=>i.id===itemId);
-  if(!item||!ficha.id) return;
-  // Busca sprite da variante direto do catálogo
+  if(!item){ console.error('[variante] item não encontrado', itemId); return; }
+  if(!ficha.id){ console.error('[variante] ficha.id não definido'); return; }
   const varDef = item.variantes?.find(v=>v.nome===varianteNome);
   const varianteSprite = varDef?.sprite||null;
   const chave = `${itemId}::${varianteNome}`;
   const atual = inventarioFicha[chave]?.quantidade||0;
   const nova = Math.max(0, atual+delta);
+  console.log('[variante] chave:', chave, '| atual:', atual, '| nova:', nova, '| inv_id:', inventarioFicha[chave]?.inv_id);
   if(nova===0 && inventarioFicha[chave]){
-    await apiDel('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`);
+    const r = await apiDel('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`);
+    console.log('[variante] DEL result:', r);
     delete inventarioFicha[chave];
   } else if(nova>0 && !inventarioFicha[chave]){
-    const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:1,variante_nome:varianteNome,variante_sprite:varianteSprite});
+    const body = {ficha_id:ficha.id,item_id:itemId,quantidade:1,variante_nome:varianteNome,variante_sprite:varianteSprite};
+    console.log('[variante] POST body:', body);
+    const res=await apiPost('inventario_ficha', body);
+    console.log('[variante] POST result:', res);
     if(res&&res[0]) inventarioFicha[chave]={...item,nome:varianteNome,sprite:varianteSprite||item.sprite,quantidade:1,inv_id:res[0].id,_item_id:itemId,_variante_nome:varianteNome,_variante_sprite:varianteSprite};
   } else if(nova>0 && inventarioFicha[chave]){
-    await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`,{quantidade:nova});
+    const r = await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`,{quantidade:nova});
+    console.log('[variante] PATCH result:', r);
     inventarioFicha[chave].quantidade=nova;
   }
-  // Atualiza contador no modal de variante
   const nomeId = varianteNome.replace(/[^a-z0-9]/gi,'_');
   const span = document.getElementById(`vqty-${itemId}-${nomeId}`);
   if(span) span.textContent = nova;
-  // Atualiza total no modal de itens
   const totalQty = Object.values(inventarioFicha).filter(v=>v._item_id===itemId).reduce((s,v)=>s+v.quantidade,0);
   const totalEl = document.getElementById(`inv-qty-var-${itemId}`);
   if(totalEl) totalEl.textContent = totalQty;
