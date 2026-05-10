@@ -970,19 +970,20 @@ function abrirSeletorVariante(itemId){
   const modal = document.createElement('div');
   modal.id = 'variante-modal';
   modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px';
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
   modal.innerHTML=`
     <div style="background:var(--surface);border-radius:12px;padding:20px 18px;width:min(95vw,480px);max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.25)">
       <div style="font-family:var(--font-title);font-size:15px;font-weight:700;margin-bottom:14px">Escolha a variante de ${item.nome}</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px">
         ${item.variantes.map(v=>`
-          <button onclick="adicionarVarianteAoInventario('${itemId}','${v.nome.replace(/'/g,"\\'")}','${(v.sprite||'').replace(/'/g,"\\'")}');document.getElementById('variante-modal').remove()"
+          <button onclick="event.stopPropagation();adicionarVarianteAoInventario('${itemId}','${v.nome.replace(/'/g,"\\'")}','${(v.sprite||'').replace(/'/g,"\\'")}');document.getElementById('variante-modal').remove()"
             style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);cursor:pointer;font-family:var(--font-body);font-size:11px;font-weight:600;color:var(--text);transition:border-color .15s,background .15s;line-height:1.3;word-break:break-word;text-align:center"
             onmouseover="this.style.borderColor='var(--accent)';this.style.background='var(--surface)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--surface2)'">
             ${v.sprite ? `<img src="${v.sprite}" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>` : '<span style="font-size:26px">❓</span>'}
             <span>${v.nome}</span>
           </button>`).join('')}
       </div>
-      <button onclick="document.getElementById('variante-modal').remove()" style="margin-top:14px;width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:none;cursor:pointer;font-family:var(--font-body);font-size:12px;color:var(--muted)">Cancelar</button>
+      <button onclick="event.stopPropagation();document.getElementById('variante-modal').remove()" style="margin-top:14px;width:100%;padding:8px;border:1px solid var(--border);border-radius:6px;background:none;cursor:pointer;font-family:var(--font-body);font-size:12px;color:var(--muted)">Cancelar</button>
     </div>`;
   document.body.appendChild(modal);
 }
@@ -1024,14 +1025,38 @@ function renderItensModal(){
       </div>
       <div class="inv-modal-qty">
         ${temVariantes
-          ? `<button class="inv-qty-btn" onclick="abrirSeletorVariante('${item.id}')">+</button>
-             <span class="inv-qty-num" id="inv-qty-var-${item.id}">${qty||''}</span>`
+          ? `<button class="inv-qty-btn" onclick="ajustarQtyVariante('${item.id}',-1)">−</button>
+             <span class="inv-qty-num" id="inv-qty-var-${item.id}">${qty||0}</span>
+             <button class="inv-qty-btn" onclick="abrirSeletorVariante('${item.id}')">+</button>`
           : `<button class="inv-qty-btn" onclick="ajustarQty('${item.id}',-1)">−</button>
              <span class="inv-qty-num" id="inv-qty-${item.id}">${qty||0}</span>
              <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',+1)">+</button>`}
       </div>
     </div>`;
   }).join('');
+}
+
+async function ajustarQtyVariante(itemId, delta){
+  // pega todas as variantes deste item no inventário
+  const vars = Object.entries(inventarioFicha).filter(([,v])=>v._item_id===itemId);
+  if(!vars.length) return;
+  if(delta < 0){
+    // remove 1 da variante com maior quantidade (ou a última adicionada)
+    vars.sort((a,b)=>b[1].quantidade-a[1].quantidade);
+    const [chave, v] = vars[0];
+    const nova = v.quantidade - 1;
+    if(nova <= 0){
+      await apiDel('inventario_ficha',`id=eq.${v.inv_id}`);
+      delete inventarioFicha[chave];
+    } else {
+      await apiPatch('inventario_ficha',`id=eq.${v.inv_id}`,{quantidade:nova});
+      inventarioFicha[chave].quantidade = nova;
+    }
+  }
+  const total = Object.values(inventarioFicha).filter(v=>v._item_id===itemId).reduce((s,v)=>s+v.quantidade,0);
+  const numEl = document.getElementById(`inv-qty-var-${itemId}`);
+  if(numEl) numEl.textContent = total || 0;
+  renderInventario();
 }
 
 async function ajustarQty(itemId,delta){
