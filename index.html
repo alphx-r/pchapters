@@ -1861,11 +1861,15 @@ function renderVariantesLista(){
       </div>
       <input type="text" value="${v.nome}" placeholder="Nome da variante (ex: Flame Plate)"
         style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)"
-        oninput="variantesTemp[${i}].nome=this.value"/>
+        onchange="variantesTemp[${i}].nome=this.value"
+        onblur="variantesTemp[${i}].nome=this.value"/>
       <button onclick="removerVariante(${i})" style="background:none;border:none;cursor:pointer;color:#c00;font-size:16px;line-height:1">×</button>
     </div>
     <input type="file" id="var-file-${i}" accept="image/*" style="display:none" onchange="onVarianteFileChange(this,${i})"/>
   `).join('');
+  // Foca no último campo adicionado
+  const inputs = lista.querySelectorAll('input[type="text"]');
+  if(inputs.length) inputs[inputs.length-1].focus();
 }
 
 function adicionarVariante(){
