@@ -2066,6 +2066,10 @@ async function salvarItem(){
   const desc   = document.getElementById('modal-item-desc').value.trim();
   const evento = document.getElementById('modal-item-evento').checked;
   const sprite = document.getElementById('modal-item-sprite').value || null;
+  // Lê valores atuais dos inputs de variante do DOM antes de filtrar
+  document.querySelectorAll('#modal-item-variantes-lista input[type="text"]').forEach((inp,i)=>{
+    if(variantesTemp[i]) variantesTemp[i].nome = inp.value;
+  });
   const variantes = variantesTemp.filter(v=>v.nome.trim()).map(v=>({nome:v.nome.trim(),sprite:v.sprite||null}));
   const errEl  = document.getElementById('modal-item-err');
   errEl.style.display = 'none';
