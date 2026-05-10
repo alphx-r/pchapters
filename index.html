@@ -1894,8 +1894,8 @@ async function previsualizarVariantes(){
         <div style="width:36px;height:36px;flex-shrink:0;background:#fff;border:1px solid var(--border);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="document.getElementById('var-prev-file-${i}').click()" title="Clique para trocar">
           ${v.sprite ? `<img src="${v.sprite}" style="width:32px;height:32px;object-fit:contain;image-rendering:pixelated"/>` : '<span style="font-size:20px">❓</span>'}
         </div>
-        <span style="flex:1;font-size:13px;font-family:var(--font-body);font-weight:600">${v.nome}</span>
-        <span style="font-size:11px;color:${v.sprite?'#1a7a1a':'#c00'}">${v.sprite?'✓ Encontrado':'Não encontrado'}</span>
+        <input type="text" value="${v.nome}" style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body);font-weight:600;background:var(--surface);color:var(--text)" onchange="variantesConfirmadas[${i}].nome=this.value" onblur="variantesConfirmadas[${i}].nome=this.value"/>
+        <span style="font-size:11px;color:${v.sprite?'#1a7a1a':'#c00'};white-space:nowrap">${v.sprite?'✓ Encontrado':'Não encontrado'}</span>
         <input type="file" id="var-prev-file-${i}" accept="image/*" style="display:none" onchange="onVariantePrevUpload(this,${i})"/>
       </div>`).join('')}`;
 }
@@ -2149,6 +2149,10 @@ async function salvarItem(){
   const desc   = document.getElementById('modal-item-desc').value.trim();
   const evento = document.getElementById('modal-item-evento').checked;
   const sprite = document.getElementById('modal-item-sprite').value || null;
+  // Lê nomes editados do DOM antes de criar
+  document.querySelectorAll('#modal-variantes-preview input[type="text"]').forEach((inp,i)=>{
+    if(variantesConfirmadas[i]) variantesConfirmadas[i].nome = inp.value.trim();
+  });
   // Usa variantes confirmadas na pré-visualização, ou lê do textarea se não pré-visualizou
   let variantes = variantesConfirmadas.length > 0 ? variantesConfirmadas : [];
   if(!variantes.length){
