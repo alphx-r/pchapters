@@ -432,8 +432,9 @@ const SUPA_URL='https://jdgfxsvgxfdkdrzqbgje.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
 
 async function api(path,opts={}){
+  const isGet=!opts.method||opts.method==='GET';
   const res=await fetch(`${SUPA_URL}/rest/v1/${path}`,{
-    headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=representation','Range':'0-9999',...opts.headers},
+    headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=representation',...(isGet?{'Range':'0-9999'}:{}),...opts.headers},
     ...opts
   });
   if(res.status===204||opts.method==='DELETE')return[];
@@ -959,7 +960,7 @@ async function carregarInventario(){
 function renderItensModal(){
   const busca=document.getElementById('inv-busca').value.toLowerCase();
   const cat=document.getElementById('inv-filtro-cat').value;
-  let lista=todosItens.filter(i=>!i.variantes||!Array.isArray(i.variantes)||i.variantes.length===0); // exclui itens pai
+  let lista=todosItens.filter(i=>!i.is_pai); // exclui itens pai
   if(cat) lista=lista.filter(i=>i.categoria===cat);
   if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||(i.descricao||'').toLowerCase().includes(busca));
   const el=document.getElementById('inv-modal-lista');
