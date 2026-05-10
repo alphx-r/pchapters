@@ -959,7 +959,7 @@ async function carregarInventario(){
 function renderItensModal(){
   const busca=document.getElementById('inv-busca').value.toLowerCase();
   const cat=document.getElementById('inv-filtro-cat').value;
-  let lista=todosItens;
+  let lista=todosItens.filter(i=>!i.variantes?.length); // exclui itens pai
   if(cat) lista=lista.filter(i=>i.categoria===cat);
   if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||(i.descricao||'').toLowerCase().includes(busca));
   const el=document.getElementById('inv-modal-lista');
