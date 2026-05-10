@@ -958,22 +958,22 @@ function renderInventario(){
   const itens=Object.values(inventarioFicha).filter(i=>i.quantidade>0);
   if(!itens.length){lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';return;}
   lista.innerHTML=`<div class="inv-grid">${itens.map(item=>{
-    const src = item.sprite||FALLBACK_ITEM_SPRITE;
+    const src = item.sprite||null;
     const origin = spriteOrigin(item.sprite);
-    // PokéSprite: 32×32 nativo, sem canvas
-    if(origin==='pokesprite'){
-      return `<div class="inv-card">
-        <div class="inv-card-top">
-          <img class="inv-card-sprite" src="${src}" alt="${item.nome}" style="width:32px;height:32px;image-rendering:pixelated" onerror="this.src='${FALLBACK_ITEM_SPRITE}'"/>
-          <div class="inv-card-nome">${item.nome} <span class="inv-card-qty">x${item.quantidade}</span></div>
-        </div>
-        <div class="inv-card-desc">${item.descricao||''}</div>
-      </div>`;
+    let spriteHtml;
+    if(!src){
+      // Fallback Unown: tamanho nativo 40×30
+      spriteHtml = `<img class="inv-card-sprite" src="${FALLBACK_ITEM_SPRITE}" style="width:40px;height:30px;image-rendering:pixelated"/>`;
+    } else if(origin==='pokesprite'){
+      // PokéSprite: 32×32 nativo
+      spriteHtml = `<img class="inv-card-sprite" src="${src}" style="width:32px;height:32px;image-rendering:pixelated" onerror="this.style.width='36px';this.style.height='27px';this.src='${FALLBACK_ITEM_SPRITE}'"/>`;
+    } else {
+      // Upload ou outro: canvas 32×32
+      spriteHtml = `<canvas class="inv-card-sprite" width="32" height="32" data-src="${src}" style="width:32px;height:32px;image-rendering:pixelated"></canvas>`;
     }
-    // Upload (base64) ou outro: canvas 32×32
     return `<div class="inv-card">
       <div class="inv-card-top">
-        <canvas class="inv-card-sprite" width="32" height="32" data-src="${origin==='upload'?src:src}" style="width:32px;height:32px;image-rendering:pixelated"></canvas>
+        ${spriteHtml}
         <div class="inv-card-nome">${item.nome} <span class="inv-card-qty">x${item.quantidade}</span></div>
       </div>
       <div class="inv-card-desc">${item.descricao||''}</div>
@@ -993,8 +993,9 @@ function renderInventario(){
       ctx.drawImage(img, (32-w)/2, (32-h)/2, w, h);
     };
     img.onerror = ()=>{
+      // fallback no canvas também
       const fb = new Image();
-      fb.onload = ()=>{ const s=Math.min(32/fb.width,32/fb.height); ctx.drawImage(fb,(32-fb.width*s)/2,(32-fb.height*s)/2,fb.width*s,fb.height*s); };
+      fb.onload = ()=>{ ctx.drawImage(fb, (32-36)/2, (32-27)/2, 36, 27); };
       fb.src = FALLBACK_ITEM_SPRITE;
     };
     img.src = src;
