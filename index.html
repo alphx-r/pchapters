@@ -892,8 +892,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     </div>
     <div class="field" id="modal-item-variantes-wrap">
       <label>Variantes por tipo</label>
-      <textarea id="modal-item-variantes-texto" rows="4" placeholder="Digite um nome por linha:&#10;Flame Plate&#10;Icicle Plate&#10;Iron Plate&#10;..." style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);resize:vertical"></textarea>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px">Um nome por linha. Ao salvar, cada variante vira um item independente.</div>
+      <div style="display:flex;gap:8px">
+        <textarea id="modal-item-variantes-texto" rows="4" placeholder="Digite um nome por linha:&#10;Flame Plate&#10;Icicle Plate&#10;Iron Plate&#10;..." style="flex:1;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);resize:vertical"></textarea>
+        <button class="btn btn-sm" onclick="previsualizarVariantes()" style="align-self:flex-start;background:#e8f4e8;border:1.5px solid #a8d8a8;color:#1a6a1a;white-space:nowrap">🔍 Pré-visualizar</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Um nome por linha. Clique em Pré-visualizar para confirmar sprites antes de criar.</div>
+      <div id="modal-variantes-preview" style="display:none;margin-top:10px;display:flex;flex-direction:column;gap:6px"></div>
     </div>
     <div class="field">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--text)">
@@ -1846,6 +1850,81 @@ function renderTbodyItens(){
 // ── Variantes ────────────────────────────────────────────────────────────────
 let variantesTemp = []; // [{nome, sprite}]
 
+// ── Pré-visualização de variantes ────────────────────────────────────────────
+let variantesConfirmadas = []; // [{nome, sprite}]
+
+async function previsualizarVariantes(){
+  const texto = document.getElementById('modal-item-variantes-texto').value;
+  const nomes = texto.split('\n').map(v=>v.trim()).filter(v=>v.length>0);
+  if(!nomes.length) return;
+
+  const preview = document.getElementById('modal-variantes-preview');
+  preview.style.display = 'flex';
+  preview.innerHTML = `<div style="font-size:12px;color:var(--muted)">⏳ Buscando sprites... (0/${nomes.length})</div>`;
+
+  const POKESPRITE = 'https://raw.githubusercontent.com/msikma/pokesprite/master/items/';
+  const POKEAPI    = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+  const cats = ['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
+    'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr','plate',
+    'incense','gem','shard','apricorn'];
+
+  function testar(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url; }); }
+  function toSlug(nome){ return nome.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9\s\-]/g,'').trim().replace(/\s+/g,'-'); }
+
+  variantesConfirmadas = [];
+
+  for(let idx=0; idx<nomes.length; idx++){
+    const nome = nomes[idx];
+    preview.innerHTML = `<div style="font-size:12px;color:var(--muted)">⏳ Buscando sprites... (${idx+1}/${nomes.length})</div>`;
+    const slug = toSlug(nome);
+    let sprite = null;
+    for(const cat of cats){
+      sprite = await testar(`${POKESPRITE}${cat}/${slug}.png`);
+      if(sprite) break;
+    }
+    if(!sprite) sprite = await testar(`${POKEAPI}${slug}.png`);
+    variantesConfirmadas.push({nome, sprite});
+  }
+
+  // Renderiza cards de confirmação
+  preview.innerHTML = `
+    <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">Confirme os sprites antes de criar:</div>
+    ${variantesConfirmadas.map((v,i)=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 10px;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px">
+        <div style="width:36px;height:36px;flex-shrink:0;background:#fff;border:1px solid var(--border);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="document.getElementById('var-prev-file-${i}').click()" title="Clique para trocar">
+          ${v.sprite ? `<img src="${v.sprite}" style="width:32px;height:32px;object-fit:contain;image-rendering:pixelated"/>` : '<span style="font-size:20px">❓</span>'}
+        </div>
+        <span style="flex:1;font-size:13px;font-family:var(--font-body);font-weight:600">${v.nome}</span>
+        <span style="font-size:11px;color:${v.sprite?'#1a7a1a':'#c00'}">${v.sprite?'✓ Encontrado':'Não encontrado'}</span>
+        <input type="file" id="var-prev-file-${i}" accept="image/*" style="display:none" onchange="onVariantePrevUpload(this,${i})"/>
+      </div>`).join('')}`;
+}
+
+function onVariantePrevUpload(input, i){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width=32; canvas.height=32;
+      const ctx=canvas.getContext('2d');
+      ctx.imageSmoothingEnabled=false;
+      const scale=Math.min(32/img.width,32/img.height);
+      ctx.drawImage(img,(32-img.width*scale)/2,(32-img.height*scale)/2,img.width*scale,img.height*scale);
+      variantesConfirmadas[i].sprite = canvas.toDataURL('image/png');
+      // Atualiza o preview do card
+      const div = document.getElementById(`var-prev-file-${i}`).previousElementSibling.previousElementSibling;
+      const prev = document.getElementById(`var-prev-file-${i}`).closest('div').querySelector('div');
+      prev.innerHTML = `<img src="${variantesConfirmadas[i].sprite}" style="width:32px;height:32px;object-fit:contain;image-rendering:pixelated"/>`;
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value='';
+}
+
 function renderVariantesLista(){
   const lista = document.getElementById('modal-item-variantes-lista');
   if(!variantesTemp.length){
@@ -2019,7 +2098,11 @@ async function buscarSpriteManual(){
   }
 }
 
-function fecharModalItem(){ document.getElementById('modal-item').style.display = 'none'; }
+function fecharModalItem(){
+  variantesConfirmadas = [];
+  document.getElementById('modal-variantes-preview').style.display='none';
+  document.getElementById('modal-item').style.display = 'none';
+}
 
 // converte nome para slug da PokéAPI: "Poké Ball" → "poke-ball"
 function toItemSlug(str){
@@ -2066,9 +2149,12 @@ async function salvarItem(){
   const desc   = document.getElementById('modal-item-desc').value.trim();
   const evento = document.getElementById('modal-item-evento').checked;
   const sprite = document.getElementById('modal-item-sprite').value || null;
-  // Lê variantes do textarea (um nome por linha)
-  const variantesTexto = document.getElementById('modal-item-variantes-texto').value;
-  const variantes = variantesTexto.split('\n').map(v=>v.trim()).filter(v=>v.length>0).map(v=>({nome:v,sprite:null}));
+  // Usa variantes confirmadas na pré-visualização, ou lê do textarea se não pré-visualizou
+  let variantes = variantesConfirmadas.length > 0 ? variantesConfirmadas : [];
+  if(!variantes.length){
+    const variantesTexto = document.getElementById('modal-item-variantes-texto').value;
+    variantes = variantesTexto.split('\n').map(v=>v.trim()).filter(v=>v.length>0).map(v=>({nome:v,sprite:null}));
+  }
   const errEl  = document.getElementById('modal-item-err');
   errEl.style.display = 'none';
   if(!nome){ errEl.textContent='Preencha o nome do item.'; errEl.style.display='block'; return; }
