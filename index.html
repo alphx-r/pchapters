@@ -260,7 +260,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 ═══════════════════════════════════════ */
 .home-page{padding:0;max-width:100%;overflow-x:hidden}
 .nav-home .nav-links{display:none}
-.slideshow-wrap{position:relative;width:100%;max-width:860px;margin:32px auto 0;padding:0 20px}
+.slideshow-wrap{position:relative;width:100%;max-width:860px;margin:16px auto 0;padding:0 20px}
 .slideshow{position:relative;border-radius:16px;overflow:hidden;background:#0a0e1a;box-shadow:0 8px 40px rgba(0,0,0,.22);aspect-ratio:16/7;cursor:pointer}
 .slide{position:absolute;inset:0;opacity:0;transition:opacity .55s ease;pointer-events:none}
 .slide.active{opacity:1;pointer-events:auto}
@@ -286,7 +286,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .home-info-icon{font-size:20px;line-height:1;flex-shrink:0}
 .home-info-card-title{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);letter-spacing:.3px}
 .home-info-card-body{font-size:13px;color:var(--muted);line-height:1.6}
-.home-quickmenu-wrap{max-width:860px;margin:20px auto 0;padding:0 20px}
+.home-quickmenu-wrap{max-width:860px;margin:12px auto 0;padding:0 20px}
 .home-quickmenu-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;justify-content:center}
 .home-quick-btn{padding:7px 18px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
 .home-quick-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:var(--brand-light)}
@@ -334,7 +334,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="home-quickmenu-row" id="home-qrow-1"></div>
     <div class="home-quickmenu-row" id="home-qrow-2"></div>
   </div>
-  <div class="home-info-wrap">
+  <div class="home-info-wrap" style="display:none">
     <div class="home-info-title">Informações do RPG</div>
     <div class="home-info-grid" id="home-info-grid"></div>
   </div>
