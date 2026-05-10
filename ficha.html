@@ -969,15 +969,14 @@ function renderVarianteModal(itemId){
   grid.innerHTML = item.variantes.map(v=>{
     const chave = `${itemId}::${v.nome}`;
     const qty = inventarioFicha[chave]?.quantidade||0;
-    const spriteEsc = (v.sprite||'').replace(/'/g,"\\'");
-    const nomeEsc = v.nome.replace(/'/g,"\\'");
+    const nomeId = v.nome.replace(/[^a-z0-9]/gi,'_');
     return`<div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface2);font-family:var(--font-body);font-size:11px;font-weight:600;color:var(--text);text-align:center;word-break:break-word">
       ${v.sprite ? `<img src="${v.sprite}" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>` : '<span style="font-size:26px">❓</span>'}
       <span style="line-height:1.3">${v.nome}</span>
       <div style="display:flex;align-items:center;gap:6px;margin-top:2px">
-        <button class="inv-qty-btn" onclick="ajustarQtyVarianteModal('${itemId}','${nomeEsc}','${spriteEsc}',-1)">−</button>
-        <span id="vqty-${itemId}-${v.nome.replace(/\s+/g,'_')}" style="min-width:18px;text-align:center;font-size:13px;font-weight:700">${qty}</span>
-        <button class="inv-qty-btn" onclick="ajustarQtyVarianteModal('${itemId}','${nomeEsc}','${spriteEsc}',+1)">+</button>
+        <button class="inv-qty-btn" onclick="ajustarQtyVarianteModal('${itemId}','${v.nome.replace(/'/g,"\\'")}', -1)">−</button>
+        <span id="vqty-${itemId}-${nomeId}" style="min-width:18px;text-align:center;font-size:13px;font-weight:700">${qty}</span>
+        <button class="inv-qty-btn" onclick="ajustarQtyVarianteModal('${itemId}','${v.nome.replace(/'/g,"\\'")}', +1)">+</button>
       </div>
     </div>`;
   }).join('');
@@ -1002,9 +1001,12 @@ function abrirSeletorVariante(itemId){
   renderVarianteModal(itemId);
 }
 
-async function ajustarQtyVarianteModal(itemId, varianteNome, varianteSprite, delta){
+async function ajustarQtyVarianteModal(itemId, varianteNome, delta){
   const item = todosItens.find(i=>i.id===itemId);
   if(!item||!ficha.id) return;
+  // Busca sprite da variante direto do catálogo
+  const varDef = item.variantes?.find(v=>v.nome===varianteNome);
+  const varianteSprite = varDef?.sprite||null;
   const chave = `${itemId}::${varianteNome}`;
   const atual = inventarioFicha[chave]?.quantidade||0;
   const nova = Math.max(0, atual+delta);
@@ -1012,15 +1014,15 @@ async function ajustarQtyVarianteModal(itemId, varianteNome, varianteSprite, del
     await apiDel('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`);
     delete inventarioFicha[chave];
   } else if(nova>0 && !inventarioFicha[chave]){
-    const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:1,variante_nome:varianteNome,variante_sprite:varianteSprite||null});
-    if(res&&res[0]) inventarioFicha[chave]={...item,nome:varianteNome,sprite:varianteSprite||item.sprite,quantidade:1,inv_id:res[0].id,_item_id:itemId,_variante_nome:varianteNome,_variante_sprite:varianteSprite||null};
+    const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:1,variante_nome:varianteNome,variante_sprite:varianteSprite});
+    if(res&&res[0]) inventarioFicha[chave]={...item,nome:varianteNome,sprite:varianteSprite||item.sprite,quantidade:1,inv_id:res[0].id,_item_id:itemId,_variante_nome:varianteNome,_variante_sprite:varianteSprite};
   } else if(nova>0 && inventarioFicha[chave]){
     await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`,{quantidade:nova});
     inventarioFicha[chave].quantidade=nova;
   }
   // Atualiza contador no modal de variante
-  const spanId = `vqty-${itemId}-${varianteNome.replace(/\s+/g,'_')}`;
-  const span = document.getElementById(spanId);
+  const nomeId = varianteNome.replace(/[^a-z0-9]/gi,'_');
+  const span = document.getElementById(`vqty-${itemId}-${nomeId}`);
   if(span) span.textContent = nova;
   // Atualiza total no modal de itens
   const totalQty = Object.values(inventarioFicha).filter(v=>v._item_id===itemId).reduce((s,v)=>s+v.quantidade,0);
@@ -1051,9 +1053,8 @@ function renderItensModal(){
       </div>
       <div class="inv-modal-qty">
         ${temVariantes
-          ? `<button class="inv-qty-btn" onclick="ajustarQtyVariante('${item.id}',-1)">−</button>
-             <span class="inv-qty-num" id="inv-qty-var-${item.id}">${qty||0}</span>
-             <button class="inv-qty-btn" onclick="abrirSeletorVariante('${item.id}')">+</button>`
+          ? `<button class="inv-qty-btn" onclick="abrirSeletorVariante('${item.id}')" style="padding:0 10px;font-size:16px;font-weight:700">+</button>
+             <span class="inv-qty-num" id="inv-qty-var-${item.id}">${qty||0}</span>`
           : `<button class="inv-qty-btn" onclick="ajustarQty('${item.id}',-1)">−</button>
              <span class="inv-qty-num" id="inv-qty-${item.id}">${qty||0}</span>
              <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',+1)">+</button>`}
