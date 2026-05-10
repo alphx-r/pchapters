@@ -921,8 +921,28 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="field" id="modal-item-variantes-wrap">
       <label style="display:flex;align-items:center;justify-content:space-between">
         Variantes por tipo
-        <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);font-size:11px" onclick="adicionarVariante()">+ Adicionar</button>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-sm" style="background:#e8f4e8;border:1px solid #a8d8a8;color:#1a6a1a;font-size:11px" onclick="toggleBuscarVarianteSlug()">🔍 Buscar slug</button>
+          <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);font-size:11px" onclick="adicionarVariante()">+ Adicionar</button>
+        </div>
       </label>
+      <!-- painel de busca por slug -->
+      <div id="variante-slug-painel" style="display:none;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:8px">
+        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">Buscar sprite e criar variante</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <input type="text" id="variante-slug-input" placeholder="slug PokéSprite (ex: flame-plate)" style="flex:1;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font-body)" onkeydown="if(event.key==='Enter')buscarEAdicionarVariante()"/>
+          <button class="btn btn-sm" style="background:var(--brand-mid);color:#fff;border:none;white-space:nowrap;font-size:11px" onclick="buscarEAdicionarVariante()">🔍 Buscar</button>
+        </div>
+        <div id="variante-slug-preview" style="display:none;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
+          <img id="variante-slug-img" src="" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>
+          <div style="flex:1">
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Nome da variante:</div>
+            <input type="text" id="variante-slug-nome" placeholder="ex: Chama" style="width:100%;padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font-body)" onkeydown="if(event.key==='Enter')confirmarVarianteSlug()"/>
+          </div>
+          <button class="btn btn-sm" style="background:var(--brand-mid);color:#fff;border:none;font-size:11px;white-space:nowrap" onclick="confirmarVarianteSlug()">✓ Criar</button>
+        </div>
+        <div id="variante-slug-status" style="font-size:11px;color:var(--muted);margin-top:6px"></div>
+      </div>
       <div id="modal-item-variantes-lista" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
     </div>
     <div class="field">
@@ -2024,30 +2044,100 @@ function renderTbodyItens(){
 // ── Variantes ────────────────────────────────────────────────────────────────
 let variantesTemp = []; // [{nome, sprite}]
 
-async function buscarSpriteVariante(idx, btn){
-  const v = variantesTemp[idx];
-  const slug = prompt(`🔍 Buscar sprite para variante "${v.nome||'sem nome'}"
+// slug salvo temporariamente pelo painel de busca
+let _varianteSlugUrl = null;
 
-Digite o slug (ex: flame-plate, life-orb):`);
-  if(!slug || !slug.trim()) return;
-  const s = slug.trim().toLowerCase();
+function toggleBuscarVarianteSlug(){
+  const p = document.getElementById('variante-slug-painel');
+  const aberto = p.style.display !== 'none';
+  p.style.display = aberto ? 'none' : 'block';
+  if(!aberto){
+    document.getElementById('variante-slug-input').value='';
+    document.getElementById('variante-slug-preview').style.display='none';
+    document.getElementById('variante-slug-status').textContent='';
+    document.getElementById('variante-slug-nome').value='';
+    _varianteSlugUrl=null;
+    setTimeout(()=>document.getElementById('variante-slug-input').focus(),50);
+  }
+}
+
+async function buscarEAdicionarVariante(){
+  const s = document.getElementById('variante-slug-input').value.trim().toLowerCase();
+  const status = document.getElementById('variante-slug-status');
+  const preview = document.getElementById('variante-slug-preview');
+  if(!s){ status.textContent='⚠ Digite um slug.'; return; }
+  status.textContent='⏳ Buscando...';
+  preview.style.display='none';
+  _varianteSlugUrl=null;
+
   const POKESPRITE_BASE = 'https://raw.githubusercontent.com/msikma/pokesprite/master/items/';
   const POKEAPI_BASE    = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
   function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url+'?v='+Date.now(); }); }
-  const tentativas = [
-    ...['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
-        'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr'].map(cat=>`${POKESPRITE_BASE}${cat}/${s}.png`),
-    `${POKEAPI_BASE}${s}.png`,
-  ];
+
+  const categorias = ['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
+    'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr'];
+
   let url = null;
-  for(const t of tentativas){ const ok=await testarUrl(t); if(ok){url=t.split('?')[0];break;} }
+  for(const cat of categorias){
+    const ok = await testarUrl(`${POKESPRITE_BASE}${cat}/${s}.png`);
+    if(ok){ url=ok.split('?')[0]; break; }
+  }
+  if(!url && s.includes('/')){
+    const ok = await testarUrl(`${POKESPRITE_BASE}${s}.png`);
+    if(ok) url=ok.split('?')[0];
+  }
+  if(!url){ const ok=await testarUrl(`${POKEAPI_BASE}${s}.png`); if(ok) url=ok.split('?')[0]; }
   if(!url){
     try{
       const r=await fetch(`https://pokeapi.co/api/v2/item/${s}/`);
       if(r.ok){const d=await r.json();if(d?.sprites?.default)url=d.sprites.default;}
     }catch(e){}
   }
-  if(!url){ alert(`❌ Sprite não encontrado para "${s}".`); return; }
+
+  if(!url){ status.textContent=`❌ Sprite não encontrado para "${s}".`; return; }
+
+  _varianteSlugUrl = url;
+  document.getElementById('variante-slug-img').src = url;
+  // pré-preenche o nome com o slug formatado
+  const nomeAuto = s.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  document.getElementById('variante-slug-nome').value = nomeAuto;
+  preview.style.display='flex';
+  status.textContent='';
+  setTimeout(()=>document.getElementById('variante-slug-nome').select(),50);
+}
+
+function confirmarVarianteSlug(){
+  if(!_varianteSlugUrl){ return; }
+  const nome = document.getElementById('variante-slug-nome').value.trim();
+  if(!nome){ document.getElementById('variante-slug-status').textContent='⚠ Dê um nome à variante.'; return; }
+  variantesTemp.push({ nome, sprite: _varianteSlugUrl });
+  renderVariantesLista();
+  // reseta painel
+  document.getElementById('variante-slug-input').value='';
+  document.getElementById('variante-slug-preview').style.display='none';
+  document.getElementById('variante-slug-nome').value='';
+  document.getElementById('variante-slug-status').textContent='✓ Variante criada!';
+  _varianteSlugUrl=null;
+  setTimeout(()=>{
+    document.getElementById('variante-slug-status').textContent='';
+    document.getElementById('variante-slug-input').focus();
+  },1500);
+}
+
+async function buscarSpriteVariante(idx, btn){
+  const v = variantesTemp[idx];
+  const s = prompt(`🔍 Slug para variante "${v.nome||'sem nome'}" (ex: flame-plate):`);
+  if(!s||!s.trim()) return;
+  const slug = s.trim().toLowerCase();
+  const POKESPRITE_BASE = 'https://raw.githubusercontent.com/msikma/pokesprite/master/items/';
+  const POKEAPI_BASE    = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+  function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url+'?v='+Date.now(); }); }
+  const categorias=['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
+    'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr'];
+  let url=null;
+  for(const cat of categorias){ const ok=await testarUrl(`${POKESPRITE_BASE}${cat}/${slug}.png`); if(ok){url=ok.split('?')[0];break;} }
+  if(!url){ const ok=await testarUrl(`${POKEAPI_BASE}${slug}.png`); if(ok) url=ok.split('?')[0]; }
+  if(!url){ alert(`❌ Não encontrado: "${slug}"`); return; }
   variantesTemp[idx].sprite = url;
   renderVariantesLista();
 }
