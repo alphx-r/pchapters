@@ -889,6 +889,13 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <input type="file" id="modal-item-sprite-file" accept="image/*" style="display:none" onchange="onSpriteUpload(this)"/>
       <div id="modal-item-sprite-status" style="font-size:11px;color:var(--muted);margin-top:4px"></div>
     </div>
+    <div class="field" id="modal-item-variantes-wrap">
+      <label style="display:flex;align-items:center;justify-content:space-between">
+        Variantes por tipo
+        <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);font-size:11px" onclick="adicionarVariante()">+ Adicionar</button>
+      </label>
+      <div id="modal-item-variantes-lista" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
+    </div>
     <div class="field">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--text)">
         <input type="checkbox" id="modal-item-evento"/>
@@ -1833,6 +1840,65 @@ function renderTbodyItens(){
       </tr>`).join('');
 }
 
+// ── Variantes ────────────────────────────────────────────────────────────────
+let variantesTemp = []; // [{nome, sprite}]
+
+function renderVariantesLista(){
+  const lista = document.getElementById('modal-item-variantes-lista');
+  if(!variantesTemp.length){
+    lista.innerHTML = '<div style="font-size:12px;color:var(--muted)">Nenhuma variante cadastrada.</div>';
+    return;
+  }
+  lista.innerHTML = variantesTemp.map((v,i)=>`
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 8px">
+      <div style="width:32px;height:32px;flex-shrink:0;background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="uploadVarianteSprite(${i})" title="Clique para trocar sprite">
+        ${v.sprite ? `<img src="${v.sprite}" style="width:28px;height:28px;object-fit:contain;image-rendering:pixelated"/>` : '<span style="font-size:16px">❓</span>'}
+      </div>
+      <input type="text" value="${v.nome}" placeholder="Nome da variante (ex: Flame Plate)"
+        style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)"
+        oninput="variantesTemp[${i}].nome=this.value"/>
+      <button onclick="removerVariante(${i})" style="background:none;border:none;cursor:pointer;color:#c00;font-size:16px;line-height:1">×</button>
+    </div>
+    <input type="file" id="var-file-${i}" accept="image/*" style="display:none" onchange="onVarianteFileChange(this,${i})"/>
+  `).join('');
+}
+
+function adicionarVariante(){
+  variantesTemp.push({nome:'', sprite:''});
+  renderVariantesLista();
+}
+
+function removerVariante(i){
+  variantesTemp.splice(i,1);
+  renderVariantesLista();
+}
+
+function uploadVarianteSprite(i){
+  document.getElementById(`var-file-${i}`)?.click();
+}
+
+function onVarianteFileChange(input, i){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 32; canvas.height = 32;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      const scale = Math.min(32/img.width, 32/img.height);
+      ctx.drawImage(img, (32-img.width*scale)/2, (32-img.height*scale)/2, img.width*scale, img.height*scale);
+      variantesTemp[i].sprite = canvas.toDataURL('image/png');
+      renderVariantesLista();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value='';
+}
+
 function abrirModalItem(id){
   const item = id ? itensDB.find(i => i.id === id) : null;
   document.getElementById('modal-item-id').value    = id || '';
@@ -1845,6 +1911,9 @@ function abrirModalItem(id){
   document.getElementById('modal-item-sprite-slug').value = '';
   document.getElementById('modal-item-err').style.display = 'none';
   document.getElementById('modal-item-del-btn').style.display = item ? 'inline-block' : 'none';
+  // Carrega variantes
+  variantesTemp = item?.variantes ? JSON.parse(JSON.stringify(item.variantes)) : [];
+  renderVariantesLista();
   // preview sprite existente
   const prev   = document.getElementById('modal-item-sprite-preview');
   const status = document.getElementById('modal-item-sprite-status');
@@ -1988,16 +2057,17 @@ async function salvarItem(){
   const desc   = document.getElementById('modal-item-desc').value.trim();
   const evento = document.getElementById('modal-item-evento').checked;
   const sprite = document.getElementById('modal-item-sprite').value || null;
+  const variantes = variantesTemp.filter(v=>v.nome.trim()).map(v=>({nome:v.nome.trim(),sprite:v.sprite||null}));
   const errEl  = document.getElementById('modal-item-err');
   errEl.style.display = 'none';
   if(!nome){ errEl.textContent='Preencha o nome do item.'; errEl.style.display='block'; return; }
   if(id){
-    const patch = {nome, categoria:cat, descricao:desc, evento, sprite};
+    const patch = {nome, categoria:cat, descricao:desc, evento, sprite, variantes: variantes.length ? variantes : null};
     await dbPatch('itens', `id=eq.${id}`, patch);
     const i = itensDB.find(x => x.id === id);
     if(i) Object.assign(i, patch);
   } else {
-    const res = await dbPost('itens', {nome, categoria:cat, descricao:desc, evento, sprite});
+    const res = await dbPost('itens', {nome, categoria:cat, descricao:desc, evento, sprite, variantes: variantes.length ? variantes : null});
     if(res && res[0]) itensDB.push(res[0]);
   }
   fecharModalItem();
