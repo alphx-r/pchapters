@@ -450,14 +450,14 @@ function apiDel(table,query){return api(`${table}?${query}`,{method:'DELETE',hea
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
+const modoEditUrl = /\/ficha\/[^\/]+\/edit\/?$/.test(location.pathname);
 const _rawSlug=(()=>{
   const params=new URLSearchParams(location.search).get('id');
   if(params) return params;
   const match=location.pathname.match(/\/ficha\/([^\/]+)/);
   return match?match[1]:null;
 })();
-const modoEditUrl = _rawSlug?.endsWith('/edit') || location.pathname.endsWith('/edit');
-const personagemSlug = _rawSlug?.replace(/\/edit$/,'') ?? null;
+const personagemSlug = _rawSlug ?? null;
 
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 
