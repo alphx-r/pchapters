@@ -611,6 +611,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               <label>Filtrar por categoria</label>
               <select id="itens-filtro-cat" onchange="renderTbodyItens()">
                 <option value="">Todas</option>
+                <option value="__sem_sprite__">📁 Sem sprite</option>
                 <option>Pokéball</option>
                 <option>Snack</option>
                 <option>Medicine</option>
@@ -1815,7 +1816,8 @@ function renderTbodyItens(){
   const busca  = (document.getElementById('itens-busca')?.value || '').toLowerCase();
   const soloEv = document.getElementById('itens-filtro-evento')?.checked || false;
   let lista = itensDB;
-  if(cat)    lista = lista.filter(i => i.categoria === cat);
+  if(cat === '__sem_sprite__') lista = lista.filter(i => !i.sprite);
+  else if(cat) lista = lista.filter(i => i.categoria === cat);
   if(busca)  lista = lista.filter(i => i.nome.toLowerCase().includes(busca) || (i.descricao||'').toLowerCase().includes(busca));
   if(soloEv) lista = lista.filter(i => i.evento);
   const contEl = document.getElementById('itens-contagem');
