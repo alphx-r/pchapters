@@ -450,12 +450,14 @@ function apiDel(table,query){return api(`${table}?${query}`,{method:'DELETE',hea
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
-const personagemSlug=(()=>{
+const _rawSlug=(()=>{
   const params=new URLSearchParams(location.search).get('id');
   if(params) return params;
   const match=location.pathname.match(/\/ficha\/([^\/]+)/);
   return match?match[1]:null;
 })();
+const modoEditUrl = _rawSlug?.endsWith('/edit') || location.pathname.endsWith('/edit');
+const personagemSlug = _rawSlug?.replace(/\/edit$/,'') ?? null;
 
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 
@@ -1109,6 +1111,8 @@ async function init(){
     document.getElementById('top-bar').style.display='flex';
     document.getElementById('ficha-wrap').style.display='block';
     atualizarTopBar();
+    // Ativa edição automaticamente se URL terminar em /edit
+    if(modoEditUrl && jogadorLogado) ativarEdicao();
   }catch(e){
     console.error('Erro no init da ficha:',e);
     document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:13px;max-width:400px;text-align:center">❌ Erro ao carregar a ficha:<br><code style="font-size:11px">${e.message}</code><br><br><button onclick="location.reload()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:none;background:#2563a8;color:#fff;cursor:pointer">Tentar novamente</button></div>`;
