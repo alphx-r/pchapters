@@ -928,20 +928,13 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       </label>
       <!-- painel de busca por slug -->
       <div id="variante-slug-painel" style="display:none;background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-top:8px">
-        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:8px">Buscar sprite e criar variante</div>
-        <div style="display:flex;gap:6px;margin-bottom:8px">
-          <input type="text" id="variante-slug-input" placeholder="slug PokéSprite (ex: flame-plate)" style="flex:1;padding:5px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font-body)" onkeydown="if(event.key==='Enter')buscarEAdicionarVariante()"/>
-          <button class="btn btn-sm" style="background:var(--brand-mid);color:#fff;border:none;white-space:nowrap;font-size:11px" onclick="buscarEAdicionarVariante()">🔍 Buscar</button>
+        <div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px">Slugs dos sprites (um por linha)</div>
+        <textarea id="variante-slug-input" rows="3" placeholder="flame-plate&#10;splash-plate&#10;toxic-plate&#10;..." style="width:100%;padding:7px 9px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font-body);background:var(--surface);color:var(--text);resize:vertical;margin-bottom:8px"></textarea>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-sm" style="background:var(--brand-mid);color:#fff;border:none;font-size:11px" onclick="buscarEAdicionarVariante()">🔍 Buscar e Criar</button>
+          <div id="variante-slug-status" style="font-size:11px;color:var(--muted)"></div>
         </div>
-        <div id="variante-slug-preview" style="display:none;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 10px">
-          <img id="variante-slug-img" src="" style="width:36px;height:36px;object-fit:contain;image-rendering:pixelated"/>
-          <div style="flex:1">
-            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Nome da variante:</div>
-            <input type="text" id="variante-slug-nome" placeholder="ex: Chama" style="width:100%;padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font-body)" onkeydown="if(event.key==='Enter')confirmarVarianteSlug()"/>
-          </div>
-          <button class="btn btn-sm" style="background:var(--brand-mid);color:#fff;border:none;font-size:11px;white-space:nowrap" onclick="confirmarVarianteSlug()">✓ Criar</button>
-        </div>
-        <div id="variante-slug-status" style="font-size:11px;color:var(--muted);margin-top:6px"></div>
+        <div id="variante-slug-resultados" style="display:flex;flex-direction:column;gap:6px;margin-top:10px"></div>
       </div>
       <div id="modal-item-variantes-lista" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
     </div>
@@ -2045,83 +2038,81 @@ function renderTbodyItens(){
 let variantesTemp = []; // [{nome, sprite}]
 
 // slug salvo temporariamente pelo painel de busca
-let _varianteSlugUrl = null;
-
 function toggleBuscarVarianteSlug(){
   const p = document.getElementById('variante-slug-painel');
   const aberto = p.style.display !== 'none';
   p.style.display = aberto ? 'none' : 'block';
   if(!aberto){
     document.getElementById('variante-slug-input').value='';
-    document.getElementById('variante-slug-preview').style.display='none';
     document.getElementById('variante-slug-status').textContent='';
-    document.getElementById('variante-slug-nome').value='';
-    _varianteSlugUrl=null;
+    document.getElementById('variante-slug-resultados').innerHTML='';
     setTimeout(()=>document.getElementById('variante-slug-input').focus(),50);
   }
 }
 
 async function buscarEAdicionarVariante(){
-  const s = document.getElementById('variante-slug-input').value.trim().toLowerCase();
+  const raw = document.getElementById('variante-slug-input').value;
+  const slugs = raw.split('\n').map(s=>s.trim().toLowerCase()).filter(Boolean);
   const status = document.getElementById('variante-slug-status');
-  const preview = document.getElementById('variante-slug-preview');
-  if(!s){ status.textContent='⚠ Digite um slug.'; return; }
-  status.textContent='⏳ Buscando...';
-  preview.style.display='none';
-  _varianteSlugUrl=null;
+  const resultDiv = document.getElementById('variante-slug-resultados');
+  if(!slugs.length){ status.textContent='⚠ Digite ao menos um slug.'; return; }
 
   const POKESPRITE_BASE = 'https://raw.githubusercontent.com/msikma/pokesprite/master/items/';
   const POKEAPI_BASE    = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+  const CATEGORIAS = ['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
+    'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr'];
   function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url+'?v='+Date.now(); }); }
 
-  const categorias = ['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
-    'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr'];
+  resultDiv.innerHTML='';
+  status.textContent=`⏳ Buscando ${slugs.length} slug${slugs.length>1?'s':''}...`;
 
-  let url = null;
-  for(const cat of categorias){
-    const ok = await testarUrl(`${POKESPRITE_BASE}${cat}/${s}.png`);
-    if(ok){ url=ok.split('?')[0]; break; }
-  }
-  if(!url && s.includes('/')){
-    const ok = await testarUrl(`${POKESPRITE_BASE}${s}.png`);
-    if(ok) url=ok.split('?')[0];
-  }
-  if(!url){ const ok=await testarUrl(`${POKEAPI_BASE}${s}.png`); if(ok) url=ok.split('?')[0]; }
-  if(!url){
-    try{
-      const r=await fetch(`https://pokeapi.co/api/v2/item/${s}/`);
-      if(r.ok){const d=await r.json();if(d?.sprites?.default)url=d.sprites.default;}
-    }catch(e){}
-  }
+  for(let idx=0; idx<slugs.length; idx++){
+    const s = slugs[idx];
+    status.textContent=`⏳ ${idx+1}/${slugs.length}: ${s}`;
+    let url=null;
+    for(const cat of CATEGORIAS){ const ok=await testarUrl(`${POKESPRITE_BASE}${cat}/${s}.png`); if(ok){url=ok.split('?')[0];break;} }
+    if(!url && s.includes('/')){ const ok=await testarUrl(`${POKESPRITE_BASE}${s}.png`); if(ok) url=ok.split('?')[0]; }
+    if(!url){ const ok=await testarUrl(`${POKEAPI_BASE}${s}.png`); if(ok) url=ok.split('?')[0]; }
+    if(!url){ try{ const r=await fetch(`https://pokeapi.co/api/v2/item/${s}/`); if(r.ok){const d=await r.json();if(d?.sprites?.default)url=d.sprites.default;} }catch(e){} }
 
-  if(!url){ status.textContent=`❌ Sprite não encontrado para "${s}".`; return; }
-
-  _varianteSlugUrl = url;
-  document.getElementById('variante-slug-img').src = url;
-  // pré-preenche o nome com o slug formatado
-  const nomeAuto = s.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
-  document.getElementById('variante-slug-nome').value = nomeAuto;
-  preview.style.display='flex';
-  status.textContent='';
-  setTimeout(()=>document.getElementById('variante-slug-nome').select(),50);
+    const nomeAuto = s.replace(/-/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+    const rowId = `vrow-${idx}`;
+    const row = document.createElement('div');
+    row.id = rowId;
+    row.style.cssText='display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:7px 10px';
+    if(url){
+      row.innerHTML=`
+        <img src="${url}" style="width:32px;height:32px;object-fit:contain;image-rendering:pixelated;flex-shrink:0"/>
+        <input type="text" value="${nomeAuto}" placeholder="Nome da variante"
+          style="flex:1;padding:4px 8px;border:1.5px solid var(--border);border-radius:5px;font-size:12px;font-family:var(--font-body)"
+          onkeydown="if(event.key==='Enter')criarVarianteDoRow('${rowId}','${url.replace(/'/g,"\\'")}')"/>
+        <button class="btn btn-sm" style="background:var(--brand-mid);color:#fff;border:none;font-size:11px;white-space:nowrap"
+          onclick="criarVarianteDoRow('${rowId}','${url.replace(/'/g,"\\'")}')">✓ Criar</button>
+        <button onclick="this.closest('div').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;line-height:1;flex-shrink:0">×</button>`;
+    } else {
+      row.innerHTML=`
+        <div style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">❌</div>
+        <div style="flex:1;font-size:12px;color:var(--muted)">Não encontrado: <strong>${s}</strong></div>
+        <button onclick="this.closest('div').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;line-height:1;flex-shrink:0">×</button>`;
+    }
+    resultDiv.appendChild(row);
+  }
+  const ok = resultDiv.querySelectorAll('img').length;
+  status.textContent=`✅ ${ok} de ${slugs.length} encontrado${ok!==1?'s':''} — ajuste os nomes e clique ✓ Criar.`;
 }
 
-function confirmarVarianteSlug(){
-  if(!_varianteSlugUrl){ return; }
-  const nome = document.getElementById('variante-slug-nome').value.trim();
-  if(!nome){ document.getElementById('variante-slug-status').textContent='⚠ Dê um nome à variante.'; return; }
-  variantesTemp.push({ nome, sprite: _varianteSlugUrl });
+function criarVarianteDoRow(rowId, url){
+  const row = document.getElementById(rowId);
+  if(!row) return;
+  const input = row.querySelector('input[type="text"]');
+  const nome = input ? input.value.trim() : '';
+  if(!nome){ input.style.borderColor='#e53e3e'; setTimeout(()=>input.style.borderColor='',1500); return; }
+  variantesTemp.push({ nome, sprite: url });
   renderVariantesLista();
-  // reseta painel
-  document.getElementById('variante-slug-input').value='';
-  document.getElementById('variante-slug-preview').style.display='none';
-  document.getElementById('variante-slug-nome').value='';
-  document.getElementById('variante-slug-status').textContent='✓ Variante criada!';
-  _varianteSlugUrl=null;
-  setTimeout(()=>{
-    document.getElementById('variante-slug-status').textContent='';
-    document.getElementById('variante-slug-input').focus();
-  },1500);
+  row.style.opacity='.4';
+  row.style.pointerEvents='none';
+  const btn = row.querySelector('button');
+  if(btn) btn.textContent='✓ Criado!';
 }
 
 async function buscarSpriteVariante(idx, btn){
