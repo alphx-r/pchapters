@@ -891,11 +891,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <div id="modal-item-sprite-status" style="font-size:11px;color:var(--muted);margin-top:4px"></div>
     </div>
     <div class="field" id="modal-item-variantes-wrap">
-      <label style="display:flex;align-items:center;justify-content:space-between">
-        Variantes por tipo
-        <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);font-size:11px" onclick="adicionarVariante()">+ Adicionar</button>
-      </label>
-      <div id="modal-item-variantes-lista" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
+      <label>Variantes por tipo</label>
+      <textarea id="modal-item-variantes-texto" rows="4" placeholder="Digite um nome por linha:&#10;Flame Plate&#10;Icicle Plate&#10;Iron Plate&#10;..." style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);resize:vertical"></textarea>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px">Um nome por linha. Ao salvar, cada variante vira um item independente.</div>
     </div>
     <div class="field">
       <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--text)">
@@ -1920,9 +1918,11 @@ function abrirModalItem(id){
   document.getElementById('modal-item-sprite-slug').value = '';
   document.getElementById('modal-item-err').style.display = 'none';
   document.getElementById('modal-item-del-btn').style.display = item ? 'inline-block' : 'none';
-  // Carrega variantes
-  variantesTemp = item?.variantes ? JSON.parse(JSON.stringify(item.variantes)) : [];
-  renderVariantesLista();
+  // Carrega variantes no textarea
+  const variantesExistentes = itensDB
+    .filter(i => i.categoria === (item?.categoria||'') && !i.is_pai && i.nome !== (item?.nome||'') && item?.variantes_nomes?.includes(i.nome))
+    .map(i=>i.nome).join('\n');
+  document.getElementById('modal-item-variantes-texto').value = item?.variantes_nomes?.join('\n') || '';
   // preview sprite existente
   const prev   = document.getElementById('modal-item-sprite-preview');
   const status = document.getElementById('modal-item-sprite-status');
@@ -2066,23 +2066,22 @@ async function salvarItem(){
   const desc   = document.getElementById('modal-item-desc').value.trim();
   const evento = document.getElementById('modal-item-evento').checked;
   const sprite = document.getElementById('modal-item-sprite').value || null;
-  // Lê valores atuais dos inputs de variante do DOM antes de filtrar
-  document.querySelectorAll('#modal-item-variantes-lista input[type="text"]').forEach((inp,i)=>{
-    if(variantesTemp[i]) variantesTemp[i].nome = inp.value;
-  });
-  const variantes = variantesTemp.filter(v=>v.nome.trim()).map(v=>({nome:v.nome.trim(),sprite:v.sprite||null}));
+  // Lê variantes do textarea (um nome por linha)
+  const variantesTexto = document.getElementById('modal-item-variantes-texto').value;
+  const variantes = variantesTexto.split('\n').map(v=>v.trim()).filter(v=>v.length>0).map(v=>({nome:v,sprite:null}));
   const errEl  = document.getElementById('modal-item-err');
   errEl.style.display = 'none';
   if(!nome){ errEl.textContent='Preencha o nome do item.'; errEl.style.display='block'; return; }
 
-  // Salva o item pai normalmente (sem variantes no JSON)
+  // Salva o item pai normalmente
+  const nomesDasVariantes = variantes.map(v=>v.nome);
   if(id){
-    const patch = {nome, categoria:cat, descricao:desc, evento, sprite, variantes: null, is_pai: variantes.length > 0};
+    const patch = {nome, categoria:cat, descricao:desc, evento, sprite, variantes: null, is_pai: variantes.length > 0, variantes_nomes: nomesDasVariantes.length ? nomesDasVariantes : null};
     await dbPatch('itens', `id=eq.${id}`, patch);
     const i = itensDB.find(x => x.id === id);
     if(i) Object.assign(i, patch);
   } else {
-    const res = await dbPost('itens', {nome, categoria:cat, descricao:desc, evento, sprite, variantes: null, is_pai: variantes.length > 0});
+    const res = await dbPost('itens', {nome, categoria:cat, descricao:desc, evento, sprite, variantes: null, is_pai: variantes.length > 0, variantes_nomes: nomesDasVariantes.length ? nomesDasVariantes : null});
     if(res && res[0]) itensDB.push(res[0]);
   }
 
