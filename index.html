@@ -61,10 +61,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .ctrl-group label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
 .ctrl-group select,.ctrl-group input{padding:9px 12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);transition:border .2s;width:100%}
 .ctrl-group select:focus,.ctrl-group input:focus{outline:none;border-color:var(--brand-mid)}
-.badges-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:12px 16px;background:#fff;border-radius:var(--r);border:1.5px solid #e0e0e0}
+.badges-row{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:20px;padding:12px 16px;background:#fff;border-radius:var(--r);border:1.5px solid #e0e0e0}
+.badges-top-row{display:flex;align-items:center;width:100%;gap:8px}
 .badges-label{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
 .badge-btn{width:34px;height:34px;border-radius:50%;border:2px solid #d0d0d0;background:#f4f4f4;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none;line-height:1}
 .badge-btn.earned{background:#fff8e0;border-color:#e8a020}
+.badges-stars-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;width:100%}
 .badges-info{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap;font-weight:600}
 .roll-btn{width:100%;padding:15px;background:var(--brand-mid);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-title);font-size:16px;letter-spacing:1.5px;cursor:pointer;margin-bottom:24px}
 .roll-btn:hover{background:var(--brand-mid)}
@@ -203,11 +205,11 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .roller-header{margin-bottom:18px}
   .roller-header h2{font-size:18px}
   .roller-controls{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
-  .badges-row{flex-wrap:wrap;padding:10px 12px;align-items:center;row-gap:6px;column-gap:6px}
-  .badges-label{order:1;font-size:11px;flex-shrink:0}
-  .badges-info{order:2;font-size:11px;margin-left:auto;white-space:nowrap;flex-shrink:0}
-  .badges-break{order:3;width:100%;height:0;display:block}
-  .badge-btn{order:4;width:28px;height:28px;font-size:14px;flex-shrink:0}
+  .badges-row{padding:10px 12px;gap:6px}
+  .badges-label{font-size:11px}
+  .badges-info{font-size:11px}
+  .badge-btn{width:28px;height:28px;font-size:14px;flex-shrink:0}
+  .badges-stars-row{gap:6px}
   .roll-btn{font-size:14px;padding:13px}
   .results-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
   .poke-card{padding:12px;gap:12px}
@@ -290,17 +292,20 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="ctrl-group"><label>Pokémon adicionais</label><input type="number" id="n-adicionais" value="0" min="0" max="10"/></div>
   </div>
   <div class="badges-row">
-    <span class="badges-label">Provas de valor:</span>
-    <span class="badges-info" id="badges-info">0 provas → Nível 1–10</span>
-    <span class="badges-break"></span>
-    <button class="badge-btn" data-idx="0">☆</button>
-    <button class="badge-btn" data-idx="1">☆</button>
-    <button class="badge-btn" data-idx="2">☆</button>
-    <button class="badge-btn" data-idx="3">☆</button>
-    <button class="badge-btn" data-idx="4">☆</button>
-    <button class="badge-btn" data-idx="5">☆</button>
-    <button class="badge-btn" data-idx="6">☆</button>
-    <button class="badge-btn" data-idx="7">☆</button>
+    <div class="badges-top-row">
+      <span class="badges-label">Provas de valor:</span>
+      <span class="badges-info" id="badges-info">0 provas → Nível 1–10</span>
+    </div>
+    <div class="badges-stars-row">
+      <button class="badge-btn" data-idx="0">☆</button>
+      <button class="badge-btn" data-idx="1">☆</button>
+      <button class="badge-btn" data-idx="2">☆</button>
+      <button class="badge-btn" data-idx="3">☆</button>
+      <button class="badge-btn" data-idx="4">☆</button>
+      <button class="badge-btn" data-idx="5">☆</button>
+      <button class="badge-btn" data-idx="6">☆</button>
+      <button class="badge-btn" data-idx="7">☆</button>
+    </div>
   </div>
   <button class="roll-btn" onclick="rolarEncontro()">Rolar Encontro</button>
   <div id="results-section"></div>
