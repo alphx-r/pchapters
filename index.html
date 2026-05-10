@@ -286,8 +286,13 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .home-info-icon{font-size:20px;line-height:1;flex-shrink:0}
 .home-info-card-title{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);letter-spacing:.3px}
 .home-info-card-body{font-size:13px;color:var(--muted);line-height:1.6}
+.home-quickmenu-wrap{max-width:860px;margin:20px auto 0;padding:0 20px}
+.home-quickmenu-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.home-quick-btn{padding:7px 18px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;white-space:nowrap}
+.home-quick-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:var(--brand-light)}
 @media(max-width:640px){
   .slideshow-wrap,.home-info-wrap{padding:0 12px;margin-top:20px}
+  .home-quickmenu-wrap{padding:0 12px}
   .slide-title{font-size:16px}
   .slide-desc{font-size:12px}
   .slide-text{padding:16px}
@@ -323,6 +328,11 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
       <button class="ss-arrow ss-next" onclick="ssMove(1)">&#8594;</button>
     </div>
     <div class="ss-dots" id="ss-dots"></div>
+  </div>
+  <div class="home-quickmenu-wrap" id="home-quickmenu-wrap">
+    <div class="home-quickmenu-row" id="home-qrow-0"></div>
+    <div class="home-quickmenu-row" id="home-qrow-1"></div>
+    <div class="home-quickmenu-row" id="home-qrow-2"></div>
   </div>
   <div class="home-info-wrap">
     <div class="home-info-title">Informações do RPG</div>
@@ -800,6 +810,14 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           <div class="sec-title">Página Inicial</div>
           <div class="sec-sub">Edite o slideshow e as informações exibidas na página inicial do site</div>
 
+          <!-- QUICKMENU EDITOR -->
+          <div class="box">
+            <div class="box-title">⚡ Menu Rápido (3 linhas × 4 botões)</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Cada botão tem um rótulo e uma URL externa (opcional). Deixe a URL em branco para botões sem ação.</p>
+            <div id="home-qmenu-adm-list"></div>
+            <div class="fb fb-ok" id="home-qmenu-fb-ok" style="margin-top:10px;display:none">✓ Salvo!</div>
+          </div>
+
           <!-- SLIDESHOW EDITOR -->
           <div class="box">
             <div class="box-title">🖼️ Slides do Slideshow</div>
@@ -1146,10 +1164,6 @@ async function goTo(page,el,pushState=true){
   document.getElementById('btn-login').classList.remove('active');
   if(el) el.classList.add('active');
   if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
-  // hide nav links on home, show on other pages
-  const navLinks=document.getElementById('nav-links');
-  if(page==='home') navLinks.style.display='none';
-  else navLinks.style.display='';
   if(pushState) history.pushState({page},'','/'+(PAGE_PATHS[page]||''));
   await lazyLoad(page);
 }
@@ -2802,6 +2816,11 @@ const HOME_DEFAULTS = {
     {img:'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=900&q=80',title:'Explore Biomas',desc:'Cada bioma esconde Pokémon únicos e raros. Descubra o que a natureza reserva para você.',btn:'Ver Biomas',btnPage:'bioma'},
     {img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=900&q=80',title:'Gerencie suas Fichas',desc:'Acompanhe seu progresso, inventário e evolução do seu personagem.',btn:'Abrir Fichário',btnPage:'ficha'},
   ],
+  quickmenu: [
+    [{label:'Introdução',url:''},{label:'Sistema Geral',url:''},{label:'Sistemas Secundários',url:''},{label:'Guia Pokémon',url:''}],
+    [{label:'Pokémon Iniciais',url:''},{label:'Classes',url:''},{label:'Profissões',url:''},{label:'Atividades',url:''}],
+    [{label:'UWAdex',url:''},{label:'NPCdex',url:''},{label:'STATSdex',url:''},{label:'ITEMdex',url:''}],
+  ],
   cards: [
     {icon:'🎲',title:'Sistema de Rolagem',body:'Use o rolador de encontros para descobrir Pokémon selvagens baseado no bioma e nas suas provas de valor.'},
     {icon:'🗺️',title:'Biomas & Ecossistemas',body:'Cada bioma possui Pokémon exclusivos com raridades distintas — de Comum a Raríssimo.'},
@@ -2848,9 +2867,17 @@ function renderHomePage(){
   clearInterval(ssTimer);
   if(slides.length>1) ssTimer = setInterval(()=>ssMove(1), 5000);
 
+  // Quick menu
+  const qmenu = homeData.quickmenu || HOME_DEFAULTS.quickmenu;
+  qmenu.forEach((row, ri)=>{
+    const el = document.getElementById(`home-qrow-${ri}`);
+    if(!el) return;
+    el.innerHTML = row.map(item=>item.label?`
+      <button class="home-quick-btn" onclick="${item.url?`window.open('${item.url}','_blank')`:'void(0)'}">${item.label}</button>`:'').join('');
+  });
+
   // Info cards
-  const pad = [...cards];
-  while(pad.length<8) pad.push({icon:'',title:'',body:''});
+  const pad = [...cards];  while(pad.length<8) pad.push({icon:'',title:'',body:''});
   grid.innerHTML = pad.slice(0,8).map(c=>c.title?`
     <div class="home-info-card">
       <div class="home-info-card-top">
@@ -2889,7 +2916,25 @@ function ssGoto(i){
 // ══════════════════════════════════════
 function renderHomeAdmEditor(){
   renderHomeAdmSlides();
+  renderHomeAdmQuickmenu();
   renderHomeAdmCards();
+}
+
+function renderHomeAdmQuickmenu(){
+  const qmenu = (homeData.quickmenu || HOME_DEFAULTS.quickmenu).map(r=>r.map(i=>({...i})));
+  const wrap = document.getElementById('home-qmenu-adm-list');
+  if(!wrap) return;
+  const rowLabels = ['Linha 1','Linha 2','Linha 3'];
+  wrap.innerHTML = qmenu.slice(0,3).map((row,ri)=>`
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${rowLabels[ri]}</div>
+      <div class="g2" style="gap:8px">${row.slice(0,4).map((item,ii)=>`
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="text" id="hq-label-${ri}-${ii}" value="${item.label||''}" placeholder="Rótulo" style="flex:1;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+          <input type="text" id="hq-url-${ri}-${ii}" value="${item.url||''}" placeholder="URL (opcional)" style="flex:2;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
 }
 
 function renderHomeAdmSlides(){
@@ -2967,7 +3012,19 @@ async function salvarHomeData(){
       body: document.getElementById(`hc-body-${i}`)?.value||'',
     });
   }
-  homeData = {slides, cards};
+  // collect quickmenu
+  const quickmenu = [];
+  for(let ri=0;ri<3;ri++){
+    const row=[];
+    for(let ii=0;ii<4;ii++){
+      row.push({
+        label: document.getElementById(`hq-label-${ri}-${ii}`)?.value||'',
+        url:   document.getElementById(`hq-url-${ri}-${ii}`)?.value||'',
+      });
+    }
+    quickmenu.push(row);
+  }
+  homeData = {slides, quickmenu, cards};
   const payload = JSON.stringify(homeData);
   // upsert into configuracoes table
   const existing = await dbGet('configuracoes','chave=eq.home_data&limit=1');
