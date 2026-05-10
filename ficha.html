@@ -998,11 +998,8 @@ async function adicionarVarianteAoInventario(itemId, varianteNome, varianteSprit
     const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:1,variante_nome:varianteNome,variante_sprite:varianteSprite||null});
     if(res&&res[0]) inventarioFicha[chave]={...item,nome:varianteNome,sprite:varianteSprite||item.sprite,quantidade:1,inv_id:res[0].id,_item_id:itemId,_variante_nome:varianteNome,_variante_sprite:varianteSprite||null};
   }
-  // atualiza contador no modal sem re-renderizar tudo
-  const totalVar = Object.values(inventarioFicha).filter(v=>v._item_id===itemId).reduce((s,v)=>s+v.quantidade,0);
-  const numEl = document.getElementById(`inv-qty-var-${itemId}`);
-  if(numEl) numEl.textContent = totalVar || '';
   renderInventario();
+  renderItensModal();
 }
 
 function renderItensModal(){
