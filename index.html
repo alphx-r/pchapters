@@ -259,7 +259,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 <div class="loading-overlay" id="loading-overlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text">Carregando...</div>
+  <div class="loading-text">Abrindo o seu RotomPhone.</div>
 </div>
 
 <nav class="nav">
@@ -1775,6 +1775,32 @@ async function autoSpriteTodosItens(){
   alert(msg);
 }
 
+function uploadSpriteInline(input, itemId){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = async () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 32; canvas.height = 32;
+      const ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = false;
+      const scale = Math.min(32/img.width, 32/img.height);
+      const w = img.width*scale, h = img.height*scale;
+      ctx.drawImage(img, (32-w)/2, (32-h)/2, w, h);
+      const dataUrl = canvas.toDataURL('image/png');
+      await dbPatch('itens', `id=eq.${itemId}`, { sprite: dataUrl });
+      const item = itensDB.find(i => i.id === itemId);
+      if(item) item.sprite = dataUrl;
+      renderTbodyItens();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value='';
+}
+
 function renderTbodyItens(){
   const cat    = document.getElementById('itens-filtro-cat')?.value || '';
   const busca  = (document.getElementById('itens-busca')?.value || '').toLowerCase();
@@ -1792,7 +1818,9 @@ function renderTbodyItens(){
         <td style="width:48px;text-align:center">
           ${item.sprite
             ? `<img src="${item.sprite}" style="width:32px;height:32px;object-fit:contain;image-rendering:pixelated" onerror="this.replaceWith(document.createTextNode('—'))"/>`
-            : '<span style="font-size:11px;color:var(--muted)">—</span>'}
+            : `<label title="Fazer upload do sprite" style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1.5px dashed var(--border);border-radius:6px;color:var(--muted);font-size:16px;transition:border-color .15s" onmouseover="this.style.borderColor='#e53e3e'" onmouseout="this.style.borderColor='var(--border)'">
+                📁<input type="file" accept="image/*" style="display:none" onchange="uploadSpriteInline(this,'${item.id}')"/>
+              </label>`}
         </td>
         <td>
           <strong>${item.nome}</strong>
