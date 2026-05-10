@@ -203,10 +203,11 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .roller-header{margin-bottom:18px}
   .roller-header h2{font-size:18px}
   .roller-controls{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
-  .badges-row{flex-wrap:nowrap;row-gap:8px;padding:10px 12px;align-items:center}
-  .badges-label{display:none}
-  .badge-btn{width:28px;height:28px;font-size:14px;flex-shrink:0}
-  .badges-info{width:auto;text-align:right;margin-left:auto;font-size:11px;order:0;white-space:nowrap}
+  .badges-row{flex-wrap:wrap;padding:10px 12px;align-items:center;row-gap:6px;column-gap:6px}
+  .badges-label{order:1;font-size:11px;flex-shrink:0}
+  .badges-info{order:2;font-size:11px;margin-left:auto;white-space:nowrap;flex-shrink:0}
+  .badges-break{order:3;width:100%;height:0;display:block}
+  .badge-btn{order:4;width:28px;height:28px;font-size:14px;flex-shrink:0}
   .roll-btn{font-size:14px;padding:13px}
   .results-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
   .poke-card{padding:12px;gap:12px}
@@ -290,6 +291,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   </div>
   <div class="badges-row">
     <span class="badges-label">Provas de valor:</span>
+    <span class="badges-info" id="badges-info">0 provas → Nível 1–10</span>
+    <span class="badges-break"></span>
     <button class="badge-btn" data-idx="0">☆</button>
     <button class="badge-btn" data-idx="1">☆</button>
     <button class="badge-btn" data-idx="2">☆</button>
@@ -298,7 +301,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <button class="badge-btn" data-idx="5">☆</button>
     <button class="badge-btn" data-idx="6">☆</button>
     <button class="badge-btn" data-idx="7">☆</button>
-    <span class="badges-info" id="badges-info">0 provas → Nível 1–10</span>
   </div>
   <button class="roll-btn" onclick="rolarEncontro()">Rolar Encontro</button>
   <div id="results-section"></div>
