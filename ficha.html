@@ -17,7 +17,7 @@
 html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);color:var(--text)}
 /* LOADING */
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.loading-spinner{width:36px;height:36px;border:3px solid #ccc;border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;transition:border-top-color .3s}
+.loading-spinner{width:36px;height:36px;border:3px solid #ccc;border-top-color:#e53e3e;border-radius:50%;animation:spin .7s linear infinite;transition:border-top-color .3s}
 .loading-text{font-size:14px;color:var(--muted);font-weight:600}
 @keyframes spin{to{transform:rotate(360deg)}}
 /* LOGIN */
@@ -290,10 +290,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div class="ficha-section">
     <div class="ficha-section-title">
       <span>Inventário</span>
-      <button id="btn-inv-gerenciar" class="btn btn-sm edit-content" style="display:none;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);font-size:11px" onclick="abrirModalInventario()">+ Gerenciar</button>
     </div>
     <div class="ficha-section-body" style="padding:0">
       <div id="f-inv-view">
+        <button id="btn-inv-gerenciar" class="btn btn-sm edit-content" style="display:none;margin:10px 12px 4px;background:var(--accent);color:#fff;border:none;font-size:11px" onclick="abrirModalInventario()">+ Gerenciar</button>
         <div id="inv-lista-view" style="width:100%"></div>
       </div>
     </div>
@@ -455,7 +455,7 @@ const personagemSlug=(()=>{
 })();
 
 // Atualiza texto do loading com o slug
-document.getElementById('loading-text').innerHTML=`Abrindo o contato de <strong>${personagemSlug||'...'}</strong>.`;
+document.getElementById('loading-text').innerHTML=`Abrindo o contato no seu RotomPhone.`;
 
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 
@@ -883,7 +883,7 @@ function aplicarCoresFicha(c){
   document.documentElement.style.setProperty('--cor-poke',s);
   // Atualiza cor do spinner de carregamento
   const spinner=document.getElementById('loading-spinner');
-  if(spinner) spinner.style.borderTopColor=p;
+  if(spinner) spinner.style.borderTopColor='#e53e3e';
 }
 function abrirModalCores(){
   const c=ficha.cores||CORES_DEFAULT;
@@ -944,18 +944,118 @@ async function carregarInventario(){
   if(!ficha.id) return;
   const [itensDB,invDB]=await Promise.all([
     apiGet('itens','order=categoria.asc,nome.asc'),
-    apiGet('inventario_ficha',`ficha_id=eq.${ficha.id}&select=id,item_id,quantidade`)
+    apiGet('inventario_ficha',`ficha_id=eq.${ficha.id}&select=id,item_id,quantidade,variante_nome,variante_sprite`)
   ]);
   todosItens=itensDB||[];
   inventarioFicha={};
   (invDB||[]).forEach(row=>{
     const item=todosItens.find(i=>i.id===row.item_id);
-    if(item) inventarioFicha[row.item_id]={...item,quantidade:row.quantidade,inv_id:row.id};
+    if(!item) return;
+    const chave = row.variante_nome ? `${row.item_id}::${row.variante_nome}` : row.item_id;
+    const nomeExibido = row.variante_nome || item.nome;
+    const spriteExibido = row.variante_sprite || item.sprite;
+    inventarioFicha[chave]={...item, nome:nomeExibido, sprite:spriteExibido, quantidade:row.quantidade, inv_id:row.id, _item_id:row.item_id, _variante_nome:row.variante_nome||null, _variante_sprite:row.variante_sprite||null};
   });
   renderInventario();
 }
 
-const FALLBACK_ITEM_SPRITE='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
+// ── Modal de seleção de variante ─────────────────────────────────────────────
+function abrirSeletorVariante(itemId){
+  const item = todosItens.find(i=>i.id===itemId);
+  if(!item?.variantes?.length) return;
+  // Cria modal dinâmico
+  const existing = document.getElementById('variante-modal');
+  if(existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'variante-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px';
+  modal.innerHTML=`
+    <div style="background:var(--surface);border-radius:8px;padding:20px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.2)">
+      <div style="font-family:var(--font-title);font-size:15px;font-weight:700;margin-bottom:14px">Escolha a variante de ${item.nome}</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        ${item.variantes.map(v=>`
+          <button onclick="adicionarVarianteAoInventario('${itemId}','${v.nome.replace(/'/g,"\\'")}','${(v.sprite||'').replace(/'/g,"\\'")}');document.getElementById('variante-modal').remove()"
+            style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1.5px solid var(--border);border-radius:6px;background:var(--surface2);cursor:pointer;font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);transition:border-color .15s"
+            onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            ${v.sprite ? `<img src="${v.sprite}" style="width:28px;height:28px;object-fit:contain;image-rendering:pixelated"/>` : '<span style="width:28px;text-align:center">❓</span>'}
+            ${v.nome}
+          </button>`).join('')}
+      </div>
+      <button onclick="document.getElementById('variante-modal').remove()" style="margin-top:14px;width:100%;padding:7px;border:1px solid var(--border);border-radius:6px;background:none;cursor:pointer;font-family:var(--font-body);font-size:12px;color:var(--muted)">Cancelar</button>
+    </div>`;
+  document.body.appendChild(modal);
+}
+
+async function adicionarVarianteAoInventario(itemId, varianteNome, varianteSprite){
+  const item = todosItens.find(i=>i.id===itemId);
+  if(!item||!ficha.id) return;
+  const chave = `${itemId}::${varianteNome}`;
+  if(inventarioFicha[chave]){
+    // Já existe, incrementa
+    await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`,{quantidade:inventarioFicha[chave].quantidade+1});
+    inventarioFicha[chave].quantidade++;
+  } else {
+    const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:1,variante_nome:varianteNome,variante_sprite:varianteSprite||null});
+    if(res&&res[0]) inventarioFicha[chave]={...item,nome:varianteNome,sprite:varianteSprite||item.sprite,quantidade:1,inv_id:res[0].id,_item_id:itemId,_variante_nome:varianteNome,_variante_sprite:varianteSprite||null};
+  }
+  renderInventario();
+  renderItensModal();
+}
+
+function renderItensModal(){
+  const busca=document.getElementById('inv-busca').value.toLowerCase();
+  const cat=document.getElementById('inv-filtro-cat').value;
+  let lista=todosItens;
+  if(cat) lista=lista.filter(i=>i.categoria===cat);
+  if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||(i.descricao||'').toLowerCase().includes(busca));
+  const el=document.getElementById('inv-modal-lista');
+  if(!lista.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#aaa;font-size:13px">Nenhum item encontrado.</div>';return;}
+  el.innerHTML=lista.map(item=>{
+    const temVariantes = item.variantes?.length > 0;
+    // Conta total de variantes no inventário
+    const qty = temVariantes
+      ? Object.values(inventarioFicha).filter(v=>v._item_id===item.id).reduce((s,v)=>s+v.quantidade,0)
+      : (inventarioFicha[item.id]?.quantidade||0);
+    return`<div class="inv-modal-item">
+      <div class="inv-modal-info">
+        <div class="inv-modal-nome">${item.nome}${item.evento?' <span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>':''}${temVariantes?' <span style="font-size:9px;color:#5a1a9a;font-weight:700;background:#f0e8ff;padding:1px 5px;border-radius:3px">VARIANTES</span>':''}</div>
+        <div class="inv-modal-cat">${item.categoria}</div>
+        <div class="inv-modal-desc">${item.descricao||''}</div>
+      </div>
+      <div class="inv-modal-qty">
+        ${temVariantes
+          ? `<button class="inv-qty-btn" style="padding:0 10px;font-size:13px" onclick="abrirSeletorVariante('${item.id}')">+ Adicionar</button>
+             <span class="inv-qty-num" id="inv-qty-${item.id}">${qty}</span>`
+          : `<button class="inv-qty-btn" onclick="ajustarQty('${item.id}',-1)">−</button>
+             <span class="inv-qty-num" id="inv-qty-${item.id}">${qty}</span>
+             <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',+1)">+</button>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function ajustarQty(itemId,delta){
+  const item=todosItens.find(i=>i.id===itemId);
+  if(!item||!ficha.id) return;
+  const chave = itemId;
+  const atual=inventarioFicha[chave]?.quantidade||0;
+  const nova=Math.max(0,atual+delta);
+  const numEl=document.getElementById(`inv-qty-${itemId}`);
+  if(numEl) numEl.textContent=nova;
+  if(nova===0&&inventarioFicha[chave]){
+    await apiDel('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`);
+    delete inventarioFicha[chave];
+  } else if(nova>0&&!inventarioFicha[chave]){
+    const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:nova});
+    if(res&&res[0]) inventarioFicha[chave]={...item,quantidade:nova,inv_id:res[0].id,_item_id:itemId,_variante_nome:null};
+  } else if(nova>0&&inventarioFicha[chave]){
+    await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[chave].inv_id}`,{quantidade:nova});
+    inventarioFicha[chave].quantidade=nova;
+  }
+  const statusEl=document.getElementById('inv-save-status');
+  if(statusEl){statusEl.textContent='✓ Salvo';statusEl.style.color='#1a7a1a';setTimeout(()=>statusEl.textContent='',2000);}
+  renderInventario();
+}
 const POKESPRITE_HOST='raw.githubusercontent.com/msikma/pokesprite';
 
 function spriteOrigin(url){
@@ -1024,53 +1124,6 @@ async function abrirModalInventario(){
 function fecharModalInventario(){document.getElementById('inv-modal-overlay').style.display='none';}
 function filtrarItensModal(){renderItensModal();}
 
-function renderItensModal(){
-  const busca=document.getElementById('inv-busca').value.toLowerCase();
-  const cat=document.getElementById('inv-filtro-cat').value;
-  let lista=todosItens;
-  if(cat) lista=lista.filter(i=>i.categoria===cat);
-  if(busca) lista=lista.filter(i=>i.nome.toLowerCase().includes(busca)||(i.descricao||'').toLowerCase().includes(busca));
-  const el=document.getElementById('inv-modal-lista');
-  if(!lista.length){el.innerHTML='<div style="padding:20px;text-align:center;color:#aaa;font-size:13px">Nenhum item encontrado.</div>';return;}
-  el.innerHTML=lista.map(item=>{
-    const qty=inventarioFicha[item.id]?.quantidade||0;
-    return`<div class="inv-modal-item">
-      <div class="inv-modal-info">
-        <div class="inv-modal-nome">${item.nome}${item.evento?' <span style="font-size:9px;color:#e07020;font-weight:700;background:#fff3e0;padding:1px 5px;border-radius:3px">EVENTO</span>':''}</div>
-        <div class="inv-modal-cat">${item.categoria}</div>
-        <div class="inv-modal-desc">${item.descricao||''}</div>
-      </div>
-      <div class="inv-modal-qty">
-        <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',-1)">−</button>
-        <span class="inv-qty-num" id="inv-qty-${item.id}">${qty}</span>
-        <button class="inv-qty-btn" onclick="ajustarQty('${item.id}',+1)">+</button>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function ajustarQty(itemId,delta){
-  const item=todosItens.find(i=>i.id===itemId);
-  if(!item||!ficha.id) return;
-  const atual=inventarioFicha[itemId]?.quantidade||0;
-  const nova=Math.max(0,atual+delta);
-  const numEl=document.getElementById(`inv-qty-${itemId}`);
-  if(numEl) numEl.textContent=nova;
-  if(nova===0&&inventarioFicha[itemId]){
-    await apiDel('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`);
-    delete inventarioFicha[itemId];
-  } else if(nova>0&&!inventarioFicha[itemId]){
-    const res=await apiPost('inventario_ficha',{ficha_id:ficha.id,item_id:itemId,quantidade:nova});
-    if(res&&res[0]) inventarioFicha[itemId]={...item,quantidade:nova,inv_id:res[0].id};
-  } else if(nova>0&&inventarioFicha[itemId]){
-    await apiPatch('inventario_ficha',`id=eq.${inventarioFicha[itemId].inv_id}`,{quantidade:nova});
-    inventarioFicha[itemId].quantidade=nova;
-  }
-  const statusEl=document.getElementById('inv-save-status');
-  if(statusEl){statusEl.textContent='✓ Salvo';statusEl.style.color='#1a7a1a';setTimeout(()=>statusEl.textContent='',2000);}
-  renderInventario();
-}
-
 // ─── Init ─────────────────────────────────────────────
 async function init(){
   const pid=personagemSlug;
@@ -1085,6 +1138,7 @@ async function init(){
       return;
     }
     personagem=ps[0];
+    document.getElementById('loading-text').innerHTML=`Abrindo o contato de <strong>${personagem.nome||personagemSlug}</strong>.`;
     let fichasRes=await apiGet('fichas',`personagem_slug=eq.${pid}`);
     if(!fichasRes||fichasRes.length===0) fichasRes=await apiGet('fichas',`personagem_id=eq.${personagem.id}`);
     ficha=fichasRes&&fichasRes[0]?fichasRes[0]:{
