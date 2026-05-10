@@ -867,7 +867,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
 <!-- MODAL ITEM -->
 <div class="modal-overlay" id="modal-item" style="display:none">
-  <div class="modal-box" style="max-width:480px">
+  <div class="modal-box" style="max-width:480px;overflow-y:auto;max-height:85vh">
     <button class="modal-close" onclick="fecharModalItem()">✕</button>
     <div class="modal-title" id="modal-item-title">Novo Item</div>
     <input type="hidden" id="modal-item-id"/>
@@ -2109,10 +2109,7 @@ function criarVarianteDoRow(rowId, url){
   if(!nome){ input.style.borderColor='#e53e3e'; setTimeout(()=>input.style.borderColor='',1500); return; }
   variantesTemp.push({ nome, sprite: url });
   renderVariantesLista();
-  row.style.opacity='.4';
-  row.style.pointerEvents='none';
-  const btn = row.querySelector('button');
-  if(btn) btn.textContent='✓ Criado!';
+  row.remove();
 }
 
 async function buscarSpriteVariante(idx, btn){
