@@ -92,9 +92,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .inv-qty-btn:hover{background:var(--cor-cabecalho,#1a1a1a);color:#fff;border-color:var(--cor-cabecalho,#1a1a1a)}
 .inv-qty-num{width:28px;text-align:center;font-size:13px;font-weight:700;font-family:var(--font-body)}
 .ficha-section{margin-bottom:4px}
-.ficha-section-title::after{content:'▲';position:absolute;right:12px;font-size:10px;opacity:0;transition:transform .25s}
-.modo-edicao .ficha-section-title::after{opacity:.7}
-.ficha-section.fechada .ficha-section-title::after{transform:rotate(180deg)}
 .ficha-section-title{background:var(--cor-secao,#1a1a1a);padding:8px 12px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:center;gap:6px;position:relative}
 .modo-edicao .ficha-section-title{cursor:pointer;user-select:none}
 .ficha-section-body{background:var(--surface);border:1.5px solid var(--bg);padding:12px;overflow:hidden;transition:max-height .3s ease,padding .3s ease}
@@ -291,7 +288,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
   <!-- INVENTÁRIO -->
   <div class="ficha-section">
-    <div class="ficha-section-title" style="display:flex;align-items:center;justify-content:space-between">
+    <div class="ficha-section-title">
       <span>Inventário</span>
       <button id="btn-inv-gerenciar" class="btn btn-sm edit-content" style="display:none;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);font-size:11px" onclick="abrirModalInventario()">+ Gerenciar</button>
     </div>
@@ -450,14 +447,12 @@ function apiDel(table,query){return api(`${table}?${query}`,{method:'DELETE',hea
 
 // ─── Estado ───────────────────────────────────────────
 let personagem=null, ficha=null, jogadorLogado=null, modoEdicao=false;
-const modoEditUrl = /\/ficha\/[^\/]+\/edit\/?$/.test(location.pathname);
-const _rawSlug=(()=>{
+const personagemSlug=(()=>{
   const params=new URLSearchParams(location.search).get('id');
   if(params) return params;
   const match=location.pathname.match(/\/ficha\/([^\/]+)/);
   return match?match[1]:null;
 })();
-const personagemSlug = _rawSlug ?? null;
 
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 
@@ -1111,8 +1106,6 @@ async function init(){
     document.getElementById('top-bar').style.display='flex';
     document.getElementById('ficha-wrap').style.display='block';
     atualizarTopBar();
-    // Ativa edição automaticamente se URL terminar em /edit
-    if(modoEditUrl && jogadorLogado) ativarEdicao();
   }catch(e){
     console.error('Erro no init da ficha:',e);
     document.getElementById('loading-overlay').innerHTML=`<div style="padding:40px;color:#c00;font-size:13px;max-width:400px;text-align:center">❌ Erro ao carregar a ficha:<br><code style="font-size:11px">${e.message}</code><br><br><button onclick="location.reload()" style="margin-top:12px;padding:8px 20px;border-radius:6px;border:none;background:#2563a8;color:#fff;cursor:pointer">Tentar novamente</button></div>`;
