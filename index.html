@@ -923,12 +923,14 @@ const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsI
 async function sb(path, opts={}){
   const session = supabaseClient?.auth ? (await supabaseClient.auth.getSession()).data.session : null;
   const token = session?.access_token || SUPA_KEY;
+  const isGet = !opts.method || opts.method === 'GET';
   const res = await fetch(`${SUPA_URL}/rest/v1/${path}`, {
     headers:{
       'apikey': SUPA_KEY,
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
       'Prefer': opts.prefer || 'return=representation',
+      ...(isGet ? {'Range':'0-9999'} : {}),
       ...opts.headers
     },
     ...opts
@@ -1832,6 +1834,7 @@ function renderTbodyItens(){
         <td>
           <strong>${item.nome}</strong>
           ${item.evento ? '<span style="font-size:10px;font-weight:700;color:#e07020;background:#fff3e0;padding:1px 6px;border-radius:4px;margin-left:6px">EVENTO</span>' : ''}
+          ${item.is_pai ? '<span style="font-size:10px;font-weight:700;color:#5a1a9a;background:#f0e8ff;padding:1px 6px;border-radius:4px;margin-left:6px">PAI</span>' : ''}
         </td>
         <td><span style="background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:2px 8px;font-size:11px;font-weight:700;color:var(--muted)">${item.categoria}</span></td>
         <td style="white-space:nowrap">
@@ -2064,12 +2067,12 @@ async function salvarItem(){
 
   // Salva o item pai normalmente (sem variantes no JSON)
   if(id){
-    const patch = {nome, categoria:cat, descricao:desc, evento, sprite, variantes: null};
+    const patch = {nome, categoria:cat, descricao:desc, evento, sprite, variantes: null, is_pai: variantes.length > 0};
     await dbPatch('itens', `id=eq.${id}`, patch);
     const i = itensDB.find(x => x.id === id);
     if(i) Object.assign(i, patch);
   } else {
-    const res = await dbPost('itens', {nome, categoria:cat, descricao:desc, evento, sprite, variantes: null});
+    const res = await dbPost('itens', {nome, categoria:cat, descricao:desc, evento, sprite, variantes: null, is_pai: variantes.length > 0});
     if(res && res[0]) itensDB.push(res[0]);
   }
 
