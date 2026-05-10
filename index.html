@@ -627,9 +627,12 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
               <label>Buscar por nome</label>
               <input type="text" id="itens-busca" placeholder="Ex: Potion..." oninput="renderTbodyItens()"/>
             </div>
-            <div style="display:flex;gap:8px;align-items:flex-end;padding-bottom:2px">
+            <div style="display:flex;gap:14px;align-items:flex-end;padding-bottom:2px;flex-wrap:wrap">
               <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap">
                 <input type="checkbox" id="itens-filtro-evento" onchange="renderTbodyItens()"/> Só eventos
+              </label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#c05000;cursor:pointer;white-space:nowrap">
+                <input type="checkbox" id="itens-filtro-sem-sprite" onchange="renderTbodyItens()"/> ❌ Sem sprite
               </label>
             </div>
             <button class="btn btn-primary btn-sm" style="align-self:flex-end" onclick="abrirModalItem()">+ Novo item</button>
@@ -1808,6 +1811,59 @@ function uploadSpriteInline(input, itemId){
   input.value='';
 }
 
+// ── Busca manual de sprite por slug ──────────────────────────────────────────
+async function buscarSpriteManual(itemId, itemNome){
+  const slug = prompt(`🔍 Buscar sprite para "${itemNome}"
+
+Digite o slug do PokéSprite ou PokéAPI (ex: poke-ball, potion, master-ball):`);
+  if(!slug || !slug.trim()) return;
+  const s = slug.trim().toLowerCase();
+  const POKESPRITE_BASE = 'https://raw.githubusercontent.com/msikma/pokesprite/master/items/';
+  const POKEAPI_BASE    = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+  function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url+'?v='+Date.now(); }); }
+
+  // Monta candidatos de URL
+  const tentativas = [
+    // PokéSprite por categoria
+    ...['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
+        'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr'].map(cat=>`${POKESPRITE_BASE}${cat}/${s}.png`),
+    // PokéSprite slug com barra (ex: "ball/poke") caso o usuário digitou com /
+    s.includes('/')?`${POKESPRITE_BASE}${s}.png`:null,
+    // PokéAPI
+    `${POKEAPI_BASE}${s}.png`,
+  ].filter(Boolean);
+
+  let urlEncontrada = null;
+  for(const url of tentativas){
+    const ok = await testarUrl(url);
+    if(ok){ urlEncontrada = url.split('?')[0]; break; }
+  }
+
+  if(!urlEncontrada){
+    // Tenta PokéAPI via JSON para pegar o sprite real
+    try {
+      const r = await fetch(`https://pokeapi.co/api/v2/item/${s}/`);
+      if(r.ok){
+        const d = await r.json();
+        const url = d?.sprites?.default;
+        if(url) urlEncontrada = url;
+      }
+    } catch(e){}
+  }
+
+  if(!urlEncontrada){
+    alert(`❌ Sprite não encontrado para o slug "${s}".
+
+Tente outro slug ou use o upload manual (📁).`);
+    return;
+  }
+
+  await dbPatch('itens', `id=eq.${itemId}`, { sprite: urlEncontrada });
+  const item = itensDB.find(i => i.id === itemId);
+  if(item) item.sprite = urlEncontrada;
+  renderTbodyItens();
+}
+
 function renderTbodyItens(){
   const cat    = document.getElementById('itens-filtro-cat')?.value || '';
   const busca  = (document.getElementById('itens-busca')?.value || '').toLowerCase();
@@ -1816,18 +1872,26 @@ function renderTbodyItens(){
   if(cat)    lista = lista.filter(i => i.categoria === cat);
   if(busca)  lista = lista.filter(i => i.nome.toLowerCase().includes(busca) || (i.descricao||'').toLowerCase().includes(busca));
   if(soloEv) lista = lista.filter(i => i.evento);
+  const soloSemSprite = document.getElementById('itens-filtro-sem-sprite')?.checked || false;
+  if(soloSemSprite) lista = lista.filter(i => !i.sprite);
   const contEl = document.getElementById('itens-contagem');
   if(contEl) contEl.textContent = `${lista.length} item${lista.length!==1?'s':''} encontrado${lista.length!==1?'s':''}`;
   document.getElementById('tbody-itens').innerHTML = lista.length === 0
     ? `<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:20px">Nenhum item encontrado.</td></tr>`
     : lista.map(item => `
       <tr>
-        <td style="width:48px;text-align:center">
+        <td style="width:80px;text-align:center">
           ${item.sprite
-            ? `<img src="${item.sprite}" style="width:32px;height:32px;object-fit:contain;image-rendering:pixelated" onerror="this.replaceWith(document.createTextNode('—'))"/>`
-            : `<label title="Fazer upload do sprite" style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1.5px dashed var(--border);border-radius:6px;color:var(--muted);font-size:16px;transition:border-color .15s" onmouseover="this.style.borderColor='#e53e3e'" onmouseout="this.style.borderColor='var(--border)'">
-                📁<input type="file" accept="image/*" style="display:none" onchange="uploadSpriteInline(this,'${item.id}')"/>
-              </label>`}
+            ? `<div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                <img src="${item.sprite}" style="width:32px;height:32px;object-fit:contain;image-rendering:pixelated" onerror="this.replaceWith(document.createTextNode('—'))"/>
+                <button class="btn btn-xs" style="font-size:9px;padding:1px 5px;background:var(--surface2);border:1px solid var(--border)" onclick="buscarSpriteManual('${item.id}','${item.nome.replace(/'/g,"\\'")}')">🔍</button>
+               </div>`
+            : `<div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+                <label title="Fazer upload do sprite" style="cursor:pointer;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border:1.5px dashed var(--border);border-radius:6px;color:var(--muted);font-size:16px;transition:border-color .15s" onmouseover="this.style.borderColor='#e53e3e'" onmouseout="this.style.borderColor='var(--border)'">
+                    📁<input type="file" accept="image/*" style="display:none" onchange="uploadSpriteInline(this,'${item.id}')"/>
+                  </label>
+                <button class="btn btn-xs" style="font-size:9px;padding:1px 5px;background:#e8f4e8;border:1px solid #a8d8a8;color:#1a6a1a;white-space:nowrap" onclick="buscarSpriteManual('${item.id}','${item.nome.replace(/'/g,"\\'")}')">🔍 Buscar</button>
+               </div>`}
         </td>
         <td>
           <strong>${item.nome}</strong>
@@ -1843,6 +1907,34 @@ function renderTbodyItens(){
 // ── Variantes ────────────────────────────────────────────────────────────────
 let variantesTemp = []; // [{nome, sprite}]
 
+async function buscarSpriteVariante(idx, btn){
+  const v = variantesTemp[idx];
+  const slug = prompt(`🔍 Buscar sprite para variante "${v.nome||'sem nome'}"
+
+Digite o slug (ex: flame-plate, life-orb):`);
+  if(!slug || !slug.trim()) return;
+  const s = slug.trim().toLowerCase();
+  const POKESPRITE_BASE = 'https://raw.githubusercontent.com/msikma/pokesprite/master/items/';
+  const POKEAPI_BASE    = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/';
+  function testarUrl(url){ return new Promise(res=>{ const i=new Image(); i.onload=()=>res(url); i.onerror=()=>res(null); i.src=url+'?v='+Date.now(); }); }
+  const tentativas = [
+    ...['ball','medicine','hold-item','evo-item','berry','fossil','mega-stone',
+        'z-crystals','battle-item','valuable-item','key-item','other-item','tm-tr'].map(cat=>`${POKESPRITE_BASE}${cat}/${s}.png`),
+    `${POKEAPI_BASE}${s}.png`,
+  ];
+  let url = null;
+  for(const t of tentativas){ const ok=await testarUrl(t); if(ok){url=t.split('?')[0];break;} }
+  if(!url){
+    try{
+      const r=await fetch(`https://pokeapi.co/api/v2/item/${s}/`);
+      if(r.ok){const d=await r.json();if(d?.sprites?.default)url=d.sprites.default;}
+    }catch(e){}
+  }
+  if(!url){ alert(`❌ Sprite não encontrado para "${s}".`); return; }
+  variantesTemp[idx].sprite = url;
+  renderVariantesLista();
+}
+
 function renderVariantesLista(){
   const lista = document.getElementById('modal-item-variantes-lista');
   if(!variantesTemp.length){
@@ -1851,8 +1943,11 @@ function renderVariantesLista(){
   }
   lista.innerHTML = variantesTemp.map((v,i)=>`
     <div style="display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 8px">
-      <div style="width:32px;height:32px;flex-shrink:0;background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="uploadVarianteSprite(${i})" title="Clique para trocar sprite">
-        ${v.sprite ? `<img src="${v.sprite}" style="width:28px;height:28px;object-fit:contain;image-rendering:pixelated"/>` : '<span style="font-size:16px">❓</span>'}
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0">
+        <div style="width:32px;height:32px;background:#fff;border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;align-items:center;justify-content:center;cursor:pointer" onclick="uploadVarianteSprite(${i})" title="Clique para trocar sprite">
+          ${v.sprite ? `<img src="${v.sprite}" style="width:28px;height:28px;object-fit:contain;image-rendering:pixelated"/>` : '<span style="font-size:16px">❓</span>'}
+        </div>
+        <button onclick="buscarSpriteVariante(${i},this)" style="background:#e8f4e8;border:1px solid #a8d8a8;color:#1a6a1a;border-radius:4px;padding:1px 4px;font-size:9px;cursor:pointer;white-space:nowrap">🔍</button>
       </div>
       <input type="text" value="${v.nome}" placeholder="Nome da variante (ex: Flame Plate)"
         style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:var(--font-body)"
