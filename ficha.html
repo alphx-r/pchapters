@@ -76,7 +76,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .inv-grid{display:grid;grid-template-columns:repeat(6,1fr);border-left:1px solid var(--border)}
 .inv-card{border-right:1px solid var(--border);border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;padding:0}
 .inv-card-top{background:var(--cor-dados,#1a1a1a);width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 6px;gap:4px;border-bottom:1px solid var(--border)}
-.inv-card-sprite{width:30px;height:30px;object-fit:contain;image-rendering:pixelated}
+.inv-card-sprite{image-rendering:pixelated;display:block}
 .inv-card-nome{font-size:9px;font-weight:700;color:#fff;font-family:var(--font-body);text-transform:uppercase;letter-spacing:.4px;text-align:center;line-height:1.3}
 .inv-card-qty{font-size:9px;color:rgba(255,255,255,.7);font-family:var(--font-body);font-weight:600}
 .inv-card-desc{font-size:10px;color:var(--muted);font-family:var(--font-body);line-height:1.5;padding:7px 8px;text-align:justify;width:100%}
@@ -944,76 +944,60 @@ async function carregarInventario(){
 }
 
 const FALLBACK_ITEM_SPRITE='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
+const POKESPRITE_HOST='raw.githubusercontent.com/msikma/pokesprite';
 
-// Recorta o espaço transparente de uma imagem e retorna um dataURL 32x32
-function cropSprite(src){
-  return new Promise(resolve=>{
-    const img=new Image();
-    img.crossOrigin='anonymous';
-    img.onload=()=>{
-      // Desenha em canvas auxiliar para ler pixels
-      const aux=document.createElement('canvas');
-      aux.width=img.width; aux.height=img.height;
-      const ctx=aux.getContext('2d');
-      ctx.drawImage(img,0,0);
-      const data=ctx.getImageData(0,0,img.width,img.height).data;
-      let minX=img.width,minY=img.height,maxX=0,maxY=0;
-      for(let y=0;y<img.height;y++){
-        for(let x=0;x<img.width;x++){
-          const a=data[(y*img.width+x)*4+3];
-          if(a>10){
-            if(x<minX)minX=x; if(x>maxX)maxX=x;
-            if(y<minY)minY=y; if(y>maxY)maxY=y;
-          }
-        }
-      }
-      // Se não achou nada visível, usa a imagem inteira
-      if(maxX<minX){minX=0;minY=0;maxX=img.width-1;maxY=img.height-1;}
-      const cw=maxX-minX+1, ch=maxY-minY+1;
-      const out=document.createElement('canvas');
-      out.width=30; out.height=30;
-      const octx=out.getContext('2d');
-      // Mantém proporção dentro de 30x30
-      const scale=Math.min(30/cw,30/ch);
-      const dw=cw*scale, dh=ch*scale;
-      const dx=(30-dw)/2, dy=(30-dh)/2;
-      octx.imageSmoothingEnabled=false;
-      octx.drawImage(aux,minX,minY,cw,ch,dx,dy,dw,dh);
-      resolve(out.toDataURL());
-    };
-    img.onerror=()=>resolve(null);
-    img.src=src;
-  });
+function spriteOrigin(url){
+  if(!url) return 'fallback';
+  if(url.startsWith('data:')) return 'upload';
+  if(url.includes(POKESPRITE_HOST)) return 'pokesprite';
+  return 'other';
 }
 
 function renderInventario(){
   const lista=document.getElementById('inv-lista-view');
   const itens=Object.values(inventarioFicha).filter(i=>i.quantidade>0);
   if(!itens.length){lista.innerHTML='<div style="padding:14px;color:#aaa;font-size:13px;font-family:var(--font-body);text-align:center">Nenhum item no inventário.</div>';return;}
-  lista.innerHTML=`<div class="inv-grid">${
-    itens.map(item=>`
-      <div class="inv-card">
+  lista.innerHTML=`<div class="inv-grid">${itens.map(item=>{
+    const src = item.sprite||FALLBACK_ITEM_SPRITE;
+    const origin = spriteOrigin(item.sprite);
+    // PokéSprite: 32×32 nativo, sem canvas
+    if(origin==='pokesprite'){
+      return `<div class="inv-card">
         <div class="inv-card-top">
-          <canvas class="inv-card-sprite" width="30" height="30" data-src="${item.sprite||FALLBACK_ITEM_SPRITE}" style="width:30px;height:30px;image-rendering:pixelated"></canvas>
+          <img class="inv-card-sprite" src="${src}" alt="${item.nome}" style="width:32px;height:32px;image-rendering:pixelated" onerror="this.src='${FALLBACK_ITEM_SPRITE}'"/>
           <div class="inv-card-nome">${item.nome} <span class="inv-card-qty">x${item.quantidade}</span></div>
         </div>
         <div class="inv-card-desc">${item.descricao||''}</div>
-      </div>`).join('')
-  }</div>`;
-  // Processa cada canvas com crop
-  document.querySelectorAll('.inv-card-sprite[data-src]').forEach(async canvas=>{
-    const src=canvas.dataset.src;
-    const dataUrl=await cropSprite(src);
-    if(dataUrl){
-      const ctx=canvas.getContext('2d');
-      const img=new Image();
-      img.onload=()=>ctx.drawImage(img,0,0);
-      img.src=dataUrl;
-    } else {
-      // fallback: tenta com o unown
-      const dataUrl2=await cropSprite(FALLBACK_ITEM_SPRITE);
-      if(dataUrl2){const ctx=canvas.getContext('2d');const img=new Image();img.onload=()=>ctx.drawImage(img,0,0);img.src=dataUrl2;}
+      </div>`;
     }
+    // Upload (base64) ou outro: canvas 32×32
+    return `<div class="inv-card">
+      <div class="inv-card-top">
+        <canvas class="inv-card-sprite" width="32" height="32" data-src="${origin==='upload'?src:src}" style="width:32px;height:32px;image-rendering:pixelated"></canvas>
+        <div class="inv-card-nome">${item.nome} <span class="inv-card-qty">x${item.quantidade}</span></div>
+      </div>
+      <div class="inv-card-desc">${item.descricao||''}</div>
+    </div>`;
+  }).join('')}</div>`;
+
+  // Preenche os canvas (uploads e outros)
+  document.querySelectorAll('.inv-card-sprite[data-src]').forEach(canvas=>{
+    const src = canvas.dataset.src;
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.onload = ()=>{
+      ctx.clearRect(0,0,32,32);
+      const scale = Math.min(32/img.width, 32/img.height);
+      const w = img.width*scale, h = img.height*scale;
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(img, (32-w)/2, (32-h)/2, w, h);
+    };
+    img.onerror = ()=>{
+      const fb = new Image();
+      fb.onload = ()=>{ const s=Math.min(32/fb.width,32/fb.height); ctx.drawImage(fb,(32-fb.width*s)/2,(32-fb.height*s)/2,fb.width*s,fb.height*s); };
+      fb.src = FALLBACK_ITEM_SPRITE;
+    };
+    img.src = src;
   });
 }
 
