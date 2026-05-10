@@ -61,12 +61,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .ctrl-group label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
 .ctrl-group select,.ctrl-group input{padding:9px 12px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);transition:border .2s;width:100%}
 .ctrl-group select:focus,.ctrl-group input:focus{outline:none;border-color:var(--brand-mid)}
-.badges-row{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:20px;padding:12px 16px;background:#fff;border-radius:var(--r);border:1.5px solid #e0e0e0}
-.badges-top-row{display:flex;align-items:center;width:100%;gap:8px}
+.badges-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:12px 16px;background:#fff;border-radius:var(--r);border:1.5px solid #e0e0e0}
 .badges-label{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
 .badge-btn{width:34px;height:34px;border-radius:50%;border:2px solid #d0d0d0;background:#f4f4f4;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .15s;user-select:none;line-height:1}
 .badge-btn.earned{background:#fff8e0;border-color:#e8a020}
-.badges-stars-row{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;width:100%}
 .badges-info{font-size:12px;color:var(--muted);margin-left:auto;white-space:nowrap;font-weight:600}
 .roll-btn{width:100%;padding:15px;background:var(--brand-mid);color:#fff;border:none;border-radius:var(--r);font-family:var(--font-title);font-size:16px;letter-spacing:1.5px;cursor:pointer;margin-bottom:24px}
 .roll-btn:hover{background:var(--brand-mid)}
@@ -205,11 +203,11 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .roller-header{margin-bottom:18px}
   .roller-header h2{font-size:18px}
   .roller-controls{grid-template-columns:1fr;gap:10px;margin-bottom:14px}
-  .badges-row{padding:10px 12px;gap:6px}
-  .badges-label{font-size:11px}
-  .badges-info{font-size:11px}
-  .badge-btn{width:28px;height:28px;font-size:14px;flex-shrink:0}
-  .badges-stars-row{gap:6px}
+  .badges-row{flex-wrap:wrap;padding:10px 12px;align-items:center;row-gap:6px;column-gap:6px}
+  .badges-label{order:1;font-size:11px;flex-shrink:0}
+  .badges-info{order:2;font-size:11px;margin-left:auto;white-space:nowrap;flex-shrink:0}
+  .badges-break{order:3;width:100%;height:0;display:block}
+  .badge-btn{order:4;width:28px;height:28px;font-size:14px;flex-shrink:0}
   .roll-btn{font-size:14px;padding:13px}
   .results-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
   .poke-card{padding:12px;gap:12px}
@@ -256,6 +254,46 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .g3{grid-template-columns:1fr}
   .badge-btn{width:26px;height:26px;font-size:13px}
 }
+
+/* ═══════════════════════════════════════
+   HOME PAGE
+═══════════════════════════════════════ */
+.home-page{padding:0;max-width:100%;overflow-x:hidden}
+.nav-home .nav-links{display:none}
+.slideshow-wrap{position:relative;width:100%;max-width:860px;margin:32px auto 0;padding:0 20px}
+.slideshow{position:relative;border-radius:16px;overflow:hidden;background:#0a0e1a;box-shadow:0 8px 40px rgba(0,0,0,.22);aspect-ratio:16/7;cursor:pointer}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .55s ease;pointer-events:none}
+.slide.active{opacity:1;pointer-events:auto}
+.slide-img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.82)}
+.slide-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.72) 0%,rgba(0,0,0,.1) 60%,transparent 100%)}
+.slide-text{position:absolute;bottom:0;left:0;right:0;padding:24px 28px;transform:translateY(8px);opacity:0;transition:transform .45s .15s ease,opacity .45s .15s ease}
+.slide.active .slide-text{transform:translateY(0);opacity:1}
+.slide-title{font-family:var(--font-title);font-size:22px;color:#fff;font-weight:700;line-height:1.25;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.5)}
+.slide-desc{font-size:13px;color:rgba(255,255,255,.82);line-height:1.55;max-width:520px;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.slide-link-tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:var(--accent);color:#fff;letter-spacing:.5px;text-decoration:none;cursor:pointer;border:none;font-family:var(--font-body)}
+.ss-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.18);backdrop-filter:blur(4px);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#fff;transition:background .2s;z-index:10;line-height:1}
+.ss-arrow:hover{background:rgba(255,255,255,.32)}
+.ss-prev{left:12px}.ss-next{right:12px}
+.ss-dots{display:flex;justify-content:center;gap:7px;margin-top:14px}
+.ss-dot{width:8px;height:8px;border-radius:50%;background:var(--border);border:none;cursor:pointer;transition:all .2s;padding:0}
+.ss-dot.active{background:var(--brand-mid);transform:scale(1.25)}
+.home-info-wrap{max-width:860px;margin:32px auto 40px;padding:0 20px}
+.home-info-title{font-family:var(--font-title);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.home-info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.home-info-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:18px 20px;transition:all .2s}
+.home-info-card:hover{border-color:var(--brand-mid);box-shadow:0 4px 14px rgba(37,99,168,.1);transform:translateY(-1px)}
+.home-info-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.home-info-icon{font-size:20px;line-height:1;flex-shrink:0}
+.home-info-card-title{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);letter-spacing:.3px}
+.home-info-card-body{font-size:13px;color:var(--muted);line-height:1.6}
+@media(max-width:640px){
+  .slideshow-wrap,.home-info-wrap{padding:0 12px;margin-top:20px}
+  .slide-title{font-size:16px}
+  .slide-desc{font-size:12px}
+  .slide-text{padding:16px}
+  .home-info-grid{grid-template-columns:1fr}
+  .ss-arrow{width:30px;height:30px;font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -265,9 +303,9 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div class="loading-text">Abrindo o seu RotomPhone.</div>
 </div>
 
-<nav class="nav">
-  <div class="nav-logo">P<span>Chapters</span></div>
-  <div class="nav-links">
+<nav class="nav" id="main-nav">
+  <div class="nav-logo" style="cursor:pointer" onclick="goTo('home',null)">P<span>Chapters</span></div>
+  <div class="nav-links" id="nav-links">
     <button class="nav-link active" onclick="goTo('roller',this)">Pokémon</button>
     <button class="nav-link" onclick="goTo('bioma',this)">Por Bioma</button>
     <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
@@ -276,8 +314,24 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
 </nav>
 
+<!-- HOME -->
+<div class="page" id="page-home">
+  <div class="slideshow-wrap">
+    <div class="slideshow" id="home-slideshow">
+      <div id="home-slides-container"></div>
+      <button class="ss-arrow ss-prev" onclick="ssMove(-1)">&#8592;</button>
+      <button class="ss-arrow ss-next" onclick="ssMove(1)">&#8594;</button>
+    </div>
+    <div class="ss-dots" id="ss-dots"></div>
+  </div>
+  <div class="home-info-wrap">
+    <div class="home-info-title">Informações do RPG</div>
+    <div class="home-info-grid" id="home-info-grid"></div>
+  </div>
+</div>
+
 <!-- ROLADOR -->
-<div class="page active" id="page-roller">
+<div class="page" id="page-roller">
   <div class="roller-header">
     <h2>Rolador de Encontro</h2>
     <p>Selecione o bioma, configure seu personagem e role!</p>
@@ -292,20 +346,17 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="ctrl-group"><label>Pokémon adicionais</label><input type="number" id="n-adicionais" value="0" min="0" max="10"/></div>
   </div>
   <div class="badges-row">
-    <div class="badges-top-row">
-      <span class="badges-label">Provas de valor:</span>
-      <span class="badges-info" id="badges-info">0 provas → Nível 1–10</span>
-    </div>
-    <div class="badges-stars-row">
-      <button class="badge-btn" data-idx="0">☆</button>
-      <button class="badge-btn" data-idx="1">☆</button>
-      <button class="badge-btn" data-idx="2">☆</button>
-      <button class="badge-btn" data-idx="3">☆</button>
-      <button class="badge-btn" data-idx="4">☆</button>
-      <button class="badge-btn" data-idx="5">☆</button>
-      <button class="badge-btn" data-idx="6">☆</button>
-      <button class="badge-btn" data-idx="7">☆</button>
-    </div>
+    <span class="badges-label">Provas de valor:</span>
+    <span class="badges-info" id="badges-info">0 provas → Nível 1–10</span>
+    <span class="badges-break"></span>
+    <button class="badge-btn" data-idx="0">☆</button>
+    <button class="badge-btn" data-idx="1">☆</button>
+    <button class="badge-btn" data-idx="2">☆</button>
+    <button class="badge-btn" data-idx="3">☆</button>
+    <button class="badge-btn" data-idx="4">☆</button>
+    <button class="badge-btn" data-idx="5">☆</button>
+    <button class="badge-btn" data-idx="6">☆</button>
+    <button class="badge-btn" data-idx="7">☆</button>
   </div>
   <button class="roll-btn" onclick="rolarEncontro()">Rolar Encontro</button>
   <div id="results-section"></div>
@@ -456,6 +507,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <div class="adm-nav-sep"></div>
         <button class="adm-nav-btn" onclick="admTab('admins',this)">🔑 Admins</button>
         <button class="adm-nav-btn" onclick="admTab('editor',this)">🎨 Editor Visual</button>
+        <button class="adm-nav-btn" onclick="admTab('home-editor',this)">🏠 Página Inicial</button>
         <button class="adm-nav-btn" onclick="admTab('historicos',this)">🗑️ Históricos</button>
         <button class="adm-nav-btn" onclick="admTab('fichas-hist',this)">📋 Fichas</button>
         <div class="adm-nav-sep"></div>
@@ -743,6 +795,34 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           <div class="fb fb-ok" id="editor-fb-ok" style="margin-top:10px;display:none">✓ Estilo salvo!</div>
         </div>
 
+        <!-- HOME EDITOR -->
+        <div class="adm-section" id="sec-home-editor">
+          <div class="sec-title">Página Inicial</div>
+          <div class="sec-sub">Edite o slideshow e as informações exibidas na página inicial do site</div>
+
+          <!-- SLIDESHOW EDITOR -->
+          <div class="box">
+            <div class="box-title">🖼️ Slides do Slideshow</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Cada slide tem uma imagem (URL), título, descrição e botão opcional. Arraste para reordenar.</p>
+            <div id="home-slides-adm-list" style="margin-bottom:14px"></div>
+            <button class="btn btn-primary btn-sm" onclick="homeAdmAddSlide()">+ Novo slide</button>
+            <div class="fb fb-ok" id="home-slides-fb-ok" style="margin-top:10px;display:none">✓ Slides salvos!</div>
+          </div>
+
+          <!-- INFO CARDS EDITOR -->
+          <div class="box">
+            <div class="box-title">📋 Cards de Informação (8 cards — 2 colunas × 4 linhas)</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Preencha os 8 cards com ícone, título e texto. Ficam exibidos abaixo do slideshow.</p>
+            <div id="home-cards-adm-list"></div>
+            <div class="fb fb-ok" id="home-cards-fb-ok" style="margin-top:10px;display:none">✓ Cards salvos!</div>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:4px">
+            <button class="btn btn-primary" onclick="salvarHomeData()">💾 Salvar página inicial</button>
+            <button class="btn btn-warn" onclick="resetarHomeData()">↺ Restaurar padrão</button>
+          </div>
+        </div>
+
         <!-- HISTÓRICOS -->
         <div class="adm-section" id="sec-historicos">
           <div class="sec-title">Históricos</div>
@@ -1017,7 +1097,8 @@ async function init(){
     }
 
     const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
-    let paginaInicial=PATH_PAGES[pathSeg]||'roller';
+    let paginaInicial=PATH_PAGES[pathSeg];
+    if(paginaInicial===undefined) paginaInicial=(pathSeg===''?'home':'roller');
     if(paginaInicial==='adm'&&!admLogado) paginaInicial='login';
     if(paginaInicial==='player'&&!playerLogado) paginaInicial='login';
 
@@ -1032,6 +1113,7 @@ async function init(){
     players=_players; personagens=_personagens;
     biomas=_biomas; pokemonDB=_pokemons; admins=_admins;
     aplicarVars(estilo);
+    await carregarHomeData();
     syncBiomaSelect();
 
     loading(false);
@@ -1053,9 +1135,9 @@ async function init(){
 // ══════════════════════════════════════
 // NAVEGAÇÃO
 // ══════════════════════════════════════
-const PAGE_PATHS={roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm'};
+const PAGE_PATHS={home:'',roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm'};
 const PATH_PAGES=Object.fromEntries(Object.entries(PAGE_PATHS).map(([k,v])=>[v,k]));
-const pagesLoaded={roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false};
+const pagesLoaded={home:false,roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false};
 
 async function goTo(page,el,pushState=true){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1064,13 +1146,18 @@ async function goTo(page,el,pushState=true){
   document.getElementById('btn-login').classList.remove('active');
   if(el) el.classList.add('active');
   if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
-  if(pushState) history.pushState({page},'','/'+PAGE_PATHS[page]);
+  // hide nav links on home, show on other pages
+  const navLinks=document.getElementById('nav-links');
+  if(page==='home') navLinks.style.display='none';
+  else navLinks.style.display='';
+  if(pushState) history.pushState({page},'','/'+(PAGE_PATHS[page]||''));
   await lazyLoad(page);
 }
 
 async function lazyLoad(page){
   if(pagesLoaded[page]) return;
   pagesLoaded[page]=true;
+  if(page==='home') renderHomePage();
   if(page==='roller'){
     const raw=await dbGet('historico','order=created_at.desc&limit=100');
     historico=raw||[];
@@ -1102,7 +1189,8 @@ async function lazyLoad(page){
 function tryParse(str,def){try{return JSON.parse(str);}catch{return def;}}
 
 window.addEventListener('popstate',e=>{
-  const page=e.state?.page||(PATH_PAGES[location.pathname.replace(/^\/+/,'').replace(/\/+$/,'')])|| 'roller';
+  const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
+  const page=e.state?.page||(PATH_PAGES[pathSeg])||(pathSeg===''?'home':'roller');
   goTo(page,null,false);
   document.querySelectorAll('.nav-link').forEach(b=>{
     const pk=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
@@ -1185,6 +1273,7 @@ function admTab(sec,el){
   }
   if(sec==='admins')renderTbodyAdmins();
   if(sec==='editor'){carregarEstiloSalvo().then(e=>carregarEditorUI(e));}
+  if(sec==='home-editor'){renderHomeAdmEditor();}
   if(sec==='historicos'){
     const isGold=admLogado?.email==='pchaptersrpg@gmail.com';
     document.getElementById('hist-clear-blocked').style.display=isGold?'none':'block';
@@ -2702,6 +2791,205 @@ async function limparHistPokemon(){
   historico=[];
   renderHistorico();
   fb('hist-poke-fb');
+}
+
+// ══════════════════════════════════════
+// HOME PAGE DATA & RENDER
+// ══════════════════════════════════════
+const HOME_DEFAULTS = {
+  slides: [
+    {img:'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=900&q=80',title:'Bem-vindo ao PChapters',desc:'Um RPG de Pokémon colaborativo cheio de aventuras, capturas e histórias épicas.',btn:'Explorar Pokémon',btnPage:'roller'},
+    {img:'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=900&q=80',title:'Explore Biomas',desc:'Cada bioma esconde Pokémon únicos e raros. Descubra o que a natureza reserva para você.',btn:'Ver Biomas',btnPage:'bioma'},
+    {img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=900&q=80',title:'Gerencie suas Fichas',desc:'Acompanhe seu progresso, inventário e evolução do seu personagem.',btn:'Abrir Fichário',btnPage:'ficha'},
+  ],
+  cards: [
+    {icon:'🎲',title:'Sistema de Rolagem',body:'Use o rolador de encontros para descobrir Pokémon selvagens baseado no bioma e nas suas provas de valor.'},
+    {icon:'🗺️',title:'Biomas & Ecossistemas',body:'Cada bioma possui Pokémon exclusivos com raridades distintas — de Comum a Raríssimo.'},
+    {icon:'⭐',title:'Provas de Valor',body:'Colete estrelas conquistando desafios. Elas influenciam o nível dos Pokémon que você encontra.'},
+    {icon:'📋',title:'Fichário de Personagens',body:'Todos os personagens dos jogadores ficam registrados com avatar, status e inventário completo.'},
+    {icon:'🎒',title:'Itens & Inventário',body:'Dezenas de itens categorizados disponíveis, desde Pokéballs até Z-Crystals e Hold Items.'},
+    {icon:'🏆',title:'Pontuação',body:'Cada jogador acumula pontos ao longo da campanha — acompanhe o ranking no fichário.'},
+    {icon:'⚡',title:'PokéAPI Integrada',body:'Sprites, tipos e habilidades dos Pokémon são importados automaticamente direto da PokéAPI.'},
+    {icon:'🔐',title:'Área do Player',body:'Jogadores podem fazer login para editar suas próprias fichas de personagem com segurança.'},
+  ]
+};
+
+let homeData = {...HOME_DEFAULTS};
+let ssIdx = 0, ssTimer = null;
+
+async function carregarHomeData(){
+  try{
+    const raw = await dbGet('configuracoes','chave=eq.home_data&limit=1');
+    if(raw && raw[0]) homeData = {...HOME_DEFAULTS, ...JSON.parse(raw[0].valor)};
+  }catch(e){ homeData = {...HOME_DEFAULTS}; }
+}
+
+function renderHomePage(){
+  const slides = homeData.slides || HOME_DEFAULTS.slides;
+  const cards  = homeData.cards  || HOME_DEFAULTS.cards;
+  const cont   = document.getElementById('home-slides-container');
+  const dots   = document.getElementById('ss-dots');
+  const grid   = document.getElementById('home-info-grid');
+
+  // Slides
+  cont.innerHTML = slides.map((s,i)=>`
+    <div class="slide${i===0?' active':''}" id="slide-${i}">
+      <img class="slide-img" src="${s.img||''}" alt="${s.title||''}" onerror="this.style.display='none'"/>
+      <div class="slide-overlay"></div>
+      <div class="slide-text">
+        <div class="slide-title">${s.title||''}</div>
+        <div class="slide-desc">${s.desc||''}</div>
+        ${s.btn&&s.btnPage?`<button class="slide-link-tag" onclick="goTo('${s.btnPage}',null)">${s.btn} →</button>`:''}
+      </div>
+    </div>`).join('');
+
+  dots.innerHTML = slides.map((_,i)=>`<button class="ss-dot${i===0?' active':''}" onclick="ssGoto(${i})"></button>`).join('');
+  ssIdx = 0;
+  clearInterval(ssTimer);
+  if(slides.length>1) ssTimer = setInterval(()=>ssMove(1), 5000);
+
+  // Info cards
+  const pad = [...cards];
+  while(pad.length<8) pad.push({icon:'',title:'',body:''});
+  grid.innerHTML = pad.slice(0,8).map(c=>c.title?`
+    <div class="home-info-card">
+      <div class="home-info-card-top">
+        ${c.icon?`<span class="home-info-icon">${c.icon}</span>`:''}
+        <div class="home-info-card-title">${c.title}</div>
+      </div>
+      <div class="home-info-card-body">${c.body}</div>
+    </div>`:'').join('');
+}
+
+function ssMove(dir){
+  const slides = document.querySelectorAll('#home-slides-container .slide');
+  const dots   = document.querySelectorAll('#ss-dots .ss-dot');
+  if(!slides.length) return;
+  slides[ssIdx].classList.remove('active');
+  dots[ssIdx]?.classList.remove('active');
+  ssIdx = (ssIdx+dir+slides.length)%slides.length;
+  slides[ssIdx].classList.add('active');
+  dots[ssIdx]?.classList.add('active');
+}
+function ssGoto(i){
+  const slides = document.querySelectorAll('#home-slides-container .slide');
+  const dots   = document.querySelectorAll('#ss-dots .ss-dot');
+  if(!slides.length) return;
+  slides[ssIdx].classList.remove('active');
+  dots[ssIdx]?.classList.remove('active');
+  ssIdx = i;
+  slides[ssIdx].classList.add('active');
+  dots[ssIdx]?.classList.add('active');
+  clearInterval(ssTimer);
+  if(slides.length>1) ssTimer = setInterval(()=>ssMove(1), 5000);
+}
+
+// ══════════════════════════════════════
+// ADM — HOME EDITOR
+// ══════════════════════════════════════
+function renderHomeAdmEditor(){
+  renderHomeAdmSlides();
+  renderHomeAdmCards();
+}
+
+function renderHomeAdmSlides(){
+  const slides = (homeData.slides || HOME_DEFAULTS.slides).map(s=>({...s}));
+  const wrap = document.getElementById('home-slides-adm-list');
+  if(!wrap) return;
+  wrap.innerHTML = slides.map((s,i)=>`
+    <div class="box" style="margin-bottom:10px;padding:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:12px;font-weight:700;color:var(--brand-mid)">Slide ${i+1}</span>
+        <button class="btn btn-danger btn-sm" onclick="homeAdmRemoveSlide(${i})">🗑 Remover</button>
+      </div>
+      <div class="g2" style="gap:8px">
+        <div class="field" style="grid-column:1/-1;margin-bottom:6px"><label>URL da Imagem</label><input type="text" id="hs-img-${i}" value="${s.img||''}" placeholder="https://..."/></div>
+        <div class="field" style="margin-bottom:6px"><label>Título</label><input type="text" id="hs-title-${i}" value="${s.title||''}" placeholder="Título do slide"/></div>
+        <div class="field" style="margin-bottom:6px"><label>Texto do botão (opcional)</label><input type="text" id="hs-btn-${i}" value="${s.btn||''}" placeholder="Ex: Ver mais"/></div>
+        <div class="field" style="grid-column:1/-1;margin-bottom:0"><label>Descrição</label><input type="text" id="hs-desc-${i}" value="${s.desc||''}" placeholder="Descrição curta"/></div>
+        <div class="field" style="margin-bottom:0"><label>Página do botão</label>
+          <select id="hs-btnpage-${i}">
+            <option value="">— nenhum —</option>
+            <option value="roller"${s.btnPage==='roller'?' selected':''}>Pokémon</option>
+            <option value="bioma"${s.btnPage==='bioma'?' selected':''}>Por Bioma</option>
+            <option value="dados"${s.btnPage==='dados'?' selected':''}>Dados</option>
+            <option value="ficha"${s.btnPage==='ficha'?' selected':''}>Fichário</option>
+          </select>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function homeAdmAddSlide(){
+  homeData.slides = homeData.slides || [...HOME_DEFAULTS.slides];
+  homeData.slides.push({img:'',title:'Novo Slide',desc:'',btn:'',btnPage:''});
+  renderHomeAdmSlides();
+}
+function homeAdmRemoveSlide(i){
+  homeData.slides = homeData.slides || [...HOME_DEFAULTS.slides];
+  homeData.slides.splice(i,1);
+  renderHomeAdmSlides();
+}
+
+function renderHomeAdmCards(){
+  const cards = [...(homeData.cards || HOME_DEFAULTS.cards)];
+  while(cards.length<8) cards.push({icon:'',title:'',body:''});
+  const wrap = document.getElementById('home-cards-adm-list');
+  if(!wrap) return;
+  wrap.innerHTML = `<div class="g2" style="gap:10px">${cards.slice(0,8).map((c,i)=>`
+    <div class="box" style="padding:14px;margin-bottom:0">
+      <div style="font-size:12px;font-weight:700;color:var(--brand-mid);margin-bottom:8px">Card ${i+1}</div>
+      <div class="field" style="margin-bottom:6px"><label>Ícone (emoji)</label><input type="text" id="hc-icon-${i}" value="${c.icon||''}" placeholder="🎲" style="width:80px"/></div>
+      <div class="field" style="margin-bottom:6px"><label>Título</label><input type="text" id="hc-title-${i}" value="${c.title||''}" placeholder="Título"/></div>
+      <div class="field" style="margin-bottom:0"><label>Texto</label><textarea id="hc-body-${i}" rows="2" placeholder="Descrição...">${c.body||''}</textarea></div>
+    </div>`).join('')}</div>`;
+}
+
+async function salvarHomeData(){
+  // collect slides
+  const sCount = document.querySelectorAll('[id^="hs-img-"]').length;
+  const slides = [];
+  for(let i=0;i<sCount;i++){
+    slides.push({
+      img:  document.getElementById(`hs-img-${i}`)?.value||'',
+      title:document.getElementById(`hs-title-${i}`)?.value||'',
+      desc: document.getElementById(`hs-desc-${i}`)?.value||'',
+      btn:  document.getElementById(`hs-btn-${i}`)?.value||'',
+      btnPage:document.getElementById(`hs-btnpage-${i}`)?.value||'',
+    });
+  }
+  // collect cards
+  const cards = [];
+  for(let i=0;i<8;i++){
+    cards.push({
+      icon: document.getElementById(`hc-icon-${i}`)?.value||'',
+      title:document.getElementById(`hc-title-${i}`)?.value||'',
+      body: document.getElementById(`hc-body-${i}`)?.value||'',
+    });
+  }
+  homeData = {slides, cards};
+  const payload = JSON.stringify(homeData);
+  // upsert into configuracoes table
+  const existing = await dbGet('configuracoes','chave=eq.home_data&limit=1');
+  if(existing && existing[0]){
+    await dbPatch('configuracoes','chave=eq.home_data',{valor:payload});
+  } else {
+    await dbPost('configuracoes',{chave:'home_data',valor:payload});
+  }
+  fb('home-slides-fb-ok');
+  fb('home-cards-fb-ok');
+  // re-render home
+  pagesLoaded.home = false;
+  renderHomePage();
+}
+
+async function resetarHomeData(){
+  if(!confirm('Restaurar os dados padrão da página inicial?')) return;
+  homeData = {...HOME_DEFAULTS};
+  renderHomeAdmEditor();
+  await dbDel('configuracoes','chave=eq.home_data');
+  pagesLoaded.home = false;
+  renderHomePage();
 }
 
 // ══════════════════════════════════════
