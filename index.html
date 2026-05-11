@@ -330,9 +330,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <div class="ss-dots" id="ss-dots"></div>
   </div>
   <div class="home-quickmenu-wrap" id="home-quickmenu-wrap">
-    <div class="home-quickmenu-row" id="home-qrow-0"></div>
-    <div class="home-quickmenu-row" id="home-qrow-1"></div>
-    <div class="home-quickmenu-row" id="home-qrow-2"></div>
+    <div id="home-qrows-container"></div>
   </div>
   <div class="home-info-wrap" style="display:none">
     <div class="home-info-title">Informações do RPG</div>
@@ -812,9 +810,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
           <!-- QUICKMENU EDITOR -->
           <div class="box">
-            <div class="box-title">⚡ Menu Rápido (3 linhas × 4 botões)</div>
-            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Cada botão tem um rótulo e uma URL externa (opcional). Deixe a URL em branco para botões sem ação.</p>
+            <div class="box-title">⚡ Menu Rápido</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Cada botão tem um rótulo e uma URL externa opcional. Use os botões para adicionar/remover linhas e botões.</p>
             <div id="home-qmenu-adm-list"></div>
+            <button class="btn btn-primary btn-sm" onclick="homeAdmAddRow()" style="margin-top:10px">+ Nova linha</button>
             <div class="fb fb-ok" id="home-qmenu-fb-ok" style="margin-top:10px;display:none">✓ Salvo!</div>
           </div>
 
@@ -825,14 +824,6 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
             <div id="home-slides-adm-list" style="margin-bottom:14px"></div>
             <button class="btn btn-primary btn-sm" onclick="homeAdmAddSlide()">+ Novo slide</button>
             <div class="fb fb-ok" id="home-slides-fb-ok" style="margin-top:10px;display:none">✓ Slides salvos!</div>
-          </div>
-
-          <!-- INFO CARDS EDITOR -->
-          <div class="box">
-            <div class="box-title">📋 Cards de Informação (8 cards — 2 colunas × 4 linhas)</div>
-            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Preencha os 8 cards com ícone, título e texto. Ficam exibidos abaixo do slideshow.</p>
-            <div id="home-cards-adm-list"></div>
-            <div class="fb fb-ok" id="home-cards-fb-ok" style="margin-top:10px;display:none">✓ Cards salvos!</div>
           </div>
 
           <div style="display:flex;gap:10px;margin-top:4px">
@@ -2869,12 +2860,13 @@ function renderHomePage(){
 
   // Quick menu
   const qmenu = homeData.quickmenu || HOME_DEFAULTS.quickmenu;
-  qmenu.forEach((row, ri)=>{
-    const el = document.getElementById(`home-qrow-${ri}`);
-    if(!el) return;
-    el.innerHTML = row.map(item=>item.label?`
-      <button class="home-quick-btn" onclick="${item.url?`window.open('${item.url}','_blank')`:'void(0)'}">${item.label}</button>`:'').join('');
-  });
+  const qcont = document.getElementById('home-qrows-container');
+  if(qcont){
+    qcont.innerHTML = qmenu.map((row)=>`
+      <div class="home-quickmenu-row">${row.map(item=>item.label?`
+        <button class="home-quick-btn" onclick="${item.url?`window.open('${item.url}','_blank')`:'void(0)'}">${item.label}</button>`:'').join('')}
+      </div>`).join('');
+  }
 
   // Info cards
   const pad = [...cards];  while(pad.length<8) pad.push({icon:'',title:'',body:''});
@@ -2922,19 +2914,45 @@ function renderHomeAdmEditor(){
 
 function renderHomeAdmQuickmenu(){
   const qmenu = (homeData.quickmenu || HOME_DEFAULTS.quickmenu).map(r=>r.map(i=>({...i})));
+  homeData.quickmenu = qmenu;
   const wrap = document.getElementById('home-qmenu-adm-list');
   if(!wrap) return;
-  const rowLabels = ['Linha 1','Linha 2','Linha 3'];
-  wrap.innerHTML = qmenu.slice(0,3).map((row,ri)=>`
-    <div style="margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${rowLabels[ri]}</div>
-      <div class="g2" style="gap:8px">${row.slice(0,4).map((item,ii)=>`
-        <div style="display:flex;gap:6px;align-items:center">
-          <input type="text" id="hq-label-${ri}-${ii}" value="${item.label||''}" placeholder="Rótulo" style="flex:1;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
-          <input type="text" id="hq-url-${ri}-${ii}" value="${item.url||''}" placeholder="URL (opcional)" style="flex:2;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+  wrap.innerHTML = qmenu.map((row,ri)=>`
+    <div class="box" style="padding:12px 14px;margin-bottom:10px" id="hq-row-wrap-${ri}">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px">Linha ${ri+1}</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-primary btn-sm" onclick="homeAdmAddBtn(${ri})">+ Botão</button>
+          <button class="btn btn-danger btn-sm" onclick="homeAdmRemoveRow(${ri})">🗑 Linha</button>
+        </div>
+      </div>
+      <div id="hq-btns-${ri}">${row.map((item,ii)=>`
+        <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px" id="hq-item-${ri}-${ii}">
+          <input type="text" id="hq-label-${ri}-${ii}" value="${item.label||''}" placeholder="Rótulo" style="width:140px;min-width:0;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+          <input type="text" id="hq-url-${ri}-${ii}" value="${item.url||''}" placeholder="URL (opcional)" style="flex:1;min-width:0;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+          <button class="btn btn-danger btn-sm" style="flex-shrink:0" onclick="homeAdmRemoveBtn(${ri},${ii})">✕</button>
         </div>`).join('')}
       </div>
     </div>`).join('');
+}
+
+function homeAdmAddRow(){
+  homeData.quickmenu = homeData.quickmenu || [];
+  homeData.quickmenu.push([{label:'Novo Botão',url:''}]);
+  renderHomeAdmQuickmenu();
+}
+function homeAdmRemoveRow(ri){
+  homeData.quickmenu.splice(ri,1);
+  renderHomeAdmQuickmenu();
+}
+function homeAdmAddBtn(ri){
+  homeData.quickmenu[ri].push({label:'Novo Botão',url:''});
+  renderHomeAdmQuickmenu();
+}
+function homeAdmRemoveBtn(ri,ii){
+  homeData.quickmenu[ri].splice(ii,1);
+  if(homeData.quickmenu[ri].length===0) homeData.quickmenu.splice(ri,1);
+  renderHomeAdmQuickmenu();
 }
 
 function renderHomeAdmSlides(){
@@ -3012,18 +3030,13 @@ async function salvarHomeData(){
       body: document.getElementById(`hc-body-${i}`)?.value||'',
     });
   }
-  // collect quickmenu
-  const quickmenu = [];
-  for(let ri=0;ri<3;ri++){
-    const row=[];
-    for(let ii=0;ii<4;ii++){
-      row.push({
-        label: document.getElementById(`hq-label-${ri}-${ii}`)?.value||'',
-        url:   document.getElementById(`hq-url-${ri}-${ii}`)?.value||'',
-      });
-    }
-    quickmenu.push(row);
-  }
+  // collect quickmenu dynamically
+  const quickmenu = (homeData.quickmenu||[]).map((row,ri)=>
+    row.map((_,ii)=>({
+      label: document.getElementById(`hq-label-${ri}-${ii}`)?.value||'',
+      url:   document.getElementById(`hq-url-${ri}-${ii}`)?.value||'',
+    }))
+  );
   homeData = {slides, quickmenu, cards};
   const payload = JSON.stringify(homeData);
   // upsert into configuracoes table
