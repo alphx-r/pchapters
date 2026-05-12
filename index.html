@@ -342,9 +342,17 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .rich-editor-body table{width:100%;border-collapse:collapse;margin:12px 0}
 .rich-editor-body table th{background:var(--surface2);font-weight:700;padding:8px 10px;border:1.5px solid var(--border)}
 .rich-editor-body table td{padding:7px 10px;border:1px solid var(--border)}
-.wiki-layout-toggle{display:flex;gap:6px;margin-bottom:14px}
-.wiki-layout-btn{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;font-family:var(--font-body)}
-.wiki-layout-btn.active{background:var(--brand-mid);border-color:var(--brand-mid);color:#fff}
+.wiki-layout-toggle{display:none}
+.wiki-layout-btn{display:none}
+/* Wiki modal */
+.wiki-modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+.wiki-modal{background:var(--surface);border-radius:var(--r);width:100%;max-width:780px;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 16px 48px rgba(0,0,0,.22);overflow:hidden}
+.wiki-modal-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1.5px solid var(--border);flex-shrink:0}
+.wiki-modal-title{font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--brand)}
+.wiki-modal-close{background:none;border:none;cursor:pointer;font-size:20px;color:var(--muted);line-height:1;padding:0 4px}
+.wiki-modal-close:hover{color:var(--text)}
+.wiki-modal-body{padding:16px 20px;overflow-y:auto;flex:1}
+.wiki-modal-footer{padding:12px 20px;border-top:1.5px solid var(--border);display:flex;gap:10px;align-items:center;flex-shrink:0}
 @media(max-width:768px){
   .wiki-page{padding:16px}
   .wiki-title{font-size:20px}
@@ -385,6 +393,49 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div class="home-info-wrap" style="display:none">
     <div class="home-info-title">Informações do RPG</div>
     <div class="home-info-grid" id="home-info-grid"></div>
+  </div>
+</div>
+
+<!-- WIKI MODAL -->
+<div class="wiki-modal-bg" id="wiki-modal-bg" style="display:none" onclick="if(event.target===this)fecharWikiModal()">
+  <div class="wiki-modal">
+    <div class="wiki-modal-header">
+      <div class="wiki-modal-title" id="wiki-modal-title"></div>
+      <button class="wiki-modal-close" onclick="fecharWikiModal()">✕</button>
+    </div>
+    <div class="wiki-modal-body">
+      <div class="field" style="margin-bottom:12px">
+        <label>Subtítulo / descrição</label>
+        <input type="text" id="wiki-ed-subtitle" placeholder="Ex: Regras e mecânicas gerais do RPG"/>
+      </div>
+      <div class="field" style="margin-bottom:8px"><label>Conteúdo</label></div>
+      <div class="rich-editor-toolbar" id="rte-toolbar">
+        <button class="rte-btn" onclick="rteCmd('bold')" title="Negrito"><b>B</b></button>
+        <button class="rte-btn" onclick="rteCmd('italic')" title="Itálico"><i>I</i></button>
+        <button class="rte-btn" onclick="rteCmd('underline')" title="Sublinhado"><u>U</u></button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteBlock('h1')">H1</button>
+        <button class="rte-btn" onclick="rteBlock('h2')">H2</button>
+        <button class="rte-btn" onclick="rteBlock('h3')">H3</button>
+        <button class="rte-btn" onclick="rteCmd('formatBlock','p')">¶</button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteCmd('insertUnorderedList')">• Lista</button>
+        <button class="rte-btn" onclick="rteCmd('insertOrderedList')">1. Lista</button>
+        <button class="rte-btn" onclick="rteBlock('blockquote')">❝</button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteInsertTable()">⊞ Tabela</button>
+        <button class="rte-btn" onclick="rteInsertHR()">—</button>
+        <button class="rte-btn" onclick="rteInsertLink()">🔗</button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteCmd('removeFormat')">✕ Fmt</button>
+      </div>
+      <div class="rich-editor-body" id="rte-body" contenteditable="true"></div>
+    </div>
+    <div class="wiki-modal-footer">
+      <button class="btn btn-primary" onclick="salvarWikiPage()">💾 Salvar</button>
+      <button class="btn" onclick="previewWikiPage()" style="background:var(--surface2)">👁 Preview</button>
+      <div class="fb fb-ok" id="wiki-ed-fb-ok" style="display:none;margin-left:4px">✓ Salvo!</div>
+    </div>
   </div>
 </div>
 
@@ -578,7 +629,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="adm-nav-btn" onclick="admTab('admins',this)">🔑 Admins</button>
         <button class="adm-nav-btn" onclick="admTab('editor',this)">🎨 Editor Visual</button>
         <button class="adm-nav-btn" onclick="admTab('home-editor',this)">🏠 Página Inicial</button>
-        <button class="adm-nav-btn" onclick="admTab('wiki-editor',this)">📄 Páginas Wiki</button>
+        <button class="adm-nav-btn" onclick="admTab('wiki-editor',this)">📄 Menu</button>
         <button class="adm-nav-btn" onclick="admTab('historicos',this)">🗑️ Históricos</button>
         <button class="adm-nav-btn" onclick="admTab('fichas-hist',this)">📋 Fichas</button>
         <div class="adm-nav-sep"></div>
@@ -897,16 +948,10 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 
         <!-- WIKI EDITOR -->
         <div class="adm-section" id="sec-wiki-editor">
-          <div class="sec-title">Páginas Wiki</div>
+          <div class="sec-title">Menu</div>
           <div class="sec-sub">Edite o conteúdo de cada página do menu rápido</div>
-          <div style="display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start">
-            <div class="box" style="padding:12px">
-              <div class="box-title" style="margin-bottom:10px">Páginas</div>
-              <div id="wiki-pages-list"></div>
-            </div>
-            <div id="wiki-editor-panel">
-              <div style="color:var(--muted);font-size:13px;padding:20px;text-align:center">Selecione uma página à esquerda para editar.</div>
-            </div>
+          <div class="box" style="padding:12px">
+            <div id="wiki-pages-list"></div>
           </div>
         </div>
         <div class="adm-section" id="sec-historicos">
@@ -3219,6 +3264,7 @@ async function renderWikiPage(slug){
 // ══════════════════════════════════════
 let wikiEditingSlug = null;
 
+
 function renderWikiAdmList(){
   const list = document.getElementById('wiki-pages-list');
   if(!list) return;
@@ -3226,84 +3272,38 @@ function renderWikiAdmList(){
   const all = [];
   qmenu.forEach(row=>row.forEach(item=>{ if(item.slug) all.push(item); }));
   if(!all.length){
-    list.innerHTML='<div style="font-size:12px;color:var(--muted)">Nenhuma página com slug no menu rápido.</div>';
+    list.innerHTML='<div style="font-size:12px;color:var(--muted);padding:8px">Nenhuma página com slug no menu rápido.</div>';
     return;
   }
   list.innerHTML = all.map(item=>`
-    <button onclick="wikiSelectPage('${item.slug}')" id="wiki-list-btn-${item.slug}"
-      style="display:block;width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:1.5px solid transparent;background:none;font-family:var(--font-body);font-size:13px;cursor:pointer;color:var(--text);margin-bottom:4px;transition:all .15s"
-      onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=${wikiEditingSlug===item.slug?`'var(--brand-light)'`:`'none'`}">
-      ${item.label}
-    </button>`).join('');
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:var(--text)">${item.label}</div>
+        <div style="font-size:11px;color:var(--muted)">/${item.slug}</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="wikiAbrirModal('${item.slug}')">✏️ Editar</button>
+    </div>`).join('');
 }
 
-function wikiSelectPage(slug){
+function wikiAbrirModal(slug){
   wikiEditingSlug = slug;
-  // highlight
-  document.querySelectorAll('[id^="wiki-list-btn-"]').forEach(b=>{
-    b.style.background='none'; b.style.borderColor='transparent'; b.style.color='var(--text)';
-  });
-  const btn = document.getElementById('wiki-list-btn-'+slug);
-  if(btn){ btn.style.background='var(--brand-light)'; btn.style.borderColor='var(--brand-mid)'; btn.style.color='var(--brand)'; }
-
   const qmenu = homeData.quickmenu || HOME_DEFAULTS.quickmenu;
   let label = slug;
   qmenu.forEach(row=>row.forEach(item=>{ if(item.slug===slug) label=item.label; }));
-
-  const page = wikiPages[slug] || {title:label, subtitle:'', content:'', layout:'standard'};
-  const panel = document.getElementById('wiki-editor-panel');
-  panel.innerHTML = `
-    <div class="box" style="padding:16px">
-      <div class="box-title" style="margin-bottom:14px">✏️ ${label}</div>
-      <div class="field" style="margin-bottom:10px">
-        <label>Subtítulo / descrição</label>
-        <input type="text" id="wiki-ed-subtitle" value="${page.subtitle||''}" placeholder="Ex: Regras e mecânicas gerais do RPG"/>
-      </div>
-      <div class="field" style="margin-bottom:4px"><label>Layout</label></div>
-      <div class="wiki-layout-toggle" style="margin-bottom:14px">
-        <button class="wiki-layout-btn${page.layout!=='wiki'?' active':''}" onclick="wikiSetLayout('standard',this)">📄 Padrão do site</button>
-        <button class="wiki-layout-btn${page.layout==='wiki'?' active':''}" onclick="wikiSetLayout('wiki',this)">📖 Wiki limpo</button>
-      </div>
-      <div class="field" style="margin-bottom:10px"><label>Conteúdo</label></div>
-      <div class="rich-editor-toolbar" id="rte-toolbar">
-        <button class="rte-btn" onclick="rteCmd('bold')" title="Negrito"><b>B</b></button>
-        <button class="rte-btn" onclick="rteCmd('italic')" title="Itálico"><i>I</i></button>
-        <button class="rte-btn" onclick="rteCmd('underline')" title="Sublinhado"><u>U</u></button>
-        <div class="rte-sep"></div>
-        <button class="rte-btn" onclick="rteBlock('h1')" title="Título 1">H1</button>
-        <button class="rte-btn" onclick="rteBlock('h2')" title="Título 2">H2</button>
-        <button class="rte-btn" onclick="rteBlock('h3')" title="Título 3">H3</button>
-        <button class="rte-btn" onclick="rteCmd('formatBlock','p')" title="Parágrafo">¶</button>
-        <div class="rte-sep"></div>
-        <button class="rte-btn" onclick="rteCmd('insertUnorderedList')" title="Lista">• Lista</button>
-        <button class="rte-btn" onclick="rteCmd('insertOrderedList')" title="Lista numerada">1. Lista</button>
-        <button class="rte-btn" onclick="rteBlock('blockquote')" title="Citação">❝</button>
-        <div class="rte-sep"></div>
-        <button class="rte-btn" onclick="rteInsertTable()" title="Tabela">⊞ Tabela</button>
-        <button class="rte-btn" onclick="rteInsertHR()" title="Divisor">—</button>
-        <button class="rte-btn" onclick="rteInsertLink()" title="Link">🔗</button>
-        <div class="rte-sep"></div>
-        <button class="rte-btn" onclick="rteCmd('removeFormat')" title="Limpar formato">✕ Fmt</button>
-      </div>
-      <div class="rich-editor-body" id="rte-body" contenteditable="true">${page.content||''}</div>
-      <div style="display:flex;gap:10px;margin-top:14px">
-        <button class="btn btn-primary" onclick="salvarWikiPage()">💾 Salvar página</button>
-        <button class="btn" onclick="previewWikiPage()" style="background:var(--surface2)">👁 Preview</button>
-      </div>
-      <div class="fb fb-ok" id="wiki-ed-fb-ok" style="margin-top:10px;display:none">✓ Página salva!</div>
-    </div>`;
-
-  document.getElementById('rte-body').addEventListener('keydown', e=>{
-    if(e.key==='Tab'){ e.preventDefault(); rteCmd('insertHTML','&nbsp;&nbsp;&nbsp;&nbsp;'); }
-  });
+  const page = wikiPages[slug] || {subtitle:'', content:''};
+  document.getElementById('wiki-modal-title').textContent = '✏️ ' + label;
+  document.getElementById('wiki-ed-subtitle').value = page.subtitle || '';
+  document.getElementById('rte-body').innerHTML = page.content || '';
+  document.getElementById('wiki-ed-fb-ok').style.display = 'none';
+  document.getElementById('wiki-modal-bg').style.display = 'flex';
 }
 
-let wikiLayout = 'standard';
-function wikiSetLayout(val, btn){
-  wikiLayout = val;
-  document.querySelectorAll('.wiki-layout-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+function fecharWikiModal(){
+  document.getElementById('wiki-modal-bg').style.display = 'none';
+  wikiEditingSlug = null;
 }
+
+function wikiSelectPage(slug){ wikiAbrirModal(slug); }
 
 function rteCmd(cmd, val=null){ document.execCommand(cmd, false, val); document.getElementById('rte-body').focus(); }
 function rteBlock(tag){ rteCmd('formatBlock', tag); }
@@ -3326,15 +3326,13 @@ async function salvarWikiPage(){
   if(!wikiEditingSlug) return;
   const subtitle = document.getElementById('wiki-ed-subtitle')?.value||'';
   const content  = document.getElementById('rte-body')?.innerHTML||'';
-  const layout   = wikiLayout;
-  const data = {subtitle, content, layout};
+  const data = {subtitle, content};
   wikiPages[wikiEditingSlug] = data;
   const chave = `wiki_${wikiEditingSlug}`;
   const existing = await dbGet('configuracoes',`chave=eq.${chave}&limit=1`);
   if(existing && existing[0]) await dbPatch('configuracoes',`chave=eq.${chave}`,{valor:JSON.stringify(data)});
   else await dbPost('configuracoes',{chave, valor:JSON.stringify(data)});
   fb('wiki-ed-fb-ok');
-  // invalidate wiki cache for this slug
   pagesLoaded.wiki = false;
 }
 
@@ -3344,8 +3342,9 @@ function previewWikiPage(){
   wikiPages[wikiEditingSlug] = {
     ...(wikiPages[wikiEditingSlug]||{}),
     subtitle: document.getElementById('wiki-ed-subtitle')?.value||'',
-    content, layout: wikiLayout
+    content
   };
+  fecharWikiModal();
   goToWiki(wikiEditingSlug);
 }
 
