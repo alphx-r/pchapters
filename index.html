@@ -299,6 +299,56 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   .home-info-grid{grid-template-columns:1fr}
   .ss-arrow{width:30px;height:30px;font-size:13px}
 }
+
+/* ═══════════════════════════════════════
+   WIKI PAGES
+═══════════════════════════════════════ */
+.wiki-page{padding:28px;max-width:860px;margin:0 auto}
+.wiki-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;margin-bottom:18px;font-family:var(--font-body);transition:color .15s}
+.wiki-back:hover{color:var(--brand-mid)}
+.wiki-header{margin-bottom:24px;padding-bottom:18px;border-bottom:1.5px solid var(--border)}
+.wiki-title{font-family:var(--font-title);font-size:26px;color:var(--brand);font-weight:700;line-height:1.2;margin-bottom:6px}
+.wiki-subtitle{font-size:13px;color:var(--muted)}
+.wiki-body{font-size:14px;color:var(--text);line-height:1.75}
+.wiki-body h1{font-family:var(--font-title);font-size:22px;color:var(--brand);margin:28px 0 12px;padding-bottom:8px;border-bottom:1.5px solid var(--border)}
+.wiki-body h2{font-family:var(--font-title);font-size:18px;color:var(--brand);margin:22px 0 10px}
+.wiki-body h3{font-family:var(--font-title);font-size:15px;color:var(--text);margin:18px 0 8px}
+.wiki-body p{margin:0 0 12px}
+.wiki-body ul,.wiki-body ol{margin:0 0 12px 22px}
+.wiki-body li{margin-bottom:4px}
+.wiki-body strong{color:var(--text);font-weight:700}
+.wiki-body em{color:var(--muted)}
+.wiki-body blockquote{border-left:3px solid var(--brand-mid);margin:14px 0;padding:10px 16px;background:var(--surface2);border-radius:0 8px 8px 0;color:var(--muted);font-style:italic}
+.wiki-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+.wiki-body table th{background:var(--surface2);font-weight:700;color:var(--brand);padding:9px 12px;border:1.5px solid var(--border);text-align:left}
+.wiki-body table td{padding:8px 12px;border:1px solid var(--border)}
+.wiki-body table tr:nth-child(even) td{background:var(--surface2)}
+.wiki-body img{max-width:100%;border-radius:8px;margin:8px 0}
+.wiki-body hr{border:none;border-top:1.5px solid var(--border);margin:20px 0}
+.wiki-empty{text-align:center;padding:60px 20px;color:var(--muted);font-size:14px}
+.wiki-empty-icon{font-size:40px;margin-bottom:12px}
+/* Rich editor */
+.rich-editor-toolbar{display:flex;flex-wrap:wrap;gap:4px;padding:8px;background:var(--surface2);border:1.5px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0}
+.rte-btn{padding:5px 9px;border-radius:5px;border:1px solid transparent;background:transparent;cursor:pointer;font-size:12px;font-weight:700;color:var(--text);font-family:var(--font-body);transition:all .15s;line-height:1.2}
+.rte-btn:hover{background:var(--border);border-color:var(--border2)}
+.rte-btn.active{background:var(--brand-mid);color:#fff;border-color:var(--brand-mid)}
+.rte-sep{width:1px;background:var(--border2);margin:0 3px;align-self:stretch}
+.rich-editor-body{min-height:320px;padding:16px;border:1.5px solid var(--border);border-radius:0 0 8px 8px;font-family:var(--font-body);font-size:14px;color:var(--text);line-height:1.75;outline:none;background:var(--surface);overflow-y:auto}
+.rich-editor-body:focus{border-color:var(--brand-mid)}
+.rich-editor-body h1{font-family:var(--font-title);font-size:22px;color:var(--brand);margin:18px 0 10px;padding-bottom:8px;border-bottom:1.5px solid var(--border)}
+.rich-editor-body h2{font-family:var(--font-title);font-size:17px;color:var(--brand);margin:16px 0 8px}
+.rich-editor-body h3{font-family:var(--font-title);font-size:14px;color:var(--text);margin:14px 0 6px}
+.rich-editor-body blockquote{border-left:3px solid var(--brand-mid);margin:12px 0;padding:8px 14px;background:var(--surface2);border-radius:0 8px 8px 0;color:var(--muted);font-style:italic}
+.rich-editor-body table{width:100%;border-collapse:collapse;margin:12px 0}
+.rich-editor-body table th{background:var(--surface2);font-weight:700;padding:8px 10px;border:1.5px solid var(--border)}
+.rich-editor-body table td{padding:7px 10px;border:1px solid var(--border)}
+.wiki-layout-toggle{display:flex;gap:6px;margin-bottom:14px}
+.wiki-layout-btn{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.wiki-layout-btn.active{background:var(--brand-mid);border-color:var(--brand-mid);color:#fff}
+@media(max-width:768px){
+  .wiki-page{padding:16px}
+  .wiki-title{font-size:20px}
+}
 </style>
 </head>
 <body>
@@ -335,6 +385,18 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
   <div class="home-info-wrap" style="display:none">
     <div class="home-info-title">Informações do RPG</div>
     <div class="home-info-grid" id="home-info-grid"></div>
+  </div>
+</div>
+
+<!-- WIKI PAGE (dinâmica) -->
+<div class="page" id="page-wiki">
+  <div class="wiki-page" id="wiki-content-wrap">
+    <button class="wiki-back" onclick="history.back()">← Voltar</button>
+    <div class="wiki-header">
+      <div class="wiki-title" id="wiki-page-title"></div>
+      <div class="wiki-subtitle" id="wiki-page-subtitle"></div>
+    </div>
+    <div class="wiki-body" id="wiki-page-body"></div>
   </div>
 </div>
 
@@ -516,6 +578,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
         <button class="adm-nav-btn" onclick="admTab('admins',this)">🔑 Admins</button>
         <button class="adm-nav-btn" onclick="admTab('editor',this)">🎨 Editor Visual</button>
         <button class="adm-nav-btn" onclick="admTab('home-editor',this)">🏠 Página Inicial</button>
+        <button class="adm-nav-btn" onclick="admTab('wiki-editor',this)">📄 Páginas Wiki</button>
         <button class="adm-nav-btn" onclick="admTab('historicos',this)">🗑️ Históricos</button>
         <button class="adm-nav-btn" onclick="admTab('fichas-hist',this)">📋 Fichas</button>
         <div class="adm-nav-sep"></div>
@@ -832,7 +895,20 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
           </div>
         </div>
 
-        <!-- HISTÓRICOS -->
+        <!-- WIKI EDITOR -->
+        <div class="adm-section" id="sec-wiki-editor">
+          <div class="sec-title">Páginas Wiki</div>
+          <div class="sec-sub">Edite o conteúdo de cada página do menu rápido</div>
+          <div style="display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start">
+            <div class="box" style="padding:12px">
+              <div class="box-title" style="margin-bottom:10px">Páginas</div>
+              <div id="wiki-pages-list"></div>
+            </div>
+            <div id="wiki-editor-panel">
+              <div style="color:var(--muted);font-size:13px;padding:20px;text-align:center">Selecione uma página à esquerda para editar.</div>
+            </div>
+          </div>
+        </div>
         <div class="adm-section" id="sec-historicos">
           <div class="sec-title">Históricos</div>
           <div class="sec-sub">Limpeza dos históricos de rolagens — disponível apenas para o admin <strong>pchaptersrpg@gmail.com</strong></div>
@@ -1107,7 +1183,11 @@ async function init(){
 
     const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
     let paginaInicial=PATH_PAGES[pathSeg];
-    if(paginaInicial===undefined) paginaInicial=(pathSeg===''?'home':'roller');
+    let wikiSlugInicial=null;
+    if(paginaInicial===undefined){
+      if(pathSeg===''){ paginaInicial='home'; }
+      else { paginaInicial='wiki'; wikiSlugInicial=pathSeg; }
+    }
     if(paginaInicial==='adm'&&!admLogado) paginaInicial='login';
     if(paginaInicial==='player'&&!playerLogado) paginaInicial='login';
 
@@ -1123,11 +1203,12 @@ async function init(){
     biomas=_biomas; pokemonDB=_pokemons; admins=_admins;
     aplicarVars(estilo);
     await carregarHomeData();
+    await carregarWikiPages();
     syncBiomaSelect();
 
     loading(false);
 
-    await goTo(paginaInicial, null, false);
+    await goTo(paginaInicial, null, false, wikiSlugInicial);
 
     const navBtns=document.querySelectorAll('.nav-link');
     navBtns.forEach(b=>{
@@ -1144,22 +1225,28 @@ async function init(){
 // ══════════════════════════════════════
 // NAVEGAÇÃO
 // ══════════════════════════════════════
-const PAGE_PATHS={home:'',roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm'};
+const PAGE_PATHS={home:'',roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm',wiki:'__wiki__'};
 const PATH_PAGES=Object.fromEntries(Object.entries(PAGE_PATHS).map(([k,v])=>[v,k]));
-const pagesLoaded={home:false,roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false};
+const pagesLoaded={home:false,roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false,wiki:false};
 
-async function goTo(page,el,pushState=true){
+async function goTo(page,el,pushState=true,wikiSlug=null){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+page).classList.add('active');
   document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
   document.getElementById('btn-login').classList.remove('active');
   if(el) el.classList.add('active');
   if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
-  if(pushState) history.pushState({page},'','/'+(PAGE_PATHS[page]||''));
-  await lazyLoad(page);
+  let path = '/'+(PAGE_PATHS[page]||'');
+  if(page==='wiki' && wikiSlug) path = '/'+wikiSlug;
+  if(pushState) history.pushState({page,wikiSlug},'',path);
+  await lazyLoad(page,wikiSlug);
 }
 
-async function lazyLoad(page){
+async function lazyLoad(page,wikiSlug=null){
+  if(page==='wiki'){
+    await renderWikiPage(wikiSlug);
+    return;
+  }
   if(pagesLoaded[page]) return;
   pagesLoaded[page]=true;
   if(page==='home') renderHomePage();
@@ -1195,8 +1282,15 @@ function tryParse(str,def){try{return JSON.parse(str);}catch{return def;}}
 
 window.addEventListener('popstate',e=>{
   const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
-  const page=e.state?.page||(PATH_PAGES[pathSeg])||(pathSeg===''?'home':'roller');
-  goTo(page,null,false);
+  const knownPage=PATH_PAGES[pathSeg];
+  let page, wikiSlug=null;
+  if(knownPage){ page=knownPage; }
+  else if(pathSeg===''){ page='home'; }
+  else { page='wiki'; wikiSlug=pathSeg; }
+  const st=e.state;
+  if(st?.page) page=st.page;
+  if(st?.wikiSlug) wikiSlug=st.wikiSlug;
+  goTo(page,null,false,wikiSlug);
   document.querySelectorAll('.nav-link').forEach(b=>{
     const pk=b.getAttribute('onclick')?.match(/goTo\('(\w+)'/)?.[1];
     if(pk===page)b.classList.add('active');else b.classList.remove('active');
@@ -1279,6 +1373,7 @@ function admTab(sec,el){
   if(sec==='admins')renderTbodyAdmins();
   if(sec==='editor'){carregarEstiloSalvo().then(e=>carregarEditorUI(e));}
   if(sec==='home-editor'){renderHomeAdmEditor();}
+  if(sec==='wiki-editor'){renderWikiAdmList();}
   if(sec==='historicos'){
     const isGold=admLogado?.email==='pchaptersrpg@gmail.com';
     document.getElementById('hist-clear-blocked').style.display=isGold?'none':'block';
@@ -2808,9 +2903,9 @@ const HOME_DEFAULTS = {
     {img:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=900&q=80',title:'Gerencie suas Fichas',desc:'Acompanhe seu progresso, inventário e evolução do seu personagem.',btn:'Abrir Fichário',btnPage:'ficha'},
   ],
   quickmenu: [
-    [{label:'Introdução',url:''},{label:'Sistema Geral',url:''},{label:'Sistemas Secundários',url:''},{label:'Guia Pokémon',url:''}],
-    [{label:'Pokémon Iniciais',url:''},{label:'Classes',url:''},{label:'Profissões',url:''},{label:'Atividades',url:''}],
-    [{label:'UWAdex',url:''},{label:'NPCdex',url:''},{label:'STATSdex',url:''},{label:'ITEMdex',url:''}],
+    [{label:'Introdução',slug:'introducao'},{label:'Sistema Geral',slug:'sistemageral'},{label:'Sistemas Secundários',slug:'sistemassecundarios'},{label:'Guia Pokémon',slug:'guiapokemon'}],
+    [{label:'Pokémon Iniciais',slug:'pokemoniniciais'},{label:'Classes',slug:'classes'},{label:'Profissões',slug:'profissoes'},{label:'Atividades',slug:'atividades'}],
+    [{label:'UWAdex',slug:'uwadex'},{label:'NPCdex',slug:'npcdex'},{label:'STATSdex',slug:'statsdex'},{label:'ITEMdex',slug:'itemdex'}],
   ],
   cards: [
     {icon:'🎲',title:'Sistema de Rolagem',body:'Use o rolador de encontros para descobrir Pokémon selvagens baseado no bioma e nas suas provas de valor.'},
@@ -2864,7 +2959,11 @@ function renderHomePage(){
   if(qcont){
     qcont.innerHTML = qmenu.map((row)=>`
       <div class="home-quickmenu-row">${row.map(item=>item.label?`
-        <button class="home-quick-btn" onclick="${item.url?`window.open('${item.url}','_blank')`:'void(0)'}">${item.label}</button>`:'').join('')}
+        <button class="home-quick-btn" onclick="${
+          item.slug ? `goToWiki('${item.slug}')` :
+          item.url  ? `window.open('${item.url}','_blank')` :
+                      'void(0)'
+        }">${item.label}</button>`:'').join('')}
       </div>`).join('');
   }
 
@@ -2928,8 +3027,9 @@ function renderHomeAdmQuickmenu(){
       </div>
       <div id="hq-btns-${ri}">${row.map((item,ii)=>`
         <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px" id="hq-item-${ri}-${ii}">
-          <input type="text" id="hq-label-${ri}-${ii}" value="${item.label||''}" placeholder="Rótulo" style="width:140px;min-width:0;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
-          <input type="text" id="hq-url-${ri}-${ii}" value="${item.url||''}" placeholder="URL (opcional)" style="flex:1;min-width:0;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+          <input type="text" id="hq-label-${ri}-${ii}" value="${item.label||''}" placeholder="Rótulo" style="width:130px;min-width:0;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+          <input type="text" id="hq-slug-${ri}-${ii}" value="${item.slug||''}" placeholder="slug (ex: introducao)" style="width:140px;min-width:0;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+          <input type="text" id="hq-url-${ri}-${ii}" value="${item.url||''}" placeholder="URL externa (opcional)" style="flex:1;min-width:0;padding:6px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
           <button class="btn btn-danger btn-sm" style="flex-shrink:0" onclick="homeAdmRemoveBtn(${ri},${ii})">✕</button>
         </div>`).join('')}
       </div>
@@ -2938,7 +3038,7 @@ function renderHomeAdmQuickmenu(){
 
 function homeAdmAddRow(){
   homeData.quickmenu = homeData.quickmenu || [];
-  homeData.quickmenu.push([{label:'Novo Botão',url:''}]);
+  homeData.quickmenu.push([{label:'Novo Botão',slug:'',url:''}]);
   renderHomeAdmQuickmenu();
 }
 function homeAdmRemoveRow(ri){
@@ -2946,7 +3046,7 @@ function homeAdmRemoveRow(ri){
   renderHomeAdmQuickmenu();
 }
 function homeAdmAddBtn(ri){
-  homeData.quickmenu[ri].push({label:'Novo Botão',url:''});
+  homeData.quickmenu[ri].push({label:'Novo Botão',slug:'',url:''});
   renderHomeAdmQuickmenu();
 }
 function homeAdmRemoveBtn(ri,ii){
@@ -3034,6 +3134,7 @@ async function salvarHomeData(){
   const quickmenu = (homeData.quickmenu||[]).map((row,ri)=>
     row.map((_,ii)=>({
       label: document.getElementById(`hq-label-${ri}-${ii}`)?.value||'',
+      slug:  document.getElementById(`hq-slug-${ri}-${ii}`)?.value||'',
       url:   document.getElementById(`hq-url-${ri}-${ii}`)?.value||'',
     }))
   );
@@ -3060,6 +3161,192 @@ async function resetarHomeData(){
   await dbDel('configuracoes','chave=eq.home_data');
   pagesLoaded.home = false;
   renderHomePage();
+}
+
+// ══════════════════════════════════════
+// WIKI PAGES
+// ══════════════════════════════════════
+let wikiPages = {}; // {slug: {title, subtitle, content, layout}}
+
+async function carregarWikiPages(){
+  try{
+    const raw = await dbGet('configuracoes','chave=like.wiki_%');
+    if(raw) raw.forEach(r=>{
+      const slug = r.chave.replace('wiki_','');
+      try{ wikiPages[slug]=JSON.parse(r.valor); }catch{}
+    });
+  }catch(e){}
+}
+
+async function goToWiki(slug){
+  await goTo('wiki', null, true, slug);
+}
+
+async function renderWikiPage(slug){
+  if(!slug) return;
+  const titleEl   = document.getElementById('wiki-page-title');
+  const subtitleEl= document.getElementById('wiki-page-subtitle');
+  const bodyEl    = document.getElementById('wiki-page-body');
+
+  // Find label from quickmenu
+  const qmenu = homeData.quickmenu || HOME_DEFAULTS.quickmenu;
+  let label = slug;
+  qmenu.forEach(row=>row.forEach(item=>{ if(item.slug===slug) label=item.label; }));
+
+  titleEl.textContent = label;
+
+  // Load from cache or fetch
+  if(!wikiPages[slug]){
+    try{
+      const raw = await dbGet('configuracoes',`chave=eq.wiki_${slug}&limit=1`);
+      if(raw && raw[0]) wikiPages[slug] = JSON.parse(raw[0].valor);
+    }catch{}
+  }
+
+  const page = wikiPages[slug];
+  if(page){
+    subtitleEl.textContent = page.subtitle || '';
+    bodyEl.innerHTML = page.content || '';
+  } else {
+    subtitleEl.textContent = '';
+    bodyEl.innerHTML = `<div class="wiki-empty"><div class="wiki-empty-icon">📝</div><div>Esta página ainda não tem conteúdo.</div>${admLogado?`<br><button class="btn btn-primary btn-sm" onclick="admTab('wiki-editor',null);goTo('adm',null)">Editar no ADM</button>`:''}
+    </div>`;
+  }
+}
+
+// ══════════════════════════════════════
+// ADM WIKI EDITOR
+// ══════════════════════════════════════
+let wikiEditingSlug = null;
+
+function renderWikiAdmList(){
+  const list = document.getElementById('wiki-pages-list');
+  if(!list) return;
+  const qmenu = homeData.quickmenu || HOME_DEFAULTS.quickmenu;
+  const all = [];
+  qmenu.forEach(row=>row.forEach(item=>{ if(item.slug) all.push(item); }));
+  if(!all.length){
+    list.innerHTML='<div style="font-size:12px;color:var(--muted)">Nenhuma página com slug no menu rápido.</div>';
+    return;
+  }
+  list.innerHTML = all.map(item=>`
+    <button onclick="wikiSelectPage('${item.slug}')" id="wiki-list-btn-${item.slug}"
+      style="display:block;width:100%;text-align:left;padding:8px 10px;border-radius:8px;border:1.5px solid transparent;background:none;font-family:var(--font-body);font-size:13px;cursor:pointer;color:var(--text);margin-bottom:4px;transition:all .15s"
+      onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background=${wikiEditingSlug===item.slug?`'var(--brand-light)'`:`'none'`}">
+      ${item.label}
+    </button>`).join('');
+}
+
+function wikiSelectPage(slug){
+  wikiEditingSlug = slug;
+  // highlight
+  document.querySelectorAll('[id^="wiki-list-btn-"]').forEach(b=>{
+    b.style.background='none'; b.style.borderColor='transparent'; b.style.color='var(--text)';
+  });
+  const btn = document.getElementById('wiki-list-btn-'+slug);
+  if(btn){ btn.style.background='var(--brand-light)'; btn.style.borderColor='var(--brand-mid)'; btn.style.color='var(--brand)'; }
+
+  const qmenu = homeData.quickmenu || HOME_DEFAULTS.quickmenu;
+  let label = slug;
+  qmenu.forEach(row=>row.forEach(item=>{ if(item.slug===slug) label=item.label; }));
+
+  const page = wikiPages[slug] || {title:label, subtitle:'', content:'', layout:'standard'};
+  const panel = document.getElementById('wiki-editor-panel');
+  panel.innerHTML = `
+    <div class="box" style="padding:16px">
+      <div class="box-title" style="margin-bottom:14px">✏️ ${label}</div>
+      <div class="field" style="margin-bottom:10px">
+        <label>Subtítulo / descrição</label>
+        <input type="text" id="wiki-ed-subtitle" value="${page.subtitle||''}" placeholder="Ex: Regras e mecânicas gerais do RPG"/>
+      </div>
+      <div class="field" style="margin-bottom:4px"><label>Layout</label></div>
+      <div class="wiki-layout-toggle" style="margin-bottom:14px">
+        <button class="wiki-layout-btn${page.layout!=='wiki'?' active':''}" onclick="wikiSetLayout('standard',this)">📄 Padrão do site</button>
+        <button class="wiki-layout-btn${page.layout==='wiki'?' active':''}" onclick="wikiSetLayout('wiki',this)">📖 Wiki limpo</button>
+      </div>
+      <div class="field" style="margin-bottom:10px"><label>Conteúdo</label></div>
+      <div class="rich-editor-toolbar" id="rte-toolbar">
+        <button class="rte-btn" onclick="rteCmd('bold')" title="Negrito"><b>B</b></button>
+        <button class="rte-btn" onclick="rteCmd('italic')" title="Itálico"><i>I</i></button>
+        <button class="rte-btn" onclick="rteCmd('underline')" title="Sublinhado"><u>U</u></button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteBlock('h1')" title="Título 1">H1</button>
+        <button class="rte-btn" onclick="rteBlock('h2')" title="Título 2">H2</button>
+        <button class="rte-btn" onclick="rteBlock('h3')" title="Título 3">H3</button>
+        <button class="rte-btn" onclick="rteCmd('formatBlock','p')" title="Parágrafo">¶</button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteCmd('insertUnorderedList')" title="Lista">• Lista</button>
+        <button class="rte-btn" onclick="rteCmd('insertOrderedList')" title="Lista numerada">1. Lista</button>
+        <button class="rte-btn" onclick="rteBlock('blockquote')" title="Citação">❝</button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteInsertTable()" title="Tabela">⊞ Tabela</button>
+        <button class="rte-btn" onclick="rteInsertHR()" title="Divisor">—</button>
+        <button class="rte-btn" onclick="rteInsertLink()" title="Link">🔗</button>
+        <div class="rte-sep"></div>
+        <button class="rte-btn" onclick="rteCmd('removeFormat')" title="Limpar formato">✕ Fmt</button>
+      </div>
+      <div class="rich-editor-body" id="rte-body" contenteditable="true">${page.content||''}</div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn btn-primary" onclick="salvarWikiPage()">💾 Salvar página</button>
+        <button class="btn" onclick="previewWikiPage()" style="background:var(--surface2)">👁 Preview</button>
+      </div>
+      <div class="fb fb-ok" id="wiki-ed-fb-ok" style="margin-top:10px;display:none">✓ Página salva!</div>
+    </div>`;
+
+  document.getElementById('rte-body').addEventListener('keydown', e=>{
+    if(e.key==='Tab'){ e.preventDefault(); rteCmd('insertHTML','&nbsp;&nbsp;&nbsp;&nbsp;'); }
+  });
+}
+
+let wikiLayout = 'standard';
+function wikiSetLayout(val, btn){
+  wikiLayout = val;
+  document.querySelectorAll('.wiki-layout-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function rteCmd(cmd, val=null){ document.execCommand(cmd, false, val); document.getElementById('rte-body').focus(); }
+function rteBlock(tag){ rteCmd('formatBlock', tag); }
+function rteInsertHR(){ rteCmd('insertHTML','<hr/>'); }
+function rteInsertLink(){
+  const url = prompt('URL do link:','https://');
+  if(url) rteCmd('createLink', url);
+}
+function rteInsertTable(){
+  const rows = parseInt(prompt('Quantas linhas?','3')||'3');
+  const cols = parseInt(prompt('Quantas colunas?','3')||'3');
+  if(!rows||!cols) return;
+  let html='<table><tr>'+ Array(cols).fill(0).map((_,i)=>`<th>Coluna ${i+1}</th>`).join('') +'</tr>';
+  for(let r=0;r<rows;r++) html+='<tr>'+Array(cols).fill('<td>&nbsp;</td>').join('')+'</tr>';
+  html+='</table>';
+  rteCmd('insertHTML', html);
+}
+
+async function salvarWikiPage(){
+  if(!wikiEditingSlug) return;
+  const subtitle = document.getElementById('wiki-ed-subtitle')?.value||'';
+  const content  = document.getElementById('rte-body')?.innerHTML||'';
+  const layout   = wikiLayout;
+  const data = {subtitle, content, layout};
+  wikiPages[wikiEditingSlug] = data;
+  const chave = `wiki_${wikiEditingSlug}`;
+  const existing = await dbGet('configuracoes',`chave=eq.${chave}&limit=1`);
+  if(existing && existing[0]) await dbPatch('configuracoes',`chave=eq.${chave}`,{valor:JSON.stringify(data)});
+  else await dbPost('configuracoes',{chave, valor:JSON.stringify(data)});
+  fb('wiki-ed-fb-ok');
+  // invalidate wiki cache for this slug
+  pagesLoaded.wiki = false;
+}
+
+function previewWikiPage(){
+  if(!wikiEditingSlug) return;
+  const content = document.getElementById('rte-body')?.innerHTML||'';
+  wikiPages[wikiEditingSlug] = {
+    ...(wikiPages[wikiEditingSlug]||{}),
+    subtitle: document.getElementById('wiki-ed-subtitle')?.value||'',
+    content, layout: wikiLayout
+  };
+  goToWiki(wikiEditingSlug);
 }
 
 // ══════════════════════════════════════
