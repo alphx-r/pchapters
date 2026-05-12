@@ -18,12 +18,12 @@
   --r:10px;--font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
 }
 html.dark{
-  --brand:#4a9ede;--brand-mid:#5aaeee;--brand-light:#0d1f35;
-  --accent:#e8a020;--accent-light:#2a1f00;
-  --bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;
-  --border:#2a2f45;--border2:#363c58;
-  --text:#e0e6f0;--muted:#8a9ab8;
-  --red:#e05050;--green:#4aaa4a;
+  --brand:#4a9ede !important;--brand-mid:#5aaeee !important;--brand-light:#0d1f35 !important;
+  --accent:#e8a020 !important;--accent-light:#2a1f00 !important;
+  --bg:#0f1117 !important;--surface:#1a1d27 !important;--surface2:#22263a !important;
+  --border:#2a2f45 !important;--border2:#363c58 !important;
+  --text:#e0e6f0 !important;--muted:#8a9ab8 !important;
+  --red:#e05050 !important;--green:#4aaa4a !important;
 }
 html.dark .nav{background:#0d1622}
 html.dark .slide-img{filter:brightness(.7)}
@@ -2804,20 +2804,27 @@ function coletarEstilo(){
   };
 }
 function aplicarVars(e){
-  const r=document.documentElement;
-  r.style.setProperty('--brand',e.brand);
-  r.style.setProperty('--brand-mid',e.brandMid);
-  r.style.setProperty('--accent',e.accent);
-  r.style.setProperty('--bg',e.bg);
-  r.style.setProperty('--surface',e.surface);
-  r.style.setProperty('--text',e.text);
-  r.style.setProperty('--font-title',e.fontTitle);
-  r.style.setProperty('--font-body',e.fontBody);
-  r.style.setProperty('--r',e.radius);
-  let tag=document.getElementById('custom-css-tag');
-  if(!tag){tag=document.createElement('style');tag.id='custom-css-tag';document.head.appendChild(tag);}
-  tag.textContent=e.customCss||'';
+  // Usa uma tag <style> em vez de inline style para não bloquear a cascata do dark mode
+  let tag=document.getElementById('tema-vars-tag');
+  if(!tag){tag=document.createElement('style');tag.id='tema-vars-tag';document.head.appendChild(tag);}
+  tag.textContent=`:root{
+    --brand:${e.brand};
+    --brand-mid:${e.brandMid};
+    --accent:${e.accent};
+    --bg:${e.bg};
+    --surface:${e.surface};
+    --text:${e.text};
+    --font-title:${e.fontTitle};
+    --font-body:${e.fontBody};
+    --r:${e.radius};
+  }`;
+  let customTag=document.getElementById('custom-css-tag');
+  if(!customTag){customTag=document.createElement('style');customTag.id='custom-css-tag';document.head.appendChild(customTag);}
+  customTag.textContent=e.customCss||'';
   injectFonts((e.fontTitle||'')+(e.fontBody||''));
+  // Limpar quaisquer inline styles residuais no html element
+  const vars=['--brand','--brand-mid','--accent','--bg','--surface','--text','--font-title','--font-body','--r'];
+  vars.forEach(v=>document.documentElement.style.removeProperty(v));
 }
 function injectFonts(str){
   const map={
