@@ -30,10 +30,12 @@ html.dark .slide-img{filter:brightness(.7)}
 html.dark .callout-info{background:#0d1f3a;color:#7ab8f0}
 html.dark .callout-warn{background:#2a1f00;color:#f0c040}
 html.dark .callout-tip{background:#0d2a0d;color:#60c060}
+html.dark body{background:var(--bg);color:var(--text)}
 /* dark mode toggle btn */
-.dark-toggle{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-right:6px;flex-shrink:0}
+.dark-toggle{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-left:8px;flex-shrink:0;line-height:1}
 .dark-toggle:hover{background:rgba(255,255,255,.15)}
-html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);color:var(--text)}
+html{background:var(--bg);transition:background .2s}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);transition:background .2s,color .2s}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:100}
 .nav-logo{font-family:var(--font-title);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px}
 .nav-logo span{color:var(--accent)}
@@ -402,8 +404,8 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
     <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
     <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
   </div>
-  <button class="dark-toggle" id="btn-dark" onclick="toggleDarkMode()" title="Alternar dark mode">🌙</button>
   <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
+  <button class="dark-toggle" id="btn-dark" onclick="toggleDarkMode()" title="Alternar dark mode">💡</button>
 </nav>
 
 <!-- HOME -->
@@ -1296,7 +1298,6 @@ async function init(){
     syncBiomaSelect();
 
     loading(false);
-    if(document.documentElement.classList.contains('dark')) document.getElementById('btn-dark').textContent='☀️';
 
     await goTo(paginaInicial, null, false, wikiSlugInicial);
 
@@ -1377,12 +1378,11 @@ function toggleSenha(id, btn){
 
 function toggleDarkMode(){
   const isDark = document.documentElement.classList.toggle('dark');
-  document.getElementById('btn-dark').textContent = isDark ? '☀️' : '🌙';
   try{ localStorage.setItem('pch-dark', isDark?'1':'0'); }catch{}
 }
 
 (function initDark(){
-  try{ if(localStorage.getItem('pch-dark')==='1'){ document.documentElement.classList.add('dark'); } }catch{}
+  try{ if(localStorage.getItem('pch-dark')==='1') document.documentElement.classList.add('dark'); }catch{}
 })();
 
 
