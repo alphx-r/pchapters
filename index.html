@@ -43,8 +43,8 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .nav-link{font-size:13px;font-weight:600;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:none;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s}
 .nav-link:hover{background:rgba(255,255,255,.12);color:#fff}
 .nav-link.active{background:rgba(255,255,255,.18);color:#fff}
-.nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid rgba(255,255,255,.5);background:transparent;color:#fff;cursor:pointer;transition:all .2s}
-.nav-login:hover{background:var(--accent);border-color:var(--accent)}
+.nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:all .2s}
+.nav-login:hover{background:var(--accent);border-color:var(--accent);opacity:.88}
 .nav-login.active{background:var(--accent);border-color:var(--accent)}
 .page{display:none;padding:28px;max-width:1000px;margin:0 auto}
 .page.active{display:block}
@@ -404,8 +404,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
     <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
   </div>
-  <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
-  <button class="dark-toggle" id="btn-dark" onclick="toggleDarkMode()" title="Alternar dark mode">💡</button>
+  <div style="display:flex;align-items:center;gap:8px">
+    <button class="dark-toggle" id="btn-dark" onclick="toggleDarkMode()" title="Alternar dark mode">💡</button>
+    <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
+  </div>
 </nav>
 
 <!-- HOME -->
@@ -952,6 +954,50 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
               </div>
             </div>
           </div>
+          <!-- DARK MODE EDITOR -->
+          <div class="box" style="margin-top:4px;border-color:#2a2f45">
+            <div class="box-title" style="color:#5aaeee">🌙 Modo Escuro</div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Personalize as cores exibidas quando o modo escuro estiver ativo.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div class="field">
+                <label>Fundo da página (dark)</label>
+                <input type="color" id="ec-dark-bg" value="#0f1117" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field">
+                <label>Fundo dos cards (dark)</label>
+                <input type="color" id="ec-dark-surface" value="#1a1d27" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field">
+                <label>Cor principal / nav (dark)</label>
+                <input type="color" id="ec-dark-brand" value="#4a9ede" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field">
+                <label>Cor de destaque (dark)</label>
+                <input type="color" id="ec-dark-brand-mid" value="#5aaeee" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field">
+                <label>Cor do texto (dark)</label>
+                <input type="color" id="ec-dark-text" value="#e0e6f0" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field">
+                <label>Cor das bordas (dark)</label>
+                <input type="color" id="ec-dark-border" value="#2a2f45" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field">
+                <label>Cor de fundo nav (dark)</label>
+                <input type="color" id="ec-dark-nav" value="#0d1622" oninput="aplicarEstilo()"/>
+              </div>
+              <div class="field">
+                <label>Texto secundário / muted (dark)</label>
+                <input type="color" id="ec-dark-muted" value="#8a9ab8" oninput="aplicarEstilo()"/>
+              </div>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <button class="btn btn-sm" style="background:#1a1d27;color:#e0e6f0;border:1.5px solid #2a2f45" onclick="previewDarkMode()">👁 Pré-visualizar dark</button>
+              <button class="btn btn-sm btn-warn" onclick="resetarDarkMode()">↺ Restaurar dark padrão</button>
+            </div>
+          </div>
+
           <div class="box">
             <div class="box-title">💻 CSS Personalizado</div>
             <textarea id="ec-custom-css" rows="5" placeholder="/* Seu CSS aqui */" style="font-family:monospace;font-size:12px" oninput="aplicarEstilo()"></textarea>
@@ -2765,7 +2811,8 @@ function renderHistorico(){
 // ══════════════════════════════════════
 // EDITOR VISUAL
 // ══════════════════════════════════════
-const ESTILO_DEFAULT={brand:'#000000',brandMid:'#000000',accent:'#b22a2a',bg:'#f4f6fa',surface:'#ffffff',text:'#1a1f2e',fontTitle:"'Cinzel',serif",fontBody:"'Nunito',sans-serif",radius:'10px',customCss:''};
+const DARK_DEFAULT={darkBg:'#0f1117',darkSurface:'#1a1d27',darkBrand:'#4a9ede',darkBrandMid:'#5aaeee',darkText:'#e0e6f0',darkBorder:'#2a2f45',darkNav:'#0d1622',darkMuted:'#8a9ab8'};
+const ESTILO_DEFAULT={brand:'#000000',brandMid:'#000000',accent:'#b22a2a',bg:'#f4f6fa',surface:'#ffffff',text:'#1a1f2e',fontTitle:"'Cinzel',serif",fontBody:"'Nunito',sans-serif",radius:'10px',customCss:'',...DARK_DEFAULT};
 
 async function carregarEstiloSalvo(){
   try{
@@ -2788,23 +2835,39 @@ function carregarEditorUI(e){
   document.getElementById('ec-font-body').value=d.fontBody;
   document.getElementById('ec-radius').value=d.radius;
   document.getElementById('ec-custom-css').value=d.customCss||'';
+  // Dark mode fields
+  document.getElementById('ec-dark-bg').value=d.darkBg||DARK_DEFAULT.darkBg;
+  document.getElementById('ec-dark-surface').value=d.darkSurface||DARK_DEFAULT.darkSurface;
+  document.getElementById('ec-dark-brand').value=d.darkBrand||DARK_DEFAULT.darkBrand;
+  document.getElementById('ec-dark-brand-mid').value=d.darkBrandMid||DARK_DEFAULT.darkBrandMid;
+  document.getElementById('ec-dark-text').value=d.darkText||DARK_DEFAULT.darkText;
+  document.getElementById('ec-dark-border').value=d.darkBorder||DARK_DEFAULT.darkBorder;
+  document.getElementById('ec-dark-nav').value=d.darkNav||DARK_DEFAULT.darkNav;
+  document.getElementById('ec-dark-muted').value=d.darkMuted||DARK_DEFAULT.darkMuted;
 }
 function coletarEstilo(){
   return{
-    brand:     document.getElementById('ec-brand').value,
-    brandMid:  document.getElementById('ec-brand-mid').value,
-    accent:    document.getElementById('ec-accent').value,
-    bg:        document.getElementById('ec-bg').value,
-    surface:   document.getElementById('ec-surface').value,
-    text:      document.getElementById('ec-text').value,
-    fontTitle: document.getElementById('ec-font-title').value,
-    fontBody:  document.getElementById('ec-font-body').value,
-    radius:    document.getElementById('ec-radius').value,
-    customCss: document.getElementById('ec-custom-css').value,
+    brand:       document.getElementById('ec-brand').value,
+    brandMid:    document.getElementById('ec-brand-mid').value,
+    accent:      document.getElementById('ec-accent').value,
+    bg:          document.getElementById('ec-bg').value,
+    surface:     document.getElementById('ec-surface').value,
+    text:        document.getElementById('ec-text').value,
+    fontTitle:   document.getElementById('ec-font-title').value,
+    fontBody:    document.getElementById('ec-font-body').value,
+    radius:      document.getElementById('ec-radius').value,
+    customCss:   document.getElementById('ec-custom-css').value,
+    darkBg:      document.getElementById('ec-dark-bg').value,
+    darkSurface: document.getElementById('ec-dark-surface').value,
+    darkBrand:   document.getElementById('ec-dark-brand').value,
+    darkBrandMid:document.getElementById('ec-dark-brand-mid').value,
+    darkText:    document.getElementById('ec-dark-text').value,
+    darkBorder:  document.getElementById('ec-dark-border').value,
+    darkNav:     document.getElementById('ec-dark-nav').value,
+    darkMuted:   document.getElementById('ec-dark-muted').value,
   };
 }
 function aplicarVars(e){
-  // Usa uma tag <style> em vez de inline style para não bloquear a cascata do dark mode
   let tag=document.getElementById('tema-vars-tag');
   if(!tag){tag=document.createElement('style');tag.id='tema-vars-tag';document.head.appendChild(tag);}
   tag.textContent=`:root{
@@ -2817,14 +2880,35 @@ function aplicarVars(e){
     --font-title:${e.fontTitle};
     --font-body:${e.fontBody};
     --r:${e.radius};
-  }`;
+  }
+  html.dark{
+    --brand:${e.darkBrand||DARK_DEFAULT.darkBrand} !important;
+    --brand-mid:${e.darkBrandMid||DARK_DEFAULT.darkBrandMid} !important;
+    --bg:${e.darkBg||DARK_DEFAULT.darkBg} !important;
+    --surface:${e.darkSurface||DARK_DEFAULT.darkSurface} !important;
+    --text:${e.darkText||DARK_DEFAULT.darkText} !important;
+    --border:${e.darkBorder||DARK_DEFAULT.darkBorder} !important;
+    --muted:${e.darkMuted||DARK_DEFAULT.darkMuted} !important;
+  }
+  html.dark .nav{ background:${e.darkNav||DARK_DEFAULT.darkNav}; }`;
   let customTag=document.getElementById('custom-css-tag');
   if(!customTag){customTag=document.createElement('style');customTag.id='custom-css-tag';document.head.appendChild(customTag);}
   customTag.textContent=e.customCss||'';
   injectFonts((e.fontTitle||'')+(e.fontBody||''));
-  // Limpar quaisquer inline styles residuais no html element
   const vars=['--brand','--brand-mid','--accent','--bg','--surface','--text','--font-title','--font-body','--r'];
   vars.forEach(v=>document.documentElement.style.removeProperty(v));
+}
+function previewDarkMode(){
+  if(!document.documentElement.classList.contains('dark')){
+    document.documentElement.classList.add('dark');
+  }
+  aplicarEstilo();
+}
+function resetarDarkMode(){
+  const cur=coletarEstilo();
+  const reset={...cur,...DARK_DEFAULT};
+  carregarEditorUI(reset);
+  aplicarVars(reset);
 }
 function injectFonts(str){
   const map={
