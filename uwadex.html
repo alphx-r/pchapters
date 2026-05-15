@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>UWAdex</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --brand:#1a3a5c;--brand-mid:#2563a8;--brand-light:#e8f0fb;
+  --accent:#e8a020;--accent-light:#fdf3dc;
+  --bg:#f4f6fa;--surface:#fff;--surface2:#f0f3f8;
+  --border:#dde3ee;--border2:#c8d0e0;
+  --text:#1a1f2e;--muted:#6b7a99;
+  --red:#c03030;--green:#1a7a1a;
+  --r:10px;--font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
+}
+html.dark{
+  --brand:#4a9ede!important;--brand-mid:#5aaeee!important;--brand-light:#0d1f35!important;
+  --accent:#e8a020!important;--bg:#0f1117!important;--surface:#1a1d27!important;
+  --surface2:#22263a!important;--border:#2a2f45!important;--border2:#363c58!important;
+  --text:#e0e6f0!important;--muted:#8a9ab8!important;--red:#e05050!important;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);transition:background .2s,color .2s}
+
+/* ── NAV ── */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:200}
+html.dark .nav{background:#0d1622}
+.nav-logo{font-family:var(--font-title);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px;cursor:pointer;text-decoration:none}
+.nav-logo span{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.dark-toggle{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.dark-toggle:hover{background:rgba(255,255,255,.15)}
+.nav-adm-btn{font-size:12px;font-weight:700;font-family:var(--font-body);padding:6px 14px;border-radius:20px;border:1.5px solid rgba(255,255,255,.4);background:transparent;color:rgba(255,255,255,.8);cursor:pointer;transition:all .2s}
+.nav-adm-btn:hover,.nav-adm-btn.active{background:rgba(255,255,255,.15);color:#fff}
+.nav-back{font-size:12px;font-weight:700;font-family:var(--font-body);padding:6px 14px;border-radius:20px;border:none;background:rgba(255,255,255,.12);color:#fff;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.nav-back:hover{background:rgba(255,255,255,.22)}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+
+/* ── LOADING ── */
+.loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:#2563a8;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:var(--muted);font-weight:600}
+
+/* ── DEX LIST PAGE ── */
+.dex-wrap{max-width:1100px;margin:0 auto;padding:28px}
+.dex-header{margin-bottom:24px}
+.dex-header h1{font-family:var(--font-title);font-size:26px;color:var(--brand);font-weight:700;margin-bottom:4px}
+.dex-header p{font-size:13px;color:var(--muted)}
+.dex-filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px;align-items:center}
+.dex-search{padding:9px 16px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;width:240px;color:var(--text);transition:border .2s}
+.dex-search:focus{outline:none;border-color:var(--brand-mid)}
+.type-filter-btn{padding:5px 12px;border-radius:16px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.4px}
+.type-filter-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
+.type-filter-btn.active{background:var(--brand-mid);border-color:var(--brand-mid);color:#fff}
+.dex-count{font-size:12px;color:var(--muted);font-weight:600;margin-left:auto}
+
+/* ── CARD GRID ── */
+.dex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.dex-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .2s;text-decoration:none;position:relative;overflow:hidden}
+.dex-card:hover{border-color:var(--brand-mid);transform:translateY(-3px);box-shadow:0 6px 20px rgba(37,99,168,.13)}
+.dex-card-num{font-size:10px;font-weight:700;color:var(--muted);font-family:var(--font-title);letter-spacing:.5px}
+.dex-card-sprite{width:96px;height:96px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
+.dex-card-name{font-family:var(--font-title);font-size:12px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
+.dex-card-types{display:flex;gap:4px;flex-wrap:wrap;justify-content:center}
+.dex-card-rarity{position:absolute;top:8px;right:8px}
+
+/* ── TYPE PILLS ── */
+.type-pill{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.3px;margin:1px}
+.t-fire{background:#ff9b4a;color:#7a2a00}.t-water{background:#6ab8ff;color:#003a6a}.t-grass{background:#78d878;color:#1a5a1a}.t-normal{background:#c8c8a0;color:#4a4a2a}.t-electric{background:#ffe030;color:#5a4a00}.t-psychic{background:#ff8fb0;color:#6a0030}.t-steel{background:#aababb;color:#2a3a3a}.t-fairy{background:#ffaad8;color:#6a0050}.t-ghost{background:#9090c0;color:#1a1a4a}.t-dragon{background:#7060f0;color:#fff}.t-ice{background:#96d8d8;color:#1a4a4a}.t-fighting{background:#c03030;color:#fff}.t-rock{background:#b8a050;color:#3a2a00}.t-ground{background:#e0c060;color:#3a2a00}.t-poison{background:#a060c0;color:#fff}.t-bug{background:#a0c020;color:#2a3a00}.t-dark{background:#705040;color:#fff}.t-flying{background:#88aaee;color:#1a1a5a}
+.rc{background:#e0f0e0;color:#1a6a1a}.ri{background:#dde8f8;color:#1a4a8a}.rr{background:#f0e8ff;color:#5a1a9a}.rrr{background:#fff0d8;color:#8a4a00}
+
+/* ── FICHA PAGE ── */
+.ficha-wrap{max-width:1000px;margin:0 auto;padding:28px}
+.ficha-back{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;margin-bottom:20px;font-family:var(--font-body);transition:color .15s}
+.ficha-back:hover{color:var(--brand-mid)}
+
+/* Evolutionary Chain */
+.evo-chain-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
+.evo-chain-title{background:var(--brand);color:#fff;text-align:center;font-family:var(--font-title);font-size:11px;letter-spacing:1.5px;padding:8px;font-weight:600}
+.evo-chain-inner{display:flex;align-items:center;justify-content:center;gap:0;padding:20px;flex-wrap:wrap;gap:4px}
+.evo-stage{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 14px}
+.evo-stage-sprite{width:80px;height:80px;object-fit:contain;image-rendering:pixelated;cursor:pointer;transition:transform .2s}
+.evo-stage-sprite:hover{transform:scale(1.08)}
+.evo-stage-name{font-family:var(--font-title);font-size:10px;color:var(--text);text-align:center;font-weight:600}
+.evo-stage.current .evo-stage-name{color:var(--brand-mid)}
+.evo-stage.current .evo-stage-sprite{filter:drop-shadow(0 0 6px rgba(37,99,168,.4))}
+.evo-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0 6px}
+.evo-arrow-icon{font-size:20px;color:var(--muted)}
+.evo-arrow-label{font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 7px}
+
+/* Main info block */
+.ficha-main{display:grid;grid-template-columns:260px 1fr;gap:0;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
+.ficha-sprite-col{background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;gap:12px;border-right:1.5px solid var(--border)}
+.ficha-sprite-img{width:200px;height:200px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
+.ficha-sprite-num{font-family:var(--font-title);font-size:12px;color:var(--muted);letter-spacing:1px}
+.ficha-sprite-types{display:flex;gap:5px;justify-content:center}
+.ficha-info-col{padding:0}
+.ficha-info-name{background:var(--brand);color:#fff;font-family:var(--font-title);font-size:20px;font-weight:700;letter-spacing:1.5px;padding:14px 20px;text-align:center}
+.ficha-info-table{width:100%}
+.ficha-info-table tr{border-bottom:1px solid var(--border)}
+.ficha-info-table tr:last-child{border-bottom:none}
+.ficha-info-table td{padding:9px 16px;font-size:13px;vertical-align:top}
+.ficha-info-table td:first-child{font-weight:700;color:var(--muted);width:38%;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.ficha-info-table td:last-child{color:var(--text)}
+.ficha-ability{margin-bottom:6px;font-size:13px;line-height:1.5}
+.ficha-ability-name{font-weight:700;color:var(--brand-mid)}
+.ficha-ability-ha{font-size:10px;font-weight:700;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle}
+
+/* Damage taken */
+.ficha-dmg-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
+.ficha-section-title{background:var(--brand);color:#fff;text-align:center;font-family:var(--font-title);font-size:11px;letter-spacing:1.5px;padding:8px;font-weight:600}
+.dmg-table{width:100%;border-collapse:collapse}
+.dmg-table th{padding:6px 4px;text-align:center;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;border-right:1px solid var(--border);min-width:44px}
+.dmg-table td{padding:6px 4px;text-align:center;font-size:12px;font-weight:700;border-right:1px solid var(--border)}
+.dmg-table th:last-child,.dmg-table td:last-child{border-right:none}
+.dmg-0{color:#888}.dmg-half{color:#2a7a2a;background:#e0f0e0}.dmg-2{color:#c03030;background:#fde8e8}.dmg-4{color:#7a0000;background:#f8b0b0}.dmg-1{color:var(--muted)}
+
+/* Stats */
+.ficha-stats-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
+.stats-table{width:100%;border-collapse:collapse}
+.stats-table th{background:var(--brand-mid);color:#fff;text-align:center;font-family:var(--font-title);font-size:10px;letter-spacing:.8px;padding:8px 6px;border-right:1px solid rgba(255,255,255,.2)}
+.stats-table th:last-child{border-right:none}
+.stats-table td{padding:10px 8px;text-align:center;font-family:var(--font-title);font-size:16px;font-weight:700;color:var(--brand);border-right:1px solid var(--border);border-top:1px solid var(--border)}
+.stats-table td:last-child{border-right:none}
+
+/* RPG stats row */
+.rpg-stats-row{display:flex;gap:0;border-top:1.5px solid var(--border)}
+.rpg-stat{flex:1;text-align:center;padding:8px 4px;border-right:1px solid var(--border)}
+.rpg-stat:last-child{border-right:none}
+.rpg-stat-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.rpg-stat-val{font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--brand-mid)}
+
+/* Biology */
+.ficha-bio-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
+.ficha-bio-inner{display:flex;gap:16px;padding:16px 20px;align-items:flex-start}
+.ficha-bio-sprite{width:96px;height:96px;object-fit:contain;image-rendering:pixelated;flex-shrink:0}
+.ficha-bio-text{font-size:13px;color:var(--text);line-height:1.75;padding-top:4px}
+
+/* Moves */
+.ficha-moves-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
+.moves-tabs{display:flex;border-bottom:1.5px solid var(--border)}
+.moves-tab{flex:1;padding:10px;text-align:center;font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--muted);background:var(--surface2);border:none;cursor:pointer;transition:all .15s;border-right:1px solid var(--border)}
+.moves-tab:last-child{border-right:none}
+.moves-tab.active{background:var(--surface);color:var(--brand-mid)}
+.moves-panel{display:none;padding:0}.moves-panel.active{display:block}
+.moves-table{width:100%;border-collapse:collapse;font-size:12px}
+.moves-table th{background:var(--surface2);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:8px 12px;text-align:left;border-bottom:1.5px solid var(--border);position:sticky;top:0}
+.moves-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:middle}
+.moves-table tr:last-child td{border-bottom:none}
+.moves-table tr:hover td{background:var(--surface2)}
+.moves-table td.lvl-cell{font-family:var(--font-title);font-weight:700;color:var(--brand-mid);text-align:center;width:60px}
+.moves-table td.move-name{font-weight:700}
+.moves-table td.num-cell{text-align:center;color:var(--muted);width:70px}
+.cat-icon{display:inline-block;font-size:11px;font-weight:800;padding:2px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.3px}
+.cat-fisico{background:#f8d8a0;color:#7a4000}
+.cat-especial{background:#d0d8f8;color:#1a2a7a}
+.cat-status{background:#e0d8f0;color:#3a1a5a}
+.moves-empty{padding:24px;text-align:center;color:var(--muted);font-size:13px}
+
+/* ── ADM PANEL ── */
+.adm-wrap{max-width:1100px;margin:0 auto;padding:28px}
+.adm-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.adm-header h1{font-family:var(--font-title);font-size:20px;color:var(--brand)}
+.adm-login-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:36px 32px;max-width:380px;margin:60px auto}
+.adm-login-title{font-family:var(--font-title);font-size:18px;color:var(--brand);text-align:center;margin-bottom:4px}
+.adm-login-sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:24px}
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.field label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.field input,.field select,.field textarea{padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:14px;color:var(--text);transition:border .2s;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--brand-mid)}
+.btn{padding:9px 18px;border-radius:8px;border:none;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-block}
+.btn-primary{background:var(--brand-mid);color:#fff}
+.btn-primary:hover{background:var(--brand)}
+.btn-danger{background:#fde8e8;color:var(--red);border:1px solid #f0c0c0}
+.btn-danger:hover{background:#f8c8c8}
+.btn-warn{background:#fff8e0;color:#7a5010;border:1px solid #e8d080}
+.btn-sm{padding:5px 11px;font-size:12px}
+.btn-full{width:100%}
+.fb{font-size:12px;font-weight:700;text-align:center;padding:7px 10px;border-radius:6px;margin-top:8px;display:none}
+.fb-ok{background:#e0f0e0;color:var(--green)}
+.fb-err{background:#fde8e8;color:var(--red)}
+.box{background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:16px;margin-bottom:20px}
+.box-title{font-size:12px;font-weight:700;color:var(--brand-mid);margin-bottom:14px;text-transform:uppercase;letter-spacing:.4px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.adm-table{width:100%;border-collapse:collapse;font-size:13px}
+.adm-table th{text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:8px 10px;border-bottom:1.5px solid var(--border)}
+.adm-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.adm-table tr:last-child td{border-bottom:none}
+.adm-table tr:hover td{background:var(--surface2)}
+.adm-layout{display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start}
+.adm-sidebar{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;position:sticky;top:78px}
+.adm-nav-btn{display:block;width:100%;text-align:left;padding:9px 12px;border-radius:8px;border:none;background:transparent;font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;margin-bottom:3px}
+.adm-nav-btn:hover{background:var(--brand-light);color:var(--brand-mid)}
+.adm-nav-btn.active{background:var(--brand-light);color:var(--brand-mid)}
+.adm-nav-sep{height:1px;background:var(--border);margin:8px 0}
+.adm-nav-danger{color:var(--red)!important}
+.adm-nav-danger:hover{background:#fde8e8!important}
+.adm-content{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:24px;min-height:500px}
+.adm-sec{display:none}.adm-sec.active{display:block}
+.sec-title{font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:4px}
+.sec-sub{font-size:13px;color:var(--muted);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+.tipo-tag{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;user-select:none;transition:all .15s;margin:2px}
+.tipo-tag:hover{border-color:var(--brand-mid)}
+.tipo-tag.sel{background:var(--brand-mid);color:#fff;border-color:var(--brand-mid)}
+
+/* Moves editor inside ADM */
+.move-row{display:grid;grid-template-columns:70px 1fr 100px 80px 60px 60px 60px 36px;gap:6px;align-items:center;margin-bottom:6px}
+.move-row input,.move-row select{padding:6px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text);width:100%}
+.move-row-header{display:grid;grid-template-columns:70px 1fr 100px 80px 60px 60px 60px 36px;gap:6px;margin-bottom:4px}
+.move-row-header span{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;padding:0 2px}
+
+.egg-row,.tutor-row{display:grid;grid-template-columns:1fr 36px;gap:6px;align-items:center;margin-bottom:6px}
+.egg-row input,.tutor-row input{padding:6px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text);width:100%}
+
+/* Evo editor */
+.evo-edit-row{display:grid;grid-template-columns:1fr 120px 36px;gap:8px;align-items:center;margin-bottom:8px;padding:10px;background:var(--surface2);border:1px solid var(--border);border-radius:8px}
+.evo-edit-row input,.evo-edit-row select{padding:7px 10px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text);width:100%}
+.evo-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px}
+
+/* Empty state */
+.empty-state{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-text{font-size:14px}
+
+@media(max-width:700px){
+  .ficha-main{grid-template-columns:1fr}
+  .ficha-sprite-col{border-right:none;border-bottom:1.5px solid var(--border)}
+  .dex-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+  .move-row{grid-template-columns:50px 1fr 80px 60px 50px 50px 50px 30px}
+  .adm-layout{grid-template-columns:1fr}
+  .adm-sidebar{position:static}
+  .ficha-wrap,.dex-wrap,.adm-wrap{padding:16px}
+  .evo-chain-inner{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Carregando UWAdex…</div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="../index.html">P<span>Chapters</span></a>
+  <div class="nav-right">
+    <button class="dark-toggle" onclick="toggleDark()" title="Alternar tema">💡</button>
+    <button class="nav-adm-btn" id="btn-adm-toggle" onclick="toggleAdmView()">⚙ ADM</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ DEX LIST VIEW ═══════════════════════════════ -->
+<div class="view active" id="view-dex">
+  <div class="dex-wrap">
+    <div class="dex-header">
+      <h1>UWAdex</h1>
+      <p>Pokédex oficial da região — <span id="dex-total-count">0</span> Pokémon registrados</p>
+    </div>
+    <div class="dex-filters">
+      <input class="dex-search" type="text" placeholder="Buscar por nome…" id="dex-search" oninput="filtrarDex()"/>
+      <div id="dex-type-filters" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+      <span class="dex-count" id="dex-filter-count"></span>
+    </div>
+    <div class="dex-grid" id="dex-grid"></div>
+    <div class="empty-state" id="dex-empty" style="display:none">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-text">Nenhum Pokémon encontrado.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ FICHA VIEW ═══════════════════════════════ -->
+<div class="view" id="view-ficha">
+  <div class="ficha-wrap">
+    <button class="ficha-back" onclick="voltarDex()">← Voltar para a UWAdex</button>
+    <div id="ficha-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ ADM VIEW ═══════════════════════════════ -->
+<div class="view" id="view-adm">
+  <!-- Login -->
+  <div id="adm-login-wrap" style="display:none">
+    <div class="adm-login-box">
+      <div class="adm-login-title">⚙ UWAdex ADM</div>
+      <div class="adm-login-sub">Acesso restrito ao administrador</div>
+      <div class="field"><label>E-mail</label><input type="text" id="adm-email" placeholder="admin@email.com" onkeydown="if(event.key==='Enter')admLogin()"/></div>
+      <div class="field"><label>Senha</label><input type="password" id="adm-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')admLogin()"/></div>
+      <button class="btn btn-primary btn-full" onclick="admLogin()">Entrar</button>
+      <div class="fb fb-err" id="adm-login-err" style="margin-top:10px">E-mail ou senha incorretos.</div>
+    </div>
+  </div>
+
+  <!-- Painel -->
+  <div id="adm-painel-wrap" style="display:none">
+    <div class="adm-wrap">
+      <div class="adm-header">
+        <h1>⚙ UWAdex ADM</h1>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:12px;color:var(--muted)" id="adm-user-lbl"></span>
+          <button class="btn btn-sm btn-warn" onclick="admLogout()">Sair</button>
+        </div>
+      </div>
+      <div class="adm-layout">
+        <div class="adm-sidebar">
+          <button class="adm-nav-btn active" onclick="admTab('pokemon',this)">⚡ Pokémon</button>
+          <div class="adm-nav-sep"></div>
+          <button class="adm-nav-btn adm-nav-danger" onclick="admLogout()">Sair</button>
+        </div>
+        <div class="adm-content">
+
+          <!-- SEC: POKEMON -->
+          <div class="adm-sec active" id="adm-sec-pokemon">
+            <div class="sec-title">Pokémon da UWAdex</div>
+            <div class="sec-sub">Cadastre e edite os Pokémon da Pokédex regional</div>
+
+            <!-- Form novo/editar -->
+            <div class="box" id="adm-form-box">
+              <div class="box-title" id="adm-form-title">➕ Novo Pokémon</div>
+
+              <!-- Bloco 1: Identificação -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Identificação</div>
+                <div class="g3">
+                  <div class="field"><label>Número (#)</label><input type="number" id="f-num" placeholder="001" min="1"/></div>
+                  <div class="field"><label>Nome</label><input type="text" id="f-nome" placeholder="Ex: Bubbeet"/></div>
+                  <div class="field"><label>Classificação</label><input type="text" id="f-classif" placeholder="Ex: Bubble Bug Pokémon"/></div>
+                </div>
+                <div class="g2">
+                  <div class="field"><label>URL do Sprite (frente)</label><input type="text" id="f-sprite" placeholder="https://…"/></div>
+                  <div class="field"><label>Raridade</label>
+                    <select id="f-raridade">
+                      <option value="comum">Comum</option>
+                      <option value="incomum">Incomum</option>
+                      <option value="raro">Raro</option>
+                      <option value="rarissimo">Raríssimo</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="g3">
+                  <div class="field"><label>Altura</label><input type="text" id="f-altura" placeholder="Ex: 35,5 cm"/></div>
+                  <div class="field"><label>Peso</label><input type="text" id="f-peso" placeholder="Ex: 4 kg"/></div>
+                  <div class="field"><label>Proporção de Gênero</label><input type="text" id="f-genero" placeholder="Ex: 88% Male, 12% Female"/></div>
+                </div>
+                <div class="g2">
+                  <div class="field"><label>Egg Group(s)</label><input type="text" id="f-egggroup" placeholder="Ex: Bug, Water 3"/></div>
+                </div>
+              </div>
+
+              <!-- Tipo(s) -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Tipo(s)</div>
+                <div id="tipos-selector" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+                <input type="hidden" id="f-tipos"/>
+              </div>
+
+              <!-- Stats RPG -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Stats RPG</div>
+                <div class="g3">
+                  <div class="field"><label>Dado</label><input type="text" id="f-dado" placeholder="Ex: 1d8"/></div>
+                  <div class="field"><label>CA</label><input type="number" id="f-ca" placeholder="5"/></div>
+                  <div class="field"><label>PV</label><input type="number" id="f-pv" placeholder="5"/></div>
+                </div>
+              </div>
+
+              <!-- Stats Base -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Stats Base</div>
+                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
+                  <div class="field"><label>HP</label><input type="number" id="f-hp" placeholder="45"/></div>
+                  <div class="field"><label>ATK</label><input type="number" id="f-atk" placeholder="49"/></div>
+                  <div class="field"><label>DEF</label><input type="number" id="f-def" placeholder="49"/></div>
+                  <div class="field"><label>Sp.ATK</label><input type="number" id="f-spatk" placeholder="65"/></div>
+                  <div class="field"><label>Sp.DEF</label><input type="number" id="f-spdef" placeholder="65"/></div>
+                  <div class="field"><label>SPEED</label><input type="number" id="f-speed" placeholder="45"/></div>
+                </div>
+              </div>
+
+              <!-- Habilidades -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Habilidades</div>
+                <div id="abilities-list"></div>
+                <button class="btn btn-sm btn-warn" onclick="addAbilityRow()" style="margin-top:4px">+ Habilidade</button>
+              </div>
+
+              <!-- Damage Taken -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Damage Taken (multiplicadores)</div>
+                <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px" id="dmg-taken-fields"></div>
+              </div>
+
+              <!-- Biology -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Biology</div>
+                <div class="field" style="margin-bottom:0"><label>Descrição / Lore</label><textarea id="f-bio" rows="3" placeholder="Descrição do Pokémon na região…"></textarea></div>
+              </div>
+
+              <!-- Cadeia Evolutiva -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Cadeia Evolutiva</div>
+                <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Liste todos os estágios em ordem. O estágio "atual" é identificado pelo nome igual ao campo Nome acima.</p>
+                <div id="evo-chain-list"></div>
+                <button class="btn btn-sm btn-warn" onclick="addEvoRow()" style="margin-top:4px">+ Estágio</button>
+              </div>
+
+              <!-- Moves por Nível -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Moves por Nível</div>
+                <div class="move-row-header">
+                  <span>LVL</span><span>Nome</span><span>Tipo</span><span>Categoria</span><span>ATK</span><span>ACC</span><span>Efeito%</span><span></span>
+                </div>
+                <div id="moves-lvl-list"></div>
+                <button class="btn btn-sm btn-warn" onclick="addMoveRow('lvl')" style="margin-top:4px">+ Move</button>
+              </div>
+
+              <!-- Egg Moves -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Egg Moves</div>
+                <div id="egg-moves-list"></div>
+                <button class="btn btn-sm btn-warn" onclick="addEggRow()" style="margin-top:4px">+ Egg Move</button>
+              </div>
+
+              <!-- Tutor Moves -->
+              <div style="margin-bottom:16px">
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Tutor Moves</div>
+                <div id="tutor-moves-list"></div>
+                <button class="btn btn-sm btn-warn" onclick="addTutorRow()" style="margin-top:4px">+ Tutor Move</button>
+              </div>
+
+              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="salvarPokemon()">💾 Salvar Pokémon</button>
+                <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="cancelarEdicao()">Cancelar</button>
+                <button class="btn btn-danger" id="adm-del-btn" style="display:none;margin-left:auto" onclick="excluirPokemon()">🗑 Excluir</button>
+              </div>
+              <div class="fb fb-ok" id="adm-form-ok">✓ Pokémon salvo!</div>
+              <div class="fb fb-err" id="adm-form-err">Erro ao salvar.</div>
+            </div>
+
+            <!-- Lista de pokémon cadastrados -->
+            <div class="box">
+              <div class="box-title">Pokémon Cadastrados</div>
+              <div id="adm-poke-list">
+                <div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div>
+              </div>
+            </div>
+
+          </div><!-- /adm-sec-pokemon -->
+        </div><!-- /adm-content -->
+      </div><!-- /adm-layout -->
+    </div><!-- /adm-wrap -->
+  </div><!-- /adm-painel-wrap -->
+</div><!-- /view-adm -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+// ════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════
+const SUPA_URL = 'https://jdgfxsvgxfdkdrzqbgje.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpkZ2Z4c3ZneGZka2RyenFiZ2plIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MTUyMTcsImV4cCI6MjA5MzA5MTIxN30.PvzZiMHKYLn6ObK4b70pmPpr0U6Zp5O-ouQHfOtsOvk';
+const supabaseClient = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+async function sb(path, opts={}){
+  const session = supabaseClient?.auth ? (await supabaseClient.auth.getSession()).data.session : null;
+  const token = session?.access_token || SUPA_KEY;
+  const isGet = !opts.method || opts.method==='GET';
+  const res = await fetch(`${SUPA_URL}/rest/v1/${path}`,{
+    headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${token}`,'Content-Type':'application/json','Prefer':opts.prefer||'return=representation',...(isGet?{'Range':'0-9999'}:{}),...(opts.headers||{})},
+    ...opts
+  });
+  if(opts.method==='DELETE'||res.status===204) return [];
+  const text=await res.text();
+  if(!text) return [];
+  try{return JSON.parse(text);}catch{return [];}
+}
+const dbGet  = (t,q='')  => sb(`${t}?${q}&order=numero.asc`);
+const dbPost = (t,b)     => sb(t,{method:'POST',body:JSON.stringify(b)});
+const dbPatch= (t,q,b)   => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
+const dbDel  = (t,q)     => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
+
+// ════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════
+let uwaDex = [];          // todos os pokémon
+let admLogado = null;
+let editingId = null;     // ID do pokémon sendo editado
+let tipoFiltroAtivo = ''; // filtro de tipo na dex
+
+const TIPOS = ['normal','fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+const TIPO_LABELS = {normal:'Normal',fire:'Fogo',water:'Água',grass:'Planta',electric:'Elétrico',ice:'Gelo',fighting:'Lutador',poison:'Veneno',ground:'Terra',flying:'Voador',psychic:'Psíquico',bug:'Inseto',rock:'Pedra',ghost:'Fantasma',dragon:'Dragão',dark:'Sombrio',steel:'Metálico',fairy:'Fada'};
+const TCLS = {fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
+const RCLS = {comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
+const RLBL = {comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
+const FALLBACK = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
+
+// Damage taken tipos na ordem do PDF
+const DMG_TIPOS = ['normal','fire','water','electric','grass','ice','fight','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+const DMG_LABELS = {normal:'Normal',fire:'Fire',water:'Water',electric:'Electr',grass:'Grass',ice:'Ice',fight:'Fight',poison:'Poison',ground:'Ground',flying:'Flying',psychic:'Psychic',bug:'Bug',rock:'Rock',ghost:'Ghost',dragon:'Dragon',dark:'Dark',steel:'Steel',fairy:'Fairy'};
+const DMG_OPTIONS = ['0','0.25','0.5','1','2','4'];
+
+function loading(v){ document.getElementById('loading-overlay').style.display=v?'flex':'none'; }
+function fb(id,ms=2500){const el=document.getElementById(id);if(!el)return;el.style.display='block';setTimeout(()=>el.style.display='none',ms);}
+
+// ════════════════════════════════════════
+// DARK MODE
+// ════════════════════════════════════════
+(function(){try{if(localStorage.getItem('pch-dark')==='1')document.documentElement.classList.add('dark');}catch{}}());
+function toggleDark(){
+  const d=document.documentElement.classList.toggle('dark');
+  try{localStorage.setItem('pch-dark',d?'1':'0');}catch{}
+}
+
+// ════════════════════════════════════════
+// ROUTING (hash-based)
+// ════════════════════════════════════════
+function showView(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+id).classList.add('active');
+}
+
+function parseHash(){
+  const raw=location.hash.replace(/^#\/?/,'').trim();
+  if(!raw||raw==='dex') return {view:'dex',slug:null};
+  if(raw==='adm') return {view:'adm',slug:null};
+  return {view:'ficha',slug:raw};
+}
+
+function navigateTo(hash){
+  location.hash = hash ? ('#'+hash) : '#';
+}
+
+window.addEventListener('hashchange', ()=>{
+  const {view,slug}=parseHash();
+  if(view==='ficha'&&slug) renderFicha(slug);
+  else if(view==='adm') mostrarAdm();
+  else mostrarDex();
+});
+
+// ════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════
+async function init(){
+  loading(true);
+  // Check ADM session
+  try{
+    const {data:{session}}=await supabaseClient.auth.getSession();
+    if(session){
+      admLogado={email:session.user.email};
+    }
+  }catch{}
+
+  // Load pokémon
+  try{
+    const data = await dbGet('uwadex');
+    uwaDex = Array.isArray(data) ? data : [];
+  }catch(e){ uwaDex=[]; }
+
+  buildTypeFilters();
+  renderDexGrid();
+  document.getElementById('dex-total-count').textContent = uwaDex.length;
+
+  loading(false);
+
+  // Routing
+  const {view,slug}=parseHash();
+  if(view==='ficha'&&slug) renderFicha(slug);
+  else if(view==='adm') mostrarAdm();
+  else mostrarDex();
+}
+
+// ════════════════════════════════════════
+// DEX LIST
+// ════════════════════════════════════════
+function buildTypeFilters(){
+  const wrap=document.getElementById('dex-type-filters');
+  wrap.innerHTML='<button class="type-filter-btn active" onclick="setTipoFiltro(\'\',this)">Todos</button>'
+    +TIPOS.map(t=>`<button class="type-filter-btn" onclick="setTipoFiltro('${t}',this)">${TIPO_LABELS[t]||t}</button>`).join('');
+}
+
+function setTipoFiltro(tipo,el){
+  tipoFiltroAtivo=tipo;
+  document.querySelectorAll('.type-filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  filtrarDex();
+}
+
+function filtrarDex(){
+  const q=document.getElementById('dex-search').value.toLowerCase().trim();
+  const filtered=uwaDex.filter(p=>{
+    const nomeOk=!q||p.nome.toLowerCase().includes(q);
+    const tipos=p.tipos||[];
+    const tipoOk=!tipoFiltroAtivo||tipos.includes(tipoFiltroAtivo);
+    return nomeOk&&tipoOk;
+  });
+  document.getElementById('dex-filter-count').textContent=filtered.length!==uwaDex.length?`${filtered.length} encontrado${filtered.length!==1?'s':''}` :'';
+  renderDexGridData(filtered);
+}
+
+function renderDexGrid(){ renderDexGridData(uwaDex); }
+
+function renderDexGridData(list){
+  const grid=document.getElementById('dex-grid');
+  const empty=document.getElementById('dex-empty');
+  if(!list.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  grid.innerHTML=list.map(p=>{
+    const tipos=(p.tipos||[]).map(t=>`<span class="type-pill ${TCLS[t]||'t-normal'}">${t}</span>`).join('');
+    const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'';
+    const rarCls=RCLS[p.raridade]||'rc';
+    const rarLbl=RLBL[p.raridade]||'';
+    return `<div class="dex-card" onclick="abrirFicha('${slugify(p.nome)}')">
+      <div class="dex-card-num">${numStr}</div>
+      ${rarLbl?`<div class="dex-card-rarity"><span class="type-pill ${rarCls}" style="font-size:8px">${rarLbl}</span></div>`:''}
+      <img class="dex-card-sprite" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+      <div class="dex-card-name">${p.nome}</div>
+      <div class="dex-card-types">${tipos}</div>
+    </div>`;
+  }).join('');
+}
+
+function abrirFicha(slug){
+  navigateTo(slug);
+}
+function voltarDex(){
+  navigateTo('dex');
+}
+function mostrarDex(){
+  showView('dex');
+  document.getElementById('btn-adm-toggle').classList.remove('active');
+}
+
+// ════════════════════════════════════════
+// FICHA PAGE
+// ════════════════════════════════════════
+function slugify(str){
+  return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+}
+
+function renderFicha(slug){
+  const p=uwaDex.find(x=>slugify(x.nome)===slug);
+  if(!p){
+    document.getElementById('ficha-content').innerHTML=`<div class="empty-state"><div class="empty-icon">❓</div><div class="empty-text">Pokémon não encontrado.</div></div>`;
+    showView('ficha');
+    return;
+  }
+  showView('ficha');
+  document.title=`${p.nome} — UWAdex`;
+
+  const tipos=p.tipos||[];
+  const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'';
+  const rarCls=RCLS[p.raridade]||'rc';
+  const rarLbl=RLBL[p.raridade]||'';
+  const habilidades=p.habilidades||[];
+  const evoChain=p.evo_chain||[];
+  const dmgTaken=p.dmg_taken||{};
+  const stats=p.stats||{};
+  const movesLvl=p.moves_lvl||[];
+  const eggMoves=p.egg_moves||[];
+  const tutorMoves=p.tutor_moves||[];
+
+  // ── Evo Chain HTML ──
+  let evoHTML='';
+  if(evoChain.length>0){
+    const stages=evoChain.map((stage,i)=>{
+      const isCurrent=slugify(stage.nome)===slug;
+      const spr=stage.sprite||FALLBACK;
+      const arrow=i<evoChain.length-1?`<div class="evo-arrow"><div class="evo-arrow-icon">›</div>${evoChain[i+1].trigger?`<div class="evo-arrow-label">${evoChain[i+1].trigger}</div>`:''}</div>`:'';
+      return `<div class="evo-stage${isCurrent?' current':''}">
+        <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="abrirFicha('${slugify(stage.nome)}')"/>
+        <div class="evo-stage-name">${stage.nome}</div>
+      </div>${arrow}`;
+    }).join('');
+    evoHTML=`<div class="evo-chain-wrap">
+      <div class="evo-chain-title">EVOLUTIONARY CHAIN</div>
+      <div class="evo-chain-inner">${stages}</div>
+    </div>`;
+  }
+
+  // ── Damage Taken HTML ──
+  const dmgTH=DMG_TIPOS.map(t=>`<th class="type-pill ${TCLS[t]||'t-normal'}" style="font-size:8px;padding:4px 2px;min-width:38px">${DMG_LABELS[t]}</th>`).join('');
+  const dmgTD=DMG_TIPOS.map(t=>{
+    const v=dmgTaken[t]!==undefined?dmgTaken[t]:1;
+    const cls=v==0?'dmg-0':v<1?'dmg-half':v>2?'dmg-4':v>1?'dmg-2':'dmg-1';
+    return `<td class="${cls}">×${v}</td>`;
+  }).join('');
+  const dmgHTML=`<div class="ficha-dmg-wrap">
+    <div class="ficha-section-title">DAMAGE TAKEN</div>
+    <div style="overflow-x:auto">
+      <table class="dmg-table">
+        <thead><tr>${dmgTH}</tr></thead>
+        <tbody><tr>${dmgTD}</tr></tbody>
+      </table>
+    </div>
+  </div>`;
+
+  // ── Stats HTML ──
+  const statKeys=['hp','atk','def','spatk','spdef','speed'];
+  const statLabels=['HP','ATK','DEF','Sp. ATK','Sp. DEF','SPEED'];
+  const statsHTML=`<div class="ficha-stats-wrap">
+    <div class="ficha-section-title">BASE STATS</div>
+    <div style="overflow-x:auto">
+      <table class="stats-table">
+        <thead><tr>${statLabels.map(l=>`<th>${l}</th>`).join('')}</tr></thead>
+        <tbody><tr>${statKeys.map(k=>`<td>${stats[k]||'—'}</td>`).join('')}</tr></tbody>
+      </table>
+    </div>
+    ${(p.dado||p.ca||p.pv)?`<div class="rpg-stats-row">
+      ${p.dado?`<div class="rpg-stat"><div class="rpg-stat-label">Dado</div><div class="rpg-stat-val">${p.dado}</div></div>`:''}
+      ${p.ca!==undefined&&p.ca!==null&&p.ca!==''?`<div class="rpg-stat"><div class="rpg-stat-label">CA</div><div class="rpg-stat-val">${p.ca}</div></div>`:''}
+      ${p.pv!==undefined&&p.pv!==null&&p.pv!==''?`<div class="rpg-stat"><div class="rpg-stat-label">PV</div><div class="rpg-stat-val">${p.pv}</div></div>`:''}
+    </div>`:''}
+  </div>`;
+
+  // ── Biology HTML ──
+  const bioHTML=p.bio?`<div class="ficha-bio-wrap">
+    <div class="ficha-section-title">BIOLOGY</div>
+    <div class="ficha-bio-inner">
+      <img class="ficha-bio-sprite" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+      <div class="ficha-bio-text">${p.bio}</div>
+    </div>
+  </div>`:'';
+
+  // ── Moves HTML helper ──
+  function catPill(cat){
+    if(!cat) return '—';
+    const c=cat.toLowerCase();
+    if(c.includes('físico')||c.includes('fisico')||c.includes('physical')) return `<span class="cat-icon cat-fisico">Físico</span>`;
+    if(c.includes('especial')||c.includes('special')) return `<span class="cat-icon cat-especial">Especial</span>`;
+    return `<span class="cat-icon cat-status">Status</span>`;
+  }
+
+  const movesLvlHTML=movesLvl.length?movesLvl.map(m=>`<tr>
+    <td class="lvl-cell">${m.lvl||'—'}</td>
+    <td class="move-name">${m.nome||''}</td>
+    <td>${m.tipo?`<span class="type-pill ${TCLS[m.tipo]||'t-normal'}">${m.tipo}</span>`:'—'}</td>
+    <td>${catPill(m.cat)}</td>
+    <td class="num-cell">${m.atk||'—'}</td>
+    <td class="num-cell">${m.acc||'—'}</td>
+    <td class="num-cell">${m.efeito||'—'}</td>
+  </tr>`).join(''):`<tr><td colspan="7" class="moves-empty">Nenhum move cadastrado.</td></tr>`;
+
+  const eggHTML=eggMoves.length?eggMoves.map(m=>`<tr>
+    <td colspan="2" class="move-name">${m.nome||''}</td>
+    <td colspan="5" style="color:var(--muted);font-size:12px">${m.desc||''}</td>
+  </tr>`).join(''):`<tr><td colspan="7" class="moves-empty">Nenhum egg move cadastrado.</td></tr>`;
+
+  const tutorHTML=tutorMoves.length?tutorMoves.map(m=>`<tr>
+    <td colspan="2" class="move-name">${m.nome||''}</td>
+    <td colspan="5" style="color:var(--muted);font-size:12px">${m.desc||''}</td>
+  </tr>`).join(''):`<tr><td colspan="7" class="moves-empty">Nenhum tutor move cadastrado.</td></tr>`;
+
+  const movesHTML=`<div class="ficha-moves-wrap">
+    <div class="moves-tabs">
+      <button class="moves-tab active" onclick="switchMovesTab(this,'tab-lvl')">Moves por Nível</button>
+      <button class="moves-tab" onclick="switchMovesTab(this,'tab-egg')">Egg Moves</button>
+      <button class="moves-tab" onclick="switchMovesTab(this,'tab-tutor')">Tutor Moves</button>
+    </div>
+    <div class="moves-panel active" id="tab-lvl">
+      <table class="moves-table">
+        <thead><tr><th style="width:60px">LVL</th><th>Nome</th><th>Tipo</th><th>Cat.</th><th>ATK</th><th>ACC</th><th>Efeito%</th></tr></thead>
+        <tbody>${movesLvlHTML}</tbody>
+      </table>
+    </div>
+    <div class="moves-panel" id="tab-egg">
+      <table class="moves-table">
+        <thead><tr><th colspan="2">Nome</th><th colspan="5">Descrição</th></tr></thead>
+        <tbody>${eggHTML}</tbody>
+      </table>
+    </div>
+    <div class="moves-panel" id="tab-tutor">
+      <table class="moves-table">
+        <thead><tr><th colspan="2">Nome</th><th colspan="5">Descrição</th></tr></thead>
+        <tbody>${tutorHTML}</tbody>
+      </table>
+    </div>
+  </div>`;
+
+  // ── Abilities HTML ──
+  const abilitiesHTML=habilidades.map((a,i)=>`<div class="ficha-ability">
+    ${!a.ha?`<span style="font-weight:700;color:var(--muted);margin-right:4px">${i+1}.</span>`:''}
+    <span class="ficha-ability-name">${a.nome}</span>
+    ${a.ha?`<span class="ficha-ability-ha">HA</span>`:''}
+    ${a.desc?`: <span style="color:var(--text)">${a.desc}</span>`:''}
+  </div>`).join('');
+
+  // ── Main block ──
+  document.getElementById('ficha-content').innerHTML=`
+    ${evoHTML}
+    <div class="ficha-main">
+      <div class="ficha-sprite-col">
+        <div class="ficha-sprite-num">${numStr}</div>
+        <img class="ficha-sprite-img" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+        <div class="ficha-sprite-types">${tipos.map(t=>`<span class="type-pill ${TCLS[t]||'t-normal'}" style="font-size:11px;padding:4px 10px">${t}</span>`).join('')}</div>
+        ${rarLbl?`<span class="type-pill ${rarCls}" style="font-size:10px;padding:3px 10px">${rarLbl}</span>`:''}
+      </div>
+      <div class="ficha-info-col">
+        <div class="ficha-info-name">${p.nome}</div>
+        <table class="ficha-info-table">
+          ${p.classificacao?`<tr><td>Classification</td><td>${p.classificacao}</td></tr>`:''}
+          ${p.altura||p.peso?`<tr><td>Height / Weight</td><td>${p.altura||'—'} / ${p.peso||'—'}</td></tr>`:''}
+          ${p.genero?`<tr><td>Gender Ratio</td><td>${p.genero}</td></tr>`:''}
+          ${p.egggroup?`<tr><td>Egg Group(s)</td><td>${p.egggroup}</td></tr>`:''}
+          ${habilidades.length?`<tr><td>Abilities</td><td>${abilitiesHTML}</td></tr>`:''}
+        </table>
+      </div>
+    </div>
+    ${dmgHTML}
+    ${statsHTML}
+    ${bioHTML}
+    ${movesHTML}
+  `;
+
+  document.title=`${p.nome} — UWAdex`;
+}
+
+function switchMovesTab(btn,panelId){
+  document.querySelectorAll('.moves-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.moves-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+}
+
+// ════════════════════════════════════════
+// ADM
+// ════════════════════════════════════════
+function toggleAdmView(){
+  const v=parseHash();
+  if(v.view==='adm') navigateTo('dex');
+  else navigateTo('adm');
+}
+
+function mostrarAdm(){
+  showView('adm');
+  document.getElementById('btn-adm-toggle').classList.add('active');
+  if(admLogado){
+    document.getElementById('adm-login-wrap').style.display='none';
+    document.getElementById('adm-painel-wrap').style.display='block';
+    document.getElementById('adm-user-lbl').textContent=admLogado.email;
+    renderAdmPokeList();
+  } else {
+    document.getElementById('adm-login-wrap').style.display='block';
+    document.getElementById('adm-painel-wrap').style.display='none';
+  }
+}
+
+async function admLogin(){
+  const email=document.getElementById('adm-email').value.trim();
+  const senha=document.getElementById('adm-senha').value;
+  const err=document.getElementById('adm-login-err');
+  err.style.display='none';
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password:senha});
+  if(error||!data.session){err.style.display='block';return;}
+  admLogado={email:data.user.email};
+  mostrarAdm();
+}
+
+async function admLogout(){
+  await supabaseClient.auth.signOut();
+  admLogado=null;
+  navigateTo('dex');
+}
+
+function admTab(sec,btn){
+  document.querySelectorAll('.adm-sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('adm-sec-'+sec).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ── ADM: lista de pokémon ──
+function renderAdmPokeList(){
+  const wrap=document.getElementById('adm-poke-list');
+  if(!uwaDex.length){wrap.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Nenhum Pokémon cadastrado ainda.</div>';return;}
+  wrap.innerHTML=`<table class="adm-table">
+    <thead><tr><th>#</th><th>Nome</th><th>Tipo(s)</th><th>Raridade</th><th>Ações</th></tr></thead>
+    <tbody>${uwaDex.map(p=>`<tr>
+      <td style="font-family:var(--font-title);color:var(--muted)">${p.numero?'#'+String(p.numero).padStart(3,'0'):''}</td>
+      <td><strong>${p.nome}</strong></td>
+      <td>${(p.tipos||[]).map(t=>`<span class="type-pill ${TCLS[t]||'t-normal'}">${t}</span>`).join('')}</td>
+      <td><span class="type-pill ${RCLS[p.raridade]||'rc'}">${RLBL[p.raridade]||''}</span></td>
+      <td><button class="btn btn-sm btn-primary" onclick="editarPokemon(${p.id})">✏️ Editar</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// ── ADM: form helpers ──
+function buildTiposSelector(selected=[]){
+  document.getElementById('tipos-selector').innerHTML=TIPOS.map(t=>`<span class="tipo-tag${selected.includes(t)?' sel':''}" onclick="toggleTipo(this,'${t}')">${TIPO_LABELS[t]||t}</span>`).join('');
+  document.getElementById('f-tipos').value=JSON.stringify(selected);
+}
+
+function toggleTipo(el,tipo){
+  el.classList.toggle('sel');
+  const sels=[...document.querySelectorAll('.tipo-tag.sel')].map(e=>e.dataset.tipo||e.textContent.trim());
+  const tiposMap=Object.fromEntries(Object.entries(TIPO_LABELS).map(([k,v])=>[v,k]));
+  const tipoKeys=[...document.querySelectorAll('.tipo-tag.sel')].map(e=>{
+    for(const [k,v] of Object.entries(TIPO_LABELS)) if(v===e.textContent.trim()) return k;
+    return e.textContent.trim();
+  });
+  document.getElementById('f-tipos').value=JSON.stringify(tipoKeys);
+}
+
+function buildDmgTakenFields(existing={}){
+  document.getElementById('dmg-taken-fields').innerHTML=DMG_TIPOS.map(t=>`
+    <div>
+      <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px">${DMG_LABELS[t]}</div>
+      <select id="dmg-${t}" style="padding:6px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text);width:100%">
+        ${DMG_OPTIONS.map(v=>`<option value="${v}"${String(existing[t]||1)===v?' selected':''}>${v==='0'?'0 (imune)':v}</option>`).join('')}
+      </select>
+    </div>`).join('');
+}
+
+function collectDmgTaken(){
+  const out={};
+  DMG_TIPOS.forEach(t=>{ out[t]=parseFloat(document.getElementById('dmg-'+t).value)||1; });
+  return out;
+}
+
+function addAbilityRow(data={}){
+  const list=document.getElementById('abilities-list');
+  const idx=list.children.length;
+  const div=document.createElement('div');
+  div.style.cssText='display:grid;grid-template-columns:1fr 2fr 28px;gap:8px;margin-bottom:6px;align-items:center';
+  div.innerHTML=`
+    <input type="text" placeholder="Nome da hab." value="${data.nome||''}" style="padding:6px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text)" class="ab-nome"/>
+    <input type="text" placeholder="Descrição" value="${data.desc||''}" style="padding:6px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text)" class="ab-desc"/>
+    <label style="display:flex;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer"><input type="checkbox" class="ab-ha" ${data.ha?'checked':''}/> HA</label>`;
+  const rmBtn=document.createElement('button');
+  rmBtn.className='btn btn-sm btn-danger';rmBtn.textContent='✕';rmBtn.style.marginLeft='4px';
+  rmBtn.onclick=()=>div.remove();
+  div.appendChild(rmBtn);
+  list.appendChild(div);
+}
+
+function collectAbilities(){
+  return [...document.querySelectorAll('#abilities-list > div')].map(div=>({
+    nome:div.querySelector('.ab-nome').value.trim(),
+    desc:div.querySelector('.ab-desc').value.trim(),
+    ha:div.querySelector('.ab-ha').checked
+  })).filter(a=>a.nome);
+}
+
+function addEvoRow(data={}){
+  const list=document.getElementById('evo-chain-list');
+  const div=document.createElement('div');
+  div.className='evo-edit-row';
+  div.innerHTML=`
+    <div>
+      <div class="evo-label">Nome do Pokémon</div>
+      <input type="text" class="evo-nome" value="${data.nome||''}" placeholder="Ex: Bubbeet"/>
+    </div>
+    <div>
+      <div class="evo-label">Sprite URL</div>
+      <input type="text" class="evo-sprite" value="${data.sprite||''}" placeholder="https://…"/>
+    </div>
+    <div>
+      <div class="evo-label">Gatilho</div>
+      <input type="text" class="evo-trigger" value="${data.trigger||''}" placeholder="Ex: LVL 16"/>
+    </div>`;
+  const rm=document.createElement('button');
+  rm.className='btn btn-sm btn-danger';rm.textContent='✕';rm.style.alignSelf='flex-end';
+  rm.onclick=()=>div.remove();
+  div.appendChild(rm);
+  list.appendChild(div);
+}
+
+function collectEvoChain(){
+  return [...document.querySelectorAll('#evo-chain-list .evo-edit-row')].map(div=>({
+    nome:div.querySelector('.evo-nome').value.trim(),
+    sprite:div.querySelector('.evo-sprite').value.trim(),
+    trigger:div.querySelector('.evo-trigger').value.trim()
+  })).filter(e=>e.nome);
+}
+
+function addMoveRow(type,data={}){
+  const list=document.getElementById('moves-lvl-list');
+  const div=document.createElement('div');
+  div.className='move-row';
+  div.innerHTML=`
+    <input type="text" class="mv-lvl" value="${data.lvl||''}" placeholder="1"/>
+    <input type="text" class="mv-nome" value="${data.nome||''}" placeholder="Nome do move"/>
+    <select class="mv-tipo">${['','...'+TIPOS.map(t=>`<option value="${t}"${data.tipo===t?' selected':''}>${TIPO_LABELS[t]||t}</option>`).join('')].join('')}</select>
+    <select class="mv-cat">
+      <option value="">—</option>
+      <option value="Físico"${data.cat==='Físico'?' selected':''}>Físico</option>
+      <option value="Especial"${data.cat==='Especial'?' selected':''}>Especial</option>
+      <option value="Status"${data.cat==='Status'?' selected':''}>Status</option>
+    </select>
+    <input type="text" class="mv-atk" value="${data.atk||''}" placeholder="—"/>
+    <input type="text" class="mv-acc" value="${data.acc||''}" placeholder="—"/>
+    <input type="text" class="mv-efeito" value="${data.efeito||''}" placeholder="—"/>`;
+  const rm=document.createElement('button');
+  rm.className='btn btn-sm btn-danger';rm.textContent='✕';
+  rm.onclick=()=>div.remove();
+  div.appendChild(rm);
+  // Fix select to include all types properly
+  div.querySelector('.mv-tipo').innerHTML='<option value="">—</option>'+TIPOS.map(t=>`<option value="${t}"${data.tipo===t?' selected':''}>${TIPO_LABELS[t]||t}</option>`).join('');
+  list.appendChild(div);
+}
+
+function collectMovesLvl(){
+  return [...document.querySelectorAll('#moves-lvl-list .move-row')].map(div=>({
+    lvl:div.querySelector('.mv-lvl').value.trim(),
+    nome:div.querySelector('.mv-nome').value.trim(),
+    tipo:div.querySelector('.mv-tipo').value,
+    cat:div.querySelector('.mv-cat').value,
+    atk:div.querySelector('.mv-atk').value.trim(),
+    acc:div.querySelector('.mv-acc').value.trim(),
+    efeito:div.querySelector('.mv-efeito').value.trim()
+  })).filter(m=>m.nome);
+}
+
+function addEggRow(data={}){
+  const list=document.getElementById('egg-moves-list');
+  const div=document.createElement('div');
+  div.className='egg-row';
+  div.innerHTML=`<input type="text" class="em-nome" value="${data.nome||''}" placeholder="Nome do Egg Move" style="padding:6px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text)"/>`;
+  const rm=document.createElement('button');
+  rm.className='btn btn-sm btn-danger';rm.textContent='✕';
+  rm.onclick=()=>div.remove();
+  div.appendChild(rm);
+  list.appendChild(div);
+}
+function collectEggMoves(){
+  return [...document.querySelectorAll('#egg-moves-list .em-nome')].map(i=>({nome:i.value.trim()})).filter(m=>m.nome);
+}
+
+function addTutorRow(data={}){
+  const list=document.getElementById('tutor-moves-list');
+  const div=document.createElement('div');
+  div.className='tutor-row';
+  div.innerHTML=`<input type="text" class="tm-nome" value="${data.nome||''}" placeholder="Nome do Tutor Move" style="padding:6px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text)"/>`;
+  const rm=document.createElement('button');
+  rm.className='btn btn-sm btn-danger';rm.textContent='✕';
+  rm.onclick=()=>div.remove();
+  div.appendChild(rm);
+  list.appendChild(div);
+}
+function collectTutorMoves(){
+  return [...document.querySelectorAll('#tutor-moves-list .tm-nome')].map(i=>({nome:i.value.trim()})).filter(m=>m.nome);
+}
+
+// ── ADM: limpar/preencher form ──
+function resetForm(){
+  ['f-num','f-nome','f-classif','f-sprite','f-altura','f-peso','f-genero','f-egggroup','f-dado','f-bio'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['f-ca','f-pv','f-hp','f-atk','f-def','f-spatk','f-spdef','f-speed'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('f-raridade').value='comum';
+  buildTiposSelector([]);
+  buildDmgTakenFields({});
+  document.getElementById('abilities-list').innerHTML='';
+  document.getElementById('evo-chain-list').innerHTML='';
+  document.getElementById('moves-lvl-list').innerHTML='';
+  document.getElementById('egg-moves-list').innerHTML='';
+  document.getElementById('tutor-moves-list').innerHTML='';
+  document.getElementById('adm-del-btn').style.display='none';
+  document.getElementById('adm-form-title').textContent='➕ Novo Pokémon';
+  editingId=null;
+}
+
+function cancelarEdicao(){ resetForm(); }
+
+function editarPokemon(id){
+  const p=uwaDex.find(x=>x.id===id);
+  if(!p) return;
+  editingId=id;
+  document.getElementById('adm-form-title').textContent=`✏️ Editando: ${p.nome}`;
+  document.getElementById('adm-del-btn').style.display='inline-block';
+
+  document.getElementById('f-num').value=p.numero||'';
+  document.getElementById('f-nome').value=p.nome||'';
+  document.getElementById('f-classif').value=p.classificacao||'';
+  document.getElementById('f-sprite').value=p.sprite||'';
+  document.getElementById('f-raridade').value=p.raridade||'comum';
+  document.getElementById('f-altura').value=p.altura||'';
+  document.getElementById('f-peso').value=p.peso||'';
+  document.getElementById('f-genero').value=p.genero||'';
+  document.getElementById('f-egggroup').value=p.egggroup||'';
+  document.getElementById('f-dado').value=p.dado||'';
+  document.getElementById('f-ca').value=p.ca!==null&&p.ca!==undefined?p.ca:'';
+  document.getElementById('f-pv').value=p.pv!==null&&p.pv!==undefined?p.pv:'';
+  document.getElementById('f-bio').value=p.bio||'';
+
+  const s=p.stats||{};
+  ['hp','atk','def','spatk','spdef','speed'].forEach(k=>{const el=document.getElementById('f-'+k);if(el)el.value=s[k]!==undefined?s[k]:'';});
+
+  buildTiposSelector(p.tipos||[]);
+  buildDmgTakenFields(p.dmg_taken||{});
+
+  document.getElementById('abilities-list').innerHTML='';
+  (p.habilidades||[]).forEach(a=>addAbilityRow(a));
+
+  document.getElementById('evo-chain-list').innerHTML='';
+  (p.evo_chain||[]).forEach(e=>addEvoRow(e));
+
+  document.getElementById('moves-lvl-list').innerHTML='';
+  (p.moves_lvl||[]).forEach(m=>addMoveRow('lvl',m));
+
+  document.getElementById('egg-moves-list').innerHTML='';
+  (p.egg_moves||[]).forEach(m=>addEggRow(m));
+
+  document.getElementById('tutor-moves-list').innerHTML='';
+  (p.tutor_moves||[]).forEach(m=>addTutorRow(m));
+
+  // Scroll to form
+  document.getElementById('adm-form-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function salvarPokemon(){
+  const nome=document.getElementById('f-nome').value.trim();
+  if(!nome){alert('Preencha o nome do Pokémon.');return;}
+
+  const tipos=JSON.parse(document.getElementById('f-tipos').value||'[]');
+  const stats={
+    hp:parseInt(document.getElementById('f-hp').value)||null,
+    atk:parseInt(document.getElementById('f-atk').value)||null,
+    def:parseInt(document.getElementById('f-def').value)||null,
+    spatk:parseInt(document.getElementById('f-spatk').value)||null,
+    spdef:parseInt(document.getElementById('f-spdef').value)||null,
+    speed:parseInt(document.getElementById('f-speed').value)||null,
+  };
+
+  const payload={
+    numero:parseInt(document.getElementById('f-num').value)||null,
+    nome,
+    slug:slugify(nome),
+    classificacao:document.getElementById('f-classif').value.trim(),
+    sprite:document.getElementById('f-sprite').value.trim(),
+    raridade:document.getElementById('f-raridade').value,
+    altura:document.getElementById('f-altura').value.trim(),
+    peso:document.getElementById('f-peso').value.trim(),
+    genero:document.getElementById('f-genero').value.trim(),
+    egggroup:document.getElementById('f-egggroup').value.trim(),
+    dado:document.getElementById('f-dado').value.trim(),
+    ca:document.getElementById('f-ca').value!==''?parseInt(document.getElementById('f-ca').value):null,
+    pv:document.getElementById('f-pv').value!==''?parseInt(document.getElementById('f-pv').value):null,
+    bio:document.getElementById('f-bio').value.trim(),
+    tipos,
+    stats,
+    dmg_taken:collectDmgTaken(),
+    habilidades:collectAbilities(),
+    evo_chain:collectEvoChain(),
+    moves_lvl:collectMovesLvl(),
+    egg_moves:collectEggMoves(),
+    tutor_moves:collectTutorMoves(),
+  };
+
+  let res;
+  if(editingId){
+    res=await dbPatch('uwadex',`id=eq.${editingId}`,payload);
+    if(res&&!res.error){
+      const idx=uwaDex.findIndex(x=>x.id===editingId);
+      if(idx>=0) uwaDex[idx]={...uwaDex[idx],...payload};
+    }
+  } else {
+    res=await dbPost('uwadex',payload);
+    if(res&&res[0]) uwaDex.push(res[0]);
+  }
+
+  if(res&&!res.error){
+    fb('adm-form-ok');
+    renderAdmPokeList();
+    renderDexGrid();
+    document.getElementById('dex-total-count').textContent=uwaDex.length;
+    resetForm();
+  } else {
+    fb('adm-form-err');
+  }
+}
+
+async function excluirPokemon(){
+  if(!editingId) return;
+  const p=uwaDex.find(x=>x.id===editingId);
+  if(!confirm(`Excluir ${p?.nome||'este Pokémon'} permanentemente?`)) return;
+  await dbDel('uwadex',`id=eq.${editingId}`);
+  uwaDex=uwaDex.filter(x=>x.id!==editingId);
+  renderAdmPokeList();
+  renderDexGrid();
+  document.getElementById('dex-total-count').textContent=uwaDex.length;
+  resetForm();
+}
+
+// ════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
