@@ -478,6 +478,10 @@ async function sb(path, opts={}){
     ...opts
   });
   if(opts.method==='DELETE'||res.status===204) return [];
+  if(!res.ok){
+    const errText = await res.text().catch(()=>'');
+    throw new Error(`HTTP ${res.status}: ${errText}`);
+  }
   const text=await res.text();
   if(!text) return [];
   try{return JSON.parse(text);}catch{return [];}
@@ -1153,19 +1157,22 @@ async function salvarPokemon(){
     tutor_moves:collectTutorMoves(),
   };
 
-  let res;
-  if(editingId){
-    res=await dbPatch('uwadex',`id=eq.${editingId}`,payload);
-    if(res&&!res.error){
-      const idx=uwaDex.findIndex(x=>x.id===editingId);
-      if(idx>=0) uwaDex[idx]={...uwaDex[idx],...payload};
+  let ok = false;
+  try {
+    if(editingId){
+      await dbPatch('uwadex',`id=eq.${editingId}`,payload);
+    } else {
+      await dbPost('uwadex',payload);
     }
-  } else {
-    res=await dbPost('uwadex',payload);
-    if(res&&res[0]) uwaDex.push(res[0]);
-  }
+    ok = true;
+  } catch(e){ ok = false; }
 
-  if(res&&!res.error){
+  if(ok){
+    // Recarrega a lista completa do banco para garantir sincronia
+    try {
+      const fresh = await dbGet('uwadex');
+      uwaDex = Array.isArray(fresh) ? fresh : uwaDex;
+    } catch(e){}
     fb('adm-form-ok');
     renderAdmPokeList();
     renderDexGrid();
@@ -1181,7 +1188,10 @@ async function excluirPokemon(){
   const p=uwaDex.find(x=>x.id===editingId);
   if(!confirm(`Excluir ${p?.nome||'este Pokémon'} permanentemente?`)) return;
   await dbDel('uwadex',`id=eq.${editingId}`);
-  uwaDex=uwaDex.filter(x=>x.id!==editingId);
+  try {
+    const fresh = await dbGet('uwadex');
+    uwaDex = Array.isArray(fresh) ? fresh : uwaDex.filter(x=>x.id!==editingId);
+  } catch(e){ uwaDex=uwaDex.filter(x=>x.id!==editingId); }
   renderAdmPokeList();
   renderDexGrid();
   document.getElementById('dex-total-count').textContent=uwaDex.length;
