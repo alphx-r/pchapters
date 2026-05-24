@@ -74,6 +74,7 @@ html.dark .nav{background:#0d1622}
 .type-pill{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.3px;margin:1px}
 .t-fire{background:#ff9b4a;color:#7a2a00}.t-water{background:#6ab8ff;color:#003a6a}.t-grass{background:#78d878;color:#1a5a1a}.t-normal{background:#c8c8a0;color:#4a4a2a}.t-electric{background:#ffe030;color:#5a4a00}.t-psychic{background:#ff8fb0;color:#6a0030}.t-steel{background:#aababb;color:#2a3a3a}.t-fairy{background:#ffaad8;color:#6a0050}.t-ghost{background:#9090c0;color:#1a1a4a}.t-dragon{background:#7060f0;color:#fff}.t-ice{background:#96d8d8;color:#1a4a4a}.t-fighting{background:#c03030;color:#fff}.t-rock{background:#b8a050;color:#3a2a00}.t-ground{background:#e0c060;color:#3a2a00}.t-poison{background:#a060c0;color:#fff}.t-bug{background:#a0c020;color:#2a3a00}.t-dark{background:#705040;color:#fff}.t-flying{background:#88aaee;color:#1a1a5a}
 .rc{background:#e0f0e0;color:#1a6a1a}.ri{background:#dde8f8;color:#1a4a8a}.rr{background:#f0e8ff;color:#5a1a9a}.rrr{background:#fff0d8;color:#8a4a00}
+.cat-inicial{background:#d8f0ff;color:#0a4a7a}.cat-mitico{background:#ffe0f8;color:#7a006a}.cat-lendario{background:#fff8c0;color:#7a5a00;border:1px solid #e8c800}.cat-ultra{background:#e0ffe8;color:#005a1a}
 
 /* ── FICHA PAGE ── */
 .ficha-wrap{max-width:1000px;margin:0 auto;padding:28px}
@@ -345,6 +346,17 @@ html.dark .nav{background:#0d1622}
                     </select>
                   </div>
                 </div>
+                <div class="g2">
+                  <div class="field"><label>Categoria Especial</label>
+                    <select id="f-categoria">
+                      <option value="">— Nenhuma —</option>
+                      <option value="inicial">Inicial</option>
+                      <option value="mitico">Mítico</option>
+                      <option value="lendario">Lendário</option>
+                      <option value="ultra-beast">Ultra Beast</option>
+                    </select>
+                  </div>
+                </div>
                 <div class="g3">
                   <div class="field"><label>Altura</label><input type="text" id="f-altura" placeholder="Ex: 35,5 cm"/></div>
                   <div class="field"><label>Peso</label><input type="text" id="f-peso" placeholder="Ex: 4 kg"/></div>
@@ -360,16 +372,6 @@ html.dark .nav{background:#0d1622}
                 <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Tipo(s)</div>
                 <div id="tipos-selector" style="display:flex;flex-wrap:wrap;gap:4px"></div>
                 <input type="hidden" id="f-tipos"/>
-              </div>
-
-              <!-- Stats RPG -->
-              <div style="margin-bottom:16px">
-                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Stats RPG</div>
-                <div class="g3">
-                  <div class="field"><label>Dado</label><input type="text" id="f-dado" placeholder="Ex: 1d8"/></div>
-                  <div class="field"><label>CA</label><input type="number" id="f-ca" placeholder="5"/></div>
-                  <div class="field"><label>PV</label><input type="number" id="f-pv" placeholder="5"/></div>
-                </div>
               </div>
 
               <!-- Stats Base -->
@@ -504,6 +506,8 @@ const TIPO_LABELS = {normal:'Normal',fire:'Fogo',water:'Água',grass:'Planta',el
 const TCLS = {fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
 const RCLS = {comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
 const RLBL = {comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
+const CATLBL = {inicial:'Inicial',mitico:'Mítico',lendario:'Lendário','ultra-beast':'Ultra Beast'};
+const CATCLS = {inicial:'cat-inicial',mitico:'cat-mitico',lendario:'cat-lendario','ultra-beast':'cat-ultra'};
 const FALLBACK = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
 
 // Damage taken tipos na ordem do PDF
@@ -621,12 +625,15 @@ function renderDexGridData(list){
     const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'';
     const rarCls=RCLS[p.raridade]||'rc';
     const rarLbl=RLBL[p.raridade]||'';
+    const catLbl=CATLBL[p.categoria]||'';
+    const catCls=CATCLS[p.categoria]||'';
     return `<div class="dex-card" onclick="abrirFicha('${slugify(p.nome)}')">
       <div class="dex-card-num">${numStr}</div>
       ${rarLbl?`<div class="dex-card-rarity"><span class="type-pill ${rarCls}" style="font-size:8px">${rarLbl}</span></div>`:''}
       <img class="dex-card-sprite" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
       <div class="dex-card-name">${p.nome}</div>
       <div class="dex-card-types">${tipos}</div>
+      ${catLbl?`<span class="type-pill ${catCls}" style="font-size:8px;margin-top:2px">★ ${catLbl}</span>`:''}
     </div>`;
   }).join('');
 }
@@ -663,6 +670,8 @@ function renderFicha(slug){
   const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'';
   const rarCls=RCLS[p.raridade]||'rc';
   const rarLbl=RLBL[p.raridade]||'';
+  const catLbl=CATLBL[p.categoria]||'';
+  const catCls=CATCLS[p.categoria]||'';
   const habilidades=p.habilidades||[];
   const evoChain=p.evo_chain||[];
   const dmgTaken=p.dmg_taken||{};
@@ -717,11 +726,7 @@ function renderFicha(slug){
         <tbody><tr>${statKeys.map(k=>`<td>${stats[k]||'—'}</td>`).join('')}</tr></tbody>
       </table>
     </div>
-    ${(p.dado||p.ca||p.pv)?`<div class="rpg-stats-row">
-      ${p.dado?`<div class="rpg-stat"><div class="rpg-stat-label">Dado</div><div class="rpg-stat-val">${p.dado}</div></div>`:''}
-      ${p.ca!==undefined&&p.ca!==null&&p.ca!==''?`<div class="rpg-stat"><div class="rpg-stat-label">CA</div><div class="rpg-stat-val">${p.ca}</div></div>`:''}
-      ${p.pv!==undefined&&p.pv!==null&&p.pv!==''?`<div class="rpg-stat"><div class="rpg-stat-label">PV</div><div class="rpg-stat-val">${p.pv}</div></div>`:''}
-    </div>`:''}
+    ${''/* RPG stats removed */}
   </div>`;
 
   // ── Biology HTML ──
@@ -805,6 +810,7 @@ function renderFicha(slug){
         <img class="ficha-sprite-img" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
         <div class="ficha-sprite-types">${tipos.map(t=>`<span class="type-pill ${TCLS[t]||'t-normal'}" style="font-size:11px;padding:4px 10px">${t}</span>`).join('')}</div>
         ${rarLbl?`<span class="type-pill ${rarCls}" style="font-size:10px;padding:3px 10px">${rarLbl}</span>`:''}
+        ${catLbl?`<span class="type-pill ${catCls}" style="font-size:10px;padding:3px 10px">★ ${catLbl}</span>`:''}
       </div>
       <div class="ficha-info-col">
         <div class="ficha-info-name">${p.nome}</div>
@@ -1055,9 +1061,10 @@ function collectTutorMoves(){
 
 // ── ADM: limpar/preencher form ──
 function resetForm(){
-  ['f-num','f-nome','f-classif','f-sprite','f-altura','f-peso','f-genero','f-egggroup','f-dado','f-bio'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-  ['f-ca','f-pv','f-hp','f-atk','f-def','f-spatk','f-spdef','f-speed'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['f-num','f-nome','f-classif','f-sprite','f-altura','f-peso','f-genero','f-egggroup','f-bio'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  ['f-hp','f-atk','f-def','f-spatk','f-spdef','f-speed'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('f-raridade').value='comum';
+  document.getElementById('f-categoria').value='';
   buildTiposSelector([]);
   buildDmgTakenFields({});
   document.getElementById('abilities-list').innerHTML='';
@@ -1084,13 +1091,11 @@ function editarPokemon(id){
   document.getElementById('f-classif').value=p.classificacao||'';
   document.getElementById('f-sprite').value=p.sprite||'';
   document.getElementById('f-raridade').value=p.raridade||'comum';
+  document.getElementById('f-categoria').value=p.categoria||'';
   document.getElementById('f-altura').value=p.altura||'';
   document.getElementById('f-peso').value=p.peso||'';
   document.getElementById('f-genero').value=p.genero||'';
   document.getElementById('f-egggroup').value=p.egggroup||'';
-  document.getElementById('f-dado').value=p.dado||'';
-  document.getElementById('f-ca').value=p.ca!==null&&p.ca!==undefined?p.ca:'';
-  document.getElementById('f-pv').value=p.pv!==null&&p.pv!==undefined?p.pv:'';
   document.getElementById('f-bio').value=p.bio||'';
 
   const s=p.stats||{};
@@ -1139,13 +1144,11 @@ async function salvarPokemon(){
     classificacao:document.getElementById('f-classif').value.trim(),
     sprite:document.getElementById('f-sprite').value.trim(),
     raridade:document.getElementById('f-raridade').value,
+    categoria:document.getElementById('f-categoria').value||null,
     altura:document.getElementById('f-altura').value.trim(),
     peso:document.getElementById('f-peso').value.trim(),
     genero:document.getElementById('f-genero').value.trim(),
     egggroup:document.getElementById('f-egggroup').value.trim(),
-    dado:document.getElementById('f-dado').value.trim(),
-    ca:document.getElementById('f-ca').value!==''?parseInt(document.getElementById('f-ca').value):null,
-    pv:document.getElementById('f-pv').value!==''?parseInt(document.getElementById('f-pv').value):null,
     bio:document.getElementById('f-bio').value.trim(),
     tipos,
     stats,
