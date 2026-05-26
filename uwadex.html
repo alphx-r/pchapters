@@ -407,6 +407,9 @@ html.dark .dex-tab.active{color:#fff}
       <div class="adm-layout">
         <div class="adm-sidebar">
           <button class="adm-nav-btn active" onclick="admTab('pokemon',this)">⚡ Pokémon</button>
+          <button class="adm-nav-btn" onclick="admTab('nationaldex',this)">📖 NationalDex</button>
+          <button class="adm-nav-btn" onclick="admTab('abilities',this)">✨ Abilities</button>
+          <button class="adm-nav-btn" onclick="admTab('moves',this)">⚔️ Moves</button>
           <div class="adm-nav-sep"></div>
           <button class="adm-nav-btn adm-nav-danger" onclick="admLogout()">Sair</button>
         </div>
@@ -485,7 +488,7 @@ html.dark .dex-tab.active{color:#fff}
 
               <!-- Habilidades -->
               <div style="margin-bottom:16px">
-                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Abilities/div>
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Abilities</div>
                 <div id="abilities-list"></div>
                 <button class="btn btn-sm btn-warn" onclick="addAbilityRow()" style="margin-top:4px">+ Ability</button>
               </div>
@@ -555,6 +558,117 @@ html.dark .dex-tab.active{color:#fff}
             </div>
 
           </div><!-- /adm-sec-pokemon -->
+
+          <!-- SEC: NATIONALDEX -->
+          <div class="adm-sec" id="adm-sec-nationaldex">
+            <div class="sec-title">NationalDex Manual</div>
+            <div class="sec-sub">Adicione Pokémon manualmente à NationalDex (entradas do CSV local)</div>
+            <div class="box" id="adm-ndex-form-box">
+              <div class="box-title" id="adm-ndex-form-title">➕ Novo Pokémon na NationalDex</div>
+              <div class="g3">
+                <div class="field"><label>Número (#)</label><input type="number" id="nd-num" placeholder="001" min="1" autocomplete="off"/></div>
+                <div class="field"><label>Nome</label><input type="text" id="nd-nome" placeholder="Ex: Bulbasaur" autocomplete="off"/></div>
+                <div class="field"><label>Tipo 1</label>
+                  <select id="nd-tipo1">
+                    <option value="">—</option>
+                    <option value="Normal">Normal</option><option value="Fire">Fire</option><option value="Water">Water</option><option value="Grass">Grass</option><option value="Electric">Electric</option><option value="Ice">Ice</option><option value="Fighting">Fighting</option><option value="Poison">Poison</option><option value="Ground">Ground</option><option value="Flying">Flying</option><option value="Psychic">Psychic</option><option value="Bug">Bug</option><option value="Rock">Rock</option><option value="Ghost">Ghost</option><option value="Dragon">Dragon</option><option value="Dark">Dark</option><option value="Steel">Steel</option><option value="Fairy">Fairy</option>
+                  </select>
+                </div>
+              </div>
+              <div class="g3">
+                <div class="field"><label>Tipo 2 (opcional)</label>
+                  <select id="nd-tipo2">
+                    <option value="">—</option>
+                    <option value="Normal">Normal</option><option value="Fire">Fire</option><option value="Water">Water</option><option value="Grass">Grass</option><option value="Electric">Electric</option><option value="Ice">Ice</option><option value="Fighting">Fighting</option><option value="Poison">Poison</option><option value="Ground">Ground</option><option value="Flying">Flying</option><option value="Psychic">Psychic</option><option value="Bug">Bug</option><option value="Rock">Rock</option><option value="Ghost">Ghost</option><option value="Dragon">Dragon</option><option value="Dark">Dark</option><option value="Steel">Steel</option><option value="Fairy">Fairy</option>
+                  </select>
+                </div>
+                <div class="field"><label>CA</label><input type="number" id="nd-ca" placeholder="Ex: 5" autocomplete="off" step="0.1"/></div>
+                <div class="field"><label>PV</label><input type="number" id="nd-pv" placeholder="Ex: 4" autocomplete="off" step="0.1"/></div>
+              </div>
+              <div class="g3">
+                <div class="field"><label>Dado de Vida</label><input type="text" id="nd-dado" placeholder="Ex: 1d8" autocomplete="off"/></div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="salvarNDex()">💾 Adicionar à NationalDex</button>
+                <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="resetNDexForm()">Limpar</button>
+              </div>
+              <div class="fb fb-ok" id="adm-ndex-ok">✓ Pokémon adicionado!</div>
+              <div class="fb fb-err" id="adm-ndex-err">Erro ao adicionar.</div>
+            </div>
+            <div class="box">
+              <div class="box-title">Pokémon Adicionados Manualmente</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Entradas manuais são salvas no Supabase e aparecem no fim da NationalDex.</p>
+              <div id="adm-ndex-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div></div>
+            </div>
+          </div>
+
+          <!-- SEC: ABILITIES -->
+          <div class="adm-sec" id="adm-sec-abilities">
+            <div class="sec-title">AbilityDex Manual</div>
+            <div class="sec-sub">Adicione ou edite abilities para a AbilityDex</div>
+            <div class="box" id="adm-ab-form-box">
+              <div class="box-title" id="adm-ab-form-title">➕ Nova Ability</div>
+              <input type="hidden" id="adm-ab-editing-id"/>
+              <div class="g2">
+                <div class="field"><label>Nome da Ability</label><input type="text" id="ab-nome" placeholder="Ex: OVERGROW" autocomplete="off" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()"/></div>
+              </div>
+              <div class="field"><label>Descrição / Efeito</label><textarea id="ab-efeito" rows="3" placeholder="Descreva o efeito da ability…"></textarea></div>
+              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="salvarAbility()">💾 Salvar Ability</button>
+                <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="resetAbForm()">Cancelar</button>
+                <button class="btn btn-danger" id="adm-ab-del-btn" style="display:none;margin-left:auto" onclick="excluirAbility()">🗑 Excluir</button>
+              </div>
+              <div class="fb fb-ok" id="adm-ab-ok">✓ Ability salva!</div>
+              <div class="fb fb-err" id="adm-ab-err">Erro ao salvar.</div>
+            </div>
+            <div class="box">
+              <div class="box-title">Abilities Cadastradas</div>
+              <div id="adm-ab-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div></div>
+            </div>
+          </div>
+
+          <!-- SEC: MOVES -->
+          <div class="adm-sec" id="adm-sec-moves">
+            <div class="sec-title">MoveDex Manual</div>
+            <div class="sec-sub">Adicione ou edite moves para a MoveDex</div>
+            <div class="box" id="adm-mv-form-box">
+              <div class="box-title" id="adm-mv-form-title">➕ Novo Move</div>
+              <input type="hidden" id="adm-mv-editing-id"/>
+              <div class="g3">
+                <div class="field"><label>Nome do Move</label><input type="text" id="mv-nome" placeholder="Ex: Vine Whip" autocomplete="off"/></div>
+                <div class="field"><label>Tipo</label>
+                  <select id="mv-tipo">
+                    <option value="">—</option>
+                    <option value="Normal">Normal</option><option value="Fire">Fire</option><option value="Water">Water</option><option value="Grass">Grass</option><option value="Electric">Electric</option><option value="Ice">Ice</option><option value="Fighting">Fighting</option><option value="Poison">Poison</option><option value="Ground">Ground</option><option value="Flying">Flying</option><option value="Psychic">Psychic</option><option value="Bug">Bug</option><option value="Rock">Rock</option><option value="Ghost">Ghost</option><option value="Dragon">Dragon</option><option value="Dark">Dark</option><option value="Steel">Steel</option><option value="Fairy">Fairy</option>
+                  </select>
+                </div>
+                <div class="field"><label>Categoria</label>
+                  <select id="mv-categoria">
+                    <option value="">—</option>
+                    <option value="Physical">Physical</option>
+                    <option value="Special">Special</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div class="g3">
+                <div class="field"><label>Rolagem (ex: 2d8+10)</label><input type="text" id="mv-rolagem" placeholder="Ex: 2d8+10" autocomplete="off"/></div>
+                <div class="field"><label>BD (Base Damage)</label><input type="text" id="mv-base" placeholder="Ex: 8" autocomplete="off"/></div>
+              </div>
+              <div class="field"><label>Efeito</label><textarea id="mv-efeito" rows="3" placeholder="Descreva o efeito do move…"></textarea></div>
+              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="salvarMove()">💾 Salvar Move</button>
+                <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="resetMvForm()">Cancelar</button>
+                <button class="btn btn-danger" id="adm-mv-del-btn" style="display:none;margin-left:auto" onclick="excluirMove()">🗑 Excluir</button>
+              </div>
+              <div class="fb fb-ok" id="adm-mv-ok">✓ Move salvo!</div>
+              <div class="fb fb-err" id="adm-mv-err">Erro ao salvar.</div>
+            </div>
+            <div class="box">
+              <div class="box-title">Moves Cadastrados</div>
+              <div id="adm-mv-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div></div>
+            </div>
+          </div>
         </div><!-- /adm-content -->
       </div><!-- /adm-layout -->
     </div><!-- /adm-wrap -->
@@ -1122,23 +1236,23 @@ function renderFicha(slug){
         <div class="ficha-info-name">${p.nome}</div>
         <table class="ficha-info-table">
           ${p.classificacao?`<tr><td>Classification</td><td colspan="1">${p.classificacao}</td></tr>`:''}
-          ${(p.altura||p.peso)?`<tr><td style="width:50%">Height: <span style="font-weight:400">${p.altura||'—'}</span></td><td>Weight: <span style="font-weight:400">${p.peso||'—'}</span></td></tr>`:''}
+          ${(p.altura||p.peso)?`<tr><td>Height: <span style="font-weight:400">${p.altura||'—'}</span></td><td>Weight: <span style="font-weight:400">${p.peso||'—'}</span></td></tr>`:''}
           ${p.genero?`<tr><td>Gender Ratio</td><td>${p.genero}</td></tr>`:''}
           ${p.egggroup?`<tr><td>Egg Group(s)</td><td>${p.egggroup}</td></tr>`:''}
           ${(dado||ca!=null||pv!=null)?`<tr><td colspan="2" style="padding:0">
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:left">
-              <div style="padding:9px 16px;border-right:1px solid var(--border)">
-                <span style="font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-size:13px;color:var(--text)">${dado||'—'}</span>
+            <div style="display:flex;gap:24px;padding:9px 16px">
+              <div>
+                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-size:13px;color:var(--text)">${dado||'—'}</span>
               </div>
-              <div style="padding:9px 16px;border-right:1px solid var(--border)">
-                <span style="font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA: </span><span style="font-size:13px;color:var(--text)">${ca!=null?ca:'—'}</span>
+              <div>
+                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA: </span><span style="font-size:13px;color:var(--text)">${ca!=null?ca:'—'}</span>
               </div>
-              <div style="padding:9px 16px">
-                <span style="font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV: </span><span style="font-size:13px;color:var(--text)">${pv!=null?pv:'—'}</span>
+              <div>
+                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV: </span><span style="font-size:13px;color:var(--text)">${pv!=null?pv:'—'}</span>
               </div>
             </div>
           </td></tr>`:''}
-          ${habilidades.length?`<tr><td>Abilities</td><td>${abilitiesHTML}</td></tr>`:''}
+          ${habilidades.length?`<tr><td colspan="2" style="padding:0"><div style="display:flex;flex-direction:column;gap:0"><div style="padding:6px 16px 2px 16px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities:</div><div style="padding:8px 16px 10px 16px">${abilitiesHTML}</div></div></td></tr>`:''}
         </table>
       </div>
     </div>
@@ -1206,6 +1320,9 @@ function admTab(sec,btn){
   document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('adm-sec-'+sec).classList.add('active');
   btn.classList.add('active');
+  if(sec==='nationaldex') renderAdmNDexList();
+  if(sec==='abilities') renderAdmAbList();
+  if(sec==='moves') renderAdmMvList();
 }
 
 // ── ADM: lista de pokémon ──
@@ -1604,6 +1721,195 @@ async function excluirPokemon(){
     document.getElementById('dex-total-count').textContent=uwaDex.length;
     resetForm();
   }
+}
+
+// ════════════════════════════════════════
+// ADM: NATIONALDEX MANUAL
+// ════════════════════════════════════════
+let ndexEntries = [];
+
+async function loadNDexEntries(){
+  try{ ndexEntries = await dbGet('uwadex_ndex'); } catch{ ndexEntries=[]; }
+}
+
+async function renderAdmNDexList(){
+  await loadNDexEntries();
+  const wrap = document.getElementById('adm-ndex-list');
+  if(!ndexEntries.length){ wrap.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Nenhuma entrada manual ainda.</div>'; return; }
+  wrap.innerHTML=`<table class="adm-table">
+    <thead><tr><th>#</th><th>Nome</th><th>Tipos</th><th>CA</th><th>PV</th><th>Dado</th><th>Ações</th></tr></thead>
+    <tbody>${ndexEntries.map(p=>`<tr>
+      <td style="font-family:var(--font-title);color:var(--muted)">${p.numero?'#'+String(p.numero).padStart(3,'0'):''}</td>
+      <td><strong>${p.nome}</strong></td>
+      <td>${[p.tipo1,p.tipo2].filter(Boolean).map(t=>`<span class="type-pill ${TCLS[t.toLowerCase()]||'t-normal'}">${t}</span>`).join('')}</td>
+      <td>${p.ca??'—'}</td><td>${p.pv??'—'}</td><td>${p.dado||'—'}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="excluirNDex(${p.id})">🗑</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+async function salvarNDex(){
+  const nome = document.getElementById('nd-nome').value.trim();
+  if(!nome){ alert('Preencha o nome.'); return; }
+  const payload = {
+    numero: parseInt(document.getElementById('nd-num').value)||null,
+    nome,
+    tipo1: document.getElementById('nd-tipo1').value||null,
+    tipo2: document.getElementById('nd-tipo2').value||null,
+    ca: document.getElementById('nd-ca').value!==''?parseFloat(document.getElementById('nd-ca').value):null,
+    pv: document.getElementById('nd-pv').value!==''?parseFloat(document.getElementById('nd-pv').value):null,
+    dado: document.getElementById('nd-dado').value.trim()||null,
+  };
+  const res = await dbPost('uwadex_ndex', payload);
+  if(res.ok){ fb('adm-ndex-ok'); resetNDexForm(); renderAdmNDexList(); }
+  else fb('adm-ndex-err');
+}
+
+async function excluirNDex(id){
+  if(!confirm('Excluir esta entrada?')) return;
+  const res = await dbDel('uwadex_ndex',`id=eq.${id}`);
+  if(res.ok) renderAdmNDexList();
+}
+
+function resetNDexForm(){
+  ['nd-num','nd-nome','nd-ca','nd-pv','nd-dado'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('nd-tipo1').value='';
+  document.getElementById('nd-tipo2').value='';
+}
+
+// ════════════════════════════════════════
+// ADM: ABILITIES MANUAL
+// ════════════════════════════════════════
+let admAbilities = [];
+let editingAbId = null;
+
+async function loadAdmAbilities(){
+  try{ admAbilities = await dbGet('uwadex_abilities','order=nome.asc'); } catch{ admAbilities=[]; }
+}
+
+async function renderAdmAbList(){
+  await loadAdmAbilities();
+  const wrap = document.getElementById('adm-ab-list');
+  if(!admAbilities.length){ wrap.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Nenhuma ability cadastrada ainda.</div>'; return; }
+  wrap.innerHTML=`<table class="adm-table">
+    <thead><tr><th>Nome</th><th>Efeito</th><th>Ações</th></tr></thead>
+    <tbody>${admAbilities.map(a=>`<tr>
+      <td><strong>${a.nome}</strong></td>
+      <td style="font-size:12px;color:var(--muted)">${(a.efeito||'').substring(0,80)}${(a.efeito||'').length>80?'…':''}</td>
+      <td><button class="btn btn-sm btn-primary" onclick="editarAbility(${a.id})">✏️</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function editarAbility(id){
+  const a = admAbilities.find(x=>x.id===id);
+  if(!a) return;
+  editingAbId = id;
+  document.getElementById('adm-ab-form-title').textContent='✏️ Editando: '+a.nome;
+  document.getElementById('ab-nome').value = a.nome||'';
+  document.getElementById('ab-efeito').value = a.efeito||'';
+  document.getElementById('adm-ab-del-btn').style.display='inline-block';
+  document.getElementById('adm-ab-form-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function salvarAbility(){
+  const nome = document.getElementById('ab-nome').value.trim();
+  if(!nome){ alert('Preencha o nome da ability.'); return; }
+  const payload = { nome, efeito: document.getElementById('ab-efeito').value.trim() };
+  let res;
+  if(editingAbId) res = await dbPatch('uwadex_abilities',`id=eq.${editingAbId}`,payload);
+  else res = await dbPost('uwadex_abilities',payload);
+  if(res.ok){ fb('adm-ab-ok'); resetAbForm(); renderAdmAbList(); }
+  else fb('adm-ab-err');
+}
+
+async function excluirAbility(){
+  if(!editingAbId||!confirm('Excluir esta ability?')) return;
+  const res = await dbDel('uwadex_abilities',`id=eq.${editingAbId}`);
+  if(res.ok){ resetAbForm(); renderAdmAbList(); }
+}
+
+function resetAbForm(){
+  editingAbId = null;
+  document.getElementById('adm-ab-form-title').textContent='➕ Nova Ability';
+  document.getElementById('ab-nome').value='';
+  document.getElementById('ab-efeito').value='';
+  document.getElementById('adm-ab-del-btn').style.display='none';
+}
+
+// ════════════════════════════════════════
+// ADM: MOVES MANUAL
+// ════════════════════════════════════════
+let admMoves = [];
+let editingMvId = null;
+
+async function loadAdmMoves(){
+  try{ admMoves = await dbGet('uwadex_moves','order=nome.asc'); } catch{ admMoves=[]; }
+}
+
+async function renderAdmMvList(){
+  await loadAdmMoves();
+  const wrap = document.getElementById('adm-mv-list');
+  if(!admMoves.length){ wrap.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Nenhum move cadastrado ainda.</div>'; return; }
+  wrap.innerHTML=`<table class="adm-table">
+    <thead><tr><th>Nome</th><th>Tipo</th><th>Cat.</th><th>BD</th><th>Efeito</th><th>Ações</th></tr></thead>
+    <tbody>${admMoves.map(m=>`<tr>
+      <td><strong>${m.nome}</strong></td>
+      <td>${m.tipo?`<span class="type-pill ${TCLS[m.tipo.toLowerCase()]||'t-normal'}" style="font-size:9px">${m.tipo}</span>`:''}</td>
+      <td style="font-size:12px;color:var(--muted)">${m.categoria||'—'}</td>
+      <td style="font-family:var(--font-title)">${m.base||'—'}</td>
+      <td style="font-size:12px;color:var(--muted)">${(m.efeito||'').substring(0,60)}${(m.efeito||'').length>60?'…':''}</td>
+      <td><button class="btn btn-sm btn-primary" onclick="editarMove(${m.id})">✏️</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function editarMove(id){
+  const m = admMoves.find(x=>x.id===id);
+  if(!m) return;
+  editingMvId = id;
+  document.getElementById('adm-mv-form-title').textContent='✏️ Editando: '+m.nome;
+  document.getElementById('mv-nome').value = m.nome||'';
+  document.getElementById('mv-tipo').value = m.tipo||'';
+  document.getElementById('mv-categoria').value = m.categoria||'';
+  document.getElementById('mv-rolagem').value = m.rolagem||'';
+  document.getElementById('mv-base').value = m.base||'';
+  document.getElementById('mv-efeito').value = m.efeito||'';
+  document.getElementById('adm-mv-del-btn').style.display='inline-block';
+  document.getElementById('adm-mv-form-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function salvarMove(){
+  const nome = document.getElementById('mv-nome').value.trim();
+  if(!nome){ alert('Preencha o nome do move.'); return; }
+  const payload = {
+    nome,
+    tipo: document.getElementById('mv-tipo').value||null,
+    categoria: document.getElementById('mv-categoria').value||null,
+    rolagem: document.getElementById('mv-rolagem').value.trim()||null,
+    base: document.getElementById('mv-base').value.trim()||null,
+    efeito: document.getElementById('mv-efeito').value.trim()||null,
+  };
+  let res;
+  if(editingMvId) res = await dbPatch('uwadex_moves',`id=eq.${editingMvId}`,payload);
+  else res = await dbPost('uwadex_moves',payload);
+  if(res.ok){ fb('adm-mv-ok'); resetMvForm(); renderAdmMvList(); }
+  else fb('adm-mv-err');
+}
+
+async function excluirMove(){
+  if(!editingMvId||!confirm('Excluir este move?')) return;
+  const res = await dbDel('uwadex_moves',`id=eq.${editingMvId}`);
+  if(res.ok){ resetMvForm(); renderAdmMvList(); }
+}
+
+function resetMvForm(){
+  editingMvId = null;
+  document.getElementById('adm-mv-form-title').textContent='➕ Novo Move';
+  ['mv-nome','mv-rolagem','mv-base','mv-efeito'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('mv-tipo').value='';
+  document.getElementById('mv-categoria').value='';
+  document.getElementById('adm-mv-del-btn').style.display='none';
 }
 
 // ════════════════════════════════════════
