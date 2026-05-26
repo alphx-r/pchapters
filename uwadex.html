@@ -320,7 +320,7 @@ html.dark .dex-tab.active{color:#fff}
         <span class="dex-count" id="nationaldex-count"></span>
       </div>
       <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:visible">
-        <table class="ndex-table" style="border-radius:var(--r);overflow:hidden">
+        <table class="ndex-table" style="border-radius:var(--r)">
           <thead><tr>
             <th style="width:70px">#</th>
             <th>Nome</th>
@@ -829,15 +829,7 @@ function renderNationalDex(q=''){
   const empty=document.getElementById('nationaldex-empty');
   if(!filtered.length){tbody.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
-  const headerBannerRow=`<tr style="background:linear-gradient(90deg,var(--brand) 0%,var(--brand-mid) 100%);position:sticky;top:97px;z-index:9">
-    <td class="ndex-num" style="color:rgba(255,255,255,.6);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">#</td>
-    <td style="color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Nome</td>
-    <td style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Tipo(s)</td>
-    <td class="ndex-stat" style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">CA</td>
-    <td class="ndex-stat" style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">HP</td>
-    <td class="ndex-stat" style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Dado</td>
-  </tr>`;
-  tbody.innerHTML=headerBannerRow+filtered.map(p=>{
+  tbody.innerHTML=filtered.map(p=>{
     const tipos=(p.tipos||[]).map(t=>{
       const tLower=t.toLowerCase();
       return `<span class="type-pill ${TCLS[tLower]||'t-normal'}" style="font-size:9px">${t}</span>`;
@@ -901,9 +893,9 @@ function renderHabilidades(q=''){
   }
   document.getElementById('habilidades-list-wrap').innerHTML=`
     <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:visible">
-      <table class="ref-table" style="border-radius:var(--r);overflow:hidden">
+      <table class="ref-table" style="border-radius:var(--r)">
         <thead><tr><th style="width:200px">Ability</th><th>Efeito</th></tr></thead>
-        <tbody><tr style="background:linear-gradient(90deg,var(--brand) 0%,var(--brand-mid) 100%);position:sticky;top:97px;z-index:9"><td class="ref-name" style="color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Ability</td><td style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Efeito</td></tr>${data.map(a=>`<tr>
+        <tbody>${data.map(a=>`<tr>
           <td class="ref-name">${a.nome}</td>
           <td>${a.efeito||'—'}</td>
         </tr>`).join('')}</tbody>
@@ -924,9 +916,9 @@ function renderMoves(q=''){
   }
   document.getElementById('moves-list-wrap').innerHTML=`
     <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:visible">
-      <table class="ref-table" style="border-radius:var(--r);overflow:hidden">
+      <table class="ref-table" style="border-radius:var(--r)">
         <thead><tr><th style="width:200px">Move</th><th style="width:90px">Tipo</th><th style="width:90px">Categoria</th><th style="width:90px">Rolagem</th><th>Efeito</th></tr></thead>
-        <tbody><tr style="background:linear-gradient(90deg,var(--brand) 0%,var(--brand-mid) 100%);position:sticky;top:97px;z-index:9"><td class="ref-name" style="color:#fff;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Move</td><td style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Tipo</td><td class="ref-muted" style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Categoria</td><td class="ref-muted" style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Rolagem</td><td style="color:rgba(255,255,255,.8);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.5px">Efeito</td></tr>${data.map(m=>`<tr>
+        <tbody>${data.map(m=>`<tr>
           <td class="ref-name">${m.nome}</td>
           <td><span class="type-pill ${TCLS[m.tipo]||'t-normal'}">${m.tipo||'—'}</span></td>
           <td class="ref-muted">${m.categoria||'—'}</td>
