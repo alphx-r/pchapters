@@ -26,6 +26,8 @@ html.dark{
   --red:#e05050 !important;--green:#4aaa4a !important;
 }
 html.dark .nav{background:#0d1622}
+html.dark .nav-logo{color:#fff}
+html.dark .nav-logo span{color:var(--accent)}
 html.dark .slide-img{filter:brightness(.7)}
 html.dark .callout-info{background:#0d1f3a;color:#7ab8f0}
 html.dark .callout-warn{background:#2a1f00;color:#f0c040}
@@ -1877,9 +1879,22 @@ function previewPokeSprite(input){
   const file=input.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=e=>{
-    const prev=document.getElementById('pk-sprite-preview');
-    prev.innerHTML=`<img src="${e.target.result}" style="width:53px;height:53px;object-fit:contain;image-rendering:pixelated"/>`;
-    prev.dataset.b64=e.target.result;
+    const img=new Image();
+    img.onload=()=>{
+      const SIZE=96;
+      const canvas=document.createElement('canvas');
+      canvas.width=SIZE;canvas.height=SIZE;
+      const ctx=canvas.getContext('2d');
+      ctx.imageSmoothingEnabled=false;
+      const scale=Math.min(SIZE/img.width,SIZE/img.height);
+      const w=img.width*scale,h=img.height*scale;
+      ctx.drawImage(img,(SIZE-w)/2,(SIZE-h)/2,w,h);
+      const dataUrl=canvas.toDataURL('image/png');
+      const prev=document.getElementById('pk-sprite-preview');
+      prev.innerHTML=`<img src="${dataUrl}" style="width:53px;height:53px;object-fit:contain;image-rendering:pixelated"/>`;
+      prev.dataset.b64=dataUrl;
+    };
+    img.src=e.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -3102,7 +3117,7 @@ const HOME_DEFAULTS = {
   quickmenu: [
     [{label:'Introdução',slug:'introducao'},{label:'Sistema Geral',slug:'sistemageral'},{label:'Sistemas Secundários',slug:'sistemassecundarios'},{label:'Guia Pokémon',slug:'guiapokemon'}],
     [{label:'Pokémon Iniciais',slug:'pokemoniniciais'},{label:'Classes',slug:'classes'},{label:'Profissões',slug:'profissoes'},{label:'Atividades',slug:'atividades'}],
-    [{label:'UWAdex',url:'uwadex.html'},{label:'NPCdex',slug:'npcdex'},{label:'STATSdex',slug:'statsdex'},{label:'ITEMdex',slug:'itemdex'}],
+    [{label:'UWAdex',url:'uwadex'},{label:'NPCdex',slug:'npcdex'},{label:'STATSdex',slug:'statsdex'},{label:'ITEMdex',slug:'itemdex'}],
   ],
   cards: [
     {icon:'🎲',title:'Sistema de Rolagem',body:'Use o rolador de encontros para descobrir Pokémon selvagens baseado no bioma e nas suas provas de valor.'},
