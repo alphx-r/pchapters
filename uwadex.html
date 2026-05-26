@@ -859,6 +859,8 @@ function mostrarAdm(){
     document.getElementById('adm-login-wrap').style.display='none';
     document.getElementById('adm-painel-wrap').style.display='block';
     document.getElementById('adm-user-lbl').textContent=admLogado.email;
+    buildTiposSelector([]);
+    buildDmgTakenFields({});
     renderAdmPokeList();
   } else {
     document.getElementById('adm-login-wrap').style.display='block';
@@ -908,18 +910,13 @@ function renderAdmPokeList(){
 
 // ── ADM: form helpers ──
 function buildTiposSelector(selected=[]){
-  document.getElementById('tipos-selector').innerHTML=TIPOS.map(t=>`<span class="tipo-tag${selected.includes(t)?' sel':''}" onclick="toggleTipo(this,'${t}')">${TIPO_LABELS[t]||t}</span>`).join('');
+  document.getElementById('tipos-selector').innerHTML=TIPOS.map(t=>`<span class="tipo-tag${selected.includes(t)?' sel':''}" data-tipo="${t}" onclick="toggleTipo(this)">${TIPO_LABELS[t]||t}</span>`).join('');
   document.getElementById('f-tipos').value=JSON.stringify(selected);
 }
 
-function toggleTipo(el,tipo){
+function toggleTipo(el){
   el.classList.toggle('sel');
-  const sels=[...document.querySelectorAll('.tipo-tag.sel')].map(e=>e.dataset.tipo||e.textContent.trim());
-  const tiposMap=Object.fromEntries(Object.entries(TIPO_LABELS).map(([k,v])=>[v,k]));
-  const tipoKeys=[...document.querySelectorAll('.tipo-tag.sel')].map(e=>{
-    for(const [k,v] of Object.entries(TIPO_LABELS)) if(v===e.textContent.trim()) return k;
-    return e.textContent.trim();
-  });
+  const tipoKeys=[...document.querySelectorAll('#tipos-selector .tipo-tag.sel')].map(e=>e.dataset.tipo);
   document.getElementById('f-tipos').value=JSON.stringify(tipoKeys);
 }
 
