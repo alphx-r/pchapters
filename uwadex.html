@@ -139,7 +139,8 @@ html.dark .dex-tab.active{color:#fff}
 .ficha-sprite-num{font-family:var(--font-title);font-size:12px;color:var(--muted);letter-spacing:1px}
 .ficha-sprite-types{display:flex;gap:5px;justify-content:center}
 .ficha-info-col{padding:0}
-.ficha-info-name{background:var(--brand);color:#fff;font-family:var(--font-title);font-size:20px;font-weight:700;letter-spacing:1.5px;padding:14px 20px;text-align:center}
+.ficha-info-name{background:var(--brand);color:#fff;font-family:var(--font-title);font-size:20px;font-weight:700;letter-spacing:1.5px;padding:10px 20px;display:flex;align-items:center;gap:12px}
+.ficha-info-name span{flex:1;text-align:center}
 .ficha-info-table{width:100%}
 .ficha-info-table tr{border-bottom:1px solid var(--border)}
 .ficha-info-table tr:last-child{border-bottom:none}
@@ -148,7 +149,7 @@ html.dark .dex-tab.active{color:#fff}
 .ficha-info-table td:last-child{color:var(--text)}
 .ficha-ability{margin-bottom:6px;font-size:12px;line-height:1.5;text-align:justify}
 .ficha-type-icons{display:flex;gap:6px;justify-content:center;align-items:center}
-.ficha-type-icon{width:32px;height:32px;object-fit:contain}
+.ficha-type-icon{width:36px;height:36px;object-fit:contain}
 .ficha-ability-name{font-weight:700;color:var(--brand-mid)}
 .ficha-ability-ha{font-size:10px;font-weight:700;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle}
 
@@ -1231,10 +1232,12 @@ function renderFicha(slug){
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
         <img class="ficha-sprite-img" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
-        <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/${t.charAt(0).toUpperCase()+t.slice(1)}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
-        <div class="ficha-info-name">${p.nome}</div>
+        <div class="ficha-info-name">
+          <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/duiker101/pokemon-type-svg-icons/master/icons/${t.charAt(0).toUpperCase()+t.slice(1)}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
+          <span>${p.nome}</span>
+        </div>
         <table class="ficha-info-table">
           ${p.classificacao?`<tr><td>Classification</td><td colspan="1">${p.classificacao}</td></tr>`:''}
           ${(p.altura||p.peso)?`<tr><td style="border-right:none">HEIGHT: <span style="font-weight:400;color:var(--text)">${p.altura||'—'}</span></td><td style="border-left:none;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: <span style="font-weight:400;color:var(--text)">${p.peso||'—'}</span></td></tr>`:''}
