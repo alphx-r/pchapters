@@ -146,7 +146,7 @@ html.dark .dex-tab.active{color:#fff}
 .ficha-info-table td{padding:9px 16px;font-size:13px;vertical-align:top}
 .ficha-info-table td:first-child{font-weight:700;color:var(--muted);width:38%;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
 .ficha-info-table td:last-child{color:var(--text)}
-.ficha-ability{margin-bottom:6px;font-size:13px;line-height:1.5}
+.ficha-ability{margin-bottom:6px;font-size:11px;line-height:1.5}
 .ficha-ability-name{font-weight:700;color:var(--brand-mid)}
 .ficha-ability-ha{font-size:10px;font-weight:700;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle}
 
@@ -1236,23 +1236,23 @@ function renderFicha(slug){
         <div class="ficha-info-name">${p.nome}</div>
         <table class="ficha-info-table">
           ${p.classificacao?`<tr><td>Classification</td><td colspan="1">${p.classificacao}</td></tr>`:''}
-          ${(p.altura||p.peso)?`<tr><td>Height: <span style="font-weight:400">${p.altura||'—'}</span></td><td>Weight: <span style="font-weight:400">${p.peso||'—'}</span></td></tr>`:''}
+          ${(p.altura||p.peso)?`<tr><td style="border-right:none">HEIGHT: <span style="font-weight:400;color:var(--text)">${p.altura||'—'}</span></td><td style="border-left:none">Weight: <span style="font-weight:400;color:var(--text)">${p.peso||'—'}</span></td></tr>`:''}
           ${p.genero?`<tr><td>Gender Ratio</td><td>${p.genero}</td></tr>`:''}
           ${p.egggroup?`<tr><td>Egg Group(s)</td><td>${p.egggroup}</td></tr>`:''}
           ${(dado||ca!=null||pv!=null)?`<tr><td colspan="2" style="padding:0">
-            <div style="display:flex;gap:24px;padding:9px 16px">
-              <div>
-                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-size:13px;color:var(--text)">${dado||'—'}</span>
+            <div style="display:flex;gap:0;padding:0">
+              <div style="flex:1;padding:9px 16px;border-right:none">
+                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-size:13px;color:var(--text);font-weight:400">${dado||'—'}</span>
               </div>
-              <div>
-                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA: </span><span style="font-size:13px;color:var(--text)">${ca!=null?ca:'—'}</span>
+              <div style="flex:1;padding:9px 16px;border-right:none">
+                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA: </span><span style="font-size:13px;color:var(--text);font-weight:400">${ca!=null?ca:'—'}</span>
               </div>
-              <div>
-                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV: </span><span style="font-size:13px;color:var(--text)">${pv!=null?pv:'—'}</span>
+              <div style="flex:1;padding:9px 16px">
+                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV: </span><span style="font-size:13px;color:var(--text);font-weight:400">${pv!=null?pv:'—'}</span>
               </div>
             </div>
           </td></tr>`:''}
-          ${habilidades.length?`<tr><td colspan="2" style="padding:0"><div style="display:flex;flex-direction:column;gap:0"><div style="padding:6px 16px 2px 16px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities:</div><div style="padding:8px 16px 10px 16px">${abilitiesHTML}</div></div></td></tr>`:''}
+          ${habilidades.length?`<tr><td colspan="2" style="padding:0"><div style="display:flex;flex-direction:column;gap:0"><div style="padding:6px 16px 2px 16px;font-weight:400;color:var(--muted);font-size:12px;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities:</div><div style="padding:8px 16px 10px 16px;font-weight:400;text-transform:none;letter-spacing:0">${abilitiesHTML}</div></div></td></tr>`:''}
         </table>
       </div>
     </div>
