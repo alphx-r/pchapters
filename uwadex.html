@@ -967,11 +967,13 @@ function renderFicha(slug){
   const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'';
   const rarCls=RCLS[p.raridade]||'rc';
   const rarLbl=RLBL[p.raridade]||'';
-  // Busca dado/ca/pv no CSV da NationalDex (não são salvos no Supabase)
+  // Busca dado/ca/pv do Supabase (p) ou fallback no CSV da NationalDex
   const csvRef=(DATADEX.pokemon||[]).find(x=>x.nome&&slugify(x.nome)===slug);
-  const dado=p.dado||(csvRef&&csvRef.dado&&csvRef.dado!=='NaN'?csvRef.dado:null);
-  const ca=p.ca!=null?p.ca:(csvRef&&csvRef.ca!=null&&!isNaN(csvRef.ca)?csvRef.ca:null);
-  const pv=p.pv!=null?p.pv:(csvRef&&csvRef.pv!=null&&!isNaN(csvRef.pv)?csvRef.pv:null);
+  const dado=p.dado&&p.dado!==''?p.dado:(csvRef&&csvRef.dado&&csvRef.dado!=='NaN'?csvRef.dado:null);
+  const caRaw=p.ca!==null&&p.ca!==undefined&&p.ca!==''?p.ca:(csvRef&&csvRef.ca!=null&&csvRef.ca!==''&&!isNaN(csvRef.ca)?csvRef.ca:null);
+  const pvRaw=p.pv!==null&&p.pv!==undefined&&p.pv!==''?p.pv:(csvRef&&csvRef.pv!=null&&csvRef.pv!==''&&!isNaN(csvRef.pv)?csvRef.pv:null);
+  const ca=caRaw!=null&&!isNaN(caRaw)?caRaw:null;
+  const pv=pvRaw!=null&&!isNaN(pvRaw)?pvRaw:null;
   const habilidades=p.habilidades||[];
   const evoChain=p.evo_chain||[];
   const dmgTaken=p.dmg_taken||{};
