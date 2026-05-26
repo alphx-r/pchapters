@@ -18,16 +18,20 @@
   --r:10px;--font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
 }
 html.dark{
-  --brand:#4a9ede!important;--brand-mid:#5aaeee!important;--brand-light:#0d1f35!important;
-  --accent:#e8a020!important;--bg:#0f1117!important;--surface:#1a1d27!important;
-  --surface2:#22263a!important;--border:#2a2f45!important;--border2:#363c58!important;
-  --text:#e0e6f0!important;--muted:#8a9ab8!important;--red:#e05050!important;
+  --brand:#4a9ede !important;--brand-mid:#5aaeee !important;--brand-light:#0d1f35 !important;
+  --accent:#e8a020 !important;--accent-light:#2a1f00 !important;
+  --bg:#0f1117 !important;--surface:#1a1d27 !important;--surface2:#22263a !important;
+  --border:#2a2f45 !important;--border2:#363c58 !important;
+  --text:#e0e6f0 !important;--muted:#8a9ab8 !important;
+  --red:#e05050 !important;--green:#4aaa4a !important;
 }
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);transition:background .2s,color .2s}
 
 /* ── NAV ── */
 .nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:200}
 html.dark .nav{background:#0d1622}
+html.dark .nav-logo{color:#fff}
+html.dark .nav-logo span{color:var(--accent)}
 .nav-logo{font-family:var(--font-title);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px;cursor:pointer;text-decoration:none}
 .nav-logo span{color:var(--accent)}
 .nav-right{display:flex;align-items:center;gap:10px}
@@ -43,7 +47,7 @@ html.dark .nav{background:#0d1622}
 
 /* ── LOADING ── */
 .loading-overlay{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:#2563a8;border-radius:50%;animation:spin .7s linear infinite}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:#e53e3e;border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-text{font-size:14px;color:var(--muted);font-weight:600}
 
@@ -74,7 +78,6 @@ html.dark .nav{background:#0d1622}
 .type-pill{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.3px;margin:1px}
 .t-fire{background:#ff9b4a;color:#7a2a00}.t-water{background:#6ab8ff;color:#003a6a}.t-grass{background:#78d878;color:#1a5a1a}.t-normal{background:#c8c8a0;color:#4a4a2a}.t-electric{background:#ffe030;color:#5a4a00}.t-psychic{background:#ff8fb0;color:#6a0030}.t-steel{background:#aababb;color:#2a3a3a}.t-fairy{background:#ffaad8;color:#6a0050}.t-ghost{background:#9090c0;color:#1a1a4a}.t-dragon{background:#7060f0;color:#fff}.t-ice{background:#96d8d8;color:#1a4a4a}.t-fighting{background:#c03030;color:#fff}.t-rock{background:#b8a050;color:#3a2a00}.t-ground{background:#e0c060;color:#3a2a00}.t-poison{background:#a060c0;color:#fff}.t-bug{background:#a0c020;color:#2a3a00}.t-dark{background:#705040;color:#fff}.t-flying{background:#88aaee;color:#1a1a5a}
 .rc{background:#e0f0e0;color:#1a6a1a}.ri{background:#dde8f8;color:#1a4a8a}.rr{background:#f0e8ff;color:#5a1a9a}.rrr{background:#fff0d8;color:#8a4a00}
-.cat-inicial{background:#d8f0ff;color:#0a4a7a}.cat-mitico{background:#ffe0f8;color:#7a006a}.cat-lendario{background:#fff8c0;color:#7a5a00;border:1px solid #e8c800}.cat-ultra{background:#e0ffe8;color:#005a1a}
 
 /* ── FICHA PAGE ── */
 .ficha-wrap{max-width:1000px;margin:0 auto;padding:28px}
@@ -251,7 +254,7 @@ html.dark .nav{background:#0d1622}
 
 <!-- NAV -->
 <nav class="nav">
-  <a class="nav-logo" href="../index.html">P<span>Chapters</span></a>
+  <a class="nav-logo" href="/">P<span>Chapters</span></a>
   <div class="nav-right">
     <button class="dark-toggle" onclick="toggleDark()" title="Alternar tema">💡</button>
     <button class="nav-adm-btn" id="btn-adm-toggle" onclick="toggleAdmView()">⚙ ADM</button>
@@ -336,24 +339,25 @@ html.dark .nav{background:#0d1622}
                   <div class="field"><label>Classificação</label><input type="text" id="f-classif" placeholder="Ex: Bubble Bug Pokémon"/></div>
                 </div>
                 <div class="g2">
-                  <div class="field"><label>URL do Sprite (frente)</label><input type="text" id="f-sprite" placeholder="https://…"/></div>
+                  <div class="field">
+                    <label>Sprite (frente)</label>
+                    <input type="file" id="f-sprite-file" accept="image/*" onchange="previewUwadexSprite(this)" style="font-size:13px"/>
+                    <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
+                      <div id="f-sprite-preview" style="width:64px;height:64px;background:var(--surface2);border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden">
+                        <img id="f-sprite-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>
+                      </div>
+                      <div>
+                        <span style="font-size:11px;color:var(--muted);display:block">Pré-visualização</span>
+                        <input type="text" id="f-sprite" placeholder="ou cole uma URL…" style="margin-top:4px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:200px" oninput="if(this.value)document.getElementById('f-sprite-preview-img').src=this.value"/>
+                      </div>
+                    </div>
+                  </div>
                   <div class="field"><label>Raridade</label>
                     <select id="f-raridade">
                       <option value="comum">Comum</option>
                       <option value="incomum">Incomum</option>
                       <option value="raro">Raro</option>
                       <option value="rarissimo">Raríssimo</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="g2">
-                  <div class="field"><label>Categoria Especial</label>
-                    <select id="f-categoria">
-                      <option value="">— Nenhuma —</option>
-                      <option value="inicial">Inicial</option>
-                      <option value="mitico">Mítico</option>
-                      <option value="lendario">Lendário</option>
-                      <option value="ultra-beast">Ultra Beast</option>
                     </select>
                   </div>
                 </div>
@@ -480,10 +484,6 @@ async function sb(path, opts={}){
     ...opts
   });
   if(opts.method==='DELETE'||res.status===204) return [];
-  if(!res.ok){
-    const errText = await res.text().catch(()=>'');
-    throw new Error(`HTTP ${res.status}: ${errText}`);
-  }
   const text=await res.text();
   if(!text) return [];
   try{return JSON.parse(text);}catch{return [];}
@@ -506,8 +506,6 @@ const TIPO_LABELS = {normal:'Normal',fire:'Fogo',water:'Água',grass:'Planta',el
 const TCLS = {fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
 const RCLS = {comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
 const RLBL = {comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
-const CATLBL = {inicial:'Inicial',mitico:'Mítico',lendario:'Lendário','ultra-beast':'Ultra Beast'};
-const CATCLS = {inicial:'cat-inicial',mitico:'cat-mitico',lendario:'cat-lendario','ultra-beast':'cat-ultra'};
 const FALLBACK = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
 
 // Damage taken tipos na ordem do PDF
@@ -625,15 +623,12 @@ function renderDexGridData(list){
     const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'';
     const rarCls=RCLS[p.raridade]||'rc';
     const rarLbl=RLBL[p.raridade]||'';
-    const catLbl=CATLBL[p.categoria]||'';
-    const catCls=CATCLS[p.categoria]||'';
     return `<div class="dex-card" onclick="abrirFicha('${slugify(p.nome)}')">
       <div class="dex-card-num">${numStr}</div>
       ${rarLbl?`<div class="dex-card-rarity"><span class="type-pill ${rarCls}" style="font-size:8px">${rarLbl}</span></div>`:''}
       <img class="dex-card-sprite" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
       <div class="dex-card-name">${p.nome}</div>
       <div class="dex-card-types">${tipos}</div>
-      ${catLbl?`<span class="type-pill ${catCls}" style="font-size:8px;margin-top:2px">★ ${catLbl}</span>`:''}
     </div>`;
   }).join('');
 }
@@ -670,8 +665,6 @@ function renderFicha(slug){
   const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'';
   const rarCls=RCLS[p.raridade]||'rc';
   const rarLbl=RLBL[p.raridade]||'';
-  const catLbl=CATLBL[p.categoria]||'';
-  const catCls=CATCLS[p.categoria]||'';
   const habilidades=p.habilidades||[];
   const evoChain=p.evo_chain||[];
   const dmgTaken=p.dmg_taken||{};
@@ -726,7 +719,11 @@ function renderFicha(slug){
         <tbody><tr>${statKeys.map(k=>`<td>${stats[k]||'—'}</td>`).join('')}</tr></tbody>
       </table>
     </div>
-    ${''/* RPG stats removed */}
+    ${(p.dado||p.ca||p.pv)?`<div class="rpg-stats-row">
+      ${p.dado?`<div class="rpg-stat"><div class="rpg-stat-label">Dado</div><div class="rpg-stat-val">${p.dado}</div></div>`:''}
+      ${p.ca!==undefined&&p.ca!==null&&p.ca!==''?`<div class="rpg-stat"><div class="rpg-stat-label">CA</div><div class="rpg-stat-val">${p.ca}</div></div>`:''}
+      ${p.pv!==undefined&&p.pv!==null&&p.pv!==''?`<div class="rpg-stat"><div class="rpg-stat-label">PV</div><div class="rpg-stat-val">${p.pv}</div></div>`:''}
+    </div>`:''}
   </div>`;
 
   // ── Biology HTML ──
@@ -810,7 +807,6 @@ function renderFicha(slug){
         <img class="ficha-sprite-img" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
         <div class="ficha-sprite-types">${tipos.map(t=>`<span class="type-pill ${TCLS[t]||'t-normal'}" style="font-size:11px;padding:4px 10px">${t}</span>`).join('')}</div>
         ${rarLbl?`<span class="type-pill ${rarCls}" style="font-size:10px;padding:3px 10px">${rarLbl}</span>`:''}
-        ${catLbl?`<span class="type-pill ${catCls}" style="font-size:10px;padding:3px 10px">★ ${catLbl}</span>`:''}
       </div>
       <div class="ficha-info-col">
         <div class="ficha-info-name">${p.nome}</div>
@@ -1064,7 +1060,9 @@ function resetForm(){
   ['f-num','f-nome','f-classif','f-sprite','f-altura','f-peso','f-genero','f-egggroup','f-bio'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   ['f-hp','f-atk','f-def','f-spatk','f-spdef','f-speed'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('f-raridade').value='comum';
-  document.getElementById('f-categoria').value='';
+  const prev=document.getElementById('f-sprite-preview');
+  if(prev){delete prev.dataset.b64;prev.innerHTML='<img id="f-sprite-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>';}
+  const fileInp=document.getElementById('f-sprite-file');if(fileInp)fileInp.value='';
   buildTiposSelector([]);
   buildDmgTakenFields({});
   document.getElementById('abilities-list').innerHTML='';
@@ -1079,6 +1077,30 @@ function resetForm(){
 
 function cancelarEdicao(){ resetForm(); }
 
+function previewUwadexSprite(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const SIZE=200;
+      const canvas=document.createElement('canvas');
+      canvas.width=SIZE;canvas.height=SIZE;
+      const ctx=canvas.getContext('2d');
+      ctx.imageSmoothingEnabled=false;
+      const scale=Math.min(SIZE/img.width,SIZE/img.height);
+      const w=img.width*scale,h=img.height*scale;
+      ctx.drawImage(img,(SIZE-w)/2,(SIZE-h)/2,w,h);
+      const dataUrl=canvas.toDataURL('image/png');
+      document.getElementById('f-sprite').value='';
+      document.getElementById('f-sprite-preview-img').src=dataUrl;
+      document.getElementById('f-sprite-preview').dataset.b64=dataUrl;
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
 function editarPokemon(id){
   const p=uwaDex.find(x=>x.id===id);
   if(!p) return;
@@ -1089,9 +1111,10 @@ function editarPokemon(id){
   document.getElementById('f-num').value=p.numero||'';
   document.getElementById('f-nome').value=p.nome||'';
   document.getElementById('f-classif').value=p.classificacao||'';
-  document.getElementById('f-sprite').value=p.sprite||'';
+  document.getElementById('f-sprite').value=p.sprite&&!p.sprite.startsWith('data:')?p.sprite:'';
+  const prev=document.getElementById('f-sprite-preview');
+  if(p.sprite){prev.dataset.b64=p.sprite.startsWith('data:')?p.sprite:'';document.getElementById('f-sprite-preview-img').src=p.sprite;}
   document.getElementById('f-raridade').value=p.raridade||'comum';
-  document.getElementById('f-categoria').value=p.categoria||'';
   document.getElementById('f-altura').value=p.altura||'';
   document.getElementById('f-peso').value=p.peso||'';
   document.getElementById('f-genero').value=p.genero||'';
@@ -1142,9 +1165,8 @@ async function salvarPokemon(){
     nome,
     slug:slugify(nome),
     classificacao:document.getElementById('f-classif').value.trim(),
-    sprite:document.getElementById('f-sprite').value.trim(),
+    sprite:(document.getElementById('f-sprite-preview').dataset.b64)||document.getElementById('f-sprite').value.trim()||null,
     raridade:document.getElementById('f-raridade').value,
-    categoria:document.getElementById('f-categoria').value||null,
     altura:document.getElementById('f-altura').value.trim(),
     peso:document.getElementById('f-peso').value.trim(),
     genero:document.getElementById('f-genero').value.trim(),
@@ -1160,22 +1182,19 @@ async function salvarPokemon(){
     tutor_moves:collectTutorMoves(),
   };
 
-  let ok = false;
-  try {
-    if(editingId){
-      await dbPatch('uwadex',`id=eq.${editingId}`,payload);
-    } else {
-      await dbPost('uwadex',payload);
+  let res;
+  if(editingId){
+    res=await dbPatch('uwadex',`id=eq.${editingId}`,payload);
+    if(res&&!res.error){
+      const idx=uwaDex.findIndex(x=>x.id===editingId);
+      if(idx>=0) uwaDex[idx]={...uwaDex[idx],...payload};
     }
-    ok = true;
-  } catch(e){ ok = false; }
+  } else {
+    res=await dbPost('uwadex',payload);
+    if(res&&res[0]) uwaDex.push(res[0]);
+  }
 
-  if(ok){
-    // Recarrega a lista completa do banco para garantir sincronia
-    try {
-      const fresh = await dbGet('uwadex');
-      uwaDex = Array.isArray(fresh) ? fresh : uwaDex;
-    } catch(e){}
+  if(res&&!res.error){
     fb('adm-form-ok');
     renderAdmPokeList();
     renderDexGrid();
@@ -1191,10 +1210,7 @@ async function excluirPokemon(){
   const p=uwaDex.find(x=>x.id===editingId);
   if(!confirm(`Excluir ${p?.nome||'este Pokémon'} permanentemente?`)) return;
   await dbDel('uwadex',`id=eq.${editingId}`);
-  try {
-    const fresh = await dbGet('uwadex');
-    uwaDex = Array.isArray(fresh) ? fresh : uwaDex.filter(x=>x.id!==editingId);
-  } catch(e){ uwaDex=uwaDex.filter(x=>x.id!==editingId); }
+  uwaDex=uwaDex.filter(x=>x.id!==editingId);
   renderAdmPokeList();
   renderDexGrid();
   document.getElementById('dex-total-count').textContent=uwaDex.length;
