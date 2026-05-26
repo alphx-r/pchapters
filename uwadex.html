@@ -1052,12 +1052,14 @@ function filtrarMoves(){
 
 
 function voltarDex(){
+  resetNavTheme();
   navigateTo('dex');
 }
 function abrirFicha(slug){
   navigateTo(slug);
 }
 function mostrarDex(){
+  resetNavTheme();
   showView('dex');
   document.getElementById('btn-adm-toggle').classList.remove('active');
   document.getElementById('nav-tabs').style.display='flex';
@@ -1293,6 +1295,9 @@ function renderFicha(slug){
   `;
 
   document.title=`${p.nome} — UWAdex`;
+
+  // Tematiza a nav com a cor do tipo primário
+  setNavTheme(primaryType);
 }
 
 function switchMovesTab(btn,panelId){
@@ -1312,6 +1317,7 @@ function toggleAdmView(){
 }
 
 function mostrarAdm(){
+  resetNavTheme();
   showView('adm');
   document.getElementById('btn-adm-toggle').classList.add('active');
   if(admLogado){
@@ -1625,7 +1631,8 @@ function previewUwadexSprite(input){
       const canvas=document.createElement('canvas');
       canvas.width=SIZE;canvas.height=SIZE;
       const ctx=canvas.getContext('2d');
-      ctx.imageSmoothingEnabled=false;
+      ctx.imageSmoothingEnabled=true;
+      ctx.imageSmoothingQuality='high';
       const scale=Math.min(SIZE/img.width,SIZE/img.height);
       const w=img.width*scale,h=img.height*scale;
       ctx.drawImage(img,(SIZE-w)/2,(SIZE-h)/2,w,h);
@@ -1939,6 +1946,33 @@ function resetMvForm(){
   document.getElementById('mv-tipo').value='';
   document.getElementById('mv-categoria').value='';
   document.getElementById('adm-mv-del-btn').style.display='none';
+}
+
+// ════════════════════════════════════════
+// NAV THEME
+// ════════════════════════════════════════
+const NAV_TYPE_COLORS={
+  grass:'#1a4a28',fire:'#7a2000',water:'#0a2a4a',
+  electric:'#4a3800',psychic:'#5a0a30',ice:'#0a3a3a',
+  fighting:'#5a0808',poison:'#3a0858',ground:'#4a3000',
+  flying:'#1a2060',bug:'#2a3a00',rock:'#3a2a08',
+  ghost:'#18104a',dragon:'#1a0a5a',dark:'#18120a',
+  steel:'#1a2430',fairy:'#5a0840',normal:'#2a2a1e',
+};
+
+function setNavTheme(primaryType){
+  const nav=document.querySelector('.nav');
+  if(!nav)return;
+  const color=NAV_TYPE_COLORS[primaryType]||'#0d1622';
+  nav.style.transition='background-color .4s ease';
+  nav.style.backgroundColor=color;
+}
+
+function resetNavTheme(){
+  const nav=document.querySelector('.nav');
+  if(!nav)return;
+  nav.style.transition='background-color .4s ease';
+  nav.style.backgroundColor='#0d1622';
 }
 
 // ════════════════════════════════════════
