@@ -980,7 +980,8 @@ function renderFicha(slug){
   if(evoChain.length>0){
     const stages=evoChain.map((stage,i)=>{
       const isCurrent=slugify(stage.nome)===slug;
-      const spr=stage.sprite||FALLBACK;
+      const dbMatch=!stage.sprite?uwaDex.find(x=>slugify(x.nome)===slugify(stage.nome)):null;
+      const spr=stage.sprite||(dbMatch&&dbMatch.sprite)||FALLBACK;
       const arrow=i<evoChain.length-1?`<div class="evo-arrow"><div class="evo-arrow-icon">›</div>${evoChain[i+1].trigger?`<div class="evo-arrow-label">${evoChain[i+1].trigger}</div>`:''}</div>`:'';
       return `<div class="evo-stage${isCurrent?' current':''}">
         <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="abrirFicha('${slugify(stage.nome)}')"/>
