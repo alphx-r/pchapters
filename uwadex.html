@@ -28,12 +28,9 @@ html.dark{
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);transition:background .2s,color .2s}
 
 /* ── NAV ── */
-.nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:200}
-html.dark .nav{background:#0d1622}
-html.dark .nav-logo{color:#fff}
-html.dark .nav-logo span{color:var(--accent)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:#000;position:sticky;top:0;z-index:200;transition:background-color .4s ease}
 .nav-logo{font-family:var(--font-title);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px;cursor:pointer;text-decoration:none}
-.nav-logo span{color:var(--accent)}
+.nav-logo span{color:#b22a2a}
 .nav-right{display:flex;align-items:center;gap:10px}
 .dark-toggle{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
 .dark-toggle:hover{background:rgba(255,255,255,.15)}
@@ -135,7 +132,7 @@ html.dark .dex-tab.active{color:#fff}
 /* Main info block */
 .ficha-main{display:grid;grid-template-columns:260px 1fr;gap:0;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
 .ficha-sprite-col{background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px 16px 24px 16px;gap:12px;border-right:1.5px solid var(--border)}
-.ficha-sprite-img{width:200px;height:200px;object-fit:contain;image-rendering:auto;margin-top:4px}
+.ficha-sprite-img{width:250px;height:250px;object-fit:contain;image-rendering:auto;margin-top:4px}
 .ficha-sprite-num{font-family:var(--font-title);font-size:13px;color:var(--muted);letter-spacing:1px}
 .ficha-sprite-types{display:flex;gap:5px;justify-content:center}
 .ficha-info-col{padding:0}
@@ -1296,7 +1293,6 @@ function renderFicha(slug){
 
   document.title=`${p.nome} — UWAdex`;
 
-  // Tematiza a nav com a cor do tipo primário
   setNavTheme(primaryType);
 }
 
@@ -1317,7 +1313,6 @@ function toggleAdmView(){
 }
 
 function mostrarAdm(){
-  resetNavTheme();
   showView('adm');
   document.getElementById('btn-adm-toggle').classList.add('active');
   if(admLogado){
@@ -1963,16 +1958,19 @@ const NAV_TYPE_COLORS={
 function setNavTheme(primaryType){
   const nav=document.querySelector('.nav');
   if(!nav)return;
-  const color=NAV_TYPE_COLORS[primaryType]||'#0d1622';
-  nav.style.transition='background-color .4s ease';
-  nav.style.backgroundColor=color;
+  nav.style.backgroundColor=NAV_TYPE_COLORS[primaryType]||'#000';
+  // na ficha ambos P e Chapters ficam brancos
+  const logo=nav.querySelector('.nav-logo');
+  if(logo){ logo.style.color='#fff'; const sp=logo.querySelector('span'); if(sp) sp.style.color='#fff'; }
 }
 
 function resetNavTheme(){
   const nav=document.querySelector('.nav');
   if(!nav)return;
-  nav.style.transition='background-color .4s ease';
-  nav.style.backgroundColor='#0d1622';
+  nav.style.backgroundColor='#000';
+  // restaura "Chapters" vermelho
+  const logo=nav.querySelector('.nav-logo');
+  if(logo){ logo.style.color='#fff'; const sp=logo.querySelector('span'); if(sp) sp.style.color='#b22a2a'; }
 }
 
 // ════════════════════════════════════════
