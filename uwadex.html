@@ -78,6 +78,7 @@ html.dark .nav-logo span{color:var(--accent)}
 .type-pill{display:inline-block;font-size:9px;font-weight:800;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.3px;margin:1px}
 .t-fire{background:#ff9b4a;color:#7a2a00}.t-water{background:#6ab8ff;color:#003a6a}.t-grass{background:#78d878;color:#1a5a1a}.t-normal{background:#c8c8a0;color:#4a4a2a}.t-electric{background:#ffe030;color:#5a4a00}.t-psychic{background:#ff8fb0;color:#6a0030}.t-steel{background:#aababb;color:#2a3a3a}.t-fairy{background:#ffaad8;color:#6a0050}.t-ghost{background:#9090c0;color:#1a1a4a}.t-dragon{background:#7060f0;color:#fff}.t-ice{background:#96d8d8;color:#1a4a4a}.t-fighting{background:#c03030;color:#fff}.t-rock{background:#b8a050;color:#3a2a00}.t-ground{background:#e0c060;color:#3a2a00}.t-poison{background:#a060c0;color:#fff}.t-bug{background:#a0c020;color:#2a3a00}.t-dark{background:#705040;color:#fff}.t-flying{background:#88aaee;color:#1a1a5a}
 .rc{background:#e0f0e0;color:#1a6a1a}.ri{background:#dde8f8;color:#1a4a8a}.rr{background:#f0e8ff;color:#5a1a9a}.rrr{background:#fff0d8;color:#8a4a00}
+.r-ini{background:#d8f0e8;color:#0a5a3a}.r-lend{background:#fff0a8;color:#7a5a00;border:1px solid #e8c800}.r-mitic{background:#ffe0f8;color:#8a0060;border:1px solid #e060c0}.r-ub{background:#e8d8ff;color:#3a0080;border:1px solid #9060e0}
 
 /* ── FICHA PAGE ── */
 .ficha-wrap{max-width:1000px;margin:0 auto;padding:28px}
@@ -354,10 +355,14 @@ html.dark .nav-logo span{color:var(--accent)}
                   </div>
                   <div class="field"><label>Raridade</label>
                     <select id="f-raridade">
+                      <option value="inicial">Inicial</option>
                       <option value="comum">Comum</option>
                       <option value="incomum">Incomum</option>
                       <option value="raro">Raro</option>
                       <option value="rarissimo">Raríssimo</option>
+                      <option value="lendario">Lendário</option>
+                      <option value="mitico">Mítico</option>
+                      <option value="ultrabeast">Ultra Beast</option>
                     </select>
                   </div>
                 </div>
@@ -483,11 +488,18 @@ async function sb(path, opts={}){
     headers:{'apikey':SUPA_KEY,'Authorization':`Bearer ${token}`,'Content-Type':'application/json','Prefer':opts.prefer||'return=representation',...(isGet?{'Range':'0-9999'}:{}),...(opts.headers||{})},
     ...opts
   });
-  if(opts.method==='DELETE'||res.status===204) return [];
+  if(opts.method==='DELETE'||res.status===204) return {ok:true,data:[]};
   const text=await res.text();
-  if(!text) return [];
-  try{return JSON.parse(text);}catch{return [];}
+  if(!text) return {ok:res.ok,data:[]};
+  let parsed;
+  try{parsed=JSON.parse(text);}catch{return {ok:false,data:[],error:'parse error'};}
+  if(!res.ok) return {ok:false,data:[],error:parsed?.message||parsed?.error||`HTTP ${res.status}`};
+  return {ok:true,data:Array.isArray(parsed)?parsed:[parsed]};
 }
+const dbGet  = async (t,q='')  => { const r=await sb(`${t}?${q}&order=numero.asc`); return r.data||[]; };
+const dbPost = (t,b)     => sb(t,{method:'POST',body:JSON.stringify(b)});
+const dbPatch= (t,q,b)   => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
+const dbDel  = (t,q)     => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
 const dbGet  = (t,q='')  => sb(`${t}?${q}&order=numero.asc`);
 const dbPost = (t,b)     => sb(t,{method:'POST',body:JSON.stringify(b)});
 const dbPatch= (t,q,b)   => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
@@ -504,8 +516,8 @@ let tipoFiltroAtivo = ''; // filtro de tipo na dex
 const TIPOS = ['normal','fire','water','grass','electric','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
 const TIPO_LABELS = {normal:'Normal',fire:'Fogo',water:'Água',grass:'Planta',electric:'Elétrico',ice:'Gelo',fighting:'Lutador',poison:'Veneno',ground:'Terra',flying:'Voador',psychic:'Psíquico',bug:'Inseto',rock:'Pedra',ghost:'Fantasma',dragon:'Dragão',dark:'Sombrio',steel:'Metálico',fairy:'Fada'};
 const TCLS = {fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',electric:'t-electric',psychic:'t-psychic',steel:'t-steel',fairy:'t-fairy',ghost:'t-ghost',dragon:'t-dragon',ice:'t-ice',fighting:'t-fighting',rock:'t-rock',ground:'t-ground',poison:'t-poison',bug:'t-bug',dark:'t-dark',flying:'t-flying'};
-const RCLS = {comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr'};
-const RLBL = {comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo'};
+const RCLS = {inicial:'r-ini',comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr',lendario:'r-lend',mitico:'r-mitic',ultrabeast:'r-ub'};
+const RLBL = {inicial:'Inicial',comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo',lendario:'Lendário',mitico:'Mítico',ultrabeast:'Ultra Beast'};
 const FALLBACK = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
 
 // Damage taken tipos na ordem do PDF
@@ -1185,22 +1197,23 @@ async function salvarPokemon(){
   let res;
   if(editingId){
     res=await dbPatch('uwadex',`id=eq.${editingId}`,payload);
-    if(res&&!res.error){
+    if(res.ok){
       const idx=uwaDex.findIndex(x=>x.id===editingId);
       if(idx>=0) uwaDex[idx]={...uwaDex[idx],...payload};
     }
   } else {
     res=await dbPost('uwadex',payload);
-    if(res&&res[0]) uwaDex.push(res[0]);
+    if(res.ok && res.data[0]) uwaDex.push(res.data[0]);
   }
 
-  if(res&&!res.error){
+  if(res.ok){
     fb('adm-form-ok');
     renderAdmPokeList();
     renderDexGrid();
     document.getElementById('dex-total-count').textContent=uwaDex.length;
     resetForm();
   } else {
+    console.error('Erro ao salvar:', res.error);
     fb('adm-form-err');
   }
 }
@@ -1209,12 +1222,14 @@ async function excluirPokemon(){
   if(!editingId) return;
   const p=uwaDex.find(x=>x.id===editingId);
   if(!confirm(`Excluir ${p?.nome||'este Pokémon'} permanentemente?`)) return;
-  await dbDel('uwadex',`id=eq.${editingId}`);
-  uwaDex=uwaDex.filter(x=>x.id!==editingId);
-  renderAdmPokeList();
-  renderDexGrid();
-  document.getElementById('dex-total-count').textContent=uwaDex.length;
-  resetForm();
+  const res=await dbDel('uwadex',`id=eq.${editingId}`);
+  if(res.ok){
+    uwaDex=uwaDex.filter(x=>x.id!==editingId);
+    renderAdmPokeList();
+    renderDexGrid();
+    document.getElementById('dex-total-count').textContent=uwaDex.length;
+    resetForm();
+  }
 }
 
 // ════════════════════════════════════════
