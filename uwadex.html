@@ -81,16 +81,20 @@ html.dark .nav-logo span{color:var(--accent)}
 .r-ini{background:#d8f0e8;color:#0a5a3a}.r-lend{background:#fff0a8;color:#7a5a00;border:1px solid #e8c800}.r-mitic{background:#ffe0f8;color:#8a0060;border:1px solid #e060c0}.r-ub{background:#e8d8ff;color:#3a0080;border:1px solid #9060e0}
 
 /* ── DEX TABS ── */
-.dex-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:24px}
-.dex-tab{padding:10px 22px;font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;letter-spacing:.3px}
-.dex-tab:hover{color:var(--brand-mid)}
-.dex-tab.active{color:var(--brand-mid);border-bottom-color:var(--brand-mid)}
+.dex-tabs{display:none}
+.dex-tab{padding:6px 14px;font-family:var(--font-body);font-size:12px;font-weight:700;color:rgba(255,255,255,.65);background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;letter-spacing:.3px;white-space:nowrap}
+.dex-tab:hover{color:#fff;background:rgba(255,255,255,.08);border-radius:6px}
+.dex-tab.active{color:#fff;background:rgba(255,255,255,.15);border-radius:6px}
+html.dark .dex-tab{color:rgba(255,255,255,.55)}
+html.dark .dex-tab:hover,.dex-tab:hover{color:#fff}
+html.dark .dex-tab.active{color:#fff}
+.nav-tabs{display:flex;align-items:center;gap:4px;flex:1;justify-content:center}
 .dex-tab-panel{display:none}
 .dex-tab-panel.active{display:block}
 
 /* ── HABILIDADES / MOVES TABLE ── */
 .ref-table{width:100%;border-collapse:collapse;font-size:13px}
-.ref-table th{background:var(--surface2);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:9px 14px;text-align:left;border-bottom:1.5px solid var(--border);position:sticky;top:58px}
+.ref-table th{background:var(--surface2);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;padding:9px 14px;text-align:left;border-bottom:1.5px solid var(--border);position:sticky;top:58px;z-index:10}
 .ref-table td{padding:9px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
 .ref-table tr:last-child td{border-bottom:none}
 .ref-table tr:hover td{background:var(--surface2)}
@@ -275,9 +279,15 @@ html.dark .nav-logo span{color:var(--accent)}
 <!-- NAV -->
 <nav class="nav">
   <a class="nav-logo" href="/">P<span>Chapters</span></a>
+  <div class="nav-tabs" id="nav-tabs" style="display:none">
+    <button class="dex-tab active" data-tab="pokemon" onclick="switchDexTab('pokemon',this)">UWAdex</button>
+    <button class="dex-tab" data-tab="nationaldex" onclick="switchDexTab('nationaldex',this)">NationalDex</button>
+    <button class="dex-tab" data-tab="habilidades" onclick="switchDexTab('habilidades',this)">Abilities</button>
+    <button class="dex-tab" data-tab="moves" onclick="switchDexTab('moves',this)">Moves</button>
+  </div>
   <div class="nav-right">
-    <button class="dark-toggle" onclick="toggleDark()" title="Alternar tema">💡</button>
-    <button class="nav-adm-btn" id="btn-adm-toggle" onclick="toggleAdmView()">⚙ ADM</button>
+    <button class="dark-toggle" onclick="toggleDark()" title="Alternar tema">◑</button>
+    <button class="nav-adm-btn" id="btn-adm-toggle" onclick="toggleAdmView()">ADM</button>
   </div>
 </nav>
 
@@ -289,11 +299,19 @@ html.dark .nav-logo span{color:var(--accent)}
       <p>Pokédex oficial da região — <span id="dex-total-count">0</span> Pokémon registrados</p>
     </div>
 
-    <!-- TABS -->
-    <div class="dex-tabs">
-      <button class="dex-tab active" onclick="switchDexTab('pokemon',this)">⚡ Pokémon</button>
-      <button class="dex-tab" onclick="switchDexTab('habilidades',this)">✦ Habilidades</button>
-      <button class="dex-tab" onclick="switchDexTab('moves',this)">⚔ Moves</button>
+    <!-- TABS removed — now in nav -->
+
+    <!-- TAB: National Dex -->
+    <div class="dex-tab-panel" id="dex-panel-nationaldex">
+      <div class="dex-filters">
+        <input class="dex-search" type="text" placeholder="Buscar na National Dex…" id="search-nationaldex" oninput="filtrarNationalDex()" autocomplete="off"/>
+        <span class="dex-count" id="nationaldex-count"></span>
+      </div>
+      <div class="dex-grid" id="nationaldex-grid"></div>
+      <div class="empty-state" id="nationaldex-empty" style="display:none">
+        <div class="empty-icon">🔍</div>
+        <div class="empty-text">Nenhum Pokémon encontrado.</div>
+      </div>
     </div>
 
     <!-- TAB: Pokémon -->
@@ -443,9 +461,9 @@ html.dark .nav-logo span{color:var(--accent)}
 
               <!-- Habilidades -->
               <div style="margin-bottom:16px">
-                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Habilidades</div>
+                <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Abilities/div>
                 <div id="abilities-list"></div>
-                <button class="btn btn-sm btn-warn" onclick="addAbilityRow()" style="margin-top:4px">+ Habilidade</button>
+                <button class="btn btn-sm btn-warn" onclick="addAbilityRow()" style="margin-top:4px">+ Ability</button>
               </div>
 
               <!-- Damage Taken -->
@@ -645,19 +663,24 @@ function toggleDark(){
 function showView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
+  const nt=document.getElementById('nav-tabs');
+  if(nt) nt.style.display='none';
 }
 
 function parsePath(){
   const path=location.pathname.replace(/\/+$/,'');
-  if(path==='/uwadex/adm') return {view:'adm',slug:null};
+  if(path==='/uwadex/adm'||path==='/uwadex/adm/') return {view:'adm',slug:null,tab:null};
+  if(path==='/uwadex/abilities') return {view:'dex',slug:null,tab:'habilidades'};
+  if(path==='/uwadex/moves') return {view:'dex',slug:null,tab:'moves'};
+  if(path==='/uwadex/nationaldex') return {view:'dex',slug:null,tab:'nationaldex'};
   const m=path.match(/^\/uwadex\/(.+)$/);
-  if(m) return {view:'ficha',slug:m[1]};
-  return {view:'dex',slug:null};
+  if(m) return {view:'ficha',slug:m[1],tab:null};
+  return {view:'dex',slug:null,tab:'pokemon'};
 }
 
 function navigateTo(slug){
   let path;
-  if(!slug||slug==='dex') path='/uwadex';
+  if(!slug||slug==='dex') path='/uwadex/';
   else if(slug==='adm') path='/uwadex/adm';
   else path='/uwadex/'+slug;
   history.pushState({slug},'',path);
@@ -665,10 +688,15 @@ function navigateTo(slug){
 }
 
 function routeCurrentPath(){
-  const {view,slug}=parsePath();
+  const {view,slug,tab}=parsePath();
   if(view==='ficha'&&slug) renderFicha(slug);
   else if(view==='adm') mostrarAdm();
-  else mostrarDex();
+  else {
+    mostrarDex();
+    const activeTab=tab||'pokemon';
+    const btn=document.querySelector(`.dex-tab[data-tab="${activeTab}"]`);
+    if(btn) switchDexTab(activeTab,btn,false);
+  }
 }
 
 window.addEventListener('popstate',routeCurrentPath);
@@ -751,26 +779,89 @@ function renderDexGridData(list){
   }).join('');
 }
 
-function switchDexTab(tab, btn){
-  document.querySelectorAll('.dex-tab').forEach(b=>b.classList.remove('active'));
+function buildNationalDexList(){
+  // Merge DATADEX.pokemon (CSV) with uwaDex (custom), prefer uwaDex entries by numero
+  const customNums=new Set(uwaDex.map(p=>p.numero));
+  const csvEntries=(DATADEX.pokemon||[]).filter(p=>p.nome&&p.nome!=='???'&&!customNums.has(p.numero));
+  const csvMapped=csvEntries.map(p=>({
+    _source:'csv',
+    numero:p.numero,
+    nome:p.nome,
+    tipos:[p.tipo1,p.tipo2].filter(t=>t&&t!=='nan'&&t!==null&&typeof t==='string'&&t.trim()),
+    sprite:null,
+  }));
+  const uwaEntries=uwaDex.map(p=>({...p,_source:'uwa'}));
+  const all=[...csvMapped,...uwaEntries].sort((a,b)=>(a.numero||9999)-(b.numero||9999));
+  return all;
+}
+
+function renderNationalDex(q=''){
+  const all=buildNationalDexList();
+  const ql=q.toLowerCase();
+  const filtered=q?all.filter(p=>p.nome.toLowerCase().includes(ql)||String(p.numero).includes(ql)):all;
+  document.getElementById('nationaldex-count').textContent=q?`${filtered.length} encontrado${filtered.length!==1?'s':''}`:filtered.length+' Pokémon';
+  const grid=document.getElementById('nationaldex-grid');
+  const empty=document.getElementById('nationaldex-empty');
+  if(!filtered.length){grid.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  grid.innerHTML=filtered.map(p=>{
+    const tipos=(p.tipos||[]).map(t=>{
+      const tLower=t.toLowerCase();
+      return `<span class="type-pill ${TCLS[tLower]||'t-normal'}">${t}</span>`;
+    }).join('');
+    const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'';
+    const isUwa=p._source==='uwa';
+    if(isUwa){
+      const rarCls=RCLS[p.raridade]||'rc';
+      const rarLbl=RLBL[p.raridade]||'';
+      return `<div class="dex-card" onclick="abrirFicha('${slugify(p.nome)}')">
+        <div class="dex-card-num">${numStr}</div>
+        ${rarLbl?`<div class="dex-card-rarity"><span class="type-pill ${rarCls}" style="font-size:8px">${rarLbl}</span></div>`:''}
+        <img class="dex-card-sprite" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+        <div class="dex-card-name">${p.nome}</div>
+        <div class="dex-card-types">${tipos}</div>
+      </div>`;
+    } else {
+      return `<div class="dex-card" style="opacity:0.75">
+        <div class="dex-card-num">${numStr}</div>
+        <img class="dex-card-sprite" src="${FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+        <div class="dex-card-name">${p.nome}</div>
+        <div class="dex-card-types">${tipos}</div>
+      </div>`;
+    }
+  }).join('');
+}
+
+function filtrarNationalDex(){
+  renderNationalDex(document.getElementById('search-nationaldex').value);
+}
+
+function switchDexTab(tab, btn, updateUrl=true){
+  const navTabs=document.getElementById('nav-tabs');
+  navTabs.querySelectorAll('.dex-tab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.dex-tab-panel').forEach(p=>p.classList.remove('active'));
-  btn.classList.add('active');
+  (btn||navTabs.querySelector(`.dex-tab[data-tab="${tab}"]`)).classList.add('active');
   document.getElementById('dex-panel-'+tab).classList.add('active');
   if(tab==='habilidades') renderHabilidades(document.getElementById('search-habilidades').value);
   if(tab==='moves') renderMoves(document.getElementById('search-moves').value);
+  if(tab==='nationaldex') renderNationalDex(document.getElementById('search-nationaldex').value);
+  if(updateUrl){
+    const path=tab==='pokemon'?'/uwadex/':tab==='habilidades'?'/uwadex/abilities':tab==='moves'?'/uwadex/moves':'/uwadex/nationaldex';
+    history.pushState({tab},'',path);
+  }
 }
 
 function renderHabilidades(q=''){
   const data=(DATADEX.abilities||[]).filter(a=>!q||a.nome.toLowerCase().includes(q.toLowerCase())||( a.efeito&&a.efeito.toLowerCase().includes(q.toLowerCase())));
-  document.getElementById('habilidades-count').textContent=q?`${data.length} encontrada${data.length!==1?'s':''}`:data.length+' habilidades';
+  document.getElementById('habilidades-count').textContent=q?`${data.length} encontrada${data.length!==1?'s':''}`:data.length+' abilities';
   if(!data.length){
-    document.getElementById('habilidades-list-wrap').innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">Nenhuma habilidade encontrada.</div></div>';
+    document.getElementById('habilidades-list-wrap').innerHTML='<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-text">Nenhuma ability encontrada.</div></div>';
     return;
   }
   document.getElementById('habilidades-list-wrap').innerHTML=`
-    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
-      <table class="ref-table">
-        <thead><tr><th style="width:200px">Habilidade</th><th>Efeito</th></tr></thead>
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:visible">
+      <table class="ref-table" style="border-radius:var(--r);overflow:hidden">
+        <thead><tr><th style="width:200px">Ability</th><th>Efeito</th></tr></thead>
         <tbody>${data.map(a=>`<tr>
           <td class="ref-name">${a.nome}</td>
           <td>${a.efeito||'—'}</td>
@@ -791,8 +882,8 @@ function renderMoves(q=''){
     return;
   }
   document.getElementById('moves-list-wrap').innerHTML=`
-    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
-      <table class="ref-table">
+    <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:visible">
+      <table class="ref-table" style="border-radius:var(--r);overflow:hidden">
         <thead><tr><th style="width:200px">Move</th><th style="width:90px">Tipo</th><th style="width:90px">Categoria</th><th style="width:90px">Rolagem</th><th>Efeito</th></tr></thead>
         <tbody>${data.map(m=>`<tr>
           <td class="ref-name">${m.nome}</td>
@@ -810,14 +901,13 @@ function filtrarMoves(){
 }
 
 
-  navigateTo(slug);
-}
 function voltarDex(){
   navigateTo('dex');
 }
 function mostrarDex(){
   showView('dex');
   document.getElementById('btn-adm-toggle').classList.remove('active');
+  document.getElementById('nav-tabs').style.display='flex';
 }
 
 // ════════════════════════════════════════
@@ -1143,7 +1233,7 @@ function onNomePokeInput(input){
   input.onblur=()=>setTimeout(()=>ac.style.display='none',150);
 }
 
-
+function addAbilityRow(data={}){
   const list=document.getElementById('abilities-list');
   const div=document.createElement('div');
   div.style.cssText='display:grid;grid-template-columns:1fr 2fr auto auto;gap:8px;margin-bottom:6px;align-items:center;position:relative';
