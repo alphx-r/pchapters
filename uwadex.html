@@ -90,7 +90,7 @@ html.dark .nav-logo span{color:var(--accent)}
 .evo-chain-title{background:var(--brand);color:#fff;text-align:center;font-family:var(--font-title);font-size:11px;letter-spacing:1.5px;padding:8px;font-weight:600}
 .evo-chain-inner{display:flex;align-items:center;justify-content:center;gap:0;padding:20px;flex-wrap:wrap;gap:4px}
 .evo-stage{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 14px}
-.evo-stage-sprite{width:80px;height:80px;object-fit:contain;image-rendering:pixelated;cursor:pointer;transition:transform .2s}
+.evo-stage-sprite{width:80px;height:80px;object-fit:contain;image-rendering:auto;cursor:pointer;transition:transform .2s}
 .evo-stage-sprite:hover{transform:scale(1.08)}
 .evo-stage-name{font-family:var(--font-title);font-size:10px;color:var(--text);text-align:center;font-weight:600}
 .evo-stage.current .evo-stage-name{color:var(--brand-mid)}
@@ -102,7 +102,7 @@ html.dark .nav-logo span{color:var(--accent)}
 /* Main info block */
 .ficha-main{display:grid;grid-template-columns:260px 1fr;gap:0;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
 .ficha-sprite-col{background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;gap:12px;border-right:1.5px solid var(--border)}
-.ficha-sprite-img{width:200px;height:200px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
+.ficha-sprite-img{width:200px;height:200px;object-fit:contain;image-rendering:auto}
 .ficha-sprite-num{font-family:var(--font-title);font-size:12px;color:var(--muted);letter-spacing:1px}
 .ficha-sprite-types{display:flex;gap:5px;justify-content:center}
 .ficha-info-col{padding:0}
@@ -135,16 +135,18 @@ html.dark .nav-logo span{color:var(--accent)}
 .stats-table td:last-child{border-right:none}
 
 /* RPG stats row */
-.rpg-stats-row{display:flex;gap:0;border-top:1.5px solid var(--border)}
-.rpg-stat{flex:1;text-align:center;padding:8px 4px;border-right:1px solid var(--border)}
+.rpg-stats-row{display:flex;gap:0}
+.rpg-stat{flex:1;text-align:center;padding:16px 4px;border-right:1px solid var(--border)}
 .rpg-stat:last-child{border-right:none}
 .rpg-stat-label{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
 .rpg-stat-val{font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--brand-mid)}
 
 /* Biology */
 .ficha-bio-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
-.ficha-bio-inner{display:flex;gap:16px;padding:16px 20px;align-items:flex-start}
-.ficha-bio-sprite{width:96px;height:96px;object-fit:contain;image-rendering:pixelated;flex-shrink:0}
+.ficha-bio-inner{display:flex;gap:20px;padding:16px 20px;align-items:flex-start}
+.ficha-bio-sprites{display:flex;gap:12px;flex-shrink:0}
+.ficha-bio-sprite{width:96px;height:96px;object-fit:contain;image-rendering:auto}
+.ficha-bio-shiny{filter:drop-shadow(0 0 6px rgba(192,144,224,.5))}
 .ficha-bio-text{font-size:13px;color:var(--text);line-height:1.75;padding-top:4px}
 
 /* Moves */
@@ -772,13 +774,13 @@ function renderFicha(slug){
     if(!dmgGroups[v]) dmgGroups[v]=[];
     dmgGroups[v].push(t);
   });
-  // render only non-×1 groups first, then ×1 at the end (collapsed style)
-  const groupOrder=['0','0.25','0.5','2','4','1'];
+  // render ascending order, ×1 hidden if desired, imune (0) always last
+  const groupOrder=['0.25','0.5','1','2','4','0'];
   const dmgGroupsHTML=groupOrder.filter(k=>dmgGroups[k]&&dmgGroups[k].length).map(k=>{
     const gs=DMG_GROUP_STYLES[k]||DMG_GROUP_STYLES['1'];
     const pills=dmgGroups[k].map(t=>`<span class="type-pill ${TCLS[t]||'t-normal'}" style="font-size:10px;padding:3px 9px">${DMG_LABELS[t]}</span>`).join('');
-    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border)">
-      <div style="min-width:52px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;padding:4px 8px;border-radius:6px;background:${gs.bg};color:${gs.color};border:1px solid ${gs.border}">${gs.label}</div>
+    return `<div style="display:flex;align-items:center;gap:10px;padding:6px 14px;border-bottom:1px solid var(--border)">
+      <div style="min-width:44px;text-align:center;font-family:var(--font-body);font-size:11px;font-weight:800;padding:3px 6px;border-radius:5px;background:${gs.bg};color:${gs.color};border:1px solid ${gs.border};white-space:nowrap">${gs.label}</div>
       <div style="display:flex;flex-wrap:wrap;gap:4px">${pills}</div>
     </div>`;
   }).join('');
@@ -787,29 +789,24 @@ function renderFicha(slug){
     ${dmgGroupsHTML||'<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">Sem dados de fraqueza.</div>'}
   </div>`;
 
-  // ── Stats HTML ──
-  const statKeys=['hp','atk','def','spatk','spdef','speed'];
-  const statLabels=['HP','ATK','DEF','Sp. ATK','Sp. DEF','SPEED'];
-  const statsHTML=`<div class="ficha-stats-wrap">
-    <div class="ficha-section-title">BASE STATS</div>
-    <div style="overflow-x:auto">
-      <table class="stats-table">
-        <thead><tr>${statLabels.map(l=>`<th>${l}</th>`).join('')}</tr></thead>
-        <tbody><tr>${statKeys.map(k=>`<td>${stats[k]||'—'}</td>`).join('')}</tr></tbody>
-      </table>
-    </div>
-    ${(p.dado||p.ca||p.pv)?`<div class="rpg-stats-row">
-      ${p.dado?`<div class="rpg-stat"><div class="rpg-stat-label">Dado</div><div class="rpg-stat-val">${p.dado}</div></div>`:''}
-      ${p.ca!==undefined&&p.ca!==null&&p.ca!==''?`<div class="rpg-stat"><div class="rpg-stat-label">CA</div><div class="rpg-stat-val">${p.ca}</div></div>`:''}
-      ${p.pv!==undefined&&p.pv!==null&&p.pv!==''?`<div class="rpg-stat"><div class="rpg-stat-label">PV</div><div class="rpg-stat-val">${p.pv}</div></div>`:''}
-    </div>`:''}
-  </div>`;
+  // ── RPG Stats HTML (Dado / CA / PV) ──
+  const statsHTML='';
 
   // ── Biology HTML ──
+  const shinyUrl=p.sprite_shiny||(p.sprite?p.sprite.replace('/sprites/','/sprites/shiny/').replace('/normal/','/shiny/'):null)||p.sprite||FALLBACK;
   const bioHTML=p.bio?`<div class="ficha-bio-wrap">
     <div class="ficha-section-title">BIOLOGY</div>
     <div class="ficha-bio-inner">
-      <img class="ficha-bio-sprite" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+      <div class="ficha-bio-sprites">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <img class="ficha-bio-sprite" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+          <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Normal</span>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="${p.nome} ✨" onerror="this.src='${FALLBACK}'"/>
+          <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
+        </div>
+      </div>
       <div class="ficha-bio-text">${p.bio}</div>
     </div>
   </div>`:'';
@@ -826,12 +823,8 @@ function renderFicha(slug){
   const movesLvlHTML=movesLvl.length?movesLvl.map(m=>`<tr>
     <td class="lvl-cell">${m.lvl||'—'}</td>
     <td class="move-name">${m.nome||''}</td>
-    <td>${m.tipo?`<span class="type-pill ${TCLS[m.tipo]||'t-normal'}">${m.tipo}</span>`:'—'}</td>
-    <td>${catPill(m.cat)}</td>
-    <td class="num-cell">${m.atk||'—'}</td>
-    <td class="num-cell">${m.acc||'—'}</td>
-    <td class="num-cell">${m.efeito||'—'}</td>
-  </tr>`).join(''):`<tr><td colspan="7" class="moves-empty">Nenhum move cadastrado.</td></tr>`;
+    <td style="color:var(--muted);font-size:12px">${m.desc||m.efeito||''}</td>
+  </tr>`).join(''):`<tr><td colspan="3" class="moves-empty">Nenhum move cadastrado.</td></tr>`;
 
   const eggHTML=eggMoves.length?eggMoves.map(m=>`<tr>
     <td colspan="2" class="move-name">${m.nome||''}</td>
@@ -851,7 +844,7 @@ function renderFicha(slug){
     </div>
     <div class="moves-panel active" id="tab-lvl">
       <table class="moves-table">
-        <thead><tr><th style="width:60px">LVL</th><th>Nome</th><th>Tipo</th><th>Cat.</th><th>ATK</th><th>ACC</th><th>Efeito%</th></tr></thead>
+        <thead><tr><th style="width:60px">LVL</th><th>Nome</th><th>Descrição</th></tr></thead>
         <tbody>${movesLvlHTML}</tbody>
       </table>
     </div>
@@ -879,7 +872,6 @@ function renderFicha(slug){
 
   // ── Main block ──
   document.getElementById('ficha-content').innerHTML=`
-    ${evoHTML}
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
@@ -890,10 +882,23 @@ function renderFicha(slug){
       <div class="ficha-info-col">
         <div class="ficha-info-name">${p.nome}</div>
         <table class="ficha-info-table">
-          ${p.classificacao?`<tr><td>Classification</td><td>${p.classificacao}</td></tr>`:''}
-          ${p.altura||p.peso?`<tr><td>Height / Weight</td><td>${p.altura||'—'} / ${p.peso||'—'}</td></tr>`:''}
+          ${p.classificacao?`<tr><td>Classification</td><td colspan="1">${p.classificacao}</td></tr>`:''}
+          ${(p.altura||p.peso)?`<tr><td style="width:50%">Height: <span style="font-weight:400">${p.altura||'—'}</span></td><td>Weight: <span style="font-weight:400">${p.peso||'—'}</span></td></tr>`:''}
           ${p.genero?`<tr><td>Gender Ratio</td><td>${p.genero}</td></tr>`:''}
           ${p.egggroup?`<tr><td>Egg Group(s)</td><td>${p.egggroup}</td></tr>`:''}
+          ${(p.dado||p.ca||p.pv)?`<tr><td colspan="2" style="padding:0">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;text-align:left">
+              <div style="padding:9px 16px;border-right:1px solid var(--border)">
+                <span style="font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-size:13px;color:var(--text)">${p.dado||'—'}</span>
+              </div>
+              <div style="padding:9px 16px;border-right:1px solid var(--border)">
+                <span style="font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA: </span><span style="font-size:13px;color:var(--text)">${p.ca!==undefined&&p.ca!==null&&p.ca!==''?p.ca:'—'}</span>
+              </div>
+              <div style="padding:9px 16px">
+                <span style="font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV: </span><span style="font-size:13px;color:var(--text)">${p.pv!==undefined&&p.pv!==null&&p.pv!==''?p.pv:'—'}</span>
+              </div>
+            </div>
+          </td></tr>`:''}
           ${habilidades.length?`<tr><td>Abilities</td><td>${abilitiesHTML}</td></tr>`:''}
         </table>
       </div>
@@ -901,6 +906,7 @@ function renderFicha(slug){
     ${dmgHTML}
     ${statsHTML}
     ${bioHTML}
+    ${evoHTML}
     ${movesHTML}
   `;
 
