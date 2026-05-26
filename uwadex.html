@@ -134,9 +134,9 @@ html.dark .dex-tab.active{color:#fff}
 
 /* Main info block */
 .ficha-main{display:grid;grid-template-columns:260px 1fr;gap:0;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
-.ficha-sprite-col{background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 16px;gap:12px;border-right:1.5px solid var(--border)}
-.ficha-sprite-img{width:200px;height:200px;object-fit:contain;image-rendering:auto}
-.ficha-sprite-num{font-family:var(--font-title);font-size:12px;color:var(--muted);letter-spacing:1px}
+.ficha-sprite-col{background:var(--surface2);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:16px 16px 24px 16px;gap:12px;border-right:1.5px solid var(--border)}
+.ficha-sprite-img{width:500px;height:500px;object-fit:contain;image-rendering:auto;margin-top:4px}
+.ficha-sprite-num{font-family:var(--font-title);font-size:13px;color:var(--muted);letter-spacing:1px}
 .ficha-sprite-types{display:flex;gap:5px;justify-content:center}
 .ficha-info-col{padding:0}
 .ficha-info-name{background:var(--brand);color:#fff;font-family:var(--font-title);font-size:20px;font-weight:700;letter-spacing:1.5px;padding:14px 20px;text-align:center}
@@ -1152,6 +1152,30 @@ function renderFicha(slug){
   // ── RPG Stats HTML (Dado / CA / PV) ──
   const statsHTML='';
 
+  // ── Type theme colors ──
+  const TYPE_THEME={
+    grass:  {brand:'#2d7a3a', brandMid:'#3a9e4a', brandLight:'#e6f5e9', surface2:'#edf7ef', border:'#b6ddbf', muted:'#4a7a56'},
+    fire:   {brand:'#b83c10', brandMid:'#e04a18', brandLight:'#fdeee8', surface2:'#fdf1ed', border:'#f0b8a0', muted:'#8a4030'},
+    water:  {brand:'#1a5a8a', brandMid:'#2272b0', brandLight:'#e4f0fb', surface2:'#eaf3fc', border:'#a8ccec', muted:'#345e80'},
+    electric:{brand:'#8a6800', brandMid:'#b88c00', brandLight:'#fdf8de', surface2:'#fdf9e4', border:'#e8d870', muted:'#7a6010'},
+    psychic:{brand:'#8a1a50', brandMid:'#b82070', brandLight:'#fde8f2', surface2:'#fdeef5', border:'#f0a8cc', muted:'#7a2050'},
+    ice:    {brand:'#1a6a6a', brandMid:'#1e8888', brandLight:'#e2f5f5', surface2:'#e8f7f7', border:'#9ad8d8', muted:'#2a6060'},
+    fighting:{brand:'#7a1818', brandMid:'#a02020', brandLight:'#fbe8e8', surface2:'#fceeed', border:'#e8a8a8', muted:'#702020'},
+    poison: {brand:'#5a1878', brandMid:'#7820a0', brandLight:'#f3e8fb', surface2:'#f5edfb', border:'#cca8e8', muted:'#601880'},
+    ground: {brand:'#7a5800', brandMid:'#a07010', brandLight:'#faf2dc', surface2:'#faf4e2', border:'#ddc880', muted:'#705010'},
+    flying: {brand:'#2a3a8a', brandMid:'#3a50b8', brandLight:'#eaeefb', surface2:'#ecf0fc', border:'#a8b8ec', muted:'#303880'},
+    bug:    {brand:'#4a6800', brandMid:'#608a00', brandLight:'#eef5d8', surface2:'#f1f7de', border:'#c0d880', muted:'#4a6010'},
+    rock:   {brand:'#5a4a10', brandMid:'#786020', brandLight:'#f5f0e0', surface2:'#f6f2e4', border:'#d8c880', muted:'#605020'},
+    ghost:  {brand:'#2a1a5a', brandMid:'#3a2878', brandLight:'#ece8f8', surface2:'#efedf8', border:'#b8a8e0', muted:'#382068'},
+    dragon: {brand:'#2a1a8a', brandMid:'#3820b0', brandLight:'#eae8fb', surface2:'#ececfb', border:'#a8a0e8', muted:'#302080'},
+    dark:   {brand:'#2a1e14', brandMid:'#4a3428', brandLight:'#ece8e4', surface2:'#eeeae6', border:'#c0b0a0', muted:'#504030'},
+    steel:  {brand:'#2a3a4a', brandMid:'#3a5068', brandLight:'#e4eaf0', surface2:'#e8edf2', border:'#a8bece', muted:'#384858'},
+    fairy:  {brand:'#8a1060', brandMid:'#b81880', brandLight:'#fde8f4', surface2:'#fdeef6', border:'#f0a8d8', muted:'#781068'},
+    normal: {brand:'#4a4a38', brandMid:'#686858', brandLight:'#f0f0e8', surface2:'#f2f2ea', border:'#c8c8b0', muted:'#585848'},
+  };
+  const primaryType=(tipos[0]||'normal').toLowerCase();
+  const theme=TYPE_THEME[primaryType]||TYPE_THEME.normal;
+
   // ── Biology HTML ──
   const shinyUrl=p.sprite_shiny||(p.sprite?p.sprite.replace('/sprites/','/sprites/shiny/').replace('/normal/','/shiny/'):null)||p.sprite||FALLBACK;
   const bioHTML=p.bio?`<div class="ficha-bio-wrap">
@@ -1227,7 +1251,9 @@ function renderFicha(slug){
   </div>`).join('');
 
   // ── Main block ──
+  const themeStyle=`--brand:${theme.brand};--brand-mid:${theme.brandMid};--brand-light:${theme.brandLight};--surface2:${theme.surface2};--border:${theme.border};--muted:${theme.muted}`;
   document.getElementById('ficha-content').innerHTML=`
+    <div style="${themeStyle}">
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
@@ -1263,6 +1289,7 @@ function renderFicha(slug){
     ${bioHTML}
     ${evoHTML}
     ${movesHTML}
+    </div>
   `;
 
   document.title=`${p.nome} — UWAdex`;
