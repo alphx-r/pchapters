@@ -500,10 +500,6 @@ const dbGet  = async (t,q='')  => { const r=await sb(`${t}?${q}&order=numero.asc
 const dbPost = (t,b)     => sb(t,{method:'POST',body:JSON.stringify(b)});
 const dbPatch= (t,q,b)   => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
 const dbDel  = (t,q)     => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
-const dbGet  = (t,q='')  => sb(`${t}?${q}&order=numero.asc`);
-const dbPost = (t,b)     => sb(t,{method:'POST',body:JSON.stringify(b)});
-const dbPatch= (t,q,b)   => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
-const dbDel  = (t,q)     => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
 
 // ════════════════════════════════════════
 // STATE
