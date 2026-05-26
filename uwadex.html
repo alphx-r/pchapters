@@ -61,7 +61,7 @@ html.dark .nav-logo span{color:var(--accent)}
 .ndex-name:hover{text-decoration:underline}
 .ndex-num{font-family:var(--font-title);font-size:11px;color:var(--muted);white-space:nowrap}
 .ndex-num-wrap{display:flex;flex-direction:column;gap:2px}
-.ndex-stat{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);text-align:center}
+.ndex-stat{font-family:var(--font-title);font-size:14px;font-weight:700;color:var(--text);text-align:center}
 .ndex-uwa-row td{background:color-mix(in srgb, var(--surface) 85%, var(--brand-light))}
 /* ── DEX LIST PAGE ── */
 .dex-wrap{max-width:1100px;margin:0 auto;padding:28px}
@@ -937,6 +937,9 @@ function filtrarMoves(){
 function voltarDex(){
   navigateTo('dex');
 }
+function abrirFicha(slug){
+  navigateTo(slug);
+}
 function mostrarDex(){
   showView('dex');
   document.getElementById('btn-adm-toggle').classList.remove('active');
@@ -1257,9 +1260,6 @@ function onNomePokeInput(input){
     item.addEventListener('mousedown',e=>{
       e.preventDefault();
       input.value=item.dataset.nome;
-      if(item.dataset.ca) document.getElementById('f-ca').value=item.dataset.ca;
-      if(item.dataset.pv) document.getElementById('f-pv').value=item.dataset.pv;
-      if(item.dataset.dado) document.getElementById('f-dado').value=item.dataset.dado;
       ac.style.display='none';
     });
   });
@@ -1504,9 +1504,6 @@ function editarPokemon(id){
   document.getElementById('f-genero').value=p.genero||'';
   document.getElementById('f-egggroup').value=p.egggroup||'';
   document.getElementById('f-bio').value=p.bio||'';
-  document.getElementById('f-dado').value=p.dado||'';
-  document.getElementById('f-ca').value=p.ca!==undefined&&p.ca!==null?p.ca:'';
-  document.getElementById('f-pv').value=p.pv!==undefined&&p.pv!==null?p.pv:'';
 
   buildTiposSelector(p.tipos||[]);
   buildDmgTakenFields(p.dmg_taken||{});
@@ -1548,9 +1545,6 @@ async function salvarPokemon(){
     genero:document.getElementById('f-genero').value.trim(),
     egggroup:document.getElementById('f-egggroup').value.trim(),
     bio:document.getElementById('f-bio').value.trim(),
-    dado:document.getElementById('f-dado').value.trim()||null,
-    ca:document.getElementById('f-ca').value!==''?parseFloat(document.getElementById('f-ca').value):null,
-    pv:document.getElementById('f-pv').value!==''?parseFloat(document.getElementById('f-pv').value):null,
     tipos,
     dmg_taken:collectDmgTaken(),
     habilidades:collectAbilities(),
