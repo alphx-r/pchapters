@@ -270,8 +270,7 @@ html.dark .nav-logo span{color:var(--accent)}
       <p>Pokédex oficial da região — <span id="dex-total-count">0</span> Pokémon registrados</p>
     </div>
     <div class="dex-filters">
-      <input class="dex-search" type="text" placeholder="Buscar por nome…" id="dex-search" oninput="filtrarDex()"/>
-      <div id="dex-type-filters" style="display:flex;flex-wrap:wrap;gap:5px"></div>
+      <input class="dex-search" type="text" placeholder="Buscar por nome…" id="dex-search" oninput="filtrarDex()" autocomplete="off"/>
       <span class="dex-count" id="dex-filter-count"></span>
     </div>
     <div class="dex-grid" id="dex-grid"></div>
@@ -297,8 +296,8 @@ html.dark .nav-logo span{color:var(--accent)}
     <div class="adm-login-box">
       <div class="adm-login-title">⚙ UWAdex ADM</div>
       <div class="adm-login-sub">Acesso restrito ao administrador</div>
-      <div class="field"><label>E-mail</label><input type="text" id="adm-email" placeholder="admin@email.com" onkeydown="if(event.key==='Enter')admLogin()"/></div>
-      <div class="field"><label>Senha</label><input type="password" id="adm-senha" placeholder="••••••••" onkeydown="if(event.key==='Enter')admLogin()"/></div>
+      <div class="field"><label>E-mail</label><input type="text" id="adm-email" placeholder="admin@email.com" autocomplete="off" onkeydown="if(event.key==='Enter')admLogin()"/></div>
+      <div class="field"><label>Senha</label><input type="password" id="adm-senha" placeholder="••••••••" autocomplete="off" onkeydown="if(event.key==='Enter')admLogin()"/></div>
       <button class="btn btn-primary btn-full" onclick="admLogin()">Entrar</button>
       <div class="fb fb-err" id="adm-login-err" style="margin-top:10px">E-mail ou senha incorretos.</div>
     </div>
@@ -335,9 +334,9 @@ html.dark .nav-logo span{color:var(--accent)}
               <div style="margin-bottom:16px">
                 <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Identificação</div>
                 <div class="g3">
-                  <div class="field"><label>Número (#)</label><input type="number" id="f-num" placeholder="001" min="1"/></div>
-                  <div class="field"><label>Nome</label><input type="text" id="f-nome" placeholder="Ex: Bubbeet"/></div>
-                  <div class="field"><label>Classificação</label><input type="text" id="f-classif" placeholder="Ex: Bubble Bug Pokémon"/></div>
+                  <div class="field"><label>Número (#)</label><input type="number" id="f-num" placeholder="001" min="1" autocomplete="off"/></div>
+                  <div class="field"><label>Nome</label><input type="text" id="f-nome" placeholder="Ex: Bubbeet" autocomplete="off"/></div>
+                  <div class="field"><label>Classificação</label><input type="text" id="f-classif" placeholder="Ex: Bubble Bug Pokémon" autocomplete="off"/></div>
                 </div>
                 <div class="g2">
                   <div class="field">
@@ -349,7 +348,7 @@ html.dark .nav-logo span{color:var(--accent)}
                       </div>
                       <div>
                         <span style="font-size:11px;color:var(--muted);display:block">Pré-visualização</span>
-                        <input type="text" id="f-sprite" placeholder="ou cole uma URL…" style="margin-top:4px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:200px" oninput="if(this.value)document.getElementById('f-sprite-preview-img').src=this.value"/>
+                        <input type="text" id="f-sprite" placeholder="ou cole uma URL…" style="margin-top:4px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:200px" autocomplete="off" oninput="if(this.value)document.getElementById('f-sprite-preview-img').src=this.value"/>
                       </div>
                     </div>
                   </div>
@@ -367,12 +366,12 @@ html.dark .nav-logo span{color:var(--accent)}
                   </div>
                 </div>
                 <div class="g3">
-                  <div class="field"><label>Altura</label><input type="text" id="f-altura" placeholder="Ex: 35,5 cm"/></div>
-                  <div class="field"><label>Peso</label><input type="text" id="f-peso" placeholder="Ex: 4 kg"/></div>
-                  <div class="field"><label>Proporção de Gênero</label><input type="text" id="f-genero" placeholder="Ex: 88% Male, 12% Female"/></div>
+                  <div class="field"><label>Altura</label><input type="text" id="f-altura" placeholder="Ex: 35,5 cm" autocomplete="off"/></div>
+                  <div class="field"><label>Peso</label><input type="text" id="f-peso" placeholder="Ex: 4 kg" autocomplete="off"/></div>
+                  <div class="field"><label>Proporção de Gênero</label><input type="text" id="f-genero" placeholder="Ex: 88% Male, 12% Female" autocomplete="off"/></div>
                 </div>
                 <div class="g2">
-                  <div class="field"><label>Egg Group(s)</label><input type="text" id="f-egggroup" placeholder="Ex: Bug, Water 3"/></div>
+                  <div class="field"><label>Egg Group(s)</label><input type="text" id="f-egggroup" placeholder="Ex: Bug, Water 3" autocomplete="off"/></div>
                 </div>
               </div>
 
@@ -387,12 +386,12 @@ html.dark .nav-logo span{color:var(--accent)}
               <div style="margin-bottom:16px">
                 <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Stats Base</div>
                 <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px">
-                  <div class="field"><label>HP</label><input type="number" id="f-hp" placeholder="45"/></div>
-                  <div class="field"><label>ATK</label><input type="number" id="f-atk" placeholder="49"/></div>
-                  <div class="field"><label>DEF</label><input type="number" id="f-def" placeholder="49"/></div>
-                  <div class="field"><label>Sp.ATK</label><input type="number" id="f-spatk" placeholder="65"/></div>
-                  <div class="field"><label>Sp.DEF</label><input type="number" id="f-spdef" placeholder="65"/></div>
-                  <div class="field"><label>SPEED</label><input type="number" id="f-speed" placeholder="45"/></div>
+                  <div class="field"><label>HP</label><input type="number" id="f-hp" placeholder="45" autocomplete="off"/></div>
+                  <div class="field"><label>ATK</label><input type="number" id="f-atk" placeholder="49" autocomplete="off"/></div>
+                  <div class="field"><label>DEF</label><input type="number" id="f-def" placeholder="49" autocomplete="off"/></div>
+                  <div class="field"><label>Sp.ATK</label><input type="number" id="f-spatk" placeholder="65" autocomplete="off"/></div>
+                  <div class="field"><label>Sp.DEF</label><input type="number" id="f-spdef" placeholder="65" autocomplete="off"/></div>
+                  <div class="field"><label>SPEED</label><input type="number" id="f-speed" placeholder="45" autocomplete="off"/></div>
                 </div>
               </div>
 
@@ -502,8 +501,62 @@ const dbPatch= (t,q,b)   => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b
 const dbDel  = (t,q)     => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
 
 // ════════════════════════════════════════
-// STATE
+// TYPE CHART (Defense: how much damage this type TAKES from each attacking type)
+// Columns = attacking type, Rows = defending type
 // ════════════════════════════════════════
+const TYPE_CHART = {
+  //           NOR   FIR   WAT   ELE   GRA   ICE   FIG   POI   GRO   FLY   PSY   BUG   ROC   GHO   DRA   DAR   STE   FAI
+  normal:  [1,   1,    1,    1,    1,    1,    2,    1,    1,    1,    1,    1,    1,    0,    1,    1,  0.5,    1  ],
+  fire:    [1,  0.5,  2,    1,   0.5,   2,    1,    1,    2,    1,    1,   0.5,   2,    1,    1,    1,  0.5,    1  ],
+  water:   [1,  0.5, 0.5,   2,    2,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,  0.5,    1  ],
+  electric:[1,   1,    1,  0.5,   1,    1,    1,    1,    0,    2,    1,    1,    1,    1,    1,    1,  0.5,    1  ],
+  grass:   [1,   2,   0.5,  0.5, 0.5,   2,    1,    2,    1,    2,    1,    2,    1,    1,    1,    1,  0.5,    1  ],
+  ice:     [1,   2,   0.5,  1,   0.5,  0.5,   2,    1,    2,    1,    1,    1,    2,    1,    1,    1,  0.5,    1  ],
+  fighting:[1,   1,    1,    1,    1,    1,    1,   0.5,   1,    2,    2,   0.5,  0.5,   1,    1,   0.5,  2,    2  ],
+  poison:  [1,   1,    1,    1,   0.5,   1,   0.5,  0.5,   2,    1,    2,   0.5,   1,    1,    1,    1,  0.5,   0.5 ],
+  ground:  [1,   1,    2,    0,    2,    2,    1,   0.5,   1,    1,    1,    1,   0.5,   1,    1,    1,   1,    1  ],
+  flying:  [1,   1,    1,    2,   0.5,   2,   0.5,   1,    0,   0.5,   1,   0.5,   2,    1,    1,    1,  0.5,   1  ],
+  psychic: [1,   1,    1,    1,    1,    1,   0.5,   1,    1,    1,   0.5,   2,    1,    2,    1,    2,  0.5,   1  ],
+  bug:     [1,   2,    1,    1,   0.5,   1,   0.5,   1,   0.5,   2,    1,    1,    2,    1,    1,    1,  0.5,   1  ],
+  rock:    [0.5, 0.5,  2,    1,    2,    1,    2,   0.5,   2,   0.5,   1,    1,    1,    1,    1,    1,   2,    1  ],
+  ghost:   [0,   1,    1,    1,    1,    1,    0,    1,    1,    1,    1,   0.5,   1,    2,    1,    2,  0.5,   1  ],
+  dragon:  [1,   0.5,  0.5,  0.5, 0.5,   2,    1,    1,    1,    1,    1,    1,    1,    1,    2,    1,  0.5,   2  ],
+  dark:    [1,   1,    1,    1,    1,    1,    2,    1,    1,    1,    0,    2,    1,   0.5,   1,   0.5,  0.5,   2  ],
+  steel:   [0.5, 2,    1,    1,   0.5,  0.5,   2,    0,    2,   0.5,  0.5,  0.5,  0.5,   1,   0.5,   1,  0.5,  0.5 ],
+  fairy:   [1,   2,    1,    1,    1,    1,   0.5,   2,    1,    1,    1,   0.5,   1,    1,    0,   0.5,  2,    1  ],
+};
+// Order matches DMG_TIPOS array: normal,fire,water,electric,grass,ice,fight,poison,ground,flying,psychic,bug,rock,ghost,dragon,dark,steel,fairy
+const TYPE_CHART_ORDER = ['normal','fire','water','electric','grass','ice','fight','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+
+function calcDmgTaken(tipos){
+  // tipos uses 'fighting', TYPE_CHART rows use 'fighting', TYPE_CHART_ORDER (atk columns) uses 'fight'
+  // We need to map defending tipos (from TIPOS array, e.g. 'fighting') to TYPE_CHART rows
+  const result = {};
+  TYPE_CHART_ORDER.forEach((atkKey, atkIdx) => {
+    let mult = 1;
+    tipos.forEach(defType => {
+      const row = TYPE_CHART[defType]; // defType comes from TIPOS: 'fighting' etc.
+      if(row) mult *= row[atkIdx];
+    });
+    result[atkKey] = mult;
+  });
+  return result;
+}
+
+function autoFillDmgTaken(){
+  const tipoKeys = JSON.parse(document.getElementById('f-tipos').value || '[]');
+  if(!tipoKeys.length) return;
+  const dmg = calcDmgTaken(tipoKeys);
+  TYPE_CHART_ORDER.forEach(t => {
+    const sel = document.getElementById('dmg-' + t);
+    if(sel){
+      const v = String(dmg[t] ?? 1);
+      // Find closest option
+      const opts = [...sel.options].map(o => o.value);
+      sel.value = opts.includes(v) ? v : '1';
+    }
+  });
+}
 let uwaDex = [];          // todos os pokémon
 let admLogado = null;
 let editingId = null;     // ID do pokémon sendo editado
@@ -534,30 +587,38 @@ function toggleDark(){
 }
 
 // ════════════════════════════════════════
-// ROUTING (hash-based)
+// ROUTING (path-based: /uwadex/slug-pokemon)
 // ════════════════════════════════════════
 function showView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
 }
 
-function parseHash(){
-  const raw=location.hash.replace(/^#\/?/,'').trim();
-  if(!raw||raw==='dex') return {view:'dex',slug:null};
-  if(raw==='adm') return {view:'adm',slug:null};
-  return {view:'ficha',slug:raw};
+function parsePath(){
+  const path=location.pathname.replace(/\/+$/,'');
+  if(path==='/uwadex/adm') return {view:'adm',slug:null};
+  const m=path.match(/^\/uwadex\/(.+)$/);
+  if(m) return {view:'ficha',slug:m[1]};
+  return {view:'dex',slug:null};
 }
 
-function navigateTo(hash){
-  location.hash = hash ? ('#'+hash) : '#';
+function navigateTo(slug){
+  let path;
+  if(!slug||slug==='dex') path='/uwadex';
+  else if(slug==='adm') path='/uwadex/adm';
+  else path='/uwadex/'+slug;
+  history.pushState({slug},'',path);
+  routeCurrentPath();
 }
 
-window.addEventListener('hashchange', ()=>{
-  const {view,slug}=parseHash();
+function routeCurrentPath(){
+  const {view,slug}=parsePath();
   if(view==='ficha'&&slug) renderFicha(slug);
   else if(view==='adm') mostrarAdm();
   else mostrarDex();
-});
+}
+
+window.addEventListener('popstate',routeCurrentPath);
 
 // ════════════════════════════════════════
 // INIT
@@ -578,17 +639,13 @@ async function init(){
     uwaDex = Array.isArray(data) ? data : [];
   }catch(e){ uwaDex=[]; }
 
-  buildTypeFilters();
   renderDexGrid();
   document.getElementById('dex-total-count').textContent = uwaDex.length;
 
   loading(false);
 
   // Routing
-  const {view,slug}=parseHash();
-  if(view==='ficha'&&slug) renderFicha(slug);
-  else if(view==='adm') mostrarAdm();
-  else mostrarDex();
+  routeCurrentPath();
 }
 
 // ════════════════════════════════════════
@@ -847,7 +904,7 @@ function switchMovesTab(btn,panelId){
 // ADM
 // ════════════════════════════════════════
 function toggleAdmView(){
-  const v=parseHash();
+  const v=parsePath();
   if(v.view==='adm') navigateTo('dex');
   else navigateTo('adm');
 }
@@ -918,6 +975,7 @@ function toggleTipo(el){
   el.classList.toggle('sel');
   const tipoKeys=[...document.querySelectorAll('#tipos-selector .tipo-tag.sel')].map(e=>e.dataset.tipo);
   document.getElementById('f-tipos').value=JSON.stringify(tipoKeys);
+  autoFillDmgTaken();
 }
 
 function buildDmgTakenFields(existing={}){
