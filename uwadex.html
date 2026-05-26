@@ -756,21 +756,35 @@ function renderFicha(slug){
     </div>`;
   }
 
-  // ── Damage Taken HTML ──
-  const dmgTH=DMG_TIPOS.map(t=>`<th class="type-pill ${TCLS[t]||'t-normal'}" style="font-size:8px;padding:4px 2px;min-width:38px">${DMG_LABELS[t]}</th>`).join('');
-  const dmgTD=DMG_TIPOS.map(t=>{
-    const v=dmgTaken[t]!==undefined?dmgTaken[t]:1;
-    const cls=v==0?'dmg-0':v<1?'dmg-half':v>2?'dmg-4':v>1?'dmg-2':'dmg-1';
-    return `<td class="${cls}">×${v}</td>`;
+  // ── Damage Taken HTML (grouped) ──
+  const DMG_GROUP_STYLES={
+    '0':   {label:'Imune (×0)',  bg:'#2a2a2a', color:'#aaa',     border:'#444'},
+    '0.25':{label:'×0.25',       bg:'#c8f0c8', color:'#1a5a1a',  border:'#7acc7a'},
+    '0.5': {label:'×0.5',        bg:'#e0f0e0', color:'#1a6a1a',  border:'#7acc7a'},
+    '1':   {label:'×1',          bg:'var(--surface2)', color:'var(--muted)', border:'var(--border)'},
+    '2':   {label:'×2',          bg:'#fde8e8', color:'#c03030',  border:'#f0a0a0'},
+    '4':   {label:'×4',          bg:'#f8b0b0', color:'#7a0000',  border:'#e06060'},
+  };
+  // group types by their multiplier value
+  const dmgGroups={};
+  DMG_TIPOS.forEach(t=>{
+    const v=dmgTaken[t]!==undefined?String(dmgTaken[t]):'1';
+    if(!dmgGroups[v]) dmgGroups[v]=[];
+    dmgGroups[v].push(t);
+  });
+  // render only non-×1 groups first, then ×1 at the end (collapsed style)
+  const groupOrder=['0','0.25','0.5','2','4','1'];
+  const dmgGroupsHTML=groupOrder.filter(k=>dmgGroups[k]&&dmgGroups[k].length).map(k=>{
+    const gs=DMG_GROUP_STYLES[k]||DMG_GROUP_STYLES['1'];
+    const pills=dmgGroups[k].map(t=>`<span class="type-pill ${TCLS[t]||'t-normal'}" style="font-size:10px;padding:3px 9px">${DMG_LABELS[t]}</span>`).join('');
+    return `<div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border)">
+      <div style="min-width:52px;text-align:center;font-family:var(--font-title);font-size:14px;font-weight:700;padding:4px 8px;border-radius:6px;background:${gs.bg};color:${gs.color};border:1px solid ${gs.border}">${gs.label}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">${pills}</div>
+    </div>`;
   }).join('');
   const dmgHTML=`<div class="ficha-dmg-wrap">
     <div class="ficha-section-title">DAMAGE TAKEN</div>
-    <div style="overflow-x:auto">
-      <table class="dmg-table">
-        <thead><tr>${dmgTH}</tr></thead>
-        <tbody><tr>${dmgTD}</tr></tbody>
-      </table>
-    </div>
+    ${dmgGroupsHTML||'<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">Sem dados de fraqueza.</div>'}
   </div>`;
 
   // ── Stats HTML ──
