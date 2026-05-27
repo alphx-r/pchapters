@@ -148,7 +148,14 @@ html.dark .dex-tab.active{color:#fff}
 .ficha-type-icons{display:flex;gap:6px;justify-content:center;align-items:center}
 .ficha-type-icon{width:22px;height:22px;object-fit:contain}
 .ficha-ability-name{font-weight:700;color:var(--brand-mid)}
-.ficha-ability-ha{font-size:10px;font-weight:700;background:var(--accent-light);color:var(--accent);border:1px solid var(--accent);border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle}
+.ficha-ability-ha{font-size:10px;font-weight:700;background:#000;color:#fff;border:1px solid #000;border-radius:4px;padding:1px 6px;margin-right:5px;vertical-align:middle;letter-spacing:.3px}
+/* Lightbox */
+.img-expandable{cursor:zoom-in;transition:transform .2s,filter .2s}
+.img-expandable:hover{transform:scale(1.04);filter:brightness(1.05)}
+.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9000;display:flex;align-items:center;justify-content:center;cursor:zoom-out;backdrop-filter:blur(4px)}
+.lightbox-overlay img{max-width:88vw;max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 48px rgba(0,0,0,.6);image-rendering:auto}
+.lightbox-close{position:absolute;top:18px;right:22px;color:#fff;font-size:28px;font-weight:700;cursor:pointer;line-height:1;background:rgba(255,255,255,.12);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.lightbox-close:hover{background:rgba(255,255,255,.25)}
 
 /* Damage taken */
 .ficha-dmg-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
@@ -443,6 +450,19 @@ html.dark .dex-tab.active{color:#fff}
                       <div>
                         <span style="font-size:11px;color:var(--muted);display:block">Pré-visualização</span>
                         <input type="text" id="f-sprite" placeholder="ou cole uma URL…" style="margin-top:4px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:200px" autocomplete="off" oninput="if(this.value)document.getElementById('f-sprite-preview-img').src=this.value"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label>Sprite Shiny ✨</label>
+                    <input type="file" id="f-sprite-shiny-file" accept="image/*" onchange="previewUwadexSpriteShiny(this)" style="font-size:13px"/>
+                    <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
+                      <div id="f-sprite-shiny-preview" style="width:64px;height:64px;background:var(--surface2);border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;filter:drop-shadow(0 0 4px rgba(192,144,224,.4))">
+                        <img id="f-sprite-shiny-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>
+                      </div>
+                      <div>
+                        <span style="font-size:11px;color:var(--muted);display:block">Pré-visualização Shiny</span>
+                        <input type="text" id="f-sprite-shiny" placeholder="ou cole uma URL…" style="margin-top:4px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:200px" autocomplete="off" oninput="if(this.value)document.getElementById('f-sprite-shiny-preview-img').src=this.value"/>
                       </div>
                     </div>
                   </div>
@@ -842,22 +862,35 @@ window.addEventListener('popstate',routeCurrentPath);
 // ════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════
+function withTimeout(promise, ms){
+  ms=ms||6000;
+  return Promise.race([promise, new Promise(function(_,rej){setTimeout(function(){rej(new Error('timeout'));},ms);})]);
+}
+
 async function init(){
   loading(true);
+
+  // Failsafe: never stay stuck loading more than 10s
+  var failsafe=setTimeout(function(){
+    loading(false);
+    renderDexGrid();
+    document.getElementById('dex-total-count').textContent=uwaDex.length;
+    routeCurrentPath();
+  },10000);
+
   // Check ADM session
   try{
-    const {data:{session}}=await supabaseClient.auth.getSession();
-    if(session){
-      admLogado={email:session.user.email};
-    }
+    const {data:{session}}=await withTimeout(supabaseClient.auth.getSession(),5000);
+    if(session){ admLogado={email:session.user.email}; }
   }catch{}
 
-  // Load pokémon
+  // Load pokemon
   try{
-    const data = await dbGet('uwadex');
+    const data = await withTimeout(dbGet('uwadex'),7000);
     uwaDex = Array.isArray(data) ? data : [];
   }catch(e){ uwaDex=[]; }
 
+  clearTimeout(failsafe);
   renderDexGrid();
   document.getElementById('dex-total-count').textContent = uwaDex.length;
 
@@ -1176,13 +1209,13 @@ function renderFicha(slug){
   const theme=TYPE_THEME[primaryType]||TYPE_THEME.normal;
 
   // ── Biology HTML ──
-  const shinyUrl=p.sprite_shiny||(p.sprite?p.sprite.replace('/sprites/','/sprites/shiny/').replace('/normal/','/shiny/'):null)||p.sprite||FALLBACK;
+  const shinyUrl=p.sprite_shiny||p.sprite_shiny||(p.sprite?p.sprite.replace('/sprites/','/sprites/shiny/').replace('/normal/','/shiny/'):null)||p.sprite||FALLBACK;
   const bioHTML=p.bio?`<div class="ficha-bio-wrap">
     <div class="ficha-section-title">BIOLOGY</div>
     <div class="ficha-bio-inner">
       <div class="ficha-bio-sprites">
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-          <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="${p.nome} ✨" onerror="this.src='${FALLBACK}'"/>
+          <img class="ficha-bio-sprite ficha-bio-shiny img-expandable" src="${shinyUrl}" alt="${p.nome} ✨" onerror="this.src='${FALLBACK}'" onclick="openLightbox(this.src,'${p.nome} ✨ Shiny')" title="Clique para ampliar"/>
           <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
         </div>
       </div>
@@ -1243,9 +1276,8 @@ function renderFicha(slug){
 
   // ── Abilities HTML ──
   const abilitiesHTML=habilidades.map((a,i)=>`<div class="ficha-ability">
-    ${!a.ha?`<span style="font-weight:700;color:var(--muted);margin-right:4px">${i+1}.</span>`:''}
+    ${a.ha?`<span class="ficha-ability-ha">HA</span>`:`<span style="font-weight:700;color:var(--muted);margin-right:4px">${i+1}.</span>`}
     <span class="ficha-ability-name">${a.nome}</span>
-    ${a.ha?`<span class="ficha-ability-ha">HA</span>`:''}
     ${a.desc?`: <span style="color:var(--text)">${a.desc}</span>`:''}
   </div>`).join('');
 
@@ -1256,7 +1288,7 @@ function renderFicha(slug){
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
-        <img class="ficha-sprite-img" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+        <img class="ficha-sprite-img img-expandable" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'" onclick="openLightbox(this.src,'${p.nome}')" title="Clique para ampliar"/>
         <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
@@ -1601,7 +1633,11 @@ function resetForm(){
   document.getElementById('f-raridade').value='comum';
   const prev=document.getElementById('f-sprite-preview');
   if(prev){delete prev.dataset.b64;prev.innerHTML='<img id="f-sprite-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>';}
+  const prevShiny=document.getElementById('f-sprite-shiny-preview');
+  if(prevShiny){delete prevShiny.dataset.b64;prevShiny.innerHTML='<img id="f-sprite-shiny-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>';}
   const fileInp=document.getElementById('f-sprite-file');if(fileInp)fileInp.value='';
+  const fileInpShiny=document.getElementById('f-sprite-shiny-file');if(fileInpShiny)fileInpShiny.value='';
+  const shinyUrl=document.getElementById('f-sprite-shiny');if(shinyUrl)shinyUrl.value='';
   buildTiposSelector([]);
   buildDmgTakenFields({});
   document.getElementById('abilities-list').innerHTML='';
@@ -1615,6 +1651,39 @@ function resetForm(){
 }
 
 function cancelarEdicao(){ resetForm(); }
+
+function previewUwadexSpriteShiny(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const SIZE=200;
+      const canvas=document.createElement('canvas');
+      canvas.width=SIZE;canvas.height=SIZE;
+      const ctx=canvas.getContext('2d');
+      ctx.imageSmoothingEnabled=true;
+      ctx.imageSmoothingQuality='high';
+      const scale=Math.min(SIZE/img.width,SIZE/img.height);
+      const w=img.width*scale,h=img.height*scale;
+      ctx.drawImage(img,(SIZE-w)/2,(SIZE-h)/2,w,h);
+      const dataUrl=canvas.toDataURL('image/png');
+      document.getElementById('f-sprite-shiny').value='';
+      document.getElementById('f-sprite-shiny-preview-img').src=dataUrl;
+      document.getElementById('f-sprite-shiny-preview').dataset.b64=dataUrl;
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function openLightbox(src, label){
+  const overlay=document.createElement('div');
+  overlay.className='lightbox-overlay';
+  overlay.innerHTML=`<button class="lightbox-close" title="Fechar">✕</button><img src="${src}" alt="${label||''}"/>`;
+  overlay.addEventListener('click',e=>{if(e.target===overlay||e.target.classList.contains('lightbox-close'))overlay.remove();});
+  document.body.appendChild(overlay);
+}
 
 function previewUwadexSprite(input){
   const file=input.files[0];if(!file)return;
@@ -1654,6 +1723,10 @@ function editarPokemon(id){
   document.getElementById('f-sprite').value=p.sprite&&!p.sprite.startsWith('data:')?p.sprite:'';
   const prev=document.getElementById('f-sprite-preview');
   if(p.sprite){prev.dataset.b64=p.sprite.startsWith('data:')?p.sprite:'';document.getElementById('f-sprite-preview-img').src=p.sprite;}
+  const prevShiny=document.getElementById('f-sprite-shiny-preview');
+  if(p.sprite_shiny){prevShiny.dataset.b64=p.sprite_shiny.startsWith('data:')?p.sprite_shiny:'';document.getElementById('f-sprite-shiny-preview-img').src=p.sprite_shiny;}
+  else{delete prevShiny.dataset.b64;}
+  document.getElementById('f-sprite-shiny').value=p.sprite_shiny&&!p.sprite_shiny.startsWith('data:')?p.sprite_shiny:'';
   document.getElementById('f-raridade').value=p.raridade||'comum';
   document.getElementById('f-altura').value=p.altura||'';
   document.getElementById('f-peso').value=p.peso||'';
@@ -1698,6 +1771,7 @@ async function salvarPokemon(){
     slug:slugify(nome),
     classificacao:document.getElementById('f-classif').value.trim(),
     sprite:(document.getElementById('f-sprite-preview').dataset.b64)||document.getElementById('f-sprite').value.trim()||null,
+    sprite_shiny:(document.getElementById('f-sprite-shiny-preview').dataset.b64)||document.getElementById('f-sprite-shiny').value.trim()||null,
     raridade:document.getElementById('f-raridade').value,
     altura:document.getElementById('f-altura').value.trim(),
     peso:document.getElementById('f-peso').value.trim(),
