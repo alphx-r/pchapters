@@ -150,12 +150,7 @@ html.dark .dex-tab.active{color:#fff}
 .ficha-ability-name{font-weight:700;color:var(--brand-mid)}
 .ficha-ability-ha{font-size:10px;font-weight:700;background:#000;color:#fff;border:1px solid #000;border-radius:4px;padding:1px 6px;margin-right:5px;vertical-align:middle;letter-spacing:.3px}
 /* Lightbox */
-.img-expandable{cursor:zoom-in;transition:transform .2s,filter .2s}
-.img-expandable:hover{transform:scale(1.04);filter:brightness(1.05)}
-.lightbox-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:9000;display:flex;align-items:center;justify-content:center;cursor:zoom-out;backdrop-filter:blur(4px)}
-.lightbox-overlay img{max-width:88vw;max-height:88vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 48px rgba(0,0,0,.6);image-rendering:auto}
-.lightbox-close{position:absolute;top:18px;right:22px;color:#fff;font-size:28px;font-weight:700;cursor:pointer;line-height:1;background:rgba(255,255,255,.12);border:none;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;transition:background .2s}
-.lightbox-close:hover{background:rgba(255,255,255,.25)}
+
 
 /* Damage taken */
 .ficha-dmg-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
@@ -1198,7 +1193,7 @@ function renderFicha(slug){
     <div class="ficha-bio-inner">
       <div class="ficha-bio-sprites">
         <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
-          <img class="ficha-bio-sprite ficha-bio-shiny img-expandable" src="${shinyUrl}" alt="${p.nome} ✨" onerror="this.src='${FALLBACK}'" onclick="openLightbox(this.src,'${p.nome} ✨ Shiny')" title="Clique para ampliar"/>
+          <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="${p.nome} ✨" onerror="this.src='${FALLBACK}'"/>
           <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
         </div>
       </div>
@@ -1271,7 +1266,7 @@ function renderFicha(slug){
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
-        <img class="ficha-sprite-img img-expandable" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'" onclick="openLightbox(this.src,'${p.nome}')" title="Clique para ampliar"/>
+        <img class="ficha-sprite-img" src="${p.sprite||FALLBACK}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
         <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
@@ -1654,13 +1649,7 @@ function previewUwadexSpriteShiny(input){
   reader.readAsDataURL(file);
 }
 
-function openLightbox(src, label){
-  const overlay=document.createElement('div');
-  overlay.className='lightbox-overlay';
-  overlay.innerHTML=`<button class="lightbox-close" title="Fechar">✕</button><img src="${src}" alt="${label||''}"/>`;
-  overlay.addEventListener('click',e=>{if(e.target===overlay||e.target.classList.contains('lightbox-close'))overlay.remove();});
-  document.body.appendChild(overlay);
-}
+
 
 function previewUwadexSprite(input){
   const file=input.files[0];if(!file)return;
