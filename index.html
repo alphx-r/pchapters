@@ -162,6 +162,17 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);line-height:1}
 /* HISTÓRICO */
 .hist-entry{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden}
+.rol-tab-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .18s;user-select:none}
+.rol-tab-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:var(--brand-light)}
+.rol-tab-btn.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.rol-sticky-header{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);border-left-width:4px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:12px}
+.rol-scroll-body{overflow-y:auto;max-height:calc(100vh - 320px)}
+.rol-entry{border-bottom:1px solid var(--border);padding:12px 18px}
+.rol-entry:last-child{border-bottom:none}
+.rol-entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.rol-entry-bioma{font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.4px;background:var(--brand-light);padding:2px 8px;border-radius:5px}
+.rol-entry-hora{font-size:11px;color:var(--muted)}
+.rol-pokes-wrap{display:flex;flex-wrap:wrap;gap:8px}
 .hist-header{padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .hist-body{padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap}
 .hist-poke{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--surface);border-radius:8px;border:1px solid var(--border);min-width:160px}
@@ -389,6 +400,110 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
   .wiki-page{padding:16px}
   .wiki-title{font-size:20px}
 }
+/* ── ROLAGENS ── */
+.rol-tab-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--text);cursor:pointer;transition:all .18s;user-select:none}
+.rol-tab-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:var(--brand-light)}
+.rol-tab-btn.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.rol-sticky-header{display:flex;align-items:center;gap:14px;padding:14px 18px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);border-left-width:4px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:12px}
+.rol-scroll-body{overflow-y:auto;max-height:calc(100vh - 320px)}
+.rol-entry{border-bottom:1px solid var(--border);padding:12px 18px}
+.rol-entry:last-child{border-bottom:none}
+.rol-entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px}
+.rol-entry-bioma{font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.4px;background:var(--brand-light);padding:2px 8px;border-radius:5px}
+.rol-entry-hora{font-size:11px;color:var(--muted)}
+/* ── NPCs ── */
+.npc-city-section{margin-bottom:40px}
+.npc-city-header{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:12px;border-bottom:2px solid var(--border)}
+.npc-city-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.npc-city-name{font-family:var(--font-title);font-size:18px;font-weight:700;color:var(--text)}
+.npc-city-count{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.npc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.npc-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);display:flex;flex-direction:column;overflow:hidden;transition:box-shadow .2s,border-color .2s}
+.npc-card:hover{border-color:var(--brand-mid);box-shadow:0 4px 18px rgba(37,99,168,.13)}
+.npc-card-topbar{height:6px;width:100%;flex-shrink:0}
+.npc-card-banner-wrap{position:relative;width:100%;height:200px;overflow:hidden;flex-shrink:0}
+.npc-card-banner-bg{width:100%;height:100%;object-fit:cover;display:block}
+.npc-card-banner-solid{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:72px}
+.npc-card-namebar{padding:5px 10px 4px;background:var(--surface2);border-bottom:1.5px solid var(--border);text-align:center}
+.npc-card-name{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--text);letter-spacing:.4px;text-transform:uppercase}
+.npc-card-photoplayer{font-size:11px;color:var(--muted);font-style:italic;margin-top:1px}
+.npc-card-body{padding:10px 14px 8px;flex:1;min-height:0}
+.npc-card-role{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+.npc-card-desc{font-size:12px;color:var(--text);line-height:1.6;display:-webkit-box;-webkit-line-clamp:8;-webkit-box-orient:vertical;overflow:hidden;text-align:justify}
+.npc-uso-badge{position:absolute;bottom:10px;right:0;display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:4px 0 0 8px;border-radius:20px 0 0 20px;max-width:4px;overflow:hidden;white-space:nowrap;transition:max-width .35s cubic-bezier(.4,0,.2,1),padding .35s cubic-bezier(.4,0,.2,1),opacity .2s;z-index:2;opacity:.8;cursor:default}
+.npc-uso-livre{background:#d1fae5;color:#065f46}
+.npc-uso-adm{background:#fee2e2;color:#991b1b}
+.npc-card:hover .npc-uso-badge{max-width:160px;padding:4px 10px 4px 12px;opacity:1}
+.npc-card-tags{display:flex;flex-wrap:wrap;gap:4px;padding:0 14px 8px}
+.npc-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:8px;text-transform:uppercase;letter-spacing:.3px}
+.npc-card-pokes{border-top:1px solid var(--border);padding:10px 14px 12px}
+.npc-card-pokes-title{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px}
+.npc-pokes-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+.npc-poke-slot{background:var(--surface2);border:1px solid var(--border);border-radius:6px;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:visible;position:relative;cursor:default;transition:border-color .15s,background .15s}
+.npc-poke-slot:not(.empty):hover{border-color:var(--brand-mid);background:var(--brand-light);z-index:100}
+.npc-poke-slot img{width:100%;height:100%;object-fit:contain;border-radius:5px}
+.npc-poke-slot.empty{opacity:.3;overflow:hidden}
+.npc-poke-slot.empty::after{content:'?';font-size:14px;color:var(--muted);font-weight:700}
+.npc-poke-name{font-size:8px;color:var(--muted);text-align:center;position:absolute;bottom:1px;left:0;right:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 2px}
+.npc-poke-tip{display:none;position:fixed;width:210px;background:var(--text);color:var(--surface);border-radius:10px;padding:10px 12px;z-index:99999;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.npc-poke-slot:not(.empty):hover .npc-poke-tip{display:none}
+.npc-poke-tip-name{font-family:var(--font-title);font-size:12px;font-weight:700;letter-spacing:.3px;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.npc-poke-tip-gender{opacity:.7;font-size:11px}
+.npc-poke-tip-types{display:flex;flex-wrap:wrap;gap:3px;margin-bottom:6px}
+.npc-poke-tip-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;opacity:.55;margin-bottom:2px;margin-top:5px}
+.npc-poke-tip-val{font-size:11px;opacity:.9;line-height:1.4}
+.npc-empty{color:var(--muted);font-size:13px;padding:20px 0;text-align:center}
+.npc-ev-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px}
+@media(max-width:900px){.npc-ev-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.npc-ev-grid{grid-template-columns:repeat(2,1fr)}}
+.npc-ev-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:20px 12px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;transition:border-color .22s,box-shadow .22s;position:relative;cursor:pointer;min-height:170px}
+.npc-ev-badge{position:absolute;top:14px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:#fff;padding:3px 12px;border-radius:20px;z-index:1}
+.npc-ev-face{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.npc-ev-avatar{width:86px;height:86px;border-radius:50%;overflow:hidden;background:var(--surface2);display:flex;align-items:center;justify-content:center;margin-top:20px;flex-shrink:0;border:2px solid var(--border)}
+.npc-ev-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.npc-ev-name{font-family:var(--font-title);font-size:12px;font-weight:700;color:var(--text);letter-spacing:.3px;line-height:1.3}
+.npc-ev-photoplayer{font-size:11px;color:var(--muted);font-style:italic;line-height:1.3;margin-top:-4px}
+.npc-ev-detail{display:none;flex-direction:column;align-items:center;gap:8px;width:100%;animation:fadeUp .18s both}
+.npc-ev-card.open .npc-ev-face{display:none}
+.npc-ev-card.open .npc-ev-detail{display:flex}
+.npc-ev-detail-name{font-family:var(--font-title);font-size:12px;font-weight:700;color:var(--text);letter-spacing:.4px;text-transform:uppercase;text-align:center;margin-top:22px}
+.npc-ev-detail .npc-pokes-grid{width:100%;grid-template-columns:repeat(3,1fr)}
+.npc-ev-bag-wrap{position:relative;display:inline-block;margin-top:2px}
+.npc-ev-bag-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);font-size:11px;font-weight:700;color:var(--text);cursor:default;transition:border-color .15s,color .15s}
+.npc-ev-bag-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
+.npc-ev-bag-tip-data{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);min-width:160px;background:var(--text);color:var(--surface);border-radius:8px;padding:8px 12px;font-size:11px;z-index:99999;pointer-events:none;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+.npc-ev-bag-wrap:hover .npc-ev-bag-tip-data{display:block}
+.npc-ev-bag-item{padding:2px 0;border-bottom:1px solid rgba(255,255,255,.08);white-space:nowrap}
+.npc-ev-bag-item:last-child{border-bottom:none}
+@media(max-width:700px){.npc-grid{grid-template-columns:1fr}}
+.pk-tab-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);font-family:var(--font-title);font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:all .18s}
+.pk-tab-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:var(--brand-light)}
+.pk-tab-btn.active{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 2px 8px rgba(26,58,92,.18)}
+.pk-tab-panel{display:none}
+.pk-tab-panel.active{display:block}
+.npc-tag-preset{font-size:9px;font-weight:700;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:.3px;cursor:pointer}
+/* ESTAÇÃO FAB */
+#estacao-fab{position:fixed;top:68px;right:20px;z-index:101;padding:9px 18px;border-radius:50px;font-family:var(--font-body);font-size:13px;font-weight:700;color:#fff;cursor:pointer;justify-content:center;align-items:center;gap:7px;opacity:.92;letter-spacing:.3px;transition:all .3s cubic-bezier(.4,0,.2,1);box-shadow:0 2px 10px rgba(0,0,0,.18);pointer-events:auto;user-select:none}
+@media(max-width:600px){#estacao-fab{padding:0;width:32px;height:32px;border-radius:50%;font-size:16px;overflow:hidden;white-space:nowrap}#estacao-fab.expandido{width:auto;height:auto;padding:9px 16px;border-radius:50px;font-size:13px}}
+/* EV TIPO BTNS */
+.ev-tipo-btn{flex:1;padding:10px 14px;border-radius:var(--r);border:2px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;text-align:center}
+.ev-tipo-btn.active{border-color:var(--brand-mid);background:var(--brand-light);color:var(--brand-mid)}
+.ev-tipo-btn:hover:not(.active){border-color:var(--brand-mid);color:var(--brand)}
+.ev-pool-btn{padding:7px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s}
+.ev-pool-btn.active{border-color:var(--brand-mid);background:var(--brand-light);color:var(--brand-mid)}
+.modal-pool-bioma-tab{padding:6px 14px;border-radius:20px 20px 0 0;border:1.5px solid var(--border);border-bottom:none;background:var(--surface2);font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:-1px;position:relative;z-index:1}
+.modal-pool-bioma-tab.active{background:var(--surface);color:var(--brand-mid);border-color:var(--brand-mid)}
+/* LOOT TABLE */
+.loot-table-wrap{border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:20px;background:var(--surface)}
+.loot-table-header{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface);cursor:pointer;user-select:none;transition:background .15s}
+.loot-table-header:hover{background:var(--surface2)}
+.loot-table-title{font-family:var(--font-title);font-size:12px;font-weight:700;color:var(--brand);letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.loot-table-arrow{color:var(--muted);font-size:11px;transition:transform .25s;line-height:1}
+.loot-table-wrap.open .loot-table-arrow{transform:rotate(180deg)}
+.loot-table-body{display:none;padding:14px 16px 16px;border-top:1.5px solid var(--border);background:var(--surface2)}
+.loot-table-wrap.open .loot-table-body{display:block}
+.loot-items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px 4px}
+.loot-item-card{display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px 2px;cursor:default}
 </style>
 </head>
 <body>
@@ -405,6 +520,8 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <button class="nav-link" onclick="goTo('bioma',this)">Por Bioma</button>
     <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
     <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
+    <button class="nav-link" onclick="goTo('rolagens',this)">Rolls</button>
+    <button class="nav-link" onclick="goTo('npcs',this)">NPCs</button>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
     <button class="dark-toggle" id="btn-dark" onclick="toggleDarkMode()" title="Alternar dark mode">💡</button>
@@ -682,6 +799,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
         <button class="adm-nav-btn" onclick="admTab('wiki-editor',this)">📄 Menu</button>
         <button class="adm-nav-btn" onclick="admTab('historicos',this)">🗑️ Históricos</button>
         <button class="adm-nav-btn" onclick="admTab('fichas-hist',this)">📋 Fichas</button>
+        <button class="adm-nav-btn" onclick="admTab('npcs-adm',this)">🧑 NPCs</button>
+        <button class="adm-nav-btn" onclick="admTab('eventos',this)">🎪 Eventos</button>
+        <button class="adm-nav-btn" onclick="admTab('estacao',this)">🌿 Estação</button>
+        <button class="adm-nav-btn" onclick="admTab('forcados',this)">🎯 Forçar Resultado</button>
         <div class="adm-nav-sep"></div>
         <button class="adm-nav-btn adm-nav-danger" onclick="fazerLogout()">Sair</button>
       </div>
@@ -1062,6 +1183,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
                 <div class="field"><label>De</label><input type="date" id="poke-data-de"/></div>
                 <div class="field"><label>Até</label><input type="date" id="poke-data-ate"/></div>
               </div>
+              <div class="field" style="margin-bottom:12px">
+                <label>Personagem (opcional)</label>
+                <select id="poke-filtro-personagem" style="width:100%"><option value="">— Todos os personagens —</option></select>
+              </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
                 <button class="btn btn-danger btn-sm" onclick="limparHistPokemonPorData()">🗑 Apagar período</button>
                 <button class="btn btn-danger" onclick="limparHistPokemon()">Limpar tudo</button>
@@ -1075,6 +1200,10 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
               <div class="g2" style="margin-bottom:12px">
                 <div class="field"><label>De</label><input type="date" id="dados-data-de"/></div>
                 <div class="field"><label>Até</label><input type="date" id="dados-data-ate"/></div>
+              </div>
+              <div class="field" style="margin-bottom:12px">
+                <label>Personagem (opcional)</label>
+                <select id="dados-filtro-personagem" style="width:100%"><option value="">— Todos os personagens —</option></select>
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap">
                 <button class="btn btn-danger btn-sm" onclick="limparHistDadosPorData()">🗑 Apagar período</button>
@@ -1095,10 +1224,675 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           </div>
         </div>
 
+        <!-- NPC ADM SECTION -->
+        <div class="adm-section" id="sec-npcs-adm">
+          <div class="sec-sub">Gerencie cidades, NPCs, Pokémon e informações exibidas na página de NPCs</div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border)">
+            <button class="pk-tab-btn active" data-ntab="tab-npc-cidade" onclick="setNpcAdmTab('tab-npc-cidade',this)">🏙️ Cidades</button>
+            <button class="pk-tab-btn" data-ntab="tab-npc-npc" onclick="setNpcAdmTab('tab-npc-npc',this)">🧑 NPCs</button>
+            <button class="btn btn-sm" style="background:#fdf3dc;color:#7a5010;border:1px solid #e8d080;margin-left:auto" onclick="diagnosticarNpc()">🔍 Diagnosticar tabelas</button>
+          </div>
+
+          <!-- TAB: Cidades -->
+          <div class="pk-tab-panel active" id="tab-npc-cidade">
+            <div style="font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px">🏙️ Gerenciar Cidades</div>
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+              <button class="btn btn-primary btn-sm" onclick="abrirModalCidade(null)">+ Nova Cidade</button>
+            </div>
+            <div id="npc-cidades-lista" style="display:flex;flex-direction:column;gap:8px"></div>
+            <div class="fb fb-ok" id="npc-cidade-fb">✓ Cidade salva!</div>
+            <div class="fb fb-err" id="npc-cidade-fb-err">—</div>
+          </div>
+
+          <!-- TAB: NPCs -->
+          <div class="pk-tab-panel" id="tab-npc-npc">
+            <div style="font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px">🧑 Gerenciar NPCs</div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
+              <button id="npc-adm-tipo-oficial" class="pk-tab-btn active" onclick="setNpcAdmTipo('oficial',this)" style="font-size:12px;padding:6px 14px">🏙️ Oficiais</button>
+              <button id="npc-adm-tipo-evento" class="pk-tab-btn" onclick="setNpcAdmTipo('evento',this)" style="font-size:12px;padding:6px 14px">🎪 Eventos</button>
+            </div>
+            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+              <select id="npc-adm-cidade-sel" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text)" onchange="renderNpcAdmLista()">
+                <option value="">— Todos —</option>
+              </select>
+              <button class="btn btn-primary btn-sm" onclick="abrirModalNpc(null)">+ Novo NPC</button>
+              <button class="btn btn-sm" style="background:#e8f0fb;color:var(--brand-mid);border:1px solid #b8d0f0;margin-left:4px" onclick="abrirModalTransferirNpc()">↗️ Transferir personagem</button>
+            </div>
+            <div id="npc-npcs-lista" style="display:flex;flex-direction:column;gap:8px"></div>
+            <div class="fb fb-ok" id="npc-npc-fb">✓ NPC salvo!</div>
+            <div class="fb fb-err" id="npc-npc-fb-err">—</div>
+          </div>
+        </div>
+        <!-- /NPC ADM SECTION -->
+
+        <!-- FORÇAR RESULTADO -->
+        <div class="adm-section" id="sec-forcados">
+          <div class="sec-title">🎯 Forçar Resultado</div>
+          <div class="sec-sub">Defina Pokémon específicos que aparecerão na próxima rolagem de um personagem. Após a rolagem, o resultado forçado é consumido automaticamente.</div>
+          <div class="box">
+            <div class="box-title">Nova força de resultado</div>
+            <div class="g2" style="margin-bottom:12px">
+              <div class="field" style="margin-bottom:0">
+                <label>Personagem</label>
+                <select id="frc-personagem" style="width:100%"><option value="">— Selecione —</option></select>
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label>Bioma (opcional — limita busca)</label>
+                <select id="frc-bioma" style="width:100%" onchange="renderFrcPool()"><option value="">— Todos os biomas —</option></select>
+              </div>
+            </div>
+            <div style="margin-bottom:10px">
+              <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Buscar Pokémon</div>
+              <input type="text" id="frc-busca" placeholder="Digite o nome..." oninput="renderFrcPool()" style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:14px;margin-bottom:10px"/>
+              <div id="frc-pool" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;max-height:320px;overflow-y:auto;border:1.5px solid var(--border);border-radius:8px;padding:8px;background:var(--surface2)">
+                <div style="grid-column:1/-1;text-align:center;color:var(--muted);font-size:13px;padding:16px">Selecione um bioma ou busque pelo nome</div>
+              </div>
+            </div>
+            <div id="frc-selecionados-wrap" style="display:none;margin-bottom:12px">
+              <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Pokémon selecionados <span id="frc-sel-count" style="color:var(--brand-mid)"></span></div>
+              <div id="frc-selecionados" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+            </div>
+            <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:12px;flex-wrap:wrap">
+              <div class="field" style="margin-bottom:0;flex:1;min-width:180px">
+                <label>Nota interna (opcional)</label>
+                <input type="text" id="frc-nota" placeholder="Ex: Recompensa de missão" style="width:100%"/>
+              </div>
+            </div>
+            <button class="btn btn-primary" onclick="salvarForcado()">🎯 Salvar resultado forçado</button>
+            <div class="fb fb-ok" id="frc-fb" style="margin-top:8px">✓ Resultado forçado salvo!</div>
+            <div class="fb fb-err" id="frc-fb-err" style="margin-top:8px">Erro ao salvar.</div>
+          </div>
+          <div class="box">
+            <div class="box-title">Resultados forçados ativos</div>
+            <div id="frc-lista" style="display:flex;flex-direction:column;gap:8px">
+              <div style="text-align:center;color:var(--muted);font-size:13px;padding:16px">Nenhum resultado forçado ativo.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESTAÇÃO -->
+        <div class="adm-section" id="sec-estacao">
+          <div class="sec-title">🌿 Estação do Ano</div>
+          <div class="sec-sub">Define a estação ativa do RPG — afeta os encontros Pokémon para todos os jogadores</div>
+          <div class="box">
+            <div class="box-title">Estação atual</div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px" id="estacao-btns">
+              <button class="btn" id="est-btn-primavera" onclick="setEstacao('primavera')" style="font-size:15px;padding:14px;border:2px solid var(--border)">🌱 Primavera</button>
+              <button class="btn" id="est-btn-verao"    onclick="setEstacao('verao')"    style="font-size:15px;padding:14px;border:2px solid var(--border)">☀️ Verão</button>
+              <button class="btn" id="est-btn-outono"   onclick="setEstacao('outono')"   style="font-size:15px;padding:14px;border:2px solid var(--border)">🍂 Outono</button>
+              <button class="btn" id="est-btn-inverno"  onclick="setEstacao('inverno')"  style="font-size:15px;padding:14px;border:2px solid var(--border)">❄️ Inverno</button>
+            </div>
+            <div class="fb fb-ok" id="estacao-fb" style="display:none">✓ Estação atualizada!</div>
+            <div class="fb fb-err" id="estacao-fb-err" style="display:none">Erro ao salvar.</div>
+          </div>
+          <div class="box">
+            <div class="box-title">⚡ Configurar Pokémon por Estação (em massa)</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Selecione uma estação, filtre por bioma e marque os Pokémon. <b>Exclusivo</b> = só aparece nessa estação. <b>Boost</b> = aparece sempre, mas com raridade promovida nessa estação.</p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end">
+              <div class="field" style="margin:0;flex:1;min-width:140px">
+                <label>Estação</label>
+                <select id="est-massa-estacao" onchange="renderEstMassa()">
+                  <option value="primavera">🌱 Primavera</option>
+                  <option value="verao">☀️ Verão</option>
+                  <option value="outono">🍂 Outono</option>
+                  <option value="inverno">❄️ Inverno</option>
+                </select>
+              </div>
+              <div class="field" style="margin:0;flex:1;min-width:140px">
+                <label>Bioma</label>
+                <select id="est-massa-bioma" onchange="renderEstMassa()"><option value="">— Todos —</option></select>
+              </div>
+              <div class="field" style="margin:0;flex:1;min-width:160px">
+                <label>Buscar</label>
+                <input type="text" id="est-massa-busca" placeholder="Nome do Pokémon..." oninput="renderEstMassa()"/>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+              <span style="font-size:12px;display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:3px;background:#2e9e50;display:inline-block"></span> Exclusivo desta estação</span>
+              <span style="font-size:12px;display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:3px;background:#e07a10;display:inline-block"></span> Boost nesta estação</span>
+              <span style="font-size:12px;display:flex;align-items:center;gap:4px"><span style="width:14px;height:14px;border-radius:3px;background:var(--border);display:inline-block"></span> Sem relação</span>
+            </div>
+            <div id="est-massa-lista" style="max-height:400px;overflow-y:auto;border:1.5px solid var(--border);border-radius:8px;padding:4px"></div>
+            <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+              <button class="btn btn-primary btn-sm" onclick="salvarEstMassa()">Salvar alterações</button>
+              <button class="btn btn-sm" onclick="limparEstMassa()" style="background:var(--surface2)">🗑 Limpar seleção desta estação</button>
+            </div>
+            <div class="fb fb-ok" id="est-massa-fb" style="display:none;margin-top:8px">✓ Pokémon atualizados!</div>
+            <div class="fb fb-err" id="est-massa-fb-err" style="display:none;margin-top:8px">Erro ao salvar.</div>
+          </div>
+          <div class="box">
+            <div class="box-title">Páginas onde a estação aparece</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px" id="estacao-paginas-wrap">
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="roller"   onchange="salvarPaginasEstacao()"/> Pokémon</label>
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="bioma"    onchange="salvarPaginasEstacao()"/> Bioma</label>
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="dados"    onchange="salvarPaginasEstacao()"/> Dados</label>
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="rolagens" onchange="salvarPaginasEstacao()"/> Rolls</label>
+              <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer"><input type="checkbox" value="npcs"     onchange="salvarPaginasEstacao()"/> NPCs</label>
+            </div>
+            <div class="fb fb-ok" id="estacao-pag-fb" style="display:none">✓ Páginas salvas!</div>
+          </div>
+        </div>
+
+        <!-- EVENTOS -->
+        <div class="adm-section" id="sec-eventos">
+          <div class="sec-title">Eventos</div>
+          <div class="sec-sub">Crie páginas exclusivas para eventos — cada evento gera uma URL própria com o rolador configurado</div>
+          <div class="box">
+            <div class="box-title">✨ Novo Evento</div>
+            <div class="field" style="margin-bottom:16px">
+              <label>Tipo de rolador</label>
+              <div style="display:flex;gap:10px;margin-top:6px">
+                <button type="button" id="ev-tipo-encontro" class="ev-tipo-btn active" onclick="setEvTipo('encontro')">⚡ Encontro Pokémon</button>
+                <button type="button" id="ev-tipo-dados" class="ev-tipo-btn" onclick="setEvTipo('dados')">🎲 Rolador de Dados</button>
+                <button type="button" id="ev-tipo-ambos" class="ev-tipo-btn" onclick="setEvTipo('ambos')">⚡🎲 Ambos</button>
+              </div>
+            </div>
+            <div class="g2">
+              <div class="field">
+                <label>Nome do Evento</label>
+                <input type="text" id="ev-nome" placeholder="Ex: Captura Especial"/>
+              </div>
+              <div class="field">
+                <label>Slug da URL <span style="font-size:10px;color:var(--muted);font-weight:400">(gerado automaticamente)</span></label>
+                <div style="display:flex;gap:6px;align-items:center">
+                  <span style="font-size:12px;color:var(--muted);white-space:nowrap">/evento/</span>
+                  <input type="text" id="ev-slug" placeholder="captura-especial" style="flex:1" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9\-]/g,'-').replace(/-+/g,'-')"/>
+                </div>
+              </div>
+              <div class="field">
+                <label>Cor do cabeçalho</label>
+                <input type="color" id="ev-cor" value="#1a3a5c"/>
+              </div>
+              <div class="field">
+                <label>Emoji / ícone</label>
+                <input type="text" id="ev-emoji" placeholder="🎪" style="width:80px"/>
+              </div>
+            </div>
+            <div class="field">
+              <label>Descrição <span style="font-size:10px;color:var(--muted);font-weight:400">(exibida na página do evento)</span></label>
+              <textarea id="ev-desc" rows="2" placeholder="Descrição do evento..."></textarea>
+            </div>
+            <div id="ev-opcoes-encontro">
+              <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
+                <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Pool de Pokémon do evento</div>
+                <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+                  <button type="button" id="ev-pool-modo-global" class="ev-pool-btn active" onclick="setEvPoolModo('global')">🌐 Usar biomas existentes</button>
+                  <button type="button" id="ev-pool-modo-custom" class="ev-pool-btn" onclick="setEvPoolModo('custom')">🎯 Pokémon personalizados</button>
+                </div>
+                <div id="ev-pool-global-info">
+                  <div style="font-size:11px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">⚡ Configuração de Pokémon</div>
+                  <div class="g2" style="margin-bottom:12px">
+                    <div class="field" style="margin-bottom:0"><label>Bioma padrão</label><select id="ev-bioma"></select></div>
+                    <div class="field" style="margin-bottom:0"><label>Pokémon adicionais</label><input type="number" id="ev-adicionais" value="0" min="0" max="10"/></div>
+                  </div>
+                  <div style="display:flex;gap:4px;align-items:center;margin-bottom:8px">
+                    <input type="checkbox" id="ev-lock-bioma" style="cursor:pointer"/>
+                    <label for="ev-lock-bioma" style="font-size:12px;font-weight:600;color:var(--text);cursor:pointer">Travar bioma (jogadores não podem trocar)</label>
+                  </div>
+                  <div style="display:flex;gap:4px;align-items:center">
+                    <input type="checkbox" id="ev-lock-adicionais" style="cursor:pointer"/>
+                    <label for="ev-lock-adicionais" style="font-size:12px;font-weight:600;color:var(--text);cursor:pointer">Travar quantidade de Pokémon adicionais</label>
+                  </div>
+                </div>
+                <div id="ev-pool-custom-wrap" style="display:none">
+                  <div style="font-size:12px;color:var(--muted);margin-bottom:8px">Monte biomas exclusivos para este evento com Pokémon importados do sistema.</div>
+                  <button type="button" class="btn btn-sm" style="background:var(--brand);color:#fff;margin-bottom:10px" onclick="abrirModalPoolAdmin()">+ Configurar Pokémon do Evento</button>
+                  <div id="ev-pool-resumo" style="font-size:12px;color:var(--muted)"></div>
+                </div>
+              </div>
+            </div>
+            <div id="ev-opcoes-dados" style="display:none">
+              <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:14px">
+                <div style="font-size:11px;font-weight:700;color:#5a1a9a;text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">🎲 Configuração de Dados</div>
+                <div class="g2">
+                  <div class="field"><label>Dado padrão</label>
+                    <select id="ev-dado-lados">
+                      <option value="4">d4</option><option value="6">d6</option><option value="8">d8</option>
+                      <option value="10">d10</option><option value="12">d12</option><option value="20">d20</option>
+                      <option value="100" selected>d100</option>
+                    </select>
+                  </div>
+                  <div class="field"><label>Motivo padrão <span style="font-size:10px;color:var(--muted)">(opcional)</span></label>
+                    <input type="text" id="ev-dado-motivo" placeholder="Ex: Sorte de captura"/>
+                  </div>
+                </div>
+                <div style="display:flex;gap:4px;align-items:center;margin-bottom:8px">
+                  <input type="checkbox" id="ev-lock-dado" style="cursor:pointer"/>
+                  <label for="ev-lock-dado" style="font-size:12px;font-weight:600;color:var(--text);cursor:pointer">Travar dado (jogadores não podem trocar)</label>
+                </div>
+                <div style="display:flex;gap:4px;align-items:center">
+                  <input type="checkbox" id="ev-lock-motivo" style="cursor:pointer"/>
+                  <label for="ev-lock-motivo" style="font-size:12px;font-weight:600;color:var(--text);cursor:pointer">Travar motivo</label>
+                </div>
+              </div>
+            </div>
+            <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;margin-bottom:12px">
+              <div style="font-size:11px;font-weight:700;color:#5a1a9a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">🎁 Pool de Itens <span style="font-size:10px;font-weight:400;color:var(--muted);text-transform:none">(opcional)</span></div>
+              <div id="ev-itens-lista" style="margin-bottom:10px"></div>
+              <div style="display:flex;gap:6px;align-items:flex-start">
+                <textarea id="ev-item-nome" placeholder="Um item por linha..." rows="3" style="flex:1;resize:vertical;padding:8px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px;line-height:1.5"></textarea>
+                <button class="btn btn-sm btn-primary" onclick="adicionarItemPool('ev')" style="margin-top:2px">+ Adicionar</button>
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="criarEvento()">+ Criar Evento</button>
+            <div class="fb fb-ok" id="ev-fb-ok">✓ Evento criado!</div>
+            <div class="fb fb-err" id="ev-fb-err">—</div>
+          </div>
+          <div class="box">
+            <div class="box-title">📋 Eventos Cadastrados</div>
+            <div id="ev-lista" style="display:flex;flex-direction:column;gap:8px">
+              <div style="color:var(--muted);font-size:13px;text-align:center;padding:16px">Carregando...</div>
+            </div>
+          </div>
+        </div>
+
       </div><!-- /adm-content -->
     </div><!-- /adm-layout -->
   </div><!-- /adm-painel -->
 </div><!-- /page-adm -->
+
+<!-- MODAL TRANSFERIR PERSONAGEM → NPC -->
+<div class="modal-overlay" id="modal-transferir-npc-overlay" onclick="fecharModalTransferirNpc()" style="display:none">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:520px;max-height:92vh;overflow-y:auto">
+    <button class="modal-close" onclick="fecharModalTransferirNpc()">✕</button>
+    <div style="font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:4px">↗️ Transferir para NPC</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:18px">Selecione os personagens que virarão NPCs. Os personagens não marcados continuam no fichário normalmente.</div>
+    <div style="margin-bottom:14px">
+      <input type="text" id="transferir-busca" placeholder="Buscar personagem..." oninput="filtrarTransferirLista(this.value)"
+        style="width:100%;padding:9px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text)"/>
+    </div>
+    <div id="transferir-lista" style="display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto;margin-bottom:18px;padding-right:4px"></div>
+    <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:14px;margin-bottom:18px">
+      <div style="font-size:11px;font-weight:700;color:var(--brand-mid);text-transform:uppercase;letter-spacing:.4px;margin-bottom:12px">Configurações do NPC</div>
+      <div class="g2">
+        <div class="field">
+          <label>Local de destino</label>
+          <select id="transferir-cidade" onchange="_onTransferirLocalChange()" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:100%"></select>
+        </div>
+        <div class="field" id="transferir-modelo-wrap">
+          <label>Modelo de card</label>
+          <select id="transferir-modelo" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:100%">
+            <option value="completo">Completo (com banner)</option>
+            <option value="simples">Simples (estilo fichário)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Uso</label>
+          <select id="transferir-uso" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:100%">
+            <option value="livre">Uso Livre</option>
+            <option value="adm">Exclusivo ADM</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Manter no fichário?</label>
+          <select id="transferir-manter" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:100%">
+            <option value="nao">Não — remover do fichário</option>
+            <option value="sim">Sim — manter como personagem também</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="confirmarTransferirNpc()" id="transferir-btn-confirmar">↗️ Transferir selecionados</button>
+      <span id="transferir-sel-count" style="font-size:12px;color:var(--muted)">Nenhum selecionado</span>
+    </div>
+    <div class="fb fb-ok" id="transferir-fb">✓ Transferido com sucesso!</div>
+    <div class="fb fb-err" id="transferir-fb-err">—</div>
+  </div>
+</div>
+
+<!-- MODAL CIDADE NPC -->
+<div class="modal-overlay" id="modal-cidade-overlay" onclick="fecharModalCidade()" style="display:none">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:400px">
+    <button class="modal-close" onclick="fecharModalCidade()">✕</button>
+    <div style="font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:16px" id="modal-cidade-titulo">🏙️ Nova Cidade</div>
+    <input type="hidden" id="modal-cidade-idx"/>
+    <div class="g2">
+      <div class="field"><label>Nome</label><input type="text" id="modal-cidade-nome" placeholder="Ex: Pallet Town"/></div>
+      <div class="field"><label>Emoji</label><input type="text" id="modal-cidade-emoji" placeholder="🌿" style="width:80px"/></div>
+      <div class="field"><label>Cor (hex)</label><input type="color" id="modal-cidade-cor" value="#4caf50" style="height:40px;width:100%;cursor:pointer;border-radius:6px;border:1.5px solid var(--border)"/></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="salvarCidade()">Salvar</button>
+      <button class="btn" id="modal-cidade-del" style="background:#fde8e8;color:var(--red);border:1px solid #f5c6c6;display:none" onclick="deletarCidade()">Excluir</button>
+    </div>
+    <div class="fb fb-ok" id="modal-cidade-fb">✓ Salvo!</div>
+    <div class="fb fb-err" id="modal-cidade-fb-err">—</div>
+  </div>
+</div>
+
+<!-- MODAL NPC -->
+<div class="modal-overlay" id="modal-npc-overlay" onclick="fecharModalNpc()" style="display:none">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:540px;max-height:92vh;overflow-y:auto">
+    <button class="modal-close" onclick="fecharModalNpc()">✕</button>
+    <div style="font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:16px" id="modal-npc-titulo">🧑 Novo NPC</div>
+    <input type="hidden" id="modal-npc-cidade-idx"/>
+    <input type="hidden" id="modal-npc-idx"/>
+    <!-- Foto -->
+    <div class="field">
+      <label>Foto (upload)</label>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div id="modal-npc-foto-preview" style="width:72px;height:72px;border-radius:8px;background:var(--surface2);border:1.5px solid var(--border);overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:32px;flex-shrink:0">👤</div>
+        <div style="flex:1;min-width:160px">
+          <div style="display:flex;gap:6px;margin-bottom:6px">
+            <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);white-space:nowrap" onclick="document.getElementById('modal-npc-foto-file').click()">📁 Escolher foto</button>
+            <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);color:var(--red);white-space:nowrap" onclick="_removerNpcFoto()">✕ Remover</button>
+          </div>
+          <input type="file" id="modal-npc-foto-file" accept="image/*" onchange="uploadNpcFoto(this)" style="display:none"/>
+          <div style="font-size:11px;color:var(--muted)">JPG, PNG, WEBP</div>
+        </div>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Nome</label><input type="text" id="modal-npc-nome" placeholder="Ex: Professor Carvalho"/></div>
+      <div class="field"><label>Cargo / Função</label><input type="text" id="modal-npc-cargo" placeholder="Ex: Pesquisador Pokémon"/></div>
+      <div class="field">
+        <label>Uso</label>
+        <select id="modal-npc-uso" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:100%">
+          <option value="livre">Uso Livre</option>
+          <option value="adm">Exclusivo da ADM</option>
+        </select>
+      </div>
+      <div class="field"><label>Photoplayer</label><input type="text" id="modal-npc-photoplayer" placeholder="Ex: Satoshi"/></div>
+      <div class="field"><label>Emoji (fallback)</label><input type="text" id="modal-npc-emoji" placeholder="🔬" style="width:80px"/></div>
+      <div class="field">
+        <label>Tipo de NPC</label>
+        <div style="display:flex;gap:8px;margin-top:4px">
+          <button type="button" id="modal-npc-tipo-oficial" onclick="_setNpcTipo('completo')"
+            style="flex:1;padding:10px 8px;border-radius:8px;border:2px solid var(--brand);background:var(--brand);color:#fff;font-family:var(--font-body);font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">🏛️</span><span>Oficial</span>
+            <span style="font-size:10px;font-weight:400;opacity:.8">Aba Oficiais</span>
+          </button>
+          <button type="button" id="modal-npc-tipo-evento" onclick="_setNpcTipo('simples')"
+            style="flex:1;padding:10px 8px;border-radius:8px;border:2px solid var(--border);background:var(--surface2);color:var(--muted);font-family:var(--font-body);font-size:12px;font-weight:700;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:3px">
+            <span style="font-size:18px">🎪</span><span>Evento</span>
+            <span style="font-size:10px;font-weight:400;opacity:.8">Aba Eventos</span>
+          </button>
+        </div>
+        <input type="hidden" id="modal-npc-modelo" value="completo"/>
+      </div>
+      <div class="field" id="modal-npc-cidade-wrap"><label>Cidade</label>
+        <select id="modal-npc-cidade-sel" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:100%"></select>
+      </div>
+      <div class="field" id="modal-npc-evento-nome-wrap" style="display:none">
+        <label>Nome do evento</label>
+        <input type="text" id="modal-npc-evento-nome" placeholder="Ex: Trade-Up Festival"/>
+        <span style="font-size:10px;color:var(--muted);margin-top:3px">Aparece como badge no card e agrupa os NPCs na aba Eventos</span>
+      </div>
+      <div class="field">
+        <label>Cor da top bar</label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="color" id="modal-npc-topbar-cor" value="#2563a8"
+            style="height:36px;width:44px;cursor:pointer;border-radius:6px;border:1.5px solid var(--border);padding:2px 4px;flex-shrink:0"
+            oninput="document.getElementById('modal-npc-topbar-cor-hex').value=this.value.slice(1).toUpperCase()"/>
+          <span style="font-size:13px;color:var(--muted);font-weight:700">#</span>
+          <input type="text" id="modal-npc-topbar-cor-hex" placeholder="— sem cor —" maxlength="6"
+            style="width:110px;padding:7px 10px;border-radius:6px;border:1.5px solid var(--border);font-family:monospace;font-size:13px;text-transform:uppercase"
+            oninput="(function(v){if(v.length===6){try{document.getElementById('modal-npc-topbar-cor').value='#'+v}catch(e){}}}).call(this,this.value.replace('#',''))"/>
+          <button type="button" class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-size:11px;white-space:nowrap"
+            onclick="document.getElementById('modal-npc-topbar-cor-hex').value='';document.getElementById('modal-npc-topbar-cor').value='#2563a8'">✕ Limpar</button>
+        </div>
+      </div>
+    </div>
+    <div class="field"><label>Descrição</label><textarea id="modal-npc-desc" rows="3" placeholder="Descreva o NPC..."></textarea></div>
+    <!-- Tags -->
+    <div class="field">
+      <label>Tags <span style="font-size:10px;color:var(--muted);font-weight:400">(clique + para adicionar)</span></label>
+      <div id="modal-npc-tags-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px" id="modal-npc-tags-preset"></div>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+        <input type="text" id="modal-npc-tag-txt" placeholder="Texto da tag" style="flex:1;min-width:100px;padding:7px 10px;border-radius:6px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"/>
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+          <input type="color" id="modal-npc-tag-cor" value="#42a5f5"
+            style="height:32px;width:36px;cursor:pointer;border-radius:6px;border:1.5px solid var(--border);padding:1px 3px"
+            oninput="(function(c){const h=c.slice(1);document.getElementById('modal-npc-tag-hex').value=h.toUpperCase()}).call(this,this.value)"/>
+          <span style="font-size:12px;color:var(--muted);font-weight:700">#</span>
+          <input type="text" id="modal-npc-tag-hex" value="42A5F5" maxlength="6" placeholder="42A5F5"
+            style="width:72px;padding:6px 8px;border-radius:6px;border:1.5px solid var(--border);font-family:monospace;font-size:12px;text-transform:uppercase"
+            oninput="(function(v){if(v.length===6){try{document.getElementById('modal-npc-tag-cor').value='#'+v}catch(e){}}}).call(this,this.value.replace('#',''))"/>
+        </div>
+        <button class="btn btn-sm" style="background:var(--brand);color:#fff;flex-shrink:0" onclick="adicionarTagNpc()">+</button>
+      </div>
+    </div>
+    <!-- Pokémon do NPC -->
+    <div class="field">
+      <label>Pokémon (até 6)</label>
+      <div id="modal-npc-pokes-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:8px"></div>
+      <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border)" onclick="adicionarPokeNpc()">+ Pokémon</button>
+    </div>
+    <!-- Bag -->
+    <div class="field">
+      <label>🎒 Bag / Itens <span style="font-size:10px;color:var(--muted);font-weight:400">(um por linha)</span></label>
+      <textarea id="modal-npc-bag" rows="4" placeholder="Potion x2&#10;Pokéball x5&#10;Rare Candy&#10;..." style="width:100%;padding:9px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px;color:var(--text);resize:vertical"></textarea>
+      <span style="font-size:10px;color:var(--muted);margin-top:3px;display:block">Aparece ao passar o mouse no botão de bag do card</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="salvarNpc()">Salvar NPC</button>
+      <button class="btn" id="modal-npc-del" style="background:#fde8e8;color:var(--red);border:1px solid #f5c6c6;display:none" onclick="deletarNpc()">Excluir</button>
+    </div>
+    <div class="fb fb-ok" id="modal-npc-fb">✓ NPC salvo!</div>
+    <div class="fb fb-err" id="modal-npc-fb-err">—</div>
+  </div>
+</div>
+
+<!-- MODAL POOL ADMIN -->
+<div class="modal-overlay" id="modal-pool-overlay" onclick="fecharModalPool()" style="display:none">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:680px;max-height:92vh;overflow-y:auto">
+    <button class="modal-close" onclick="fecharModalPool()">✕</button>
+    <div style="font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:16px">🎯 Configurar Pokémon do Evento</div>
+    <div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;align-items:flex-end">
+      <div id="pool-bioma-tabs" style="display:flex;gap:4px;flex-wrap:wrap"></div>
+      <button class="btn btn-sm btn-primary" onclick="adicionarBiomaPool()">+ Bioma</button>
+    </div>
+    <div id="pool-bioma-content" style="border:1.5px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);padding:16px;background:var(--surface)">
+      <div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Adicione um bioma para começar.</div>
+    </div>
+    <div style="margin-top:16px;background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">📥 Importar do sistema</div>
+      <div class="g2" style="margin-bottom:10px">
+        <div class="field" style="margin-bottom:0"><label>Bioma de origem</label><select id="pool-import-bioma-src" onchange="renderPoolImportList()"></select></div>
+        <div class="field" style="margin-bottom:0"><label>Bioma de destino (no evento)</label><select id="pool-import-bioma-dst"></select></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
+        <input type="text" id="pool-import-busca" placeholder="Buscar Pokémon..." style="flex:1;min-width:120px;padding:7px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px" oninput="renderPoolImportList()"/>
+        <select id="pool-import-raridade" onchange="renderPoolImportList()" style="padding:7px 12px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px;background:var(--surface)">
+          <option value="">— Todas raridades —</option><option value="comum">Comum</option><option value="incomum">Incomum</option><option value="raro">Raro</option><option value="rarissimo">Raríssimo</option>
+        </select>
+      </div>
+      <div id="pool-import-lista" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;max-height:220px;overflow-y:auto;padding:4px"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:10px">
+        <button class="btn btn-primary btn-sm" onclick="importarSelecionadosPool()">✔ Adicionar selecionados</button>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-primary" onclick="confirmarPool()">✔ Confirmar configuração</button>
+    </div>
+    <div class="fb fb-ok" id="pool-fb-ok" style="margin-top:8px">✓ Pool salvo!</div>
+  </div>
+</div>
+
+<!-- MODAL POOL JOGADOR -->
+<div class="modal-overlay" id="modal-pool-jogador-overlay" onclick="fecharModalPoolJogador()" style="display:none">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:560px;max-height:90vh;overflow-y:auto">
+    <button class="modal-close" onclick="fecharModalPoolJogador()">✕</button>
+    <div style="font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:4px">🗂️ Pokémon do Evento</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:16px">Escolha o bioma e role o encontro com os Pokémon deste evento.</div>
+    <div id="pool-jogador-tabs" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px"></div>
+    <div id="pool-jogador-content"></div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR EVENTO -->
+<div class="modal-overlay" id="modal-editar-evento-overlay" onclick="fecharEditarEvento()" style="display:none">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:560px;max-height:92vh;overflow-y:auto">
+    <button class="modal-close" onclick="fecharEditarEvento()">✕</button>
+    <div style="font-family:var(--font-title);font-size:16px;color:var(--brand);margin-bottom:16px">✏️ Editar Evento</div>
+    <input type="hidden" id="edit-ev-id"/>
+    <input type="hidden" id="edit-ev-tipo" value="encontro"/>
+    <div class="field" style="margin-bottom:16px">
+      <label>Tipo de rolador</label>
+      <div style="display:flex;gap:8px;margin-top:6px">
+        <button type="button" id="edit-ev-tipo-encontro" class="ev-tipo-btn" onclick="editEvSetTipo('encontro')">⚡ Encontro</button>
+        <button type="button" id="edit-ev-tipo-dados"    class="ev-tipo-btn" onclick="editEvSetTipo('dados')">🎲 Dados</button>
+        <button type="button" id="edit-ev-tipo-ambos"    class="ev-tipo-btn" onclick="editEvSetTipo('ambos')">⚡🎲 Ambos</button>
+      </div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Nome</label><input type="text" id="edit-ev-nome"/></div>
+      <div class="field"><label>Slug</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:12px;color:var(--muted)">/evento/</span>
+          <input type="text" id="edit-ev-slug" style="flex:1" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9\-]/g,'-').replace(/-+/g,'-')"/>
+        </div>
+      </div>
+      <div class="field"><label>Cor</label><input type="color" id="edit-ev-cor" value="#1a3a5c"/></div>
+      <div class="field"><label>Emoji</label><input type="text" id="edit-ev-emoji" style="width:80px"/></div>
+    </div>
+    <div class="field"><label>Descrição</label><textarea id="edit-ev-desc" rows="2"></textarea></div>
+    <div id="edit-ev-campos-encontro">
+      <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Pool de Pokémon</div>
+        <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+          <button type="button" id="edit-ev-pool-global" class="ev-pool-btn active" onclick="editEvSetPool('global')">🌐 Biomas existentes</button>
+          <button type="button" id="edit-ev-pool-custom" class="ev-pool-btn" onclick="editEvSetPool('custom')">🎯 Personalizados</button>
+        </div>
+        <div id="edit-ev-pool-global-info">
+          <div class="g2" style="margin-bottom:10px">
+            <div class="field" style="margin-bottom:0"><label>Bioma padrão</label><select id="edit-ev-bioma"></select></div>
+            <div class="field" style="margin-bottom:0"><label>Pokémon adicionais</label><input type="number" id="edit-ev-adicionais" value="0" min="0" max="10"/></div>
+          </div>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;margin-bottom:6px"><input type="checkbox" id="edit-ev-lock-bioma"/> Travar bioma</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="edit-ev-lock-adicionais"/> Travar adicionais</label>
+        </div>
+        <div id="edit-ev-pool-custom-wrap" style="display:none">
+          <button type="button" class="btn btn-sm" style="background:var(--brand);color:#fff;margin-bottom:8px" onclick="abrirModalPoolEventoEdit()">+ Configurar Pokémon</button>
+          <div id="edit-ev-pool-resumo" style="font-size:12px;color:var(--muted)"></div>
+        </div>
+      </div>
+    </div>
+    <div id="edit-ev-campos-dados" style="display:none">
+      <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:12px">
+        <div class="g2" style="margin-bottom:10px">
+          <div class="field" style="margin-bottom:0"><label>Dado padrão</label>
+            <select id="edit-ev-dado-lados">
+              <option value="4">d4</option><option value="6">d6</option><option value="8">d8</option>
+              <option value="10">d10</option><option value="12">d12</option><option value="20">d20</option>
+              <option value="100" selected>d100</option>
+            </select>
+          </div>
+          <div class="field" style="margin-bottom:0"><label>Motivo padrão</label><input type="text" id="edit-ev-dado-motivo"/></div>
+        </div>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;margin-bottom:6px"><input type="checkbox" id="edit-ev-lock-dado"/> Travar dado</label>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer"><input type="checkbox" id="edit-ev-lock-motivo"/> Travar motivo</label>
+        <div style="margin-top:12px">
+          <div style="font-size:11px;font-weight:700;color:#5a1a9a;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Pool de Itens</div>
+          <div id="edit-ev-itens-lista" style="margin-bottom:8px"></div>
+          <div style="display:flex;gap:6px">
+            <textarea id="edit-ev-item-nome" placeholder="Um item por linha..." rows="2" style="flex:1;resize:vertical;padding:7px 10px;border-radius:8px;border:1.5px solid var(--border);font-family:var(--font-body);font-size:13px"></textarea>
+            <button class="btn btn-sm btn-primary" onclick="adicionarItemPool('edit-ev')" style="margin-top:2px">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="salvarEdicaoEvento()">Salvar</button>
+      <button class="btn btn-danger btn-sm" onclick="deletarEvento(document.getElementById('edit-ev-id').value)">Excluir Evento</button>
+    </div>
+    <div class="fb fb-ok" id="edit-ev-fb-ok" style="margin-top:8px">✓ Evento atualizado!</div>
+    <div class="fb fb-err" id="edit-ev-fb-err" style="margin-top:8px">—</div>
+  </div>
+</div>
+
+<!-- PÁGINA DE EVENTO -->
+<div class="page" id="page-evento">
+  <div id="evento-header" style="border-radius:var(--r);padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:16px">
+    <div id="evento-emoji" style="font-size:36px;line-height:1"></div>
+    <div>
+      <div id="evento-titulo" style="font-family:var(--font-title);font-size:22px;font-weight:700;color:#fff;letter-spacing:.5px"></div>
+      <div id="evento-desc" style="font-size:13px;color:rgba(255,255,255,.8);margin-top:4px"></div>
+    </div>
+  </div>
+  <div id="evento-modo-selector" style="display:none;position:sticky;top:0;z-index:50;margin:-8px -8px 24px -8px;padding:12px 20px;background:var(--surface2);border-bottom:1.5px solid var(--border)">
+    <div style="display:flex;gap:8px;max-width:400px;margin:0 auto;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:4px">
+      <button id="evento-btn-encontro" onclick="eventoSetModo('encontro')" style="flex:1;padding:8px 12px;border-radius:8px;border:none;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:var(--brand);color:#fff">⚡ Encontro</button>
+      <button id="evento-btn-dados"    onclick="eventoSetModo('dados')"    style="flex:1;padding:8px 12px;border-radius:8px;border:none;font-family:var(--font-body);font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--muted)">🎲 Dados</button>
+    </div>
+  </div>
+  <div id="evento-modo-encontro">
+    <div class="roller-controls">
+      <div class="ctrl-group" id="evento-bioma-wrap"><label>Bioma</label><select id="evento-bioma-sel"></select></div>
+      <div class="ctrl-group"><label>Personagem</label><input type="text" id="evento-personagem" placeholder="Nome do personagem..." list="personagens-lista"/></div>
+      <div class="ctrl-group" id="evento-adicionais-wrap"><label>Pokémon adicionais</label><input type="number" id="evento-adicionais" value="0" min="0" max="10"/></div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="roll-btn" onclick="rolarEncontroEvento()">Rolar Encontro</button>
+      <button id="evento-btn-config-pool" class="btn btn-sm" style="display:none;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);font-size:12px;padding:8px 14px;border-radius:8px" onclick="abrirModalPoolEvento()">🗂️ Configurar Pokémon</button>
+    </div>
+  </div>
+  <div id="evento-modo-dados" style="display:none">
+    <div class="dice-roller-wrap">
+      <div style="margin-bottom:14px" id="evento-dados-sides-wrap">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Dados rápidos</div>
+        <div class="dice-sides-wrap" id="evento-dice-side-btns"></div>
+      </div>
+      <div class="dice-controls">
+        <div class="ctrl-group"><label>Personagem</label><input type="text" id="evento-dice-personagem" placeholder="Nome do personagem..." list="personagens-lista"/></div>
+        <div class="ctrl-group" id="evento-dado-lados-wrap"><label>Lados do dado</label><input type="number" id="evento-dice-lados" value="100" min="2" max="10000" oninput="sincEventoDiceBtn()"/></div>
+        <div class="ctrl-group" id="evento-dado-motivo-wrap"><label>Motivo</label><input type="text" id="evento-dice-motivo" placeholder="Ex: Ataque, Fuga..."/></div>
+      </div>
+      <button class="roll-btn" onclick="rolarDadoEvento()">Rolar Dado</button>
+    </div>
+  </div>
+  <div id="evento-results"></div>
+  <div id="evento-historico-wrap" style="margin-top:32px;display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px">Histórico do Evento</div>
+      <div style="font-size:12px;color:var(--muted)" id="evento-hist-label"></div>
+    </div>
+    <div id="evento-historico-lista"></div>
+    <div id="evento-hist-paginacao" style="display:flex;justify-content:center;gap:10px;margin-top:16px">
+      <button id="evento-hist-prev" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaHistEvento(-1)">← Mais recentes</button>
+      <button id="evento-hist-next" class="btn btn-sm" style="background:var(--surface);border:1.5px solid var(--border);color:var(--text)" onclick="mudarPaginaHistEvento(1)">Mais antigas →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ROLLS -->
+<div class="page" id="page-rolagens">
+  <div class="roller-header">
+    <h2>Rolls</h2>
+    <p>Histórico de encontros e dados por personagem</p>
+  </div>
+  <div id="rolagens-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border)"></div>
+  <div id="rolagens-container"></div>
+</div>
+
+<!-- NPCs -->
+<div class="page" id="page-npcs">
+  <div class="roller-header">
+    <h2>NPCs</h2>
+    <p>Personagens notáveis da região, organizados por cidade</p>
+  </div>
+  <div style="display:flex;justify-content:center;gap:10px;margin-bottom:28px">
+    <button id="npc-aba-oficiais" onclick="setNpcAba('oficiais')"
+      style="min-width:100px;padding:11px 28px;border-radius:8px;border:none;font-family:var(--font-title);font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;background:var(--brand);color:#fff">
+      OFICIAIS
+    </button>
+    <button id="npc-aba-eventos" onclick="setNpcAba('eventos')"
+      style="min-width:100px;padding:11px 28px;border-radius:8px;border:none;font-family:var(--font-title);font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s;background:var(--border2);color:var(--muted)">
+      EVENTOS
+    </button>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+    <input type="text" id="npc-search-input" class="search-bar" placeholder="Buscar NPC..." oninput="filtrarNpcs(this.value)" style="flex:1;min-width:160px"/>
+    <select id="npc-filter-sel" onchange="filtrarNpcsPorSel(this.value)"
+      style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text)">
+      <option value="">— Todas as cidades —</option>
+    </select>
+  </div>
+  <div id="npc-container"></div>
+</div>
 
 <!-- MODAL PLAYER -->
 <div class="modal-overlay" id="modal-player" style="display:none">
@@ -1364,9 +2158,9 @@ async function init(){
 // ══════════════════════════════════════
 // NAVEGAÇÃO
 // ══════════════════════════════════════
-const PAGE_PATHS={home:'',roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm',wiki:'__wiki__'};
+const PAGE_PATHS={home:'',roller:'pokemon',bioma:'bioma',dados:'dados',ficha:'fichario',login:'login',player:'player',adm:'adm',wiki:'__wiki__',rolagens:'rolls',npcs:'npcs'};
 const PATH_PAGES=Object.fromEntries(Object.entries(PAGE_PATHS).map(([k,v])=>[v,k]));
-const pagesLoaded={home:false,roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false,wiki:false};
+const pagesLoaded={home:false,roller:false,bioma:false,dados:false,ficha:false,login:false,player:false,adm:false,wiki:false,rolagens:false,npcs:false};
 
 async function goTo(page,el,pushState=true,wikiSlug=null){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -1414,6 +2208,20 @@ async function lazyLoad(page,wikiSlug=null){
     if(personagens.length===0) personagens=_personagens;
     renderTbodyPersonagens();
     renderTbodyPlayers();
+  }
+  if(page==='rolagens'){
+    const [rawPoke, rawDados] = await Promise.all([
+      dbGet('historico','order=created_at.desc&limit=500'),
+      dbGet('historico_dados','order=created_at.desc&limit=500'),
+    ]);
+    historico = rawPoke||[];
+    historicoDados = rawDados||[];
+    renderRolagens();
+  }
+  if(page==='npcs'){
+    await _resyncNpcCidades();
+    _populateNpcFilterSel();
+    renderNpcs();
   }
 }
 
@@ -3321,35 +4129,43 @@ function renderHomeAdmCards(){
 }
 
 async function salvarHomeData(){
-  // collect slides
+  // collect slides — só coleta se os campos estiverem renderizados no DOM
   const sCount = document.querySelectorAll('[id^="hs-img-"]').length;
-  const slides = [];
-  for(let i=0;i<sCount;i++){
-    slides.push({
-      img:  document.getElementById(`hs-img-${i}`)?.value||'',
-      title:document.getElementById(`hs-title-${i}`)?.value||'',
-      desc: document.getElementById(`hs-desc-${i}`)?.value||'',
-      btn:  document.getElementById(`hs-btn-${i}`)?.value||'',
-      btnPage:document.getElementById(`hs-btnpage-${i}`)?.value||'',
-    });
+  const slides = sCount > 0 ? [] : (homeData.slides || HOME_DEFAULTS.slides);
+  if(sCount > 0){
+    for(let i=0;i<sCount;i++){
+      slides.push({
+        img:  document.getElementById(`hs-img-${i}`)?.value||'',
+        title:document.getElementById(`hs-title-${i}`)?.value||'',
+        desc: document.getElementById(`hs-desc-${i}`)?.value||'',
+        btn:  document.getElementById(`hs-btn-${i}`)?.value||'',
+        btnPage:document.getElementById(`hs-btnpage-${i}`)?.value||'',
+      });
+    }
   }
-  // collect cards
-  const cards = [];
-  for(let i=0;i<8;i++){
-    cards.push({
-      icon: document.getElementById(`hc-icon-${i}`)?.value||'',
-      title:document.getElementById(`hc-title-${i}`)?.value||'',
-      body: document.getElementById(`hc-body-${i}`)?.value||'',
-    });
+  // collect cards — só coleta se os campos estiverem renderizados no DOM
+  const cCount = document.querySelectorAll('[id^="hc-icon-"]').length;
+  const cards = cCount > 0 ? [] : (homeData.cards || HOME_DEFAULTS.cards);
+  if(cCount > 0){
+    for(let i=0;i<cCount;i++){
+      cards.push({
+        icon: document.getElementById(`hc-icon-${i}`)?.value||'',
+        title:document.getElementById(`hc-title-${i}`)?.value||'',
+        body: document.getElementById(`hc-body-${i}`)?.value||'',
+      });
+    }
   }
   // collect quickmenu dynamically
-  const quickmenu = (homeData.quickmenu||[]).map((row,ri)=>
-    row.map((_,ii)=>({
-      label: document.getElementById(`hq-label-${ri}-${ii}`)?.value||'',
-      slug:  document.getElementById(`hq-slug-${ri}-${ii}`)?.value||'',
-      url:   document.getElementById(`hq-url-${ri}-${ii}`)?.value||'',
-    }))
-  );
+  const qCount = document.querySelectorAll('[id^="hq-label-"]').length;
+  const quickmenu = qCount > 0
+    ? (homeData.quickmenu||[]).map((row,ri)=>
+        row.map((_,ii)=>({
+          label: document.getElementById(`hq-label-${ri}-${ii}`)?.value||'',
+          slug:  document.getElementById(`hq-slug-${ri}-${ii}`)?.value||'',
+          url:   document.getElementById(`hq-url-${ri}-${ii}`)?.value||'',
+        }))
+      )
+    : (homeData.quickmenu || HOME_DEFAULTS.quickmenu);
   homeData = {slides, quickmenu, cards};
   const payload = JSON.stringify(homeData);
   // upsert into configuracoes table
@@ -3536,9 +4352,1312 @@ function previewWikiPage(){
 }
 
 // ══════════════════════════════════════
-// START
+// ROLAGENS POR PERSONAGEM
+// ══════════════════════════════════════
+let rolagemAtivaKey=null;
+const _biomaFiltroPlayer = {};
+
+function _setFiltroPlayerBioma(key, bioma){
+  _biomaFiltroPlayer[key] = bioma;
+  renderRolagens();
+}
+
+function normKey(n){ return (n||'Desconhecido').toLowerCase().trim(); }
+
+function resolveKey(nomeRolagem){
+  const k=normKey(nomeRolagem);
+  const exato=personagens.find(x=>normKey(x.nome)===k);
+  if(exato) return normKey(exato.nome);
+  const porPrimeiro=personagens.find(x=>{
+    const primeiroNome=normKey(x.nome).split(/\s+/)[0];
+    return primeiroNome===k;
+  });
+  if(porPrimeiro) return normKey(porPrimeiro.nome);
+  const porPrefixo=personagens.find(x=>normKey(x.nome).startsWith(k+' ')||normKey(x.nome)===k);
+  if(porPrefixo) return normKey(porPrefixo.nome);
+  return k;
+}
+
+function buildGrupos(){
+  const mapa={};
+  const ensureKey=(rawNome)=>{
+    const k=resolveKey(rawNome);
+    if(!mapa[k]){
+      const pCad=personagens.find(x=>normKey(x.nome)===k);
+      mapa[k]={canon: pCad ? pCad.nome : (rawNome||'Desconhecido'), rolls:[]};
+    }
+    return k;
+  };
+  historico.forEach(e=>{
+    const k=ensureKey(e.personagem);
+    mapa[k].rolls.push({...e,_tipo:'pokemon'});
+  });
+  historicoDados.forEach(e=>{
+    const k=ensureKey(e.personagem);
+    mapa[k].rolls.push({...e,_tipo:'dado'});
+  });
+  Object.values(mapa).forEach(g=>{
+    g.rolls.sort((a,b)=>{
+      const ta=a.criado_em?new Date(a.criado_em).getTime():0;
+      const tb=b.criado_em?new Date(b.criado_em).getTime():0;
+      return tb-ta;
+    });
+  });
+  return mapa;
+}
+
+function filtrarRolagens(){ renderRolagens(); }
+function expandirTodasRolagens(){}
+
+function renderRolagens(){
+  const tabsEl=document.getElementById('rolagens-tabs');
+  const container=document.getElementById('rolagens-container');
+  if(!tabsEl||!container)return;
+
+  const mapa=buildGrupos();
+  let chaves=Object.keys(mapa).filter(k=>mapa[k].rolls.length>0).sort((a,b)=>mapa[a].canon.localeCompare(mapa[b].canon,'pt-BR'));
+
+  if(rolagemAtivaKey && !chaves.includes(rolagemAtivaKey)) rolagemAtivaKey=null;
+
+  if(chaves.length===0){
+    tabsEl.innerHTML='<span style="color:var(--muted);font-size:13px">Nenhum personagem encontrado.</span>';
+    container.innerHTML='';
+    return;
+  }
+
+  tabsEl.innerHTML=chaves.map(k=>{
+    const g=mapa[k];
+    const p=personagens.find(x=>normKey(x.nome)===k);
+    const cor=p?.cor||'var(--brand)';
+    const img=p?.img||null;
+    const isAtivo=rolagemAtivaKey===k;
+    const avatarHtml=img
+      ?`<img src="${img}" style="width:22px;height:22px;object-fit:cover;border-radius:50%;flex-shrink:0;pointer-events:none"/>`
+      :`<span style="font-size:14px;flex-shrink:0;pointer-events:none">👤</span>`;
+    return`<button class="rol-tab-btn${isAtivo?' active':''}" data-rkey="${k}"
+      style="${isAtivo?`background:${cor}!important;border-color:${cor}!important;color:#fff!important`:''}"
+      onclick="selecionarRolagemTab('${k}')">
+      ${avatarHtml}
+      <span style="pointer-events:none">${g.canon}</span>
+      <span style="font-size:10px;opacity:.7;margin-left:2px;pointer-events:none">(${g.rolls.length})</span>
+    </button>`;
+  }).join('');
+
+  if(!rolagemAtivaKey){
+    container.innerHTML='<div style="color:var(--muted);font-size:14px;padding:24px 0;text-align:center">Selecione um personagem acima para ver os rolls.</div>';
+    return;
+  }
+
+  const g=mapa[rolagemAtivaKey];
+  if(!g){ container.innerHTML=''; return; }
+  const p=personagens.find(x=>normKey(x.nome)===rolagemAtivaKey);
+  const cor=p?.cor||'var(--brand-mid)';
+  const img=p?.img||null;
+  const player=p?.player||'';
+
+  const biomasDoPlayer=[...new Set(g.rolls.filter(e=>e._tipo==='pokemon'&&e.bioma).map(e=>e.bioma))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const temDados=g.rolls.some(e=>e._tipo==='dado');
+  const selId=`bioma-sel-${rolagemAtivaKey.replace(/[^a-z0-9]/g,'_')}`;
+  const biomaFiltroAtual=_biomaFiltroPlayer[rolagemAtivaKey]||'';
+
+  const rollsFiltrados=g.rolls.filter(e=>{
+    if(!biomaFiltroAtual) return true;
+    if(biomaFiltroAtual==='__dados__') return e._tipo==='dado';
+    return e._tipo==='pokemon' && e.bioma===biomaFiltroAtual;
+  });
+
+  const entriesHtml=rollsFiltrados.map(e=>{
+    if(e._tipo==='pokemon'){
+      const pokes=Array.isArray(e.pokes)?e.pokes:[];
+      const pokesHtml=pokes.map(pk=>`
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 10px;min-width:88px;max-width:108px">
+          <div style="width:52px;height:52px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;overflow:hidden">
+            <img src="${pk.sprite||FALLBACK_SPRITE}" style="width:52px;height:52px;object-fit:contain" onerror="this.src='${FALLBACK_SPRITE}'"/>
+          </div>
+          <div style="font-size:10px;font-weight:700;font-family:var(--font-title);color:var(--text);text-align:center;line-height:1.2">
+            ${pk.nome}<span style="color:${pk.genderC||'#888'}"> ${pk.genderS||''}</span>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:2px">
+            ${(pk.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}
+          </div>
+          <span class="poke-rarity ${rcls[pk.rarity]||'rc'}" style="font-size:9px;padding:1px 6px">${rlbl[pk.rarity]||''}</span>
+        </div>`).join('');
+      return`<div class="rol-entry">
+        <div class="rol-entry-header">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span class="rol-entry-bioma">⚡ Encontro · ${e.bioma||'?'}</span>
+            ${e.evento_slug?`<span class="rol-entry-bioma">🎪 ${e.evento_slug}</span>`:''}
+          </div>
+          <span class="rol-entry-hora">${e.hora||''} · ${e.data||''}</span>
+        </div>
+        <div class="rol-pokes-wrap">${pokesHtml||'<span style="color:var(--muted);font-size:13px">Sem Pokémon.</span>'}</div>
+      </div>`;
+    } else {
+      const max=e.lados||'?';
+      const res=e.resultado;
+      const pct=max>1?Math.round((res/max)*100):100;
+      const barColor=pct>=80?'#1a7a1a':pct>=50?'var(--brand-mid)':pct>=20?'var(--accent)':'var(--red)';
+      return`<div class="rol-entry">
+        <div class="rol-entry-header">
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+            <span class="rol-entry-bioma" style="background:#f0e8ff;color:#5a1a9a">🎲 Dado · d${max}</span>
+            ${e.evento_slug?`<span class="rol-entry-bioma">🎪 ${e.evento_slug}</span>`:''}
+          </div>
+          <span class="rol-entry-hora">${e.hora||''} · ${e.data||''}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:4px 0">
+          <div style="font-family:var(--font-title);font-size:38px;font-weight:700;color:var(--brand);line-height:1;min-width:52px;text-align:center">${res}</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:600;color:var(--text);margin-bottom:5px"><strong>${e.personagem||g.canon}</strong> rolou <strong>1d${max}</strong> para <strong>${e.motivo||'—'}</strong> e obteve: <strong style="color:var(--brand-mid)">${res}</strong></div>
+            <div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden;margin-bottom:4px">
+              <div style="height:6px;border-radius:4px;background:${barColor};width:${pct}%;transition:width .4s"></div>
+            </div>
+            <div style="font-size:11px;color:var(--muted)">${res} de ${max} (${pct}%)</div>
+          </div>
+        </div>
+      </div>`;
+    }
+  }).join('');
+
+  container.innerHTML=`
+    <div class="rol-sticky-header" style="border-color:${cor}">
+      <div style="width:56px;height:56px;border-radius:50%;border:2.5px solid ${cor};background:${cor}22;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">
+        ${img?`<img src="${img}" style="width:56px;height:56px;object-fit:cover;border-radius:50%"/>`:
+              `<img src="${FALLBACK_AVATAR}" style="width:42px;height:42px;object-fit:contain;image-rendering:pixelated"/>`}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--font-title);font-size:15px;font-weight:700;color:var(--text);letter-spacing:.3px">${g.canon}</div>
+        ${player?`<div style="font-size:12px;color:${cor};font-weight:700;margin-top:1px">${player}</div>`:''}
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">${rollsFiltrados.length} roll${rollsFiltrados.length!==1?'s':''}</div>
+      </div>
+      ${(biomasDoPlayer.length>0||temDados)?`<select id="${selId}" onchange="_setFiltroPlayerBioma('${rolagemAtivaKey}',this.value)"
+        style="padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text);flex-shrink:0">
+        <option value="">— Todos os rolls —</option>
+        ${temDados?`<option value="__dados__"${biomaFiltroAtual==='__dados__'?' selected':''}>Dados</option>`:''}
+        ${biomasDoPlayer.map(b=>`<option value="${b}"${biomaFiltroAtual===b?' selected':''}>${b}</option>`).join('')}
+      </select>`:''}
+    </div>
+    <div class="rol-scroll-body">
+      <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden">
+        ${entriesHtml||'<div style="padding:20px;color:var(--muted);font-size:13px">Sem rolls.</div>'}
+      </div>
+    </div>`;
+}
+
+function selecionarRolagemTab(key){
+  rolagemAtivaKey=(rolagemAtivaKey===key)?null:key;
+  renderRolagens();
+}
+
+// ══════════════════════════════════════
+// NPCs
+// ══════════════════════════════════════
+let NPC_CIDADES = [];
+let NPC_EVENTOS  = [];
+let _npcDetalheAtivo = null;
+let _npcAbaAtiva = 'oficiais';
+
+function setNpcAba(aba){
+  _npcAbaAtiva = aba;
+  const btnOf = document.getElementById('npc-aba-oficiais');
+  const btnEv = document.getElementById('npc-aba-eventos');
+  if(btnOf){
+    btnOf.style.background = aba==='oficiais' ? 'var(--brand)' : 'var(--border2)';
+    btnOf.style.color      = aba==='oficiais' ? '#fff' : 'var(--muted)';
+  }
+  if(btnEv){
+    btnEv.style.background = aba==='eventos' ? 'var(--brand)' : 'var(--border2)';
+    btnEv.style.color      = aba==='eventos' ? '#fff' : 'var(--muted)';
+  }
+  const inp = document.getElementById('npc-search-input');
+  if(inp) inp.value = '';
+  _populateNpcFilterSel();
+  renderNpcs();
+}
+
+function renderNpcs(filtro=''){
+  const q=(filtro||'').toLowerCase();
+  const cont=document.getElementById('npc-container');
+  if(!cont)return;
+  const FALLBACK_POKE=FALLBACK_SPRITE||'';
+  const abaAtiva=_npcAbaAtiva||'oficiais';
+
+  if(abaAtiva==='oficiais'){
+    const html=NPC_CIDADES.map((cidade)=>{
+      const npcs=cidade.npcs.filter(n=>{
+        if(n.modelo==='simples') return false;
+        if(!q) return true;
+        return n.nome.toLowerCase().includes(q)||
+          (n.cargo||'').toLowerCase().includes(q)||
+          (n.descricao||'').toLowerCase().includes(q)||
+          cidade.nome.toLowerCase().includes(q);
+      });
+      if(!npcs.length) return '';
+      const cards=npcs.map(n=>{
+        const topbarCor=n.topbar_cor||'var(--brand)';
+        const topbarBgTint=n.topbar_cor?n.topbar_cor+'22':'rgba(0,0,0,0.05)';
+        const pokes=Array.isArray(n.pokes)?n.pokes:[];
+        const slots=Array(6).fill(null).map((_,i)=>pokes[i]||null);
+        const pokesHtml=slots.map(pk=>{
+          if(!pk)return`<div class="npc-poke-slot empty"></div>`;
+          const tipos=(pk.tipos||[]).map(t=>`<span class="type-pill ${tcls[(t||'').toLowerCase()]||'t-normal'}">${t}</span>`).join('');
+          const habs=[pk.habilidade,pk.habilidade2].filter(Boolean);
+          const moves=Array.isArray(pk.moveset)?pk.moveset:[];
+          const genderSym=pk.genero==='macho'?'♂':pk.genero==='femea'?'♀':pk.genero==='genderless'?'☼':'';
+          return`<div class="npc-poke-slot" title="">
+            <img src="${pk.sprite||FALLBACK_POKE}" onerror="this.src='${FALLBACK_POKE}'" alt="${pk.nome||''}"/>
+            <div class="npc-poke-tip">
+              <div class="npc-poke-tip-name">${pk.nome||'?'} <span class="npc-poke-tip-gender">${genderSym}</span></div>
+              ${tipos?`<div class="npc-poke-tip-types">${tipos}</div>`:''}
+              ${habs.length?`<div class="npc-poke-tip-section">Habilidade${habs.length>1?'s':''}</div><div class="npc-poke-tip-val">${habs.join(' / ')}</div>`:''}
+              ${moves.length?`<div class="npc-poke-tip-section">Moveset</div><div class="npc-poke-tip-val">${moves.join(', ')}</div>`:''}
+            </div>
+          </div>`;
+        }).join('');
+        const tagsHtml=n.tags&&n.tags.length
+          ?`<div class="npc-card-tags">${n.tags.map(t=>`<span class="npc-tag" style="background:${t.c}22;color:${t.c}">${t.txt}</span>`).join('')}</div>`:'';
+        const bannerContent=n.foto
+          ?`<img class="npc-card-banner-bg" src="${n.foto}" alt="${n.nome}" onerror="this.style.display='none'">`
+          :`<div class="npc-card-banner-solid" style="background:${topbarBgTint}">${n.emoji||'👤'}</div>`;
+        return`<div class="npc-card" onmouseover="this.style.borderColor='${topbarCor}';this.style.boxShadow='0 4px 18px ${topbarCor}33'" onmouseout="this.style.borderColor='';this.style.boxShadow=''">
+          <div class="npc-card-topbar" style="background:${topbarCor}"></div>
+          <div class="npc-card-banner-wrap">${(()=>{const u=n.uso||'livre';return`<div class="npc-uso-badge ${u==='adm'?'npc-uso-adm':'npc-uso-livre'}">${u==='adm'?'Uso exclusivo ADM':'Uso Livre'}</div>`;})()}${bannerContent}</div>
+          <div class="npc-card-namebar">
+            <div class="npc-card-name">${n.nome}</div>
+            ${n.photoplayer?`<div class="npc-card-photoplayer">${n.photoplayer}</div>`:''}
+          </div>
+          <div class="npc-card-body">
+            ${n.cargo?`<div class="npc-card-role">${n.cargo}</div>`:''}
+            ${n.descricao?`<div class="npc-card-desc">${n.descricao}</div>`:''}
+          </div>
+          ${tagsHtml}
+          <div class="npc-card-pokes">
+            <div class="npc-card-pokes-title">Pokémon</div>
+            <div class="npc-pokes-grid">${pokesHtml}</div>
+          </div>
+        </div>`;
+      }).join('');
+      return`<div class="npc-city-section">
+        <div class="npc-city-header">
+          <div class="npc-city-icon" style="background:${cidade.cor}22">${cidade.emoji}</div>
+          <div>
+            <div class="npc-city-name">${cidade.nome}</div>
+            <div class="npc-city-count">${npcs.length} NPC${npcs.length!==1?'s':''}</div>
+          </div>
+        </div>
+        <div class="npc-grid">${cards}</div>
+      </div>`;
+    }).join('');
+    cont.innerHTML=html||`<div class="npc-empty">Nenhum NPC oficial cadastrado.</div>`;
+
+  } else {
+    const todosSimples=NPC_EVENTOS.filter(n=>{
+      if(!q) return true;
+      return n.nome.toLowerCase().includes(q)||
+        (n.photoplayer||'').toLowerCase().includes(q)||
+        (n.cargo||'').toLowerCase().includes(q);
+    });
+    if(!todosSimples.length){
+      cont.innerHTML=`<div class="npc-empty">Nenhum NPC de evento cadastrado.</div>`;
+      return;
+    }
+    const grupos={};
+    todosSimples.forEach(n=>{
+      const chave=n.cargo||'Evento';
+      if(!grupos[chave]) grupos[chave]=[];
+      grupos[chave].push(n);
+    });
+    const html=Object.entries(grupos).map(([evento,npcs])=>{
+      const cards=npcs.map(n=>{
+        const topbarCor=n.topbar_cor||'var(--brand-mid)';
+        const avatarHtml=n.foto
+          ?`<img src="${n.foto}" alt="${n.nome}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" onerror="this.parentElement.innerHTML='<span style=\\'font-size:36px\\'>${n.emoji||'👤'}</span>'">`
+          :`<span style="font-size:36px">${n.emoji||'👤'}</span>`;
+        const pokes=Array.isArray(n.pokes)?n.pokes:[];
+        const slots=Array(6).fill(null).map((_,i)=>pokes[i]||null);
+        const pokesHtml=slots.map(pk=>{
+          if(!pk)return`<div class="npc-poke-slot empty"></div>`;
+          const tipos=(pk.tipos||[]).map(t=>`<span class="type-pill ${tcls[(t||'').toLowerCase()]||'t-normal'}">${t}</span>`).join('');
+          const habs=[pk.habilidade,pk.habilidade2].filter(Boolean);
+          const moves=Array.isArray(pk.moveset)?pk.moveset:[];
+          const genderSym=pk.genero==='macho'?'♂':pk.genero==='femea'?'♀':pk.genero==='genderless'?'☼':'';
+          return`<div class="npc-poke-slot" title="">
+            <img src="${pk.sprite||FALLBACK_POKE}" onerror="this.src='${FALLBACK_POKE}'" alt="${pk.nome||''}"/>
+            <div class="npc-poke-tip">
+              <div class="npc-poke-tip-name">${pk.nome||'?'} <span class="npc-poke-tip-gender">${genderSym}</span></div>
+              ${tipos?`<div class="npc-poke-tip-types">${tipos}</div>`:''}
+              ${habs.length?`<div class="npc-poke-tip-section">Habilidade${habs.length>1?'s':''}</div><div class="npc-poke-tip-val">${habs.join(' / ')}</div>`:''}
+              ${moves.length?`<div class="npc-poke-tip-section">Moveset</div><div class="npc-poke-tip-val">${moves.join(', ')}</div>`:''}
+            </div>
+          </div>`;
+        }).join('');
+        let bagItems=_parseBag(n.bag);
+        const bagHtml=bagItems.length
+          ?bagItems.map(item=>`<div class="npc-ev-bag-item">${item}</div>`).join('')
+          :`<div style="font-size:11px;opacity:.6;font-style:italic">Bag vazia</div>`;
+        return`<div class="npc-ev-card" onclick="toggleNpcEvCard(this)" onmouseover="this.style.borderColor='${topbarCor}';this.style.boxShadow='0 4px 18px rgba(0,0,0,.12)'" onmouseout="this.style.borderColor='';this.style.boxShadow=''">
+          <div class="npc-ev-badge" style="background:${topbarCor}">${evento}</div>
+          <div class="npc-ev-face">
+            <div class="npc-ev-avatar">${avatarHtml}</div>
+            <div class="npc-ev-name">${n.nome}</div>
+            ${n.photoplayer?`<div class="npc-ev-photoplayer">${n.photoplayer}</div>`:''}
+          </div>
+          <div class="npc-ev-detail" onclick="event.stopPropagation()">
+            <div class="npc-ev-detail-name">${n.nome}</div>
+            <div class="npc-pokes-grid">${pokesHtml}</div>
+            <div class="npc-ev-bag-wrap">
+              <div class="npc-ev-bag-btn">🎒</div>
+              <div class="npc-ev-bag-tip-data">${bagHtml}</div>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+      return`<div class="npc-ev-grid">${cards}</div>`;
+    }).join('');
+    cont.innerHTML=html;
+  }
+}
+
+function filtrarNpcs(q){ renderNpcs(q); }
+
+function toggleNpcEvCard(card){
+  const isOpen = card.classList.contains('open');
+  card.closest('.npc-ev-grid')?.querySelectorAll('.npc-ev-card.open').forEach(c=>c.classList.remove('open'));
+  if(!isOpen) card.classList.add('open');
+}
+
+function filtrarNpcsPorSel(val){
+  const inp = document.getElementById('npc-search-input');
+  if(inp) inp.value = '';
+  renderNpcs(val);
+}
+
+function _populateNpcFilterSel(){
+  const sel = document.getElementById('npc-filter-sel');
+  if(!sel) return;
+  if(_npcAbaAtiva === 'oficiais'){
+    const cidades = NPC_CIDADES.filter(c => c.npcs && c.npcs.some(n => n.modelo !== 'simples'));
+    sel.innerHTML = '<option value="">— Todas as cidades —</option>' +
+      cidades.map(c => `<option value="${c.nome}">${c.emoji||''} ${c.nome}</option>`).join('');
+  } else {
+    const eventos = [...new Set(NPC_EVENTOS.map(n => n.cargo||'Evento').filter(Boolean))];
+    sel.innerHTML = '<option value="">— Todos os eventos —</option>' +
+      eventos.map(e => `<option value="${e}">${e}</option>`).join('');
+  }
+  sel.value = '';
+}
+
+async function _resyncNpcCidades(){
+  const [_cidades,_npcs] = await Promise.all([
+    sb('npc_cidades?order=nome.asc'),
+    sb('npcs?order=nome.asc'),
+  ]);
+  const npcCidadesLocal=_cidades||[];
+  const estrutura=npcCidadesLocal.map(c=>({
+    ...c,
+    npcs:(_npcs||[]).filter(n=>n.npc_cidade_id===c.id)
+  }));
+  NPC_CIDADES.length=0;
+  estrutura.forEach(x=>NPC_CIDADES.push(x));
+  NPC_EVENTOS.length=0;
+  (_npcs||[]).filter(n=>!n.npc_cidade_id).forEach(x=>NPC_EVENTOS.push(x));
+}
+
+function _parseBag(bag){if(Array.isArray(bag))return bag.filter(Boolean);const raw=(bag||'').trim();if(!raw)return[];try{const p=JSON.parse(raw);if(Array.isArray(p))return p.map(s=>String(s).trim()).filter(Boolean);}catch(e){}return raw.split('\n').map(s=>s.trim()).filter(Boolean);}
+
+// ══════════════════════════════════════
+// ESTAÇÃO DO ANO
+// ══════════════════════════════════════
+let estacaoAtiva = null;
+let estacaoPaginas = ['roller','bioma','dados','rolagens','npcs'];
+
+const ESTACAO_CFG={
+  primavera:{emoji:'🌱',cor:'#2E9E50',label:'Primavera'},
+  verao:    {emoji:'☀️',cor:'#e07a10',label:'Verão'},
+  outono:   {emoji:'🍂',cor:'#a05020',label:'Outono'},
+  inverno:  {emoji:'❄️',cor:'#3a80c8',label:'Inverno'},
+};
+
+function estacaoPorMes(){
+  const mes=new Date().getMonth()+1;
+  const mapa={1:'primavera',2:'verao',3:'outono',4:'inverno',5:'primavera',6:'verao',7:'outono',8:'inverno',9:'primavera',10:'verao',11:'outono',12:'inverno'};
+  return mapa[mes]||null;
+}
+
+function renderEstacaoFab(){
+  const fab=document.getElementById('estacao-fab');
+  if(!fab) return;
+  const pagina=(location.pathname.replace(/^\//,'')||'roller').replace('rolls','rolagens');
+  if(!estacaoAtiva||!ESTACAO_CFG[estacaoAtiva]||!estacaoPaginas.includes(pagina)){fab.style.display='none';return;}
+  const e=ESTACAO_CFG[estacaoAtiva];
+  fab.style.display='flex';
+  fab.style.background=e.cor;
+  fab.dataset.emoji=e.emoji;
+  fab.dataset.label=e.label;
+  const isMobile=window.innerWidth<=600;
+  const expandido=fab.classList.contains('expandido');
+  if(isMobile&&!expandido){fab.innerHTML=`<span style="line-height:1">${e.emoji}</span>`;}
+  else{fab.innerHTML=`<span>${e.emoji}</span><span>${e.label}</span>`;}
+}
+
+function toggleFab(){
+  const fab=document.getElementById('estacao-fab');
+  if(!fab||window.innerWidth>600) return;
+  fab.classList.toggle('expandido');
+  renderEstacaoFab();
+}
+
+function marcarBtnEstacao(){
+  Object.keys(ESTACAO_CFG).forEach(k=>{
+    const btn=document.getElementById('est-btn-'+k);
+    if(!btn) return;
+    btn.style.background=k===estacaoAtiva?'var(--brand-mid)':'';
+    btn.style.color=k===estacaoAtiva?'#fff':'';
+    btn.style.borderColor=k===estacaoAtiva?'var(--brand-mid)':'var(--border)';
+  });
+  document.querySelectorAll('#estacao-paginas-wrap input[type=checkbox]').forEach(cb=>{
+    cb.checked=estacaoPaginas.includes(cb.value);
+  });
+  // popula bioma select do massa
+  const sel=document.getElementById('est-massa-bioma');
+  if(sel){
+    sel.innerHTML='<option value="">— Todos —</option>'+biomas.map(b=>`<option value="${b.nome}">${b.nome}</option>`).join('');
+  }
+}
+
+async function setEstacao(val){
+  const fbOk=document.getElementById('estacao-fb');
+  const fbErr=document.getElementById('estacao-fb-err');
+  fbOk.style.display='none'; fbErr.style.display='none';
+  try{
+    const existing=await dbGet('configuracoes','chave=eq.estacao_ativa&limit=1');
+    if(existing&&existing[0]) await dbPatch('configuracoes','chave=eq.estacao_ativa',{valor:val});
+    else await dbPost('configuracoes',{chave:'estacao_ativa',valor:val});
+    estacaoAtiva=val;
+    renderEstacaoFab();
+    marcarBtnEstacao();
+    fbOk.style.display='block'; setTimeout(()=>fbOk.style.display='none',2500);
+  }catch(e){fbErr.textContent='Erro: '+e.message; fbErr.style.display='block';}
+}
+
+async function salvarPaginasEstacao(){
+  const checks=document.querySelectorAll('#estacao-paginas-wrap input[type=checkbox]');
+  estacaoPaginas=[...checks].filter(c=>c.checked).map(c=>c.value);
+  const fbEl=document.getElementById('estacao-pag-fb');
+  try{
+    const existing=await dbGet('configuracoes','chave=eq.estacao_paginas&limit=1');
+    if(existing&&existing[0]) await dbPatch('configuracoes','chave=eq.estacao_paginas',{valor:JSON.stringify(estacaoPaginas)});
+    else await dbPost('configuracoes',{chave:'estacao_paginas',valor:JSON.stringify(estacaoPaginas)});
+    renderEstacaoFab();
+    fbEl.style.display='block'; setTimeout(()=>fbEl.style.display='none',2000);
+  }catch(e){console.error(e);}
+}
+
+function renderEstMassa(){
+  const estacao=document.getElementById('est-massa-estacao')?.value;
+  const bioma=document.getElementById('est-massa-bioma')?.value||'';
+  const busca=(document.getElementById('est-massa-busca')?.value||'').toLowerCase();
+  const lista=document.getElementById('est-massa-lista');
+  if(!lista) return;
+  let pks=pokemonDB.slice();
+  if(bioma) pks=pks.filter(p=>p.bioma===bioma);
+  if(busca) pks=pks.filter(p=>p.nome.toLowerCase().includes(busca));
+  pks.sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  if(!pks.length){lista.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px">Nenhum Pokémon encontrado.</div>';return;}
+  lista.innerHTML=pks.map(p=>{
+    const isExclusivo=p.estacao===estacao;
+    const isBoost=p.estacao_boost===estacao;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--border)">
+      <img src="${p.sprite||FALLBACK_SPRITE}" style="width:32px;height:32px;object-fit:contain;flex-shrink:0" onerror="this.src='${FALLBACK_SPRITE}'"/>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:var(--text)">${p.nome}</div>
+        <div style="font-size:11px;color:var(--muted)">${p.bioma||''} · ${p.raridade||''}</div>
+      </div>
+      <div style="display:flex;gap:4px;flex-shrink:0">
+        <button onclick="toggleEstMassa('${p.id}','exclusivo','${estacao}')" style="font-size:11px;padding:4px 8px;border-radius:6px;border:1.5px solid ${isExclusivo?'#2e9e50':'var(--border)'};background:${isExclusivo?'#2e9e50':'var(--surface)'};color:${isExclusivo?'#fff':'var(--muted)'};cursor:pointer;font-weight:600">🌿 Exclusivo</button>
+        <button onclick="toggleEstMassa('${p.id}','boost','${estacao}')" style="font-size:11px;padding:4px 8px;border-radius:6px;border:1.5px solid ${isBoost?'#e07a10':'var(--border)'};background:${isBoost?'#e07a10':'var(--surface)'};color:${isBoost?'#fff':'var(--muted)'};cursor:pointer;font-weight:600">⬆ Boost</button>
+        <button onclick="toggleEstMassa('${p.id}','nenhum','${estacao}')" style="font-size:11px;padding:4px 8px;border-radius:6px;border:1.5px solid ${(!isExclusivo&&!isBoost)?'var(--brand)':'var(--border)'};background:${(!isExclusivo&&!isBoost)?'var(--brand)':'var(--surface)'};color:${(!isExclusivo&&!isBoost)?'#fff':'var(--muted)'};cursor:pointer;font-weight:600">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+const _estMassaPendente={};
+function toggleEstMassa(pkId,tipo,estacao){
+  const p=pokemonDB.find(x=>x.id===pkId);
+  if(!p) return;
+  if(tipo==='exclusivo'){if(p.estacao===estacao){p.estacao=null;}else{p.estacao=estacao;p.estacao_boost=null;}}
+  else if(tipo==='boost'){if(p.estacao_boost===estacao){p.estacao_boost=null;}else{p.estacao_boost=estacao;p.estacao=null;}}
+  else{if(p.estacao===estacao)p.estacao=null;if(p.estacao_boost===estacao)p.estacao_boost=null;}
+  _estMassaPendente[pkId]={estacao:p.estacao||null,estacao_boost:p.estacao_boost||null};
+  renderEstMassa();
+}
+async function salvarEstMassa(){
+  const ids=Object.keys(_estMassaPendente);
+  if(!ids.length){fb('est-massa-fb');return;}
+  const fbe=document.getElementById('est-massa-fb-err');fbe.style.display='none';
+  try{await Promise.all(ids.map(id=>dbPatch('pokemons',`id=eq.${id}`,_estMassaPendente[id])));for(const id of ids)delete _estMassaPendente[id];fb('est-massa-fb');}
+  catch(e){fbe.textContent='Erro: '+e.message;fbe.style.display='block';}
+}
+async function limparEstMassa(){
+  const estacao=document.getElementById('est-massa-estacao')?.value;
+  if(!confirm(`Remover todos os vínculos de estação para "${estacao}"?`))return;
+  const alvos=pokemonDB.filter(p=>p.estacao===estacao||p.estacao_boost===estacao);
+  await Promise.all(alvos.map(p=>{if(p.estacao===estacao)p.estacao=null;if(p.estacao_boost===estacao)p.estacao_boost=null;return dbPatch('pokemons',`id=eq.${p.id}`,{estacao:p.estacao,estacao_boost:p.estacao_boost});}));
+  renderEstMassa();fb('est-massa-fb');
+}
+
+async function _carregarEstacao(){
+  try{
+    const[_cfg,_cfgPag]=await Promise.all([
+      dbGet('configuracoes','chave=eq.estacao_ativa&limit=1'),
+      dbGet('configuracoes','chave=eq.estacao_paginas&limit=1')
+    ]);
+    estacaoAtiva=(_cfg&&_cfg[0])?_cfg[0].valor:null;
+    if(_cfgPag&&_cfgPag[0]){try{estacaoPaginas=JSON.parse(_cfgPag[0].valor);}catch(e){}}
+    else{dbPost('configuracoes',{chave:'estacao_paginas',valor:JSON.stringify(estacaoPaginas)}).catch(()=>{});}
+    renderEstacaoFab();
+  }catch(e){}
+}
+
+// ══════════════════════════════════════
+// FORÇAR RESULTADO
+// ══════════════════════════════════════
+let forcadosAtivos=[];
+let frcSelecionados=[];
+
+async function carregarForcados(){
+  const rows=await dbGet('configuracoes','chave=like.forced_result_*');
+  forcadosAtivos=(rows||[]).map(r=>{try{return{chave:r.chave,...JSON.parse(r.valor)};}catch(e){return null;}}).filter(Boolean);
+  renderFrcLista();
+}
+
+function populateFrcSelects(){
+  const selP=document.getElementById('frc-personagem');
+  const selB=document.getElementById('frc-bioma');
+  if(!selP||!selB) return;
+  selP.innerHTML='<option value="">— Selecione —</option>'+personagens.map(p=>`<option value="${p.nome}">${p.nome}</option>`).join('');
+  selB.innerHTML='<option value="">— Todos os biomas —</option>'+biomas.map(b=>`<option value="${b.nome}">${b.nome}</option>`).join('');
+  // Preenche selects de filtro no histórico
+  const selPH=document.getElementById('poke-filtro-personagem');
+  const selDH=document.getElementById('dados-filtro-personagem');
+  if(selPH) selPH.innerHTML='<option value="">— Todos os personagens —</option>'+personagens.map(p=>`<option value="${p.nome}">${p.nome}</option>`).join('');
+  if(selDH) selDH.innerHTML='<option value="">— Todos os personagens —</option>'+personagens.map(p=>`<option value="${p.nome}">${p.nome}</option>`).join('');
+}
+
+function renderFrcPool(){
+  const biomaFiltro=document.getElementById('frc-bioma')?.value||'';
+  const busca=(document.getElementById('frc-busca')?.value||'').trim().toLowerCase();
+  const container=document.getElementById('frc-pool');
+  if(!container) return;
+  let lista=pokemonDB.slice();
+  if(biomaFiltro) lista=lista.filter(p=>p.bioma===biomaFiltro);
+  if(busca) lista=lista.filter(p=>p.nome.toLowerCase().includes(busca));
+  lista=lista.slice().sort((a,b)=>a.nome.localeCompare(b.nome,'pt-BR'));
+  if(!lista.length){container.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);font-size:13px;padding:16px">Nenhum Pokémon encontrado.</div>';return;}
+  container.innerHTML=lista.map(p=>{
+    const selected=frcSelecionados.find(x=>x.id===p.id);
+    const border=selected?'border-color:var(--brand-mid);background:var(--brand-light)':'';
+    return`<div onclick="toggleFrcPoke('${p.id}')" data-pkid="${p.id}" ${selected?'data-sel="1"':''}
+      style="background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:all .15s;${border}">
+      <img src="${p.sprite||FALLBACK_SPRITE}" style="width:56px;height:56px;object-fit:contain" onerror="this.src='${FALLBACK_SPRITE}'"/>
+      <div style="font-family:var(--font-title);font-size:10px;text-align:center;line-height:1.3;color:var(--text)">${p.nome}</div>
+      <span class="poke-rarity ${rcls[p.raridade]||'rc'}" style="font-size:9px">${rlbl[p.raridade]||p.raridade}</span>
+    </div>`;
+  }).join('');
+}
+
+function toggleFrcPoke(pkId){
+  const p=pokemonDB.find(x=>x.id===pkId);
+  if(!p) return;
+  const idx=frcSelecionados.findIndex(x=>x.id===pkId);
+  if(idx>=0) frcSelecionados.splice(idx,1);
+  else frcSelecionados.push(p);
+  renderFrcPool();
+  renderFrcSelecionados();
+}
+
+function renderFrcSelecionados(){
+  const wrap=document.getElementById('frc-selecionados-wrap');
+  const container=document.getElementById('frc-selecionados');
+  const count=document.getElementById('frc-sel-count');
+  if(!wrap||!container) return;
+  if(!frcSelecionados.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  if(count) count.textContent=`(${frcSelecionados.length})`;
+  container.innerHTML=frcSelecionados.map(p=>`
+    <div style="display:flex;align-items:center;gap:6px;background:var(--brand-light);border:1.5px solid var(--brand-mid);border-radius:20px;padding:4px 10px 4px 6px">
+      <img src="${p.sprite||FALLBACK_SPRITE}" style="width:24px;height:24px;object-fit:contain" onerror="this.src='${FALLBACK_SPRITE}'"/>
+      <span style="font-size:12px;font-weight:700;color:var(--brand)">${p.nome}</span>
+      <span onclick="toggleFrcPoke('${p.id}')" style="cursor:pointer;font-size:11px;color:var(--red);margin-left:2px">✕</span>
+    </div>`).join('');
+}
+
+async function salvarForcado(){
+  const personagem=document.getElementById('frc-personagem')?.value;
+  const nota=document.getElementById('frc-nota')?.value.trim()||'';
+  const fbOk=document.getElementById('frc-fb');
+  const fbErr=document.getElementById('frc-fb-err');
+  if(!personagem){alert('Selecione um personagem.');return;}
+  if(!frcSelecionados.length){alert('Selecione ao menos 1 Pokémon.');return;}
+  const chave='forced_result_'+personagem.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
+  const valor=JSON.stringify({personagem,pokemons:frcSelecionados.map(p=>p.id),nota,criadoEm:new Date().toISOString()});
+  const existing=await dbGet('configuracoes',`chave=eq.${chave}`);
+  let res;
+  if(existing&&existing.length) res=await dbPatch('configuracoes',`chave=eq.${chave}`,{valor});
+  else res=await dbPost('configuracoes',{chave,valor});
+  if(res!==null){
+    fbOk.style.display='block';fbErr.style.display='none';setTimeout(()=>fbOk.style.display='none',2500);
+    frcSelecionados=[];
+    document.getElementById('frc-personagem').value='';
+    document.getElementById('frc-nota').value='';
+    document.getElementById('frc-busca').value='';
+    renderFrcPool();renderFrcSelecionados();
+    await carregarForcados();
+  }else{fbErr.style.display='block';fbErr.textContent='Erro ao salvar.';fbOk.style.display='none';setTimeout(()=>fbErr.style.display='none',2500);}
+}
+
+async function removerForcado(chave){
+  if(!confirm('Remover este resultado forçado?'))return;
+  await dbDel('configuracoes',`chave=eq.${chave}`);
+  await carregarForcados();
+}
+
+function renderFrcLista(){
+  const container=document.getElementById('frc-lista');
+  if(!container) return;
+  if(!forcadosAtivos.length){container.innerHTML='<div style="text-align:center;color:var(--muted);font-size:13px;padding:16px">Nenhum resultado forçado ativo.</div>';return;}
+  container.innerHTML=forcadosAtivos.map(f=>{
+    const pokes=(f.pokemons||[]).map(id=>pokemonDB.find(p=>p.id===id)).filter(Boolean);
+    const sprites=pokes.map(p=>`<img src="${p.sprite||FALLBACK_SPRITE}" title="${p.nome}" style="width:36px;height:36px;object-fit:contain;border-radius:50%;border:1.5px solid var(--border);background:var(--surface)" onerror="this.src='${FALLBACK_SPRITE}'">`).join('');
+    const dt=f.criadoEm?new Date(f.criadoEm).toLocaleDateString('pt-BR'):'';
+    return`<div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);margin-bottom:4px">🎯 ${f.personagem}</div>
+        ${f.nota?`<div style="font-size:11px;color:var(--muted);margin-bottom:6px">📝 ${f.nota}</div>`:''}
+        <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center">${sprites}${!pokes.length?'<span style="font-size:12px;color:var(--muted)">IDs não encontrados no banco</span>':''}</div>
+        ${dt?`<div style="font-size:10px;color:var(--muted);margin-top:4px">Criado em ${dt}</div>`:''}
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="removerForcado('${f.chave}')">🗑 Remover</button>
+    </div>`;
+  }).join('');
+}
+
+async function consumirForcado(personagem){
+  const chave='forced_result_'+personagem.toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
+  const rows=await dbGet('configuracoes',`chave=eq.${chave}`);
+  if(!rows||!rows.length) return null;
+  try{
+    const data=JSON.parse(rows[0].valor);
+    await dbDel('configuracoes',`chave=eq.${chave}`);
+    forcadosAtivos=forcadosAtivos.filter(f=>f.chave!==chave);
+    return data.pokemons||[];
+  }catch(e){return null;}
+}
+
+// ══════════════════════════════════════
+// EVENTOS
+// ══════════════════════════════════════
+let eventos=[];
+let eventoAtual=null;
+let eventoHistorico=[];
+let eventoHistPagina=0;
+const EVENTO_HIST_POR_PAG=10;
+let _poolItens={};
+
+function adicionarItemPool(prefixo){
+  const ta=document.getElementById(`${prefixo}-item-nome`);
+  if(!ta) return;
+  const linhas=ta.value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!linhas.length) return;
+  if(!_poolItens[prefixo]) _poolItens[prefixo]=[];
+  linhas.forEach(l=>{if(!_poolItens[prefixo].includes(l))_poolItens[prefixo].push(l);});
+  ta.value='';
+  renderItensLista(prefixo);
+}
+function renderItensLista(prefixo){
+  const el=document.getElementById(`${prefixo}-itens-lista`);
+  if(!el) return;
+  const itens=_poolItens[prefixo]||[];
+  if(!itens.length){el.innerHTML='<div style="font-size:12px;color:var(--muted)">Nenhum item.</div>';return;}
+  el.innerHTML=itens.map((item,i)=>`<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;background:var(--surface2);border-radius:6px;margin-bottom:4px">
+    <span style="flex:1;font-size:13px">${item}</span>
+    <button onclick="_removerItemPool('${prefixo}',${i})" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:14px">✕</button>
+  </div>`).join('');
+}
+function _removerItemPool(prefixo,i){
+  if(_poolItens[prefixo]) _poolItens[prefixo].splice(i,1);
+  renderItensLista(prefixo);
+}
+
+function setEvTipo(tipo){
+  document.getElementById('ev-tipo-encontro').classList.toggle('active',tipo==='encontro');
+  document.getElementById('ev-tipo-dados').classList.toggle('active',tipo==='dados');
+  document.getElementById('ev-tipo-ambos').classList.toggle('active',tipo==='ambos');
+  document.getElementById('ev-opcoes-encontro').style.display=(tipo==='encontro'||tipo==='ambos')?'':'none';
+  document.getElementById('ev-opcoes-dados').style.display=(tipo==='dados'||tipo==='ambos')?'':'none';
+}
+function setEvPoolModo(modo){
+  document.getElementById('ev-pool-modo-global').classList.toggle('active',modo==='global');
+  document.getElementById('ev-pool-modo-custom').classList.toggle('active',modo==='custom');
+  document.getElementById('ev-pool-global-info').style.display=modo==='global'?'':'none';
+  document.getElementById('ev-pool-custom-wrap').style.display=modo==='custom'?'':'none';
+}
+
+async function carregarEventos(){
+  const rows=await sb('eventos?order=criado_em.desc');
+  eventos=rows||[];
+  renderEventosLista();
+  // popula bioma select
+  const sel=document.getElementById('ev-bioma');
+  if(sel) sel.innerHTML=biomas.map(b=>`<option>${b.nome}</option>`).join('');
+}
+
+function renderEventosLista(){
+  const el=document.getElementById('ev-lista');
+  if(!el) return;
+  if(!eventos.length){el.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:16px">Nenhum evento cadastrado.</div>';return;}
+  el.innerHTML=eventos.map(ev=>`<div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div style="width:40px;height:40px;border-radius:8px;background:${ev.cor||'var(--brand)'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${ev.emoji||'🎪'}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--text)">${ev.nome}</div>
+      <div style="font-size:11px;color:var(--muted)">/evento/${ev.slug} · ${ev.tipo||'encontro'}</div>
+    </div>
+    <div style="display:flex;gap:6px;flex-shrink:0">
+      <button class="btn btn-sm" style="background:var(--surface2);border:1px solid var(--border)" onclick="copiarLinkEvento('${ev.slug}')">🔗 Link</button>
+      <button class="btn btn-sm btn-primary" onclick="abrirEditarEvento('${ev.id}')">✏️ Editar</button>
+    </div>
+  </div>`).join('');
+}
+
+function copiarLinkEvento(slug){
+  const url=`${location.origin}/evento/${slug}`;
+  navigator.clipboard.writeText(url).then(()=>alert(`Link copiado:\n${url}`)).catch(()=>alert(url));
+}
+
+async function criarEvento(){
+  const tipo=document.getElementById('ev-tipo-encontro').classList.contains('active')?'encontro':document.getElementById('ev-tipo-dados').classList.contains('active')?'dados':'ambos';
+  const nome=document.getElementById('ev-nome').value.trim();
+  const slug=document.getElementById('ev-slug').value.trim();
+  const cor=document.getElementById('ev-cor').value;
+  const emoji=document.getElementById('ev-emoji').value.trim()||'🎪';
+  const descricao=document.getElementById('ev-desc').value.trim();
+  const errEl=document.getElementById('ev-fb-err');
+  errEl.style.display='none';
+  if(!nome){errEl.textContent='Preencha o nome.';errEl.style.display='block';return;}
+  if(!slug){errEl.textContent='Preencha o slug.';errEl.style.display='block';return;}
+  if(eventos.find(e=>e.slug===slug)){errEl.textContent='Slug já em uso.';errEl.style.display='block';return;}
+  const payload={nome,slug,cor,emoji,descricao,tipo};
+  if(tipo==='encontro'||tipo==='ambos'){
+    payload.bioma=document.getElementById('ev-bioma').value;
+    payload.adicionais=parseInt(document.getElementById('ev-adicionais').value)||0;
+    payload.lock_bioma=document.getElementById('ev-lock-bioma').checked;
+    payload.lock_adicionais=document.getElementById('ev-lock-adicionais').checked;
+    const poolModo=document.getElementById('ev-pool-modo-custom').classList.contains('active')?'custom':'global';
+    payload.pool_modo=poolModo;
+    payload.pool_custom=poolModo==='custom'?_poolBiomasEvento:[];
+  }
+  if(tipo==='dados'||tipo==='ambos'){
+    payload.dado_lados=parseInt(document.getElementById('ev-dado-lados').value)||100;
+    payload.dado_motivo=document.getElementById('ev-dado-motivo').value.trim();
+    payload.lock_dado=document.getElementById('ev-lock-dado').checked;
+    payload.lock_motivo=document.getElementById('ev-lock-motivo').checked;
+    payload.pool_itens=_poolItens['ev']||[];
+  }
+  const res=await dbPost('eventos',payload);
+  if(res&&res[0]){
+    eventos.unshift(res[0]);
+    renderEventosLista();
+    fb('ev-fb-ok');
+    document.getElementById('ev-nome').value='';
+    document.getElementById('ev-slug').value='';
+    _poolItens['ev']=[];
+    renderItensLista('ev');
+    _poolBiomasEvento=[];
+  }else{errEl.textContent='Erro ao criar evento.';errEl.style.display='block';}
+}
+
+async function deletarEvento(id){
+  if(!id||!confirm('Excluir este evento permanentemente?'))return;
+  await dbDel('eventos',`id=eq.${id}`);
+  eventos=eventos.filter(e=>e.id!==id);
+  renderEventosLista();
+  fecharEditarEvento();
+}
+
+function editEvSetTipo(tipo){
+  ['encontro','dados','ambos'].forEach(t=>{
+    const b=document.getElementById('edit-ev-tipo-'+t);
+    if(b) b.classList.toggle('active',t===tipo);
+  });
+  document.getElementById('edit-ev-tipo').value=tipo;
+  document.getElementById('edit-ev-campos-encontro').style.display=(tipo==='encontro'||tipo==='ambos')?'':'none';
+  document.getElementById('edit-ev-campos-dados').style.display=(tipo==='dados'||tipo==='ambos')?'':'none';
+}
+function editEvSetPool(modo){
+  document.getElementById('edit-ev-pool-global').classList.toggle('active',modo==='global');
+  document.getElementById('edit-ev-pool-custom').classList.toggle('active',modo==='custom');
+  document.getElementById('edit-ev-pool-global-info').style.display=modo==='global'?'':'none';
+  document.getElementById('edit-ev-pool-custom-wrap').style.display=modo==='custom'?'':'none';
+}
+function abrirModalPoolEventoEdit(){
+  const src=document.getElementById('pool-import-bioma-src');
+  const dst=document.getElementById('pool-import-bioma-dst');
+  if(src) src.innerHTML=biomas.map(b=>`<option>${b.nome}</option>`).join('');
+  if(dst) dst.innerHTML=_poolBiomasEvento.map((b,i)=>`<option value="${i}">${b.nome}</option>`).join('');
+  _poolSelecionados=new Set();
+  renderPoolBiomasTabs();
+  renderPoolImportList();
+  _poolConfirmCallback=()=>{
+    const resumo=document.getElementById('edit-ev-pool-resumo');
+    if(resumo){const total=_poolBiomasEvento.reduce((s,b)=>s+b.pokemons.length,0);resumo.textContent=`${_poolBiomasEvento.length} bioma(s) · ${total} Pokémon`;}
+  };
+  document.getElementById('modal-pool-overlay').style.display='flex';
+}
+
+function abrirEditarEvento(id){
+  const ev=eventos.find(e=>e.id===id);
+  if(!ev) return;
+  document.getElementById('edit-ev-id').value=ev.id;
+  document.getElementById('edit-ev-nome').value=ev.nome||'';
+  document.getElementById('edit-ev-slug').value=ev.slug||'';
+  document.getElementById('edit-ev-cor').value=ev.cor||'#1a3a5c';
+  document.getElementById('edit-ev-emoji').value=ev.emoji||'';
+  document.getElementById('edit-ev-desc').value=ev.descricao||'';
+  const tipo=ev.tipo||'encontro';
+  editEvSetTipo(tipo);
+  if(tipo==='encontro'||tipo==='ambos'){
+    const sel=document.getElementById('edit-ev-bioma');
+    sel.innerHTML=biomas.map(b=>`<option${b.nome===ev.bioma?' selected':''}>${b.nome}</option>`).join('');
+    document.getElementById('edit-ev-adicionais').value=ev.adicionais||0;
+    document.getElementById('edit-ev-lock-bioma').checked=!!ev.lock_bioma;
+    document.getElementById('edit-ev-lock-adicionais').checked=!!ev.lock_adicionais;
+    const poolModo=ev.pool_modo||'global';
+    editEvSetPool(poolModo);
+    _poolBiomasEvento=(ev.pool_custom&&Array.isArray(ev.pool_custom))?ev.pool_custom:[];
+    if(poolModo==='custom'){const total=_poolBiomasEvento.reduce((s,b)=>s+b.pokemons.length,0);const resumo=document.getElementById('edit-ev-pool-resumo');if(resumo)resumo.textContent=`${_poolBiomasEvento.length} bioma(s) · ${total} Pokémon`;}
+  }
+  if(tipo==='dados'||tipo==='ambos'){
+    document.getElementById('edit-ev-dado-lados').value=String(ev.dado_lados||100);
+    document.getElementById('edit-ev-dado-motivo').value=ev.dado_motivo||'';
+    document.getElementById('edit-ev-lock-dado').checked=!!ev.lock_dado;
+    document.getElementById('edit-ev-lock-motivo').checked=!!ev.lock_motivo;
+    _poolItens['edit-ev']=Array.isArray(ev.pool_itens)?[...ev.pool_itens]:[];
+    renderItensLista('edit-ev');
+  }
+  document.getElementById('edit-ev-fb-ok').style.display='none';
+  document.getElementById('edit-ev-fb-err').style.display='none';
+  document.getElementById('modal-editar-evento-overlay').style.display='flex';
+}
+function fecharEditarEvento(){document.getElementById('modal-editar-evento-overlay').style.display='none';}
+
+async function salvarEdicaoEvento(){
+  const id=document.getElementById('edit-ev-id').value;
+  const tipo=document.getElementById('edit-ev-tipo').value;
+  const nome=document.getElementById('edit-ev-nome').value.trim();
+  const slug=document.getElementById('edit-ev-slug').value.trim();
+  const cor=document.getElementById('edit-ev-cor').value;
+  const emoji=document.getElementById('edit-ev-emoji').value.trim()||'🎪';
+  const descricao=document.getElementById('edit-ev-desc').value.trim();
+  const errEl=document.getElementById('edit-ev-fb-err');
+  errEl.style.display='none';
+  if(!nome){errEl.textContent='Preencha o nome.';errEl.style.display='block';return;}
+  if(!slug){errEl.textContent='Preencha o slug.';errEl.style.display='block';return;}
+  const conflict=eventos.find(e=>e.slug===slug&&e.id!==id);
+  if(conflict){errEl.textContent='Outro evento já usa este slug.';errEl.style.display='block';return;}
+  const payload={nome,slug,cor,emoji,descricao,tipo};
+  if(tipo==='encontro'||tipo==='ambos'){
+    payload.bioma=document.getElementById('edit-ev-bioma').value;
+    payload.adicionais=parseInt(document.getElementById('edit-ev-adicionais').value)||0;
+    payload.lock_bioma=document.getElementById('edit-ev-lock-bioma').checked;
+    payload.lock_adicionais=document.getElementById('edit-ev-lock-adicionais').checked;
+    const poolModo=document.getElementById('edit-ev-pool-custom').classList.contains('active')?'custom':'global';
+    payload.pool_modo=poolModo;
+    payload.pool_custom=poolModo==='custom'?_poolBiomasEvento:[];
+  }
+  if(tipo==='dados'||tipo==='ambos'){
+    payload.dado_lados=parseInt(document.getElementById('edit-ev-dado-lados').value)||100;
+    payload.dado_motivo=document.getElementById('edit-ev-dado-motivo').value.trim();
+    payload.lock_dado=document.getElementById('edit-ev-lock-dado').checked;
+    payload.lock_motivo=document.getElementById('edit-ev-lock-motivo').checked;
+    payload.pool_itens=_poolItens['edit-ev']||[];
+  }
+  try{
+    await dbPatch('eventos',`id=eq.${id}`,payload);
+    const ev=eventos.find(e=>e.id===id);if(ev)Object.assign(ev,payload);
+    fb('edit-ev-fb-ok');
+    renderEventosLista();
+    setTimeout(fecharEditarEvento,700);
+  }catch(e){errEl.textContent='Erro: '+e.message;errEl.style.display='block';}
+}
+
+// ── Pool do evento ──
+let _poolBiomasEvento=[];
+let _poolBiomaAtivoIdx=0;
+let _poolSelecionados=new Set();
+let _poolConfirmCallback=null;
+let eventoPoolAtivaBioma=null;
+
+function abrirModalPoolAdmin(){
+  const src=document.getElementById('pool-import-bioma-src');
+  const dst=document.getElementById('pool-import-bioma-dst');
+  if(src) src.innerHTML=biomas.map(b=>`<option>${b.nome}</option>`).join('');
+  if(dst) dst.innerHTML=_poolBiomasEvento.map((b,i)=>`<option value="${i}">${b.nome}</option>`).join('');
+  _poolSelecionados=new Set();
+  renderPoolBiomasTabs();
+  renderPoolImportList();
+  document.getElementById('modal-pool-overlay').style.display='flex';
+}
+function fecharModalPool(){document.getElementById('modal-pool-overlay').style.display='none';}
+
+function adicionarBiomaPool(){
+  const nome=prompt('Nome do bioma para este evento:');
+  if(!nome||!nome.trim()) return;
+  _poolBiomasEvento.push({nome:nome.trim(),pokemons:[]});
+  const dst=document.getElementById('pool-import-bioma-dst');
+  if(dst) dst.innerHTML=_poolBiomasEvento.map((b,i)=>`<option value="${i}">${b.nome}</option>`).join('');
+  _poolBiomaAtivoIdx=_poolBiomasEvento.length-1;
+  renderPoolBiomasTabs();
+}
+function renderPoolBiomasTabs(){
+  const tabs=document.getElementById('pool-bioma-tabs');
+  const cont=document.getElementById('pool-bioma-content');
+  if(!tabs||!cont) return;
+  if(!_poolBiomasEvento.length){tabs.innerHTML='';cont.innerHTML='<div style="color:var(--muted);font-size:13px;text-align:center;padding:20px">Adicione um bioma para começar.</div>';return;}
+  tabs.innerHTML=_poolBiomasEvento.map((b,i)=>`
+    <button onclick="_poolBiomaAtivoIdx=${i};renderPoolBiomasTabs()" style="padding:6px 14px;font-size:12px;font-weight:700;border:1.5px solid ${i===_poolBiomaAtivoIdx?'var(--brand-mid)':'var(--border)'};background:${i===_poolBiomaAtivoIdx?'var(--brand-light)':'var(--surface)'};color:${i===_poolBiomaAtivoIdx?'var(--brand-mid)':'var(--muted)'};border-radius:8px 8px 0 0;cursor:pointer;margin-bottom:-1.5px;position:relative;z-index:${i===_poolBiomaAtivoIdx?2:1}">${b.nome} <span style="font-size:10px">(${b.pokemons.length})</span></button>
+  `).join('');
+  const b=_poolBiomasEvento[_poolBiomaAtivoIdx];
+  if(!b){cont.innerHTML='';return;}
+  cont.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <span style="font-size:12px;font-weight:700;color:var(--brand)">${b.nome}</span>
+      <button onclick="_poolBiomasEvento.splice(_poolBiomaAtivoIdx,1);_poolBiomaAtivoIdx=Math.max(0,_poolBiomaAtivoIdx-1);const d=document.getElementById('pool-import-bioma-dst');if(d)d.innerHTML=_poolBiomasEvento.map((x,i)=>'<option value='+i+'>'+x.nome+'</option>').join('');renderPoolBiomasTabs()" style="font-size:10px;background:#fde8e8;color:var(--red);border:1px solid #f0c0c0;border-radius:6px;padding:2px 8px;cursor:pointer">✕ Remover</button>
+    </div>
+    ${!b.pokemons.length?'<div style="color:var(--muted);font-size:12px;text-align:center;padding:16px">Nenhum Pokémon. Use o importador abaixo.</div>'
+      :`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;max-height:180px;overflow-y:auto">
+          ${b.pokemons.map((pk,pi)=>`
+            <div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:6px;text-align:center;position:relative">
+              <button onclick="_poolBiomasEvento[${_poolBiomaAtivoIdx}].pokemons.splice(${pi},1);renderPoolBiomasTabs()" style="position:absolute;top:2px;right:2px;font-size:9px;background:#fde8e8;color:var(--red);border:none;border-radius:4px;cursor:pointer;padding:1px 4px">✕</button>
+              <img src="${pk.sprite||FALLBACK_SPRITE}" style="width:40px;height:40px;object-fit:contain" onerror="this.src='${FALLBACK_SPRITE}'"/>
+              <div style="font-size:9px;font-weight:700;color:var(--text);margin-top:2px">${pk.nome}</div>
+              <div style="font-size:9px;color:var(--muted)">${pk.raridade||''}</div>
+            </div>`).join('')}
+        </div>`}
+  `;
+}
+function renderPoolImportList(){
+  const lista=document.getElementById('pool-import-lista');if(!lista)return;
+  const biomaFiltro=document.getElementById('pool-import-bioma-src')?.value;
+  const busca=(document.getElementById('pool-import-busca')?.value||'').toLowerCase();
+  const raridade=document.getElementById('pool-import-raridade')?.value||'';
+  let pks=pokemonDB.filter(p=>(!biomaFiltro||p.bioma===biomaFiltro)&&(!busca||p.nome.toLowerCase().includes(busca))&&(!raridade||p.raridade===raridade));
+  lista.innerHTML=pks.map(pk=>`
+    <div onclick="togglePoolImportSel('${pk.id}',this)" data-pk-id="${pk.id}"
+      style="background:${_poolSelecionados.has(String(pk.id))?'var(--brand-light)':'var(--surface2)'};border:1.5px solid ${_poolSelecionados.has(String(pk.id))?'var(--brand-mid)':'var(--border)'};border-radius:8px;padding:6px;text-align:center;cursor:pointer;transition:all .15s">
+      <img src="${pk.sprite||FALLBACK_SPRITE}" style="width:38px;height:38px;object-fit:contain" onerror="this.src='${FALLBACK_SPRITE}'"/>
+      <div style="font-size:9px;font-weight:700;color:var(--text);line-height:1.2;margin-top:2px">${pk.nome}</div>
+      <div style="font-size:8px;color:var(--muted)">${pk.raridade||''}</div>
+      ${_poolSelecionados.has(String(pk.id))?'<div style="font-size:8px;color:var(--brand-mid);font-weight:700">✓</div>':''}
+    </div>`).join('');
+}
+function togglePoolImportSel(id){const sid=String(id);if(_poolSelecionados.has(sid))_poolSelecionados.delete(sid);else _poolSelecionados.add(sid);renderPoolImportList();}
+function importarSelecionadosPool(){
+  const dstIdx=parseInt(document.getElementById('pool-import-bioma-dst')?.value);
+  if(isNaN(dstIdx)||!_poolBiomasEvento[dstIdx]){alert('Selecione um bioma de destino.');return;}
+  const dst=_poolBiomasEvento[dstIdx];
+  pokemonDB.filter(p=>_poolSelecionados.has(String(p.id))).forEach(pk=>{if(!dst.pokemons.find(x=>x.id===pk.id))dst.pokemons.push(pk);});
+  _poolSelecionados=new Set();
+  _poolBiomaAtivoIdx=dstIdx;
+  renderPoolBiomasTabs();renderPoolImportList();
+}
+function confirmarPool(){
+  const resumo=document.getElementById('ev-pool-resumo');
+  if(resumo){const total=_poolBiomasEvento.reduce((s,b)=>s+b.pokemons.length,0);resumo.textContent=`${_poolBiomasEvento.length} bioma(s) · ${total} Pokémon configurado(s)`;}
+  if(typeof _poolConfirmCallback==='function'){_poolConfirmCallback();_poolConfirmCallback=null;}
+  fb('pool-fb-ok');
+  setTimeout(fecharModalPool,600);
+}
+
+// ── Página do evento ──
+async function iniciarPaginaEvento(slug){
+  loading(true);
+  try{
+    let ev=eventos.find(e=>e.slug===slug);
+    if(!ev){const evRes=await sb(`eventos?slug=eq.${slug}&limit=1`);ev=evRes&&evRes[0];if(ev)eventos.push(ev);}
+    if(!ev){
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      const pg=document.getElementById('page-evento');
+      if(pg){pg.classList.add('active');pg.innerHTML='<div style="text-align:center;padding:60px 20px"><div style="font-size:48px">😕</div><div style="font-size:16px;margin-top:16px;color:var(--muted)">Evento não encontrado</div></div>';}
+      loading(false);return;
+    }
+    eventoAtual=ev;
+    eventoHistorico=[];
+    eventoHistPagina=0;
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    const page=document.getElementById('page-evento');
+    if(page) page.classList.add('active');
+    const header=document.getElementById('evento-header');
+    if(header) header.style.background=ev.cor||'var(--brand)';
+    const emojiEl=document.getElementById('evento-emoji');
+    if(emojiEl) emojiEl.textContent=ev.emoji||'🎪';
+    const tituloEl=document.getElementById('evento-titulo');
+    if(tituloEl) tituloEl.textContent=ev.nome||'';
+    const descEl=document.getElementById('evento-desc');
+    if(descEl) descEl.textContent=ev.descricao||'';
+    const tipo=ev.tipo||'encontro';
+    const modoSel=document.getElementById('evento-modo-selector');
+    if(modoSel) modoSel.style.display=(tipo==='ambos')?'':'none';
+    document.getElementById('evento-modo-encontro').style.display=(tipo==='encontro'||tipo==='ambos')?'':'none';
+    document.getElementById('evento-modo-dados').style.display=(tipo==='dados')?'':'none';
+    if(tipo==='encontro'||tipo==='ambos'){
+      const poolModo=ev.pool_modo||'global';
+      _poolBiomasEvento=(ev.pool_custom&&Array.isArray(ev.pool_custom))?ev.pool_custom:[];
+      const biomaSel=document.getElementById('evento-bioma-sel');
+      if(biomaSel){
+        if(poolModo==='custom'&&_poolBiomasEvento.length) biomaSel.innerHTML=_poolBiomasEvento.map(b=>`<option>${b.nome}</option>`).join('');
+        else biomaSel.innerHTML=biomas.map(b=>`<option${b.nome===ev.bioma?' selected':''}>${b.nome}</option>`).join('');
+        if(ev.lock_bioma){const bw=document.getElementById('evento-bioma-wrap');if(bw){bw.style.opacity='.6';bw.style.pointerEvents='none';}}
+      }
+      const addIn=document.getElementById('evento-adicionais');
+      if(addIn) addIn.value=ev.adicionais||0;
+      if(ev.lock_adicionais){const aw=document.getElementById('evento-adicionais-wrap');if(aw){aw.style.opacity='.6';aw.style.pointerEvents='none';}}
+      const btnPool=document.getElementById('evento-btn-config-pool');
+      if(btnPool) btnPool.style.display=(poolModo==='custom'&&_poolBiomasEvento.length)?'':'none';
+    }
+    if(tipo==='dados'||tipo==='ambos'){
+      const laIn=document.getElementById('evento-dice-lados');
+      const motIn=document.getElementById('evento-dice-motivo');
+      if(laIn) laIn.value=ev.dado_lados||100;
+      if(motIn) motIn.value=ev.dado_motivo||'';
+      if(ev.lock_dado){const dw=document.getElementById('evento-dado-lados-wrap');if(dw){dw.style.opacity='.6';dw.style.pointerEvents='none';}}
+      if(ev.lock_motivo){const mw=document.getElementById('evento-dado-motivo-wrap');if(mw){mw.style.opacity='.6';mw.style.pointerEvents='none';}}
+      renderEventoDiceBtns();sincEventoDiceBtn();
+    }
+    try{
+      const[resEnc,resDado]=await Promise.all([
+        sb(`historico?evento_slug=eq.${slug}&order=criado_em.desc&limit=200`),
+        sb(`historico_dados?evento_slug=eq.${slug}&order=criado_em.desc&limit=200`)
+      ]);
+      eventoHistorico=[...(resEnc||[]),...((resDado||[]).map(d=>({...d,tipo:'dado'})))].sort((a,b)=>new Date(b.criado_em||0)-new Date(a.criado_em||0));
+    }catch(e){eventoHistorico=[];}
+    renderHistoricoEvento();
+  }catch(e){console.error('Erro ao carregar evento:',e);}
+  finally{loading(false);}
+}
+
+async function rolarEncontroEvento(){
+  const personagem=document.getElementById('evento-personagem').value.trim();
+  if(!personagem){alert('Preencha o nome do personagem!');return;}
+  const ev=eventoAtual;
+  if(!ev){alert('Evento não carregado.');return;}
+  if(ev.pool_modo==='custom'&&_poolBiomasEvento.length){
+    const biomaAtivo=eventoPoolAtivaBioma||_poolBiomasEvento[0]?.nome;
+    const biomaObj=_poolBiomasEvento.find(b=>b.nome===biomaAtivo);
+    if(!biomaObj||!biomaObj.pokemons.length){alert('Bioma sem Pokémon. Configure o pool primeiro.');return;}
+    const adicionais=ev.lock_adicionais?(ev.adicionais||0):Math.max(0,parseInt(document.getElementById('evento-adicionais').value)||0);
+    const total=3+adicionais;
+    const raridades=['comum','incomum','raro','rarissimo'];
+    const pools={};
+    for(const r of raridades) pools[r]=biomaObj.pokemons.filter(p=>(p.raridade||'').toLowerCase()===r);
+    function rollRarityC(){const r=Math.ceil(Math.random()*100);if(r<=2)return'rarissimo';if(r<=13)return'raro';if(r<=51)return'incomum';return'comum';}
+    const pokes=[];
+    for(let i=0;i<total;i++){const rarity=rollRarityC();const pool=pools[rarity].length?pools[rarity]:(pools['comum'].length?pools['comum']:biomaObj.pokemons);const pk=pool[Math.floor(Math.random()*pool.length)];if(pk){const gender=rollGender(pk.genero);pokes.push({...pk,rarity,genderS:gender.s,genderC:gender.c});}}
+    const section=document.getElementById('evento-results');section.innerHTML='';
+    const grid=document.createElement('div');grid.className='results-grid';
+    pokes.forEach((pk,i)=>{grid.innerHTML+=buildCardHtml(pk,i*0.08);});section.appendChild(grid);
+    const agora=new Date();
+    const entry={bioma:biomaAtivo,personagem,hora:agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),data:agora.toLocaleDateString('pt-BR'),pokes,evento_slug:ev.slug};
+    try{const res=await dbPost('historico',entry);if(res&&res[0])eventoHistorico.unshift(res[0]);}catch(e){}
+    eventoHistPagina=0;renderHistoricoEvento();return;
+  }
+  const bioma=ev.lock_bioma?ev.bioma:document.getElementById('evento-bioma-sel').value;
+  const adicionais=ev.lock_adicionais?(ev.adicionais||0):Math.max(0,parseInt(document.getElementById('evento-adicionais').value)||0);
+  const total=3+adicionais;
+  const raridades=['comum','incomum','raro','rarissimo'];
+  const pools={},usedIds={};
+  for(const r of raridades){pools[r]=pokemonDB.filter(p=>p.bioma===bioma&&p.raridade===r);usedIds[r]=new Set();}
+  function rollRarity(){const r=Math.ceil(Math.random()*100);if(r<=2)return'rarissimo';if(r<=13)return'raro';if(r<=51)return'incomum';return'comum';}
+  const pokes=[];
+  for(let i=0;i<total;i++){const rarity=rollRarity();pokes.push(pickFromPool(pools[rarity],usedIds[rarity],rarity));}
+  const section=document.getElementById('evento-results');section.innerHTML='';
+  const grid=document.createElement('div');grid.className='results-grid';
+  pokes.forEach((pk,i)=>{grid.innerHTML+=buildCardHtml(pk,i*0.08);});section.appendChild(grid);
+  const agora=new Date();
+  const entry={bioma,personagem,hora:agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'}),data:agora.toLocaleDateString('pt-BR'),pokes,evento_slug:ev.slug};
+  try{const res=await dbPost('historico',entry);if(res&&res[0])eventoHistorico.unshift(res[0]);}catch(e){}
+  eventoHistPagina=0;renderHistoricoEvento();
+}
+
+async function rolarDadoEvento(){
+  const ev=eventoAtual;if(!ev){alert('Evento não carregado.');return;}
+  const personagem=document.getElementById('evento-dice-personagem').value.trim();
+  const lados=parseInt(document.getElementById('evento-dice-lados').value)||0;
+  const motivo=document.getElementById('evento-dice-motivo').value.trim();
+  if(!personagem){alert('Preencha o nome do personagem!');return;}
+  if(!lados||lados<2){alert('O dado precisa ter ao menos 2 lados.');return;}
+  if(!motivo){alert('Preencha o motivo da rolagem!');return;}
+  const resultado=Math.floor(Math.random()*lados)+1;
+  const agora=new Date();
+  const hora=agora.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const data=agora.toLocaleDateString('pt-BR');
+  const pct=Math.round((resultado/lados)*100);
+  const barColor=pct>=80?'#1a7a1a':pct>=50?'var(--brand-mid)':pct>=20?'var(--accent)':'var(--red)';
+  const section=document.getElementById('evento-results');
+  if(section) section.innerHTML=`<div class="rol-entry" style="animation:fadeUp .35s both">
+    <div class="rol-entry-header">
+      <div style="display:flex;align-items:center;gap:6px"><span class="rol-entry-bioma" style="background:#f0e8ff;color:#5a1a9a">🎲 Dado · d${lados}</span><span class="rol-entry-bioma">🎪 ${ev.slug}</span></div>
+      <span class="rol-entry-hora">${hora} · ${data}</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;padding:4px 0">
+      <div style="font-family:var(--font-title);font-size:48px;font-weight:700;color:var(--brand);line-height:1;min-width:60px;text-align:center">${resultado}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">${motivo}</div>
+        <div style="background:var(--border);border-radius:4px;height:7px;overflow:hidden;margin-bottom:5px"><div style="height:7px;border-radius:4px;background:${barColor};width:${pct}%;transition:width .5s"></div></div>
+        <div style="font-size:12px;color:var(--muted)">${resultado} de ${lados} (${pct}%)</div>
+      </div>
+    </div>
+  </div>`;
+  const entry={personagem,lados,motivo,resultado,hora,data,evento_slug:ev.slug};
+  try{const res=await dbPost('historico_dados',entry);if(res&&res[0])eventoHistorico.unshift({...res[0],tipo:'dado'});else eventoHistorico.unshift({...entry,id:Date.now(),tipo:'dado'});}
+  catch(e){eventoHistorico.unshift({...entry,id:Date.now(),tipo:'dado'});}
+  eventoHistPagina=0;renderHistoricoEvento();
+  if(pagesLoaded&&pagesLoaded.rolagens) renderRolagens();
+}
+
+function sincEventoDiceBtn(){
+  const v=parseInt(document.getElementById('evento-dice-lados')?.value);
+  document.querySelectorAll('#evento-dice-side-btns .dice-side-btn').forEach(b=>{b.classList.toggle('active',parseInt(b.textContent.replace('d',''))===v);});
+}
+function setEventoLados(n){const el=document.getElementById('evento-dice-lados');if(el){el.value=n;sincEventoDiceBtn();}}
+function renderEventoDiceBtns(){
+  const wrap=document.getElementById('evento-dice-side-btns');if(!wrap)return;
+  const atual=parseInt(document.getElementById('evento-dice-lados')?.value)||100;
+  wrap.innerHTML=[4,6,8,10,12,20,100].map(n=>`<button class="dice-side-btn${n===atual?' active':''}" onclick="setEventoLados(${n})">d${n}</button>`).join('');
+}
+
+function mudarPaginaHistEvento(dir){
+  const total=Math.ceil(eventoHistorico.length/EVENTO_HIST_POR_PAG);
+  eventoHistPagina=Math.max(0,Math.min(eventoHistPagina+dir,total-1));
+  renderHistoricoEvento();
+}
+function renderHistoricoEvento(){
+  const wrap=document.getElementById('evento-historico-wrap');
+  const lista=document.getElementById('evento-historico-lista');
+  if(!wrap||!lista) return;
+  if(!eventoHistorico.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  const total=Math.ceil(eventoHistorico.length/EVENTO_HIST_POR_PAG);
+  eventoHistPagina=Math.max(0,Math.min(eventoHistPagina,total-1));
+  const inicio=eventoHistPagina*EVENTO_HIST_POR_PAG;
+  const pagina=eventoHistorico.slice(inicio,inicio+EVENTO_HIST_POR_PAG);
+  document.getElementById('evento-hist-label').textContent=`Página ${eventoHistPagina+1} de ${total} · ${eventoHistorico.length} rolagem${eventoHistorico.length!==1?'s':''}`;
+  document.getElementById('evento-hist-prev').style.display=eventoHistPagina>0?'':'none';
+  document.getElementById('evento-hist-next').style.display=eventoHistPagina<total-1?'':'none';
+  document.getElementById('evento-hist-paginacao').style.display=total>1?'flex':'none';
+  lista.innerHTML=pagina.map(e=>{
+    const isDado=e.tipo==='dado'||(e.lados&&!e.pokes);
+    if(isDado){
+      const max=e.lados||'?';const res=e.resultado;const pct=max>1?Math.round((res/max)*100):100;
+      const barColor=pct>=80?'#1a7a1a':pct>=50?'var(--brand-mid)':pct>=20?'var(--accent)':'var(--red)';
+      return`<div class="hist-entry">
+        <div class="hist-header">
+          <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:700;color:var(--brand)">${e.personagem}</span><span class="rol-entry-bioma" style="background:#f0e8ff;color:#5a1a9a">🎲 d${max}</span></div>
+          <span style="font-size:11px;color:var(--muted)">${e.hora||''} · ${e.data||''}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;padding:8px 14px">
+          <div style="font-family:var(--font-title);font-size:36px;font-weight:700;color:var(--brand);line-height:1;min-width:48px;text-align:center">${res}</div>
+          <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px">${e.motivo||'—'}</div>
+            <div style="background:var(--border);border-radius:4px;height:6px;overflow:hidden;margin-bottom:4px"><div style="height:6px;border-radius:4px;background:${barColor};width:${pct}%;transition:width .4s"></div></div>
+            <div style="font-size:11px;color:var(--muted)">${res} de ${max} (${pct}%)</div>
+          </div>
+        </div>
+      </div>`;
+    }
+    const pokes=Array.isArray(e.pokes)?e.pokes:[];
+    const ph=pokes.map(pk=>`<div class="hist-poke">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0">
+        <div style="width:56px;height:56px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;overflow:hidden">
+          <img src="${pk.sprite||FALLBACK_SPRITE}" style="width:56px;height:56px;object-fit:contain" onerror="this.src='${FALLBACK_SPRITE}'"/>
+        </div>
+        <div style="font-size:10px;font-weight:600;color:var(--text);text-align:center;font-family:var(--font-title);line-height:1.2">${pk.nome} <span style="color:${pk.genderC}">${pk.genderS}</span></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px">
+        <div>${(pk.tipos||[]).map(t=>`<span class="type-pill ${tcls[t]||'t-normal'}">${t}</span>`).join('')}</div>
+        <span class="poke-rarity ${rcls[pk.rarity]||'rc'}" style="font-size:9px">${rlbl[pk.rarity]||''}</span>
+      </div>
+    </div>`).join('');
+    return`<div class="hist-entry">
+      <div class="hist-header">
+        <div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:700;color:var(--brand)">${e.personagem}</span><span style="font-size:11px;color:var(--muted)">· ${e.bioma||''}</span></div>
+        <span style="font-size:11px;color:var(--muted)">${e.hora||''} · ${e.data||''}</span>
+      </div>
+      <div class="hist-body">${ph}</div>
+    </div>`;
+  }).join('');
+}
+
+function abrirModalPoolEvento(){
+  const ev=eventoAtual;if(!ev)return;
+  if(ev.pool_modo!=='custom'||!_poolBiomasEvento.length){alert('Este evento usa os biomas padrão.');return;}
+  eventoPoolAtivaBioma=_poolBiomasEvento[0]?.nome||null;
+  renderModalPoolJogador();
+  document.getElementById('modal-pool-jogador-overlay').style.display='flex';
+}
+function fecharModalPoolJogador(){document.getElementById('modal-pool-jogador-overlay').style.display='none';}
+function renderModalPoolJogador(){
+  const tabs=document.getElementById('pool-jogador-tabs');const cont=document.getElementById('pool-jogador-content');if(!tabs||!cont)return;
+  tabs.innerHTML=_poolBiomasEvento.map(b=>`<button onclick="eventoPoolAtivaBioma='${b.nome}';renderModalPoolJogador()" style="padding:6px 14px;font-size:12px;font-weight:700;border:1.5px solid ${b.nome===eventoPoolAtivaBioma?'var(--brand-mid)':'var(--border)'};background:${b.nome===eventoPoolAtivaBioma?'var(--brand-light)':'var(--surface)'};color:${b.nome===eventoPoolAtivaBioma?'var(--brand-mid)':'var(--muted)'};border-radius:20px;cursor:pointer">${b.nome}</button>`).join('');
+  const b=_poolBiomasEvento.find(x=>x.nome===eventoPoolAtivaBioma);if(!b){cont.innerHTML='';return;}
+  cont.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:8px;max-height:300px;overflow-y:auto;margin-top:12px">${b.pokemons.map(pk=>`<div style="background:var(--surface2);border:1.5px solid var(--border);border-radius:8px;padding:8px;text-align:center"><img src="${pk.sprite||FALLBACK_SPRITE}" style="width:44px;height:44px;object-fit:contain" onerror="this.src='${FALLBACK_SPRITE}'"/><div style="font-size:10px;font-weight:700;margin-top:3px;line-height:1.2">${pk.nome}</div></div>`).join('')}</div>`;
+}
+
+// Tooltip global para cards de evento
+(function(){
+  const pokeTip=document.createElement('div');pokeTip.id='global-poke-tip';pokeTip.style.cssText='display:none;position:fixed;width:210px;background:var(--text);color:var(--surface);border-radius:10px;padding:10px 12px;z-index:99999;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.4);font-family:var(--font-body)';document.body.appendChild(pokeTip);
+  const bagTip=document.createElement('div');bagTip.id='global-bag-tip';bagTip.style.cssText='display:none;position:fixed;min-width:160px;max-width:220px;background:var(--text);color:var(--surface);border-radius:10px;padding:10px 12px;z-index:99999;pointer-events:none;box-shadow:0 8px 32px rgba(0,0,0,.4);font-family:var(--font-body)';document.body.appendChild(bagTip);
+  document.addEventListener('mousemove',e=>{
+    const gpt=document.getElementById('global-poke-tip');if(gpt&&gpt.style.display!=='none'){const tw=210,th=gpt.offsetHeight||140;let x=e.clientX-tw/2,y=e.clientY-th-16;if(x<8)x=8;if(x+tw>window.innerWidth-8)x=window.innerWidth-tw-8;if(y<8)y=e.clientY+16;gpt.style.left=x+'px';gpt.style.top=y+'px';}
+    const gbt=document.getElementById('global-bag-tip');if(gbt&&gbt.style.display!=='none'){const tw=gbt.offsetWidth||180,th=gbt.offsetHeight||100;let x=e.clientX-tw/2,y=e.clientY-th-14;if(x<8)x=8;if(x+tw>window.innerWidth-8)x=window.innerWidth-tw-8;if(y<8)y=e.clientY+16;gbt.style.left=x+'px';gbt.style.top=y+'px';}
+  });
+  document.addEventListener('mouseover',e=>{
+    const slot=e.target.closest('.npc-ev-detail .npc-poke-slot:not(.empty)');if(slot){const inner=slot.querySelector('.npc-poke-tip');if(inner){pokeTip.innerHTML=inner.innerHTML;pokeTip.style.display='block';}return;}
+    const bagBtn=e.target.closest('.npc-ev-bag-btn');if(bagBtn){const inner=bagBtn.parentElement?.querySelector('.npc-ev-bag-tip-data');if(inner){bagTip.innerHTML=inner.innerHTML;bagTip.style.display='block';}return;}
+  });
+  document.addEventListener('mouseout',e=>{
+    const slot=e.target.closest('.npc-ev-detail .npc-poke-slot');if(slot&&!slot.contains(e.relatedTarget)){pokeTip.style.display='none';}
+    const bagBtn=e.target.closest('.npc-ev-bag-btn');if(bagBtn&&!bagBtn.contains(e.relatedTarget)){bagTip.style.display='none';}
+  });
+})();
+
+// ── Patch no admTab para carregar estação/forçados/eventos ao abrir ──
+const _admTabOriginal = typeof admTab === 'function' ? admTab : null;
+function admTab(sec, btn){
+  document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('active'));
+  const el=document.getElementById('sec-'+sec);
+  if(el) el.classList.add('active');
+  document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  if(sec==='estacao'){setTimeout(()=>{marcarBtnEstacao();renderEstMassa();},0);}
+  if(sec==='forcados'){setTimeout(()=>{populateFrcSelects();renderFrcPool();carregarForcados();},0);}
+  if(sec==='eventos'){setTimeout(()=>{const sel=document.getElementById('ev-bioma');if(sel)sel.innerHTML=biomas.map(b=>`<option>${b.nome}</option>`).join('');carregarEventos();},0);}
+}
+
+// ── Carregar estação e forcados na inicialização ──
+_carregarEstacao();
+
+// ── popstate para suporte a /evento/slug ──
+window.addEventListener('popstate',async()=>{
+  const pathPage=location.pathname.replace(/^\//,'')||'roller';
+  const eventoMatch=pathPage.match(/^evento\/(.+)$/);
+  if(eventoMatch){iniciarPaginaEvento(eventoMatch[1]);return;}
+});
+
 // ══════════════════════════════════════
 init();
 </script>
+<!-- ESTAÇÃO FAB -->
+<div id="estacao-fab" style="display:none" onclick="toggleFab()"></div>
+
 </body>
 </html>
