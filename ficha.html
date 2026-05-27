@@ -121,7 +121,7 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .pk-ac-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--accent);border-top:none;border-radius:0 0 4px 4px;max-height:160px;overflow-y:auto;z-index:500;box-shadow:0 4px 12px rgba(0,0,0,.15)}
 .pk-ac-item{display:flex;align-items:center;gap:6px;padding:4px 7px;cursor:pointer;font-size:11px;font-family:var(--font-body);transition:background .1s}
 .pk-ac-item:hover,.pk-ac-item.active{background:#f0f4ff}
-.pk-ac-item img{width:28px;height:28px;object-fit:contain;image-rendering:pixelated;flex-shrink:0}
+.pk-ac-item img{width:40px;height:40px;object-fit:contain;image-rendering:auto;flex-shrink:0}
 .pk-ac-item span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* RELACIONADOS */
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
@@ -475,7 +475,7 @@ function pokeApiSprite(nome){
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
     .replace(/[^a-z0-9 \-]/g,'').replace(/ /g,'-')
     .replace(/[♂♀]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'');
-  return`https://img.pokemondb.net/sprites/sword-shield/icon/${slug}.png`;
+  return`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${slug}.png`;
 }
 window._pokeDex=[];   // {nome, tipos, sprite, source:'oficial'|'uwadex'}
 window._pokeDexLoaded=false;
@@ -500,7 +500,7 @@ async function carregarPokeDex(){
       oficiais=(data.results||[]).map(p=>({
         nome:p.name.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' '),
         tipos:[],
-        sprite:`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.url.split('/').filter(Boolean).pop()}.png`
+        sprite:`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.url.split('/').filter(Boolean).pop()}.png`
       }));
     }
   }catch{}
