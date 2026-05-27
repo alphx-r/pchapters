@@ -58,7 +58,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .ndex-name:hover{text-decoration:underline}
 .ndex-num{font-family:var(--font-title);font-size:11px;color:var(--muted);white-space:nowrap}
 .ndex-num-wrap{display:flex;flex-direction:column;gap:2px}
-.ndex-stat{font-family:var(--font-title);font-size:14px;font-weight:700;color:var(--text);text-align:center}
+.ndex-stat{font-family:var(--font-body);font-size:13px;font-weight:400;color:var(--text);text-align:center}
 .ndex-uwa-row td{background:color-mix(in srgb, var(--surface) 85%, var(--brand-light))}
 /* ── DEX LIST PAGE ── */
 .dex-wrap{max-width:1100px;margin:0 auto;padding:28px}
@@ -443,29 +443,12 @@ html.dark .dex-tab.active{color:#fff}
                   <div class="field">
                     <label>Sprite (frente)</label>
                     <input type="file" id="f-sprite-file" accept="image/*" onchange="previewUwadexSprite(this)" style="font-size:13px"/>
-                    <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-                      <div id="f-sprite-preview" style="width:64px;height:64px;background:var(--surface2);border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden">
-                        <img id="f-sprite-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>
-                      </div>
-                      <div>
-                        <span style="font-size:11px;color:var(--muted);display:block">Pré-visualização</span>
-                        <input type="text" id="f-sprite" placeholder="ou cole uma URL…" style="margin-top:4px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:200px" autocomplete="off" oninput="if(this.value)document.getElementById('f-sprite-preview-img').src=this.value"/>
-                      </div>
-                    </div>
+                    <input type="text" id="f-sprite" placeholder="ou cole uma URL…" style="margin-top:6px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:100%;box-sizing:border-box" autocomplete="off"/>
                   </div>
                   <div class="field">
                     <label>Sprite Shiny ✨</label>
                     <input type="file" id="f-sprite-shiny-file" accept="image/*" onchange="previewUwadexSpriteShiny(this)" style="font-size:13px"/>
-                    <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-                      <div id="f-sprite-shiny-preview" style="width:64px;height:64px;background:var(--surface2);border-radius:8px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;overflow:hidden;filter:drop-shadow(0 0 4px rgba(192,144,224,.4))">
-                        <img id="f-sprite-shiny-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>
-                      </div>
-                      <div>
-                        <span style="font-size:11px;color:var(--muted);display:block">Pré-visualização Shiny</span>
-                        <input type="text" id="f-sprite-shiny" placeholder="ou cole uma URL…" style="margin-top:4px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:200px" autocomplete="off" oninput="if(this.value)document.getElementById('f-sprite-shiny-preview-img').src=this.value"/>
-                      </div>
-                    </div>
-                  </div>
+                    <input type="text" id="f-sprite-shiny" placeholder="ou cole uma URL…" style="margin-top:6px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:100%;box-sizing:border-box" autocomplete="off"/>
                   <div class="field"><label>Raridade</label>
                     <select id="f-raridade">
                       <option value="inicial">Inicial</option>
@@ -479,12 +462,12 @@ html.dark .dex-tab.active{color:#fff}
                     </select>
                   </div>
                 </div>
-                <div class="g3">
-                  <div class="field"><label>Altura</label><input type="text" id="f-altura" placeholder="Ex: 35,5 cm" autocomplete="off"/></div>
-                  <div class="field"><label>Peso</label><input type="text" id="f-peso" placeholder="Ex: 4 kg" autocomplete="off"/></div>
-                  <div class="field"><label>Proporção de Gênero</label><input type="text" id="f-genero" placeholder="Ex: 88% Male, 12% Female" autocomplete="off"/></div>
+                <div class="g2">
+                  <div class="field"><label>Altura (cm)</label><input type="text" id="f-altura" placeholder="Ex: 35,5" autocomplete="off"/></div>
+                  <div class="field"><label>Peso (kg)</label><input type="text" id="f-peso" placeholder="Ex: 4" autocomplete="off"/></div>
                 </div>
                 <div class="g2">
+                  <div class="field"><label>Proporção de Gênero</label><input type="text" id="f-genero" placeholder="Ex: 88% Male, 12% Female" autocomplete="off"/></div>
                   <div class="field"><label>Egg Group(s)</label><input type="text" id="f-egggroup" placeholder="Ex: Bug, Water 3" autocomplete="off"/></div>
                 </div>
               </div>
@@ -997,7 +980,7 @@ function renderNationalDex(q=''){
       <td>${tipos}</td>
       <td class="ndex-stat">${ca}</td>
       <td class="ndex-stat">${pv}</td>
-      <td class="ndex-stat">${dado}</td>
+      <td class="ndex-stat" style="text-transform:lowercase">${dado}</td>
     </tr>`;
   }).join('');
 }
@@ -1294,14 +1277,14 @@ function renderFicha(slug){
       <div class="ficha-info-col">
         <div class="ficha-info-name"><span>${p.nome}</span></div>
         <table class="ficha-info-table">
-          ${p.classificacao?`<tr><td>Classification</td><td colspan="1">${p.classificacao}</td></tr>`:''}
-          ${(p.altura||p.peso)?`<tr><td style="border-right:none">HEIGHT: <span style="font-weight:400;color:var(--text)">${p.altura||'—'}</span></td><td style="border-left:none;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: <span style="font-weight:400;color:var(--text)">${p.peso||'—'}</span></td></tr>`:''}
-          ${p.genero?`<tr><td>Gender Ratio</td><td>${p.genero}</td></tr>`:''}
-          ${p.egggroup?`<tr><td>Egg Group(s)</td><td>${p.egggroup}</td></tr>`:''}
+          ${p.classificacao?`<tr><td>Classification:</td><td colspan="1">${p.classificacao} Pokémon</td></tr>`:''}
+          ${(p.altura||p.peso)?`<tr><td style="border-right:none">HEIGHT: <span style="font-weight:400;color:var(--text)">${p.altura||'—'} cm</span></td><td style="border-left:none;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: <span style="font-weight:400;color:var(--text)">${p.peso||'—'} kg</span></td></tr>`:''}
+          ${p.genero?`<tr><td>Gender Ratio:</td><td>${p.genero}</td></tr>`:''}
+          ${p.egggroup?`<tr><td>Egg Group(s):</td><td>${p.egggroup}</td></tr>`:''}
           ${(dado||ca!=null||pv!=null)?`<tr><td colspan="2" style="padding:0">
             <div style="display:flex;gap:0;padding:0">
               <div style="flex:1;padding:9px 16px;border-right:none">
-                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-size:13px;color:var(--text);font-weight:400">${dado||'—'}</span>
+                <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-size:13px;color:var(--text);font-weight:400;text-transform:none">${dado||'—'}</span>
               </div>
               <div style="flex:1;padding:9px 16px;border-right:none">
                 <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA: </span><span style="font-size:13px;color:var(--text);font-weight:400">${ca!=null?ca:'—'}</span>
@@ -1631,13 +1614,8 @@ function resetForm(){
   ['f-num','f-nome','f-classif','f-sprite','f-altura','f-peso','f-genero','f-egggroup','f-bio'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   ['f-dado','f-ca','f-pv'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('f-raridade').value='comum';
-  const prev=document.getElementById('f-sprite-preview');
-  if(prev){delete prev.dataset.b64;prev.innerHTML='<img id="f-sprite-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>';}
-  const prevShiny=document.getElementById('f-sprite-shiny-preview');
-  if(prevShiny){delete prevShiny.dataset.b64;prevShiny.innerHTML='<img id="f-sprite-shiny-preview-img" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png" style="width:56px;height:56px;object-fit:contain;image-rendering:pixelated"/>';}
-  const fileInp=document.getElementById('f-sprite-file');if(fileInp)fileInp.value='';
-  const fileInpShiny=document.getElementById('f-sprite-shiny-file');if(fileInpShiny)fileInpShiny.value='';
-  const shinyUrl=document.getElementById('f-sprite-shiny');if(shinyUrl)shinyUrl.value='';
+  const fileInp=document.getElementById('f-sprite-file');if(fileInp){fileInp.value='';delete fileInp.dataset.b64;}
+  const fileInpShiny=document.getElementById('f-sprite-shiny-file');if(fileInpShiny){fileInpShiny.value='';delete fileInpShiny.dataset.b64;}
   buildTiposSelector([]);
   buildDmgTakenFields({});
   document.getElementById('abilities-list').innerHTML='';
@@ -1669,8 +1647,7 @@ function previewUwadexSpriteShiny(input){
       ctx.drawImage(img,(SIZE-w)/2,(SIZE-h)/2,w,h);
       const dataUrl=canvas.toDataURL('image/png');
       document.getElementById('f-sprite-shiny').value='';
-      document.getElementById('f-sprite-shiny-preview-img').src=dataUrl;
-      document.getElementById('f-sprite-shiny-preview').dataset.b64=dataUrl;
+      input.dataset.b64=dataUrl;
     };
     img.src=e.target.result;
   };
@@ -1702,8 +1679,7 @@ function previewUwadexSprite(input){
       ctx.drawImage(img,(SIZE-w)/2,(SIZE-h)/2,w,h);
       const dataUrl=canvas.toDataURL('image/png');
       document.getElementById('f-sprite').value='';
-      document.getElementById('f-sprite-preview-img').src=dataUrl;
-      document.getElementById('f-sprite-preview').dataset.b64=dataUrl;
+      input.dataset.b64=dataUrl;
     };
     img.src=e.target.result;
   };
@@ -1770,8 +1746,8 @@ async function salvarPokemon(){
     nome,
     slug:slugify(nome),
     classificacao:document.getElementById('f-classif').value.trim(),
-    sprite:(document.getElementById('f-sprite-preview').dataset.b64)||document.getElementById('f-sprite').value.trim()||null,
-    sprite_shiny:(document.getElementById('f-sprite-shiny-preview').dataset.b64)||document.getElementById('f-sprite-shiny').value.trim()||null,
+    sprite:(document.getElementById('f-sprite-file').dataset.b64)||document.getElementById('f-sprite').value.trim()||null,
+    sprite_shiny:(document.getElementById('f-sprite-shiny-file').dataset.b64)||document.getElementById('f-sprite-shiny').value.trim()||null,
     raridade:document.getElementById('f-raridade').value,
     altura:document.getElementById('f-altura').value.trim(),
     peso:document.getElementById('f-peso').value.trim(),
