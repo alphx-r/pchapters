@@ -116,6 +116,13 @@ html,body{min-height:100%;background:var(--bg);font-family:var(--font-body);colo
 .poke-slot-edit input:focus,.poke-slot-edit textarea:focus,.poke-slot-edit select:focus{border-color:var(--accent)}
 .poke-slot-edit-img-preview{width:40px;height:40px;object-fit:contain;image-rendering:pixelated;border:1px solid #eee;border-radius:2px;display:block;margin:2px auto}
 .poke-slot-edit-img-btn{width:100%;padding:3px;border:1px dashed #ccc;border-radius:2px;background:#fafafa;font-size:10px;font-family:var(--font-body);cursor:pointer;text-align:center;color:var(--muted)}
+/* AUTOCOMPLETE POKÉMON */
+.pk-ac-wrap{position:relative;width:100%}
+.pk-ac-list{position:absolute;top:100%;left:0;right:0;background:#fff;border:1.5px solid var(--accent);border-top:none;border-radius:0 0 4px 4px;max-height:160px;overflow-y:auto;z-index:500;box-shadow:0 4px 12px rgba(0,0,0,.15)}
+.pk-ac-item{display:flex;align-items:center;gap:6px;padding:4px 7px;cursor:pointer;font-size:11px;font-family:var(--font-body);transition:background .1s}
+.pk-ac-item:hover,.pk-ac-item.active{background:#f0f4ff}
+.pk-ac-item img{width:28px;height:28px;object-fit:contain;image-rendering:pixelated;flex-shrink:0}
+.pk-ac-item span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 /* RELACIONADOS */
 .rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0}
 .rel-item{background:var(--cor-rel,#000);padding:5px 8px;text-align:center;border:1px solid var(--bg)}
@@ -461,6 +468,159 @@ document.getElementById('loading-text').innerHTML=`Abrindo o contato no seu Roto
 const FALLBACK='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201-question.png';
 const FALLBACK_ITEM_SPRITE='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/items/poke-ball.png';
 
+// ─── PokéDex (autocomplete) ───────────────────────────
+// Sprite oficial via PokeAPI (slugified name)
+function pokeApiSprite(nome){
+  const slug=nome.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9 \-]/g,'').replace(/ /g,'-')
+    .replace(/[♂♀]/g,'').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  return`https://img.pokemondb.net/sprites/sword-shield/icon/${slug}.png`;
+}
+window._pokeDex=[];   // {nome, tipos, sprite, source:'oficial'|'uwadex'}
+window._pokeDexLoaded=false;
+
+async function carregarPokeDex(){
+  if(window._pokeDexLoaded) return;
+  window._pokeDexLoaded=true;
+  // 1) Carregar uwadex do Supabase
+  let uwadexList=[];
+  try{
+    const res=await apiGet('uwadex','select=nome,tipos,sprite&order=nome.asc');
+    if(Array.isArray(res)) uwadexList=res.filter(p=>p&&p.nome);
+  }catch{}
+  const uwadexNomes=new Set(uwadexList.map(p=>p.nome.toLowerCase()));
+
+  // 2) Carregar nomes oficiais da PokeAPI (todos de uma vez, sem bloquear)
+  let oficiais=[];
+  try{
+    const r=await fetch('https://pokeapi.co/api/v2/pokemon?limit=1025&offset=0');
+    if(r.ok){
+      const data=await r.json();
+      oficiais=(data.results||[]).map(p=>({
+        nome:p.name.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' '),
+        tipos:[],
+        sprite:`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.url.split('/').filter(Boolean).pop()}.png`
+      }));
+    }
+  }catch{}
+
+  // Montar dex: uwadex primeiro (sprite salvo), depois oficiais não presentes na uwadex
+  const dex=[];
+  uwadexList.forEach(p=>{
+    const tipos=(Array.isArray(p.tipos)?p.tipos:[]).filter(Boolean);
+    dex.push({nome:p.nome, tipos, sprite:p.sprite||pokeApiSprite(p.nome), source:'uwadex'});
+  });
+  oficiais.forEach(p=>{
+    if(!uwadexNomes.has(p.nome.toLowerCase())){
+      dex.push({nome:p.nome, tipos:p.tipos, sprite:p.sprite, source:'oficial'});
+    }
+  });
+  window._pokeDex=dex;
+}
+
+// Popula DATADEX_NOMES a partir do DATADEX global da uwadex, se a página tiver
+// Na ficha, injetamos a lista de nomes diretamente abaixo
+(function(){
+  // Lista compacta: usada para autocomplete — extraída do DATADEX.pokemon no uwadex
+  // Como a ficha não carrega o DATADEX completo, buscamos só os nomes da uwadex
+  // Os oficiais são puxados do Supabase via tabela "pokemon_names" se existir, ou ignorados
+  // Para garantir resultados mesmo sem tabela extra, também buscamos da API pública do Pokedex
+  // Não bloqueia — carrega lazy quando o usuário abre o primeiro slot de edição
+})();
+
+// ─── Autocomplete UI ──────────────────────────────────
+let _acActive={};  // {id: index selecionado}
+
+function criarAutoComplete(inputId, prefix, slotIndex){
+  const input=document.getElementById(inputId);
+  if(!input||input.dataset.acBound) return;
+  input.dataset.acBound='1';
+  input.setAttribute('autocomplete','off');
+
+  // Garante wrapper relativo
+  if(!input.parentElement.classList.contains('pk-ac-wrap')){
+    const wrap=document.createElement('div');
+    wrap.className='pk-ac-wrap';
+    input.parentNode.insertBefore(wrap,input);
+    wrap.appendChild(input);
+  }
+
+  const listId=`ac-list-${inputId}`;
+  let list=document.getElementById(listId);
+  if(!list){
+    list=document.createElement('div');
+    list.className='pk-ac-list';
+    list.id=listId;
+    list.style.display='none';
+    input.parentElement.appendChild(list);
+  }
+
+  function fechar(){ list.style.display='none'; _acActive[inputId]=-1; }
+
+  function selecionar(item){
+    input.value=item.nome;
+    fechar();
+    // Preencher tipos se ainda vazios
+    const t0=document.getElementById(`${prefix}-tipo0-${slotIndex}`);
+    const t1=document.getElementById(`${prefix}-tipo1-${slotIndex}`);
+    if(t0&&!t0.value&&item.tipos[0]) t0.value=item.tipos[0].toLowerCase();
+    if(t1&&item.tipos[1]) t1.value=item.tipos[1].toLowerCase();
+    // Preencher sprite só se não há upload manual
+    const fileInput=document.getElementById(`${prefix}-img-file-${slotIndex}`);
+    const hasManualUpload=fileInput&&fileInput.dataset.hasUpload==='1';
+    if(!hasManualUpload){
+      const prev=document.getElementById(`${prefix}-img-prev-${slotIndex}`);
+      if(prev&&item.sprite){ prev.src=item.sprite; prev.style.display='block'; }
+      const ctx=prefix.replace('-pk','');
+      if(!window._pokeImgs) window._pokeImgs={};
+      if(!window._pokeImgs[ctx]) window._pokeImgs[ctx]={};
+      window._pokeImgs[ctx][slotIndex]=item.sprite;
+    }
+  }
+
+  function renderLista(q){
+    const query=q.toLowerCase().trim();
+    if(!query){ fechar(); return; }
+    const matches=window._pokeDex
+      .filter(p=>p.nome.toLowerCase().includes(query))
+      .slice(0,20);
+    if(!matches.length){ fechar(); return; }
+    _acActive[inputId]=0;
+    list.innerHTML=matches.map((p,idx)=>`
+      <div class="pk-ac-item${idx===0?' active':''}" data-idx="${idx}" data-nome="${p.nome}">
+        <img src="${p.sprite}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+        <span>${p.nome}</span>
+      </div>`).join('');
+    list.style.display='block';
+    list.querySelectorAll('.pk-ac-item').forEach(el=>{
+      el.addEventListener('mousedown',ev=>{
+        ev.preventDefault();
+        const idx=parseInt(el.dataset.idx);
+        selecionar(matches[idx]);
+      });
+    });
+  }
+
+  input.addEventListener('input',()=>renderLista(input.value));
+  input.addEventListener('focus',()=>{ if(input.value) renderLista(input.value); });
+  input.addEventListener('blur',()=>setTimeout(fechar,150));
+  input.addEventListener('keydown',e=>{
+    if(list.style.display==='none') return;
+    const items=list.querySelectorAll('.pk-ac-item');
+    let cur=_acActive[inputId]||0;
+    if(e.key==='ArrowDown'){ e.preventDefault(); cur=Math.min(cur+1,items.length-1); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); cur=Math.max(cur-1,0); }
+    else if(e.key==='Enter'||e.key==='Tab'){
+      if(items[cur]){ e.preventDefault(); items[cur].dispatchEvent(new MouseEvent('mousedown')); }
+      return;
+    } else if(e.key==='Escape'){ fechar(); return; }
+    _acActive[inputId]=cur;
+    items.forEach((el,i)=>el.classList.toggle('active',i===cur));
+    items[cur]?.scrollIntoView({block:'nearest'});
+  });
+}
+
 // ─── Render ───────────────────────────────────────────
 function renderFicha(){
   try{
@@ -650,6 +810,10 @@ function renderBox(){
       </div>
     </div>`;
   }).join('');
+  // Revincular autocomplete nos slots da box após re-render em modo edição
+  if(modoEdicao && window._pokeDexLoaded){
+    for(let i=0;i<total;i++) criarAutoComplete(`box-pk-nome-${i}`,'box-pk',i);
+  }
 }
 
 function slotEdit(i,pk,prefix='time'){
@@ -660,13 +824,16 @@ function slotEdit(i,pk,prefix='time'){
   const tipo1Opts=TIPOS_POKE.map(t=>`<option value="${t}" ${t0===t?'selected':''}>${t}</option>`).join('');
   const tipo2Opts=['<option value="">— nenhum —</option>'].concat(TIPOS_POKE.map(t=>`<option value="${t}" ${t1===t?'selected':''}>${t}</option>`)).join('');
   return`<div class="poke-slot-edit">
-    <label>Pokémon</label><input value="${pk.nome||''}" placeholder="Nome" id="${pfx}-nome-${i}"/>
+    <label>Pokémon</label>
+    <div class="pk-ac-wrap">
+      <input value="${pk.nome||''}" placeholder="Nome (buscar...)" id="${pfx}-nome-${i}" autocomplete="off"/>
+    </div>
     <label>Pokéball</label><select id="${pfx}-ball-${i}">${ballOpts}</select>
     <label>Tipo 1</label><select id="${pfx}-tipo0-${i}"><option value="">— nenhum —</option>${tipo1Opts}</select>
     <label>Tipo 2</label><select id="${pfx}-tipo1-${i}">${tipo2Opts}</select>
     <label>Imagem</label>
     ${pk.img?`<img class="poke-slot-edit-img-preview" src="${pk.img}" id="${pfx}-img-prev-${i}"/>`:`<img class="poke-slot-edit-img-preview" src="" id="${pfx}-img-prev-${i}" style="display:none"/>`}
-    <button class="poke-slot-edit-img-btn" onclick="document.getElementById('${pfx}-img-file-${i}').click()">📷 Escolher imagem</button>
+    <button class="poke-slot-edit-img-btn" onclick="document.getElementById('${pfx}-img-file-${i}').click()">📷 Escolher imagem própria</button>
     <input type="file" id="${pfx}-img-file-${i}" accept="image/*" style="display:none" onchange="onPokeImg('${prefix}',${i},this)"/>
     <label>Ability</label><input value="${pk.ability||''}" placeholder="Ex: Overgrow" id="${pfx}-ability-${i}"/>
     <label>Nível</label><input value="${pk.level||''}" placeholder="Ex: 50" type="number" min="1" max="100" id="${pfx}-level-${i}"/>
@@ -701,6 +868,8 @@ function onPokeImg(prefix,i,input){
     if(!window._pokeImgs) window._pokeImgs={};
     if(!window._pokeImgs[prefix]) window._pokeImgs[prefix]={};
     window._pokeImgs[prefix][i]=e.target.result;
+    // Marcar que este slot tem upload manual (não sobrescrever no autocomplete)
+    input.dataset.hasUpload='1';
   };
   reader.readAsDataURL(file);
 }
@@ -744,10 +913,22 @@ function ativarEdicao(){
   document.querySelectorAll('.edit-content').forEach(el=>el.style.display='block');
   document.getElementById('box-upgrades-wrap').style.display='block';
   renderTime();renderBox();renderRelEdit();
+  // Carregar dex e vincular autocomplete em background
+  carregarPokeDex().then(()=>vincularAutoCompletes());
   atualizarTopBar();
   iniciarAutoSave();
   fecharSecoes();
   document.body.classList.add('modo-edicao');
+}
+
+function vincularAutoCompletes(){
+  // time: slots 0-5
+  for(let i=0;i<6;i++) criarAutoComplete(`time-pk-nome-${i}`,'time-pk',i);
+  // box: slots 0..N
+  const slotUp=parseInt(document.getElementById('box-slot-upgrade')?.value||0)||ficha.boxSlotUpgrade||0;
+  const miniUp=parseInt(document.getElementById('box-mini-upgrade')?.value||0)||ficha.boxMiniUpgrade||0;
+  const total=6+(slotUp*5)+(miniUp*2);
+  for(let i=0;i<total;i++) criarAutoComplete(`box-pk-nome-${i}`,'box-pk',i);
 }
 function cancelarEdicao(){
   clearTimeout(_autoSaveTimer);
