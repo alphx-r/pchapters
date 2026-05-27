@@ -2138,8 +2138,17 @@ async function init(){
     await carregarHomeData();
     await carregarWikiPages();
     syncBiomaSelect();
+    await _carregarEstacao();
+
+    // Check if it's an evento URL
+    const eventoMatch = location.pathname.match(/^\/evento\/(.+)$/);
 
     loading(false);
+
+    if(eventoMatch){
+      await iniciarPaginaEvento(eventoMatch[1]);
+      return;
+    }
 
     await goTo(paginaInicial, null, false, wikiSlugInicial);
 
@@ -2244,6 +2253,8 @@ function toggleDarkMode(){
 
 window.addEventListener('popstate',e=>{
   const pathSeg=location.pathname.replace(/^\/+/,'').replace(/\/+$/,'');
+  const evMatch=pathSeg.match(/^evento\/(.+)$/);
+  if(evMatch){iniciarPaginaEvento(evMatch[1]);return;}
   const knownPage=PATH_PAGES[pathSeg];
   let page, wikiSlug=null;
   if(knownPage){ page=knownPage; }
@@ -2342,6 +2353,9 @@ function admTab(sec,el){
     document.getElementById('hist-clear-panel').style.display=isGold?'block':'none';
   }
   if(sec==='fichas-hist') carregarFichasHist();
+  if(sec==='estacao'){setTimeout(()=>{marcarBtnEstacao();renderEstMassa();},0);}
+  if(sec==='forcados'){setTimeout(()=>{populateFrcSelects();renderFrcPool();carregarForcados();},0);}
+  if(sec==='eventos'){setTimeout(()=>{const sel=document.getElementById('ev-bioma');if(sel)sel.innerHTML=biomas.map(b=>'<option>'+b.nome+'</option>').join('');carregarEventos();},0);}
 }
 
 // ══════════════════════════════════════
@@ -3568,9 +3582,49 @@ async function rolarEncontro(){
   const pokes=[];
   const grid=document.createElement('div');
   grid.className='results-grid';
-  for(let i=0;i<total;i++){const pk=buildCardData();pokes.push(pk);grid.innerHTML+=buildCardHtml(pk,i*0.08);}
+
+  // Verifica resultado forçado
+  const forcadoIds = await consumirForcado(personagem);
+
+  for(let i=0;i<total;i++){
+    let pk;
+    if(forcadoIds && forcadoIds[i]){
+      const pkData=pokemonDB.find(p=>p.id===forcadoIds[i]);
+      if(pkData){
+        const gender=rollGender(pkData.genero);
+        pk={nome:pkData.nome,tipos:pkData.tipos||[],emoji:pkData.emoji||'❓',sprite:pkData.sprite||null,habilidade:pkData.habilidade,rarity:pkData.raridade,genderS:gender.s,genderC:gender.c,lvl:rollLevel(),_forcado:true};
+      } else { pk=buildCardDataComEstacao(bioma); }
+    } else {
+      pk=buildCardDataComEstacao(bioma);
+    }
+    pokes.push(pk);
+    grid.innerHTML+=buildCardHtml(pk,i*0.08);
+  }
   section.appendChild(grid);
   await salvarNoHistorico(bioma,personagem,pokes);
+}
+
+function buildCardDataComEstacao(bioma){
+  const rarity=rollRarity();
+  // Pool base: sem estação exclusiva de outra estação
+  let pool=pokemonDB.filter(p=>p.bioma===bioma&&p.raridade===rarity&&(!p.estacao||p.estacao===estacaoAtiva));
+  // Aplica boost (promove raridade)
+  if(estacaoAtiva){
+    const BOOST_MAP={rarissimo:'raro',raro:'incomum',incomum:'comum',comum:'comum'};
+    const alvo=BOOST_MAP[rarity];
+    if(alvo===rarity){
+      const comBoost=pokemonDB.filter(p=>p.bioma===bioma&&p.estacao_boost===estacaoAtiva&&!p.estacao);
+      if(comBoost.length) pool=[...pool,...comBoost];
+    }
+  }
+  if(!pool.length) pool=pokemonDB.filter(p=>p.bioma===bioma&&p.raridade===rarity);
+  if(!pool.length){
+    const gender=rollGender('1d2');
+    return{nome:'???',tipos:['normal'],emoji:'❓',sprite:null,habilidade:'???',rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
+  }
+  const p=pool[Math.floor(Math.random()*pool.length)];
+  const gender=rollGender(p.genero);
+  return{nome:p.nome,tipos:p.tipos||[],emoji:p.emoji||'❓',sprite:p.sprite||null,habilidade:p.habilidade,rarity,genderS:gender.s,genderC:gender.c,lvl:rollLevel()};
 }
 
 // ══════════════════════════════════════
@@ -5630,28 +5684,6 @@ function renderModalPoolJogador(){
   });
 })();
 
-// ── Patch no admTab para carregar estação/forçados/eventos ao abrir ──
-const _admTabOriginal = typeof admTab === 'function' ? admTab : null;
-function admTab(sec, btn){
-  document.querySelectorAll('.adm-section').forEach(s=>s.classList.remove('active'));
-  const el=document.getElementById('sec-'+sec);
-  if(el) el.classList.add('active');
-  document.querySelectorAll('.adm-nav-btn').forEach(b=>b.classList.remove('active'));
-  if(btn) btn.classList.add('active');
-  if(sec==='estacao'){setTimeout(()=>{marcarBtnEstacao();renderEstMassa();},0);}
-  if(sec==='forcados'){setTimeout(()=>{populateFrcSelects();renderFrcPool();carregarForcados();},0);}
-  if(sec==='eventos'){setTimeout(()=>{const sel=document.getElementById('ev-bioma');if(sel)sel.innerHTML=biomas.map(b=>`<option>${b.nome}</option>`).join('');carregarEventos();},0);}
-}
-
-// ── Carregar estação e forcados na inicialização ──
-_carregarEstacao();
-
-// ── popstate para suporte a /evento/slug ──
-window.addEventListener('popstate',async()=>{
-  const pathPage=location.pathname.replace(/^\//,'')||'roller';
-  const eventoMatch=pathPage.match(/^evento\/(.+)$/);
-  if(eventoMatch){iniciarPaginaEvento(eventoMatch[1]);return;}
-});
 
 // ══════════════════════════════════════
 init();
