@@ -4967,7 +4967,8 @@ async function _carregarEstacao(){
       dbGet('configuracoes','chave=eq.estacao_ativa&limit=1'),
       dbGet('configuracoes','chave=eq.estacao_paginas&limit=1')
     ]);
-    estacaoAtiva=(_cfg&&_cfg[0])?_cfg[0].valor:null;
+    const _rawEst = (_cfg&&_cfg[0]) ? _cfg[0].valor : null;
+    estacaoAtiva = (_rawEst && _rawEst !== 'null') ? _rawEst : null;
     if(_cfgPag&&_cfgPag[0]){try{estacaoPaginas=JSON.parse(_cfgPag[0].valor);}catch(e){}}
     else{dbPost('configuracoes',{chave:'estacao_paginas',valor:JSON.stringify(estacaoPaginas)}).catch(()=>{});}
     renderEstacaoFab();
