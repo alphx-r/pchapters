@@ -17,25 +17,58 @@
   --red:#c03030;--green:#1a7a1a;
   --r:10px;--font-title:'Cinzel',serif;--font-body:'Nunito',sans-serif;
 }
-html.dark{
-  --brand:#4a9ede !important;--brand-mid:#5aaeee !important;--brand-light:#0d1f35 !important;
-  --accent:#e8a020 !important;--accent-light:#2a1f00 !important;
-  --bg:#0f1117 !important;--surface:#1a1d27 !important;--surface2:#22263a !important;
-  --border:#2a2f45 !important;--border2:#363c58 !important;
-  --text:#e0e6f0 !important;--muted:#8a9ab8 !important;
-  --red:#e05050 !important;--green:#4aaa4a !important;
+/* ── TEMAS DE ESTAÇÃO ── */
+html.tema-primavera{
+  --brand:#2d6a2d !important;--brand-mid:#3e9e3e !important;--brand-light:#eaf7ea !important;
+  --accent:#f0a030 !important;--accent-light:#fff8e8 !important;
+  --bg:#f2faf2 !important;--surface:#ffffff !important;--surface2:#e8f5e8 !important;
+  --border:#b8ddb8 !important;--border2:#90c890 !important;
+  --text:#1a2e1a !important;--muted:#5a7a5a !important;
 }
-html.dark .nav{background:#0d1622}
-html.dark .nav-logo{color:#fff}
-html.dark .nav-logo span{color:var(--accent)}
-html.dark .slide-img{filter:brightness(.7)}
-html.dark .callout-info{background:#0d1f3a;color:#7ab8f0}
-html.dark .callout-warn{background:#2a1f00;color:#f0c040}
-html.dark .callout-tip{background:#0d2a0d;color:#60c060}
-html.dark body{background:var(--bg);color:var(--text)}
-/* dark mode toggle btn */
-.dark-toggle{width:28px;height:28px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);background:transparent;color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;margin-left:8px;flex-shrink:0;line-height:1}
-.dark-toggle:hover{background:rgba(255,255,255,.15)}
+html.tema-primavera .nav{background:#2d6a2d !important}
+html.tema-primavera .nav-logo span{color:#f0a030 !important}
+html.tema-primavera .callout-info{background:#e0f4e0;color:#2d6a2d}
+html.tema-primavera .callout-warn{background:#fff3e0;color:#9a5000}
+html.tema-primavera .callout-tip{background:#e8ffe8;color:#1a6a1a}
+
+html.tema-verao{
+  --brand:#b05a00 !important;--brand-mid:#e07a10 !important;--brand-light:#fff4e0 !important;
+  --accent:#e8c020 !important;--accent-light:#fffbe0 !important;
+  --bg:#fffaf0 !important;--surface:#ffffff !important;--surface2:#fff3d8 !important;
+  --border:#f0d090 !important;--border2:#e0b860 !important;
+  --text:#2e1a00 !important;--muted:#8a6030 !important;
+}
+html.tema-verao .nav{background:#b05a00 !important}
+html.tema-verao .nav-logo span{color:#e8c020 !important}
+html.tema-verao .callout-info{background:#fff4d8;color:#7a4000}
+html.tema-verao .callout-warn{background:#fffbe0;color:#7a6000}
+html.tema-verao .callout-tip{background:#f0ffe0;color:#3a6000}
+
+html.tema-outono{
+  --brand:#7a2e00 !important;--brand-mid:#c04a10 !important;--brand-light:#fff0e8 !important;
+  --accent:#d4820a !important;--accent-light:#fff5e0 !important;
+  --bg:#fdf6f0 !important;--surface:#ffffff !important;--surface2:#faeae0 !important;
+  --border:#e8c0a0 !important;--border2:#d4a080 !important;
+  --text:#2e1200 !important;--muted:#8a5030 !important;
+}
+html.tema-outono .nav{background:#7a2e00 !important}
+html.tema-outono .nav-logo span{color:#d4820a !important}
+html.tema-outono .callout-info{background:#fae8d8;color:#7a2e00}
+html.tema-outono .callout-warn{background:#fff8e0;color:#7a5000}
+html.tema-outono .callout-tip{background:#f8ffe0;color:#4a5000}
+
+html.tema-inverno{
+  --brand:#1a3a6a !important;--brand-mid:#2e6ab8 !important;--brand-light:#e8f2ff !important;
+  --accent:#60b0e0 !important;--accent-light:#e8f8ff !important;
+  --bg:#f0f6ff !important;--surface:#ffffff !important;--surface2:#e4efff !important;
+  --border:#b0ccee !important;--border2:#88aad8 !important;
+  --text:#0a1828 !important;--muted:#4a6888 !important;
+}
+html.tema-inverno .nav{background:#1a3a6a !important}
+html.tema-inverno .nav-logo span{color:#60b0e0 !important}
+html.tema-inverno .callout-info{background:#e0eeff;color:#1a3a6a}
+html.tema-inverno .callout-warn{background:#fff8e0;color:#7a6000}
+html.tema-inverno .callout-tip{background:#e0fff8;color:#006a4a}
 html{background:var(--bg);transition:background .2s}
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);transition:background .2s,color .2s}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:100}
@@ -524,7 +557,6 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
     <button class="nav-link" onclick="goTo('npcs',this)">NPCs</button>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
-    <button class="dark-toggle" id="btn-dark" onclick="toggleDarkMode()" title="Alternar dark mode">💡</button>
     <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
   </div>
 </nav>
@@ -1077,48 +1109,41 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
               </div>
             </div>
           </div>
-          <!-- DARK MODE EDITOR -->
-          <div class="box" style="margin-top:4px;border-color:#2a2f45">
-            <div class="box-title" style="color:#5aaeee">🌙 Modo Escuro</div>
-            <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Personalize as cores exibidas quando o modo escuro estiver ativo.</p>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-              <div class="field">
-                <label>Fundo da página (dark)</label>
-                <input type="color" id="ec-dark-bg" value="#0f1117" oninput="aplicarEstilo()"/>
+          <!-- TEMAS DE ESTAÇÃO (preview) -->
+          <div class="box" style="margin-top:4px">
+            <div class="box-title">🌿 Temas de Estação</div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:16px">O tema é aplicado automaticamente quando uma estação está ativa. Ative uma estação na aba <strong>Estação</strong> para ver o tema em ação.</p>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+              <div style="border-radius:var(--r);overflow:hidden;border:1.5px solid #b8ddb8;cursor:pointer" onclick="applyEstacaoTema('primavera')" title="Pré-visualizar Primavera">
+                <div style="background:#2d6a2d;padding:8px 10px;color:#fff;font-size:11px;font-weight:700">🌱 Primavera</div>
+                <div style="background:#f2faf2;padding:8px 10px">
+                  <div style="background:#3e9e3e;border-radius:4px;height:8px;margin-bottom:5px"></div>
+                  <div style="background:#b8ddb8;border-radius:4px;height:6px;width:70%"></div>
+                </div>
               </div>
-              <div class="field">
-                <label>Fundo dos cards (dark)</label>
-                <input type="color" id="ec-dark-surface" value="#1a1d27" oninput="aplicarEstilo()"/>
+              <div style="border-radius:var(--r);overflow:hidden;border:1.5px solid #f0d090;cursor:pointer" onclick="applyEstacaoTema('verao')" title="Pré-visualizar Verão">
+                <div style="background:#b05a00;padding:8px 10px;color:#fff;font-size:11px;font-weight:700">☀️ Verão</div>
+                <div style="background:#fffaf0;padding:8px 10px">
+                  <div style="background:#e07a10;border-radius:4px;height:8px;margin-bottom:5px"></div>
+                  <div style="background:#f0d090;border-radius:4px;height:6px;width:70%"></div>
+                </div>
               </div>
-              <div class="field">
-                <label>Cor principal / nav (dark)</label>
-                <input type="color" id="ec-dark-brand" value="#4a9ede" oninput="aplicarEstilo()"/>
+              <div style="border-radius:var(--r);overflow:hidden;border:1.5px solid #e8c0a0;cursor:pointer" onclick="applyEstacaoTema('outono')" title="Pré-visualizar Outono">
+                <div style="background:#7a2e00;padding:8px 10px;color:#fff;font-size:11px;font-weight:700">🍂 Outono</div>
+                <div style="background:#fdf6f0;padding:8px 10px">
+                  <div style="background:#c04a10;border-radius:4px;height:8px;margin-bottom:5px"></div>
+                  <div style="background:#e8c0a0;border-radius:4px;height:6px;width:70%"></div>
+                </div>
               </div>
-              <div class="field">
-                <label>Cor de destaque (dark)</label>
-                <input type="color" id="ec-dark-brand-mid" value="#5aaeee" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field">
-                <label>Cor do texto (dark)</label>
-                <input type="color" id="ec-dark-text" value="#e0e6f0" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field">
-                <label>Cor das bordas (dark)</label>
-                <input type="color" id="ec-dark-border" value="#2a2f45" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field">
-                <label>Cor de fundo nav (dark)</label>
-                <input type="color" id="ec-dark-nav" value="#0d1622" oninput="aplicarEstilo()"/>
-              </div>
-              <div class="field">
-                <label>Texto secundário / muted (dark)</label>
-                <input type="color" id="ec-dark-muted" value="#8a9ab8" oninput="aplicarEstilo()"/>
+              <div style="border-radius:var(--r);overflow:hidden;border:1.5px solid #b0ccee;cursor:pointer" onclick="applyEstacaoTema('inverno')" title="Pré-visualizar Inverno">
+                <div style="background:#1a3a6a;padding:8px 10px;color:#fff;font-size:11px;font-weight:700">❄️ Inverno</div>
+                <div style="background:#f0f6ff;padding:8px 10px">
+                  <div style="background:#2e6ab8;border-radius:4px;height:8px;margin-bottom:5px"></div>
+                  <div style="background:#b0ccee;border-radius:4px;height:6px;width:70%"></div>
+                </div>
               </div>
             </div>
-            <div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-              <button class="btn btn-sm" style="background:#1a1d27;color:#e0e6f0;border:1.5px solid #2a2f45" onclick="previewDarkMode()">👁 Pré-visualizar dark</button>
-              <button class="btn btn-sm btn-warn" onclick="resetarDarkMode()">↺ Restaurar dark padrão</button>
-            </div>
+            <button class="btn btn-sm btn-warn" style="margin-top:12px" onclick="applyEstacaoTema(null)">↺ Restaurar tema padrão</button>
           </div>
 
           <div class="box">
@@ -1153,6 +1178,14 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
             <div id="home-slides-adm-list" style="margin-bottom:14px"></div>
             <button class="btn btn-primary btn-sm" onclick="homeAdmAddSlide()">+ Novo slide</button>
             <div class="fb fb-ok" id="home-slides-fb-ok" style="margin-top:10px;display:none">✓ Slides salvos!</div>
+          </div>
+
+          <!-- CARDS EDITOR -->
+          <div class="box">
+            <div class="box-title">🃏 Cards de Informação</div>
+            <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Até 8 cards exibidos na página inicial. Deixe em branco para ocultar.</p>
+            <div id="home-cards-adm-list" style="margin-bottom:14px"></div>
+            <div class="fb fb-ok" id="home-cards-fb-ok" style="margin-top:10px;display:none">✓ Cards salvos!</div>
           </div>
 
           <div style="display:flex;gap:10px;margin-top:4px">
@@ -2161,7 +2194,7 @@ async function init(){
     if(['login','player','adm'].includes(paginaInicial))
       document.getElementById('btn-login').classList.add('active');
 
-  } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); loading(false); }
+  } catch(e){ console.error(e); alert('Erro ao carregar dados. Verifique sua conexão.'); } finally { loading(false); }
 }
 
 // ══════════════════════════════════════
@@ -2182,6 +2215,7 @@ async function goTo(page,el,pushState=true,wikiSlug=null){
   if(page==='wiki' && wikiSlug) path = '/'+wikiSlug;
   if(pushState) history.pushState({page,wikiSlug},'',path);
   await lazyLoad(page,wikiSlug);
+  renderEstacaoFab();
 }
 
 async function lazyLoad(page,wikiSlug=null){
@@ -2241,14 +2275,6 @@ function toggleSenha(id, btn){
   else { inp.type='password'; btn.textContent='👁'; }
 }
 
-function toggleDarkMode(){
-  const isDark = document.documentElement.classList.toggle('dark');
-  try{ localStorage.setItem('pch-dark', isDark?'1':'0'); }catch{}
-}
-
-(function initDark(){
-  try{ if(localStorage.getItem('pch-dark')==='1') document.documentElement.classList.add('dark'); }catch{}
-})();
 
 
 window.addEventListener('popstate',e=>{
@@ -3688,14 +3714,14 @@ function renderHistorico(){
 // ══════════════════════════════════════
 // EDITOR VISUAL
 // ══════════════════════════════════════
-const DARK_DEFAULT={darkBg:'#0f1117',darkSurface:'#1a1d27',darkBrand:'#4a9ede',darkBrandMid:'#5aaeee',darkText:'#e0e6f0',darkBorder:'#2a2f45',darkNav:'#0d1622',darkMuted:'#8a9ab8'};
-const ESTILO_DEFAULT={brand:'#000000',brandMid:'#000000',accent:'#b22a2a',bg:'#f4f6fa',surface:'#ffffff',text:'#1a1f2e',fontTitle:"'Cinzel',serif",fontBody:"'Nunito',sans-serif",radius:'10px',customCss:'',...DARK_DEFAULT};
+const ESTILO_DEFAULT={brand:'#000000',brandMid:'#000000',accent:'#b22a2a',bg:'#f4f6fa',surface:'#ffffff',text:'#1a1f2e',fontTitle:"'Cinzel',serif",fontBody:"'Nunito',sans-serif",radius:'10px',customCss:''};
 
 async function carregarEstiloSalvo(){
   try{
     const res=await sb('configuracoes?chave=eq.estilo&select=valor');
-    if(res&&res[0]&&res[0].valor&&Object.keys(res[0].valor).length>0){
-      return {...ESTILO_DEFAULT,...res[0].valor};
+    if(res&&res[0]&&res[0].valor){
+      const parsed = typeof res[0].valor==='string' ? JSON.parse(res[0].valor) : res[0].valor;
+      if(parsed&&typeof parsed==='object') return {...ESTILO_DEFAULT,...parsed};
     }
   }catch(e){}
   return ESTILO_DEFAULT;
@@ -3712,15 +3738,6 @@ function carregarEditorUI(e){
   document.getElementById('ec-font-body').value=d.fontBody;
   document.getElementById('ec-radius').value=d.radius;
   document.getElementById('ec-custom-css').value=d.customCss||'';
-  // Dark mode fields
-  document.getElementById('ec-dark-bg').value=d.darkBg||DARK_DEFAULT.darkBg;
-  document.getElementById('ec-dark-surface').value=d.darkSurface||DARK_DEFAULT.darkSurface;
-  document.getElementById('ec-dark-brand').value=d.darkBrand||DARK_DEFAULT.darkBrand;
-  document.getElementById('ec-dark-brand-mid').value=d.darkBrandMid||DARK_DEFAULT.darkBrandMid;
-  document.getElementById('ec-dark-text').value=d.darkText||DARK_DEFAULT.darkText;
-  document.getElementById('ec-dark-border').value=d.darkBorder||DARK_DEFAULT.darkBorder;
-  document.getElementById('ec-dark-nav').value=d.darkNav||DARK_DEFAULT.darkNav;
-  document.getElementById('ec-dark-muted').value=d.darkMuted||DARK_DEFAULT.darkMuted;
 }
 function coletarEstilo(){
   return{
@@ -3734,14 +3751,6 @@ function coletarEstilo(){
     fontBody:    document.getElementById('ec-font-body').value,
     radius:      document.getElementById('ec-radius').value,
     customCss:   document.getElementById('ec-custom-css').value,
-    darkBg:      document.getElementById('ec-dark-bg').value,
-    darkSurface: document.getElementById('ec-dark-surface').value,
-    darkBrand:   document.getElementById('ec-dark-brand').value,
-    darkBrandMid:document.getElementById('ec-dark-brand-mid').value,
-    darkText:    document.getElementById('ec-dark-text').value,
-    darkBorder:  document.getElementById('ec-dark-border').value,
-    darkNav:     document.getElementById('ec-dark-nav').value,
-    darkMuted:   document.getElementById('ec-dark-muted').value,
   };
 }
 function aplicarVars(e){
@@ -3757,17 +3766,7 @@ function aplicarVars(e){
     --font-title:${e.fontTitle};
     --font-body:${e.fontBody};
     --r:${e.radius};
-  }
-  html.dark{
-    --brand:${e.darkBrand||DARK_DEFAULT.darkBrand} !important;
-    --brand-mid:${e.darkBrandMid||DARK_DEFAULT.darkBrandMid} !important;
-    --bg:${e.darkBg||DARK_DEFAULT.darkBg} !important;
-    --surface:${e.darkSurface||DARK_DEFAULT.darkSurface} !important;
-    --text:${e.darkText||DARK_DEFAULT.darkText} !important;
-    --border:${e.darkBorder||DARK_DEFAULT.darkBorder} !important;
-    --muted:${e.darkMuted||DARK_DEFAULT.darkMuted} !important;
-  }
-  html.dark .nav{ background:${e.darkNav||DARK_DEFAULT.darkNav}; }`;
+  }`;
   let customTag=document.getElementById('custom-css-tag');
   if(!customTag){customTag=document.createElement('style');customTag.id='custom-css-tag';document.head.appendChild(customTag);}
   customTag.textContent=e.customCss||'';
@@ -3775,18 +3774,7 @@ function aplicarVars(e){
   const vars=['--brand','--brand-mid','--accent','--bg','--surface','--text','--font-title','--font-body','--r'];
   vars.forEach(v=>document.documentElement.style.removeProperty(v));
 }
-function previewDarkMode(){
-  if(!document.documentElement.classList.contains('dark')){
-    document.documentElement.classList.add('dark');
-  }
-  aplicarEstilo();
-}
-function resetarDarkMode(){
-  const cur=coletarEstilo();
-  const reset={...cur,...DARK_DEFAULT};
-  carregarEditorUI(reset);
-  aplicarVars(reset);
-}
+function aplicarEstilo(){aplicarVars(coletarEstilo());}
 function injectFonts(str){
   const map={
     'Playfair':'Playfair+Display:wght@400;600;700',
@@ -3812,7 +3800,6 @@ function injectFonts(str){
     }
   });
 }
-function aplicarEstilo(){aplicarVars(coletarEstilo());}
 async function salvarEstilo(){
   const e=coletarEstilo();
   aplicarVars(e);
@@ -4838,10 +4825,18 @@ function estacaoPorMes(){
   return mapa[mes]||null;
 }
 
+const ESTACAO_TEMAS=['primavera','verao','outono','inverno'];
+function applyEstacaoTema(estacao){
+  ESTACAO_TEMAS.forEach(t=>document.documentElement.classList.remove('tema-'+t));
+  if(estacao&&ESTACAO_TEMAS.includes(estacao)){
+    document.documentElement.classList.add('tema-'+estacao);
+  }
+}
+
 function renderEstacaoFab(){
   const fab=document.getElementById('estacao-fab');
   if(!fab) return;
-  const pagina=(location.pathname.replace(/^\//,'')||'roller').replace('rolls','rolagens');
+  const pagina=(document.querySelector('.page.active')?.id?.replace('page-','')||'roller');
   if(!estacaoAtiva||!ESTACAO_CFG[estacaoAtiva]||!estacaoPaginas.includes(pagina)){fab.style.display='none';return;}
   const e=ESTACAO_CFG[estacaoAtiva];
   fab.style.display='flex';
@@ -4888,6 +4883,7 @@ async function setEstacao(val){
     if(existing&&existing[0]) await dbPatch('configuracoes','chave=eq.estacao_ativa',{valor:val});
     else await dbPost('configuracoes',{chave:'estacao_ativa',valor:val});
     estacaoAtiva=val;
+    applyEstacaoTema(val);
     renderEstacaoFab();
     marcarBtnEstacao();
     fbOk.style.display='block'; setTimeout(()=>fbOk.style.display='none',2500);
@@ -4969,6 +4965,7 @@ async function _carregarEstacao(){
     ]);
     const _rawEst = (_cfg&&_cfg[0]) ? _cfg[0].valor : null;
     estacaoAtiva = (_rawEst && _rawEst !== 'null') ? _rawEst : null;
+    applyEstacaoTema(estacaoAtiva);
     if(_cfgPag&&_cfgPag[0]){try{estacaoPaginas=JSON.parse(_cfgPag[0].valor);}catch(e){}}
     else{dbPost('configuracoes',{chave:'estacao_paginas',valor:JSON.stringify(estacaoPaginas)}).catch(()=>{});}
     renderEstacaoFab();
