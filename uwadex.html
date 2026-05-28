@@ -444,6 +444,7 @@ html.dark .dex-tab.active{color:#fff}
                     <label>Sprite Shiny ✨</label>
                     <input type="file" id="f-sprite-shiny-file" accept="image/*" onchange="previewUwadexSpriteShiny(this)" style="font-size:13px"/>
                     <input type="text" id="f-sprite-shiny" placeholder="ou cole uma URL…" style="margin-top:6px;padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);font-size:12px;width:100%;box-sizing:border-box" autocomplete="off"/>
+                  </div>
                   <div class="field"><label>Raridade</label>
                     <select id="f-raridade">
                       <option value="inicial">Inicial</option>
@@ -1689,11 +1690,10 @@ function editarPokemon(id){
   document.getElementById('f-nome').value=p.nome||'';
   document.getElementById('f-classif').value=p.classificacao||'';
   document.getElementById('f-sprite').value=p.sprite&&!p.sprite.startsWith('data:')?p.sprite:'';
-  const prev=document.getElementById('f-sprite-preview');
-  if(p.sprite){prev.dataset.b64=p.sprite.startsWith('data:')?p.sprite:'';document.getElementById('f-sprite-preview-img').src=p.sprite;}
-  const prevShiny=document.getElementById('f-sprite-shiny-preview');
-  if(p.sprite_shiny){prevShiny.dataset.b64=p.sprite_shiny.startsWith('data:')?p.sprite_shiny:'';document.getElementById('f-sprite-shiny-preview-img').src=p.sprite_shiny;}
-  else{delete prevShiny.dataset.b64;}
+  const spriteFileInp=document.getElementById('f-sprite-file');
+  if(spriteFileInp){ if(p.sprite&&p.sprite.startsWith('data:')) spriteFileInp.dataset.b64=p.sprite; else delete spriteFileInp.dataset.b64; }
+  const shinyFileInp=document.getElementById('f-sprite-shiny-file');
+  if(shinyFileInp){ if(p.sprite_shiny&&p.sprite_shiny.startsWith('data:')) shinyFileInp.dataset.b64=p.sprite_shiny; else delete shinyFileInp.dataset.b64; }
   document.getElementById('f-sprite-shiny').value=p.sprite_shiny&&!p.sprite_shiny.startsWith('data:')?p.sprite_shiny:'';
   document.getElementById('f-raridade').value=p.raridade||'comum';
   document.getElementById('f-altura').value=p.altura||'';
