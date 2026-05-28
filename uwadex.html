@@ -295,9 +295,9 @@ html.dark .dex-tab.active{color:#fff}
   <a class="nav-logo" href="/">P<span>Chapters</span></a>
   <div class="nav-tabs" id="nav-tabs" style="display:none">
     <button class="dex-tab active" data-tab="pokemon" onclick="switchDexTab('pokemon',this)">UWAdex</button>
-    <button class="dex-tab" data-tab="nationaldex" onclick="switchDexTab('nationaldex',this)">NationalDex</button>
-    <button class="dex-tab" data-tab="habilidades" onclick="switchDexTab('habilidades',this)">Abilities</button>
-    <button class="dex-tab" data-tab="moves" onclick="switchDexTab('moves',this)">Moves</button>
+    <button class="dex-tab" data-tab="nationaldex" onclick="switchDexTab('nationaldex',this)">NATIONALdex</button>
+    <button class="dex-tab" data-tab="habilidades" onclick="switchDexTab('habilidades',this)">ABILITYdex</button>
+    <button class="dex-tab" data-tab="moves" onclick="switchDexTab('moves',this)">MOVEdex</button>
   </div>
   <div class="nav-right">
     <button class="dark-toggle" onclick="toggleDark()" title="Alternar tema">◑</button>
@@ -326,7 +326,7 @@ html.dark .dex-tab.active{color:#fff}
           <thead><tr>
             <th style="width:70px">#</th>
             <th>Nome</th>
-            <th style="width:140px">Tipo(s)</th>
+            <th style="width:161px">Tipo(s)</th>
             <th style="width:60px;text-align:center">CA</th>
             <th style="width:60px;text-align:center">HP</th>
             <th style="width:80px;text-align:center">Dado</th>
@@ -699,10 +699,13 @@ async function sb(path, opts={}){
   if(!text) return {ok:res.ok,data:[]};
   let parsed;
   try{parsed=JSON.parse(text);}catch{return {ok:false,data:[],error:'parse error'};}
-  if(!res.ok) return {ok:false,data:[],error:parsed?.message||parsed?.error||`HTTP ${res.status}`};
+  if(!res.ok){
+    const msg=parsed?.message||parsed?.hint||text;
+    throw new Error(`Supabase ${res.status}: ${msg}`);
+  }
   return {ok:true,data:Array.isArray(parsed)?parsed:[parsed]};
 }
-const dbGet  = async (t,q='')  => { const r=await sb(`${t}?${q}&order=numero.asc`); return r.data||[]; };
+const dbGet  = async (t,q='')  => { const r=await sb(`${t}${q ? '?'+q : ''}`); return r.data||[]; };
 const dbPost = (t,b)     => sb(t,{method:'POST',body:JSON.stringify(b)});
 const dbPatch= (t,q,b)   => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
 const dbDel  = (t,q)     => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
@@ -806,8 +809,8 @@ function showView(id){
 function parsePath(){
   const path=location.pathname.replace(/\/+$/,'');
   if(path==='/uwadex/adm'||path==='/uwadex/adm/') return {view:'adm',slug:null,tab:null};
-  if(path==='/uwadex/abilities') return {view:'dex',slug:null,tab:'habilidades'};
-  if(path==='/uwadex/moves') return {view:'dex',slug:null,tab:'moves'};
+  if(path==='/uwadex/abilitydex') return {view:'dex',slug:null,tab:'habilidades'};
+  if(path==='/uwadex/movedex') return {view:'dex',slug:null,tab:'moves'};
   if(path==='/uwadex/nationaldex') return {view:'dex',slug:null,tab:'nationaldex'};
   const m=path.match(/^\/uwadex\/(.+)$/);
   if(m) return {view:'ficha',slug:m[1],tab:null};
@@ -864,7 +867,7 @@ async function init(){
 
   // Load pokemon
   try{
-    const data = await withTimeout(dbGet('uwadex'),7000);
+    const data = await withTimeout(dbGet('uwadex','order=numero.asc'),7000);
     uwaDex = Array.isArray(data) ? data : [];
   }catch(e){ uwaDex=[]; }
 
@@ -991,7 +994,7 @@ function switchDexTab(tab, btn, updateUrl=true){
   (btn||navTabs.querySelector(`.dex-tab[data-tab="${tab}"]`)).classList.add('active');
   document.getElementById('dex-panel-'+tab).classList.add('active');
   // Update header title & subtitle per tab
-  const titles={pokemon:'UWAdex',nationaldex:'NationalDex',habilidades:'AbilityDex',moves:'MoveDex'};
+  const titles={pokemon:'UWAdex',nationaldex:'NATIONALdex',habilidades:'ABILITYdex',moves:'MOVEdex'};
   const h1=document.getElementById('dex-main-title');
   const sub=document.getElementById('dex-main-sub');
   if(h1) h1.textContent=titles[tab]||'UWAdex';
@@ -1004,7 +1007,7 @@ function switchDexTab(tab, btn, updateUrl=true){
   if(tab==='moves') renderMoves(document.getElementById('search-moves').value);
   if(tab==='nationaldex') renderNationalDex(document.getElementById('search-nationaldex').value);
   if(updateUrl){
-    const path=tab==='pokemon'?'/uwadex/':tab==='habilidades'?'/uwadex/abilities':tab==='moves'?'/uwadex/moves':'/uwadex/nationaldex';
+    const path=tab==='pokemon'?'/uwadex/':tab==='habilidades'?'/uwadex/abilitydex':tab==='moves'?'/uwadex/movedex':'/uwadex/nationaldex';
     history.pushState({tab},'',path);
   }
 }
@@ -1799,7 +1802,7 @@ async function excluirPokemon(){
 let ndexEntries = [];
 
 async function loadNDexEntries(){
-  try{ ndexEntries = await dbGet('uwadex_ndex'); } catch{ ndexEntries=[]; }
+  try{ ndexEntries = await dbGet('uwadex_ndex','order=id.asc'); } catch{ ndexEntries=[]; }
 }
 
 async function renderAdmNDexList(){
