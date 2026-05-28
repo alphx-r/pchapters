@@ -26,7 +26,6 @@ html.tema-primavera{
   --text:#1a2e1a !important;--muted:#5a7a5a !important;
 }
 html.tema-primavera .nav{background:#2d6a2d !important}
-html.tema-primavera .nav-logo span{color:#f0a030 !important}
 html.tema-primavera .callout-info{background:#e0f4e0;color:#2d6a2d}
 html.tema-primavera .callout-warn{background:#fff3e0;color:#9a5000}
 html.tema-primavera .callout-tip{background:#e8ffe8;color:#1a6a1a}
@@ -39,7 +38,6 @@ html.tema-verao{
   --text:#2e1a00 !important;--muted:#8a6030 !important;
 }
 html.tema-verao .nav{background:#b05a00 !important}
-html.tema-verao .nav-logo span{color:#e8c020 !important}
 html.tema-verao .callout-info{background:#fff4d8;color:#7a4000}
 html.tema-verao .callout-warn{background:#fffbe0;color:#7a6000}
 html.tema-verao .callout-tip{background:#f0ffe0;color:#3a6000}
@@ -52,7 +50,6 @@ html.tema-outono{
   --text:#2e1200 !important;--muted:#8a5030 !important;
 }
 html.tema-outono .nav{background:#7a2e00 !important}
-html.tema-outono .nav-logo span{color:#d4820a !important}
 html.tema-outono .callout-info{background:#fae8d8;color:#7a2e00}
 html.tema-outono .callout-warn{background:#fff8e0;color:#7a5000}
 html.tema-outono .callout-tip{background:#f8ffe0;color:#4a5000}
@@ -65,7 +62,6 @@ html.tema-inverno{
   --text:#0a1828 !important;--muted:#4a6888 !important;
 }
 html.tema-inverno .nav{background:#1a3a6a !important}
-html.tema-inverno .nav-logo span{color:#60b0e0 !important}
 html.tema-inverno .callout-info{background:#e0eeff;color:#1a3a6a}
 html.tema-inverno .callout-warn{background:#fff8e0;color:#7a6000}
 html.tema-inverno .callout-tip{background:#e0fff8;color:#006a4a}
@@ -547,7 +543,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 </div>
 
 <nav class="nav" id="main-nav">
-  <div class="nav-logo" style="cursor:pointer" onclick="goTo('home',null)">P<span>Chapters</span></div>
+  <div class="nav-logo" style="cursor:pointer;color:#fff" onclick="goTo('home',null)">P<span style="color:#b22a2a">Chapters</span></div>
   <div class="nav-links" id="nav-links">
     <button class="nav-link active" onclick="goTo('roller',this)">Pokémon</button>
     <button class="nav-link" onclick="goTo('bioma',this)">Por Bioma</button>
@@ -3803,20 +3799,26 @@ function injectFonts(str){
 async function salvarEstilo(){
   const e=coletarEstilo();
   aplicarVars(e);
-  await sb('configuracoes?chave=eq.estilo',{
-    method:'PATCH',
-    body:JSON.stringify({valor:e, updated_at: new Date().toISOString()}),
-    prefer:'return=minimal'
-  });
-  fb('editor-fb-ok');
+  try{
+    const existing=await sb('configuracoes?chave=eq.estilo&select=chave');
+    if(existing&&existing[0]){
+      await sb('configuracoes?chave=eq.estilo',{method:'PATCH',body:JSON.stringify({valor:JSON.stringify(e)}),prefer:'return=minimal'});
+    } else {
+      await sb('configuracoes',{method:'POST',body:JSON.stringify({chave:'estilo',valor:JSON.stringify(e)}),prefer:'return=minimal'});
+    }
+    fb('editor-fb-ok');
+  }catch(err){console.error('salvarEstilo',err);}
 }
 async function resetarEstilo(){
   if(!confirm('Restaurar padrão para todos os dispositivos?'))return;
-  await sb('configuracoes?chave=eq.estilo',{
-    method:'PATCH',
-    body:JSON.stringify({valor:ESTILO_DEFAULT, updated_at: new Date().toISOString()}),
-    prefer:'return=minimal'
-  });
+  try{
+    const existing=await sb('configuracoes?chave=eq.estilo&select=chave');
+    if(existing&&existing[0]){
+      await sb('configuracoes?chave=eq.estilo',{method:'PATCH',body:JSON.stringify({valor:JSON.stringify(ESTILO_DEFAULT)}),prefer:'return=minimal'});
+    } else {
+      await sb('configuracoes',{method:'POST',body:JSON.stringify({chave:'estilo',valor:JSON.stringify(ESTILO_DEFAULT)}),prefer:'return=minimal'});
+    }
+  }catch(err){console.error('resetarEstilo',err);}
   carregarEditorUI(ESTILO_DEFAULT);
   aplicarVars(ESTILO_DEFAULT);
 }
@@ -4170,7 +4172,6 @@ function renderHomeAdmCards(){
 }
 
 async function salvarHomeData(){
-  // collect slides — só coleta se os campos estiverem renderizados no DOM
   const sCount = document.querySelectorAll('[id^="hs-img-"]').length;
   const slides = sCount > 0 ? [] : (homeData.slides || HOME_DEFAULTS.slides);
   if(sCount > 0){
@@ -4184,7 +4185,6 @@ async function salvarHomeData(){
       });
     }
   }
-  // collect cards — só coleta se os campos estiverem renderizados no DOM
   const cCount = document.querySelectorAll('[id^="hc-icon-"]').length;
   const cards = cCount > 0 ? [] : (homeData.cards || HOME_DEFAULTS.cards);
   if(cCount > 0){
@@ -4196,7 +4196,6 @@ async function salvarHomeData(){
       });
     }
   }
-  // collect quickmenu dynamically
   const qCount = document.querySelectorAll('[id^="hq-label-"]').length;
   const quickmenu = qCount > 0
     ? (homeData.quickmenu||[]).map((row,ri)=>
@@ -4209,18 +4208,18 @@ async function salvarHomeData(){
     : (homeData.quickmenu || HOME_DEFAULTS.quickmenu);
   homeData = {slides, quickmenu, cards};
   const payload = JSON.stringify(homeData);
-  // upsert into configuracoes table
-  const existing = await dbGet('configuracoes','chave=eq.home_data&limit=1');
-  if(existing && existing[0]){
-    await dbPatch('configuracoes','chave=eq.home_data',{valor:payload});
-  } else {
-    await dbPost('configuracoes',{chave:'home_data',valor:payload});
-  }
-  fb('home-slides-fb-ok');
-  fb('home-cards-fb-ok');
-  // re-render home
-  pagesLoaded.home = false;
-  renderHomePage();
+  try{
+    const existing = await sb('configuracoes?chave=eq.home_data&select=chave');
+    if(existing && existing[0]){
+      await sb('configuracoes?chave=eq.home_data',{method:'PATCH',body:JSON.stringify({valor:payload}),prefer:'return=minimal'});
+    } else {
+      await sb('configuracoes',{method:'POST',body:JSON.stringify({chave:'home_data',valor:payload}),prefer:'return=minimal'});
+    }
+    fb('home-slides-fb-ok');
+    fb('home-cards-fb-ok');
+    pagesLoaded.home = false;
+    renderHomePage();
+  }catch(e){console.error('salvarHomeData',e);}
 }
 
 async function resetarHomeData(){
