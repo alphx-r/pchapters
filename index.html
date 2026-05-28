@@ -2075,11 +2075,16 @@ async function sb(path, opts={}){
   if(opts.method==='DELETE'||res.status===204) return [];
   const text = await res.text();
   if(!text) return [];
-  try{ return JSON.parse(text); }catch(e){ return []; }
+  const parsed = (() => { try{ return JSON.parse(text); }catch(e){ return null; } })();
+  if(!res.ok){
+    const msg = parsed?.message || parsed?.hint || text;
+    throw new Error(`Supabase ${res.status}: ${msg}`);
+  }
+  return parsed ?? [];
 }
 
 const supabaseClient = supabase.createClient(SUPA_URL, SUPA_KEY);
-const dbGet  = (t,q='')   => sb(`${t}?${q}&order=created_at.asc`);
+const dbGet  = (t,q='')   => sb(`${t}${q ? '?'+q : ''}`);
 const dbPost = (t,b)      => sb(t,{method:'POST',body:JSON.stringify(b)});
 const dbPatch= (t,q,b)    => sb(`${t}?${q}`,{method:'PATCH',body:JSON.stringify(b)});
 const dbDel  = (t,q)      => sb(`${t}?${q}`,{method:'DELETE',prefer:'return=minimal'});
@@ -2154,11 +2159,11 @@ async function init(){
     if(paginaInicial==='player'&&!playerLogado) paginaInicial='login';
 
     const [_players,_personagens,_biomas,_pokemons,_admins,estilo] = await Promise.all([
-      dbGet('players'),
-      dbGet('personagens'),
-      dbGet('biomas'),
-      dbGet('pokemons'),
-      dbGet('admins'),
+      dbGet('players','order=created_at.asc'),
+      dbGet('personagens','order=created_at.asc'),
+      dbGet('biomas','order=created_at.asc'),
+      dbGet('pokemons','order=created_at.asc'),
+      dbGet('admins','order=created_at.asc'),
       carregarEstiloSalvo(),
     ]);
     players=_players; personagens=_personagens;
@@ -2240,8 +2245,8 @@ async function lazyLoad(page,wikiSlug=null){
   if(page==='adm'){
     if(!admLogado) return;
     const [_players,_personagens] = await Promise.all([
-      players.length===0 ? dbGet('players') : Promise.resolve(players),
-      personagens.length===0 ? dbGet('personagens') : Promise.resolve(personagens),
+      players.length===0 ? dbGet('players','order=created_at.asc') : Promise.resolve(players),
+      personagens.length===0 ? dbGet('personagens','order=created_at.asc') : Promise.resolve(personagens),
     ]);
     if(players.length===0) players=_players;
     if(personagens.length===0) personagens=_personagens;
@@ -2352,8 +2357,8 @@ function admTab(sec,el){
   if(el)el.classList.add('active');
   if(sec==='personagens'){
     const load=[];
-    if(players.length===0) load.push(dbGet('players').then(r=>{players=r;}));
-    if(personagens.length===0) load.push(dbGet('personagens').then(r=>{personagens=r;}));
+    if(players.length===0) load.push(dbGet('players','order=created_at.asc').then(r=>{players=r;}));
+    if(personagens.length===0) load.push(dbGet('personagens','order=created_at.asc').then(r=>{personagens=r;}));
     Promise.all(load).then(()=>{renderTbodyPersonagens();renderTbodyPlayers();});
   }
   if(sec==='biomas')renderTbodyBiomas();
