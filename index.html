@@ -4209,11 +4209,11 @@ async function salvarHomeData(){
   homeData = {slides, quickmenu, cards};
   const payload = JSON.stringify(homeData);
   try{
-    const existing = await sb('configuracoes?chave=eq.home_data&select=chave');
+    const existing = await dbGet('configuracoes','chave=eq.home_data&limit=1');
     if(existing && existing[0]){
-      await sb('configuracoes?chave=eq.home_data',{method:'PATCH',body:JSON.stringify({valor:payload}),prefer:'return=minimal'});
+      await dbPatch('configuracoes','chave=eq.home_data',{valor:payload});
     } else {
-      await sb('configuracoes',{method:'POST',body:JSON.stringify({chave:'home_data',valor:payload}),prefer:'return=minimal'});
+      await dbPost('configuracoes',{chave:'home_data',valor:payload});
     }
     fb('home-slides-fb-ok');
     fb('home-cards-fb-ok');
