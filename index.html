@@ -26,6 +26,8 @@ html.tema-primavera{
   --text:#1a2e1a !important;--muted:#5a7a5a !important;
 }
 html.tema-primavera .nav{background:#2d6a2d !important}
+html.tema-primavera .nav-login{background:#f0a030 !important;border-color:#f0a030 !important}
+html.tema-primavera .nav-logo span{color:#fff !important}
 html.tema-primavera .callout-info{background:#e0f4e0;color:#2d6a2d}
 html.tema-primavera .callout-warn{background:#fff3e0;color:#9a5000}
 html.tema-primavera .callout-tip{background:#e8ffe8;color:#1a6a1a}
@@ -38,6 +40,8 @@ html.tema-verao{
   --text:#2e1a00 !important;--muted:#8a6030 !important;
 }
 html.tema-verao .nav{background:#b05a00 !important}
+html.tema-verao .nav-login{background:#e8c020 !important;border-color:#e8c020 !important}
+html.tema-verao .nav-logo span{color:#fff !important}
 html.tema-verao .callout-info{background:#fff4d8;color:#7a4000}
 html.tema-verao .callout-warn{background:#fffbe0;color:#7a6000}
 html.tema-verao .callout-tip{background:#f0ffe0;color:#3a6000}
@@ -50,6 +54,8 @@ html.tema-outono{
   --text:#2e1200 !important;--muted:#8a5030 !important;
 }
 html.tema-outono .nav{background:#7a2e00 !important}
+html.tema-outono .nav-login{background:#d4820a !important;border-color:#d4820a !important}
+html.tema-outono .nav-logo span{color:#fff !important}
 html.tema-outono .callout-info{background:#fae8d8;color:#7a2e00}
 html.tema-outono .callout-warn{background:#fff8e0;color:#7a5000}
 html.tema-outono .callout-tip{background:#f8ffe0;color:#4a5000}
@@ -62,6 +68,8 @@ html.tema-inverno{
   --text:#0a1828 !important;--muted:#4a6888 !important;
 }
 html.tema-inverno .nav{background:#1a3a6a !important}
+html.tema-inverno .nav-login{background:#60b0e0 !important;border-color:#60b0e0 !important}
+html.tema-inverno .nav-logo span{color:#fff !important}
 html.tema-inverno .callout-info{background:#e0eeff;color:#1a3a6a}
 html.tema-inverno .callout-warn{background:#fff8e0;color:#7a6000}
 html.tema-inverno .callout-tip{background:#e0fff8;color:#006a4a}
@@ -74,9 +82,11 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .nav-link{font-size:13px;font-weight:600;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:none;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;transition:all .2s}
 .nav-link:hover{background:rgba(255,255,255,.12);color:#fff}
 .nav-link.active{background:rgba(255,255,255,.18);color:#fff}
-.nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid var(--brand);background:var(--brand);color:#fff;cursor:pointer;transition:all .2s}
-.nav-login:hover{background:var(--brand);border-color:var(--brand);opacity:.88}
-.nav-login.active{background:var(--brand);border-color:var(--brand)}
+.nav-logo-chapters{color:#b22a2a}
+html[class*="tema-"] .nav-logo-chapters{color:#fff !important}
+.nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:all .2s}
+.nav-login:hover{background:var(--accent);border-color:var(--accent);opacity:.88}
+.nav-login.active{background:var(--accent);border-color:var(--accent)}
 .page{display:none;padding:28px;max-width:1000px;margin:0 auto}
 .page.active{display:block}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
@@ -543,7 +553,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 </div>
 
 <nav class="nav" id="main-nav">
-  <div class="nav-logo" style="cursor:pointer;color:#fff" onclick="goTo('home',null)">P<span style="color:var(--accent)">Chapters</span></div>
+  <div class="nav-logo" style="cursor:pointer;color:#fff" onclick="goTo('home',null)">P<span class="nav-logo-chapters">Chapters</span></div>
   <div class="nav-links" id="nav-links">
     <button class="nav-link active" onclick="goTo('roller',this)">Pokémon</button>
     <button class="nav-link" onclick="goTo('bioma',this)">Por Bioma</button>
@@ -1260,7 +1270,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
           <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border)">
             <button class="pk-tab-btn active" data-ntab="tab-npc-cidade" onclick="setNpcAdmTab('tab-npc-cidade',this)">🏙️ Cidades</button>
             <button class="pk-tab-btn" data-ntab="tab-npc-npc" onclick="setNpcAdmTab('tab-npc-npc',this)">🧑 NPCs</button>
-            <button class="btn btn-sm" style="background:#fdf3dc;color:#7a5010;border:1px solid #e8d080;margin-left:auto" onclick="diagnosticarNpcTabelas()">🔍 Diagnosticar tabelas</button>
+            <button class="btn btn-sm" style="background:#fdf3dc;color:#7a5010;border:1px solid #e8d080;margin-left:auto" onclick="diagnosticarNpc()">🔍 Diagnosticar tabelas</button>
           </div>
 
           <!-- TAB: Cidades -->
@@ -2380,6 +2390,7 @@ function admTab(sec,el){
     document.getElementById('hist-clear-panel').style.display=isGold?'block':'none';
   }
   if(sec==='fichas-hist') carregarFichasHist();
+  if(sec==='npcs-adm'){_resyncNpcCidades().then(()=>{renderNpcAdmCidades();renderNpcAdmLista();});}
   if(sec==='estacao'){setTimeout(()=>{marcarBtnEstacao();renderEstMassa();},0);}
   if(sec==='forcados'){setTimeout(()=>{populateFrcSelects();renderFrcPool();carregarForcados();},0);}
   if(sec==='eventos'){setTimeout(()=>{const sel=document.getElementById('ev-bioma');if(sel)sel.innerHTML=biomas.map(b=>'<option>'+b.nome+'</option>').join('');carregarEventos();},0);}
@@ -4814,6 +4825,21 @@ function _parseBag(bag){if(Array.isArray(bag))return bag.filter(Boolean);const r
 // NPC ADM — FUNÇÕES
 // ══════════════════════════════════════
 
+function setNpcAdmTipo(tipo, el){
+  document.querySelectorAll('#npc-adm-tipo-oficial,#npc-adm-tipo-evento').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const cidSel=document.getElementById('npc-adm-cidade-sel');
+  if(cidSel){
+    if(tipo==='oficial'){
+      cidSel.innerHTML='<option value="">— Todas as cidades —</option>'+
+        NPC_CIDADES.map(c=>`<option value="${c.id}">${c.emoji||''} ${c.nome}</option>`).join('');
+    } else {
+      cidSel.innerHTML='<option value="">— Todos os eventos —</option>';
+    }
+  }
+  renderNpcAdmLista();
+}
+
 function setNpcAdmTab(tab, el){
   document.querySelectorAll('[data-ntab]').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.pk-tab-panel[id^="tab-npc-"]').forEach(p=>p.classList.remove('active'));
@@ -4830,7 +4856,7 @@ function renderNpcAdmCidades(){
   if(!wrap) return;
   if(!NPC_CIDADES.length){wrap.innerHTML='<p style="color:var(--muted);font-size:13px">Nenhuma cidade cadastrada.</p>';return;}
   wrap.innerHTML=NPC_CIDADES.map(c=>`
-    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);margin-bottom:6px">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
       <span style="font-size:20px">${c.emoji||'🏙️'}</span>
       <span style="flex:1;font-weight:700;font-size:14px">${c.nome}</span>
       <span style="font-size:11px;color:var(--muted)">${(c.npcs||[]).length} NPC(s)</span>
@@ -5141,22 +5167,30 @@ async function deletarNpc(){
   }catch(e){alert('Erro ao excluir: '+e.message);}
 }
 
-// ── DIAGNÓSTICO ──
-async function diagnosticarNpcTabelas(){
+async function diagnosticarNpc(){
   const out=document.getElementById('npc-diag-out');
-  if(!out) return;
-  out.textContent='Verificando...';
+  if(!out){
+    let d=document.createElement('div');
+    d.id='npc-diag-out';
+    d.style.cssText='margin-top:10px;padding:10px;background:var(--surface2);border-radius:8px;font-size:12px;font-family:monospace;white-space:pre-wrap;border:1px solid var(--border)';
+    document.getElementById('sec-npcs-adm')?.appendChild(d);
+  }
+  const outEl=document.getElementById('npc-diag-out');
+  outEl.textContent='Verificando...';
   try{
-    const [cidades,npcs]=await Promise.all([sb('npc_cidades?select=id,nome&order=nome.asc'),sb('npcs?select=id,nome,npc_cidade_id&order=nome.asc')]);
-    out.textContent=`✅ npc_cidades: ${(cidades||[]).length} registros\n✅ npcs: ${(npcs||[]).length} registros`;
-  }catch(e){out.textContent='❌ Erro: '+e.message;}
+    const [cidades,npcs]=await Promise.all([
+      sb('npc_cidades?select=id,nome&order=nome.asc'),
+      sb('npcs?select=id,nome,npc_cidade_id&order=nome.asc')
+    ]);
+    outEl.textContent=`✅ npc_cidades: ${(cidades||[]).length} registros\n✅ npcs: ${(npcs||[]).length} registros`;
+  }catch(e){outEl.textContent='❌ Erro: '+e.message;}
 }
 
 // ══════════════════════════════════════
 // ESTAÇÃO DO ANO
 // ══════════════════════════════════════
 let estacaoAtiva = null;
-let estacaoPaginas = ['roller','bioma','dados','rolagens','npcs'];
+let estacaoPaginas = ['home','roller','bioma','dados','rolagens','npcs'];
 
 const ESTACAO_CFG={
   primavera:{emoji:'🌱',cor:'#2E9E50',label:'Primavera'},
@@ -6032,9 +6066,8 @@ function renderModalPoolJogador(){
 // ══════════════════════════════════════
 init();
 </script>
-
 <!-- ESTAÇÃO FAB -->
-<div id="estacao-fab" onclick="toggleFab()"></div>
+<div id="estacao-fab" style="display:none" onclick="toggleFab()"></div>
 
 </body>
 </html>
