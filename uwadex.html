@@ -365,19 +365,19 @@ html.dark .dex-tab.active{color:#fff}
       </div>
       <!-- Region Quick Access Menu -->
       <div class="ndex-region-menu" id="ndex-region-menu">
-        <button class="ndex-region-btn active" onclick="scrollToRegion('kanto',this)">Kanto</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('johto',this)">Johto</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('hoenn',this)">Hoenn</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('sinnoh',this)">Sinnoh</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('unova',this)">Unova</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('kalos',this)">Kalos</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('alola',this)">Alola</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('galar',this)">Galar</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('paldea',this)">Paldea</button>
+        <button class="ndex-region-btn active" data-region="kanto" onclick="scrollToRegion('kanto',this)">Kanto</button>
+        <button class="ndex-region-btn" data-region="johto" onclick="scrollToRegion('johto',this)">Johto</button>
+        <button class="ndex-region-btn" data-region="hoenn" onclick="scrollToRegion('hoenn',this)">Hoenn</button>
+        <button class="ndex-region-btn" data-region="sinnoh" onclick="scrollToRegion('sinnoh',this)">Sinnoh</button>
+        <button class="ndex-region-btn" data-region="unova" onclick="scrollToRegion('unova',this)">Unova</button>
+        <button class="ndex-region-btn" data-region="kalos" onclick="scrollToRegion('kalos',this)">Kalos</button>
+        <button class="ndex-region-btn" data-region="alola" onclick="scrollToRegion('alola',this)">Alola</button>
+        <button class="ndex-region-btn" data-region="galar" onclick="scrollToRegion('galar',this)">Galar</button>
+        <button class="ndex-region-btn" data-region="paldea" onclick="scrollToRegion('paldea',this)">Paldea</button>
         <span style="width:1px;background:var(--border2);margin:0 2px;align-self:stretch;display:inline-block"></span>
-        <button class="ndex-region-btn" onclick="scrollToRegion('prime',this)" style="border-color:var(--brand-mid);color:var(--brand-mid)">Prime</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('axis',this)" style="border-color:var(--brand-mid);color:var(--brand-mid)">Axis</button>
-        <button class="ndex-region-btn" onclick="scrollToRegion('uwa',this)" style="border-color:var(--accent);color:var(--accent)">UWA</button>
+        <button class="ndex-region-btn" data-region="prime" onclick="scrollToRegion('prime',this)" style="border-color:var(--brand-mid);color:var(--brand-mid)">Prime</button>
+        <button class="ndex-region-btn" data-region="axis" onclick="scrollToRegion('axis',this)" style="border-color:var(--brand-mid);color:var(--brand-mid)">Axis</button>
+        <button class="ndex-region-btn" data-region="uwa" onclick="scrollToRegion('uwa',this)" style="border-color:var(--accent);color:var(--accent)">UWA</button>
       </div>
       <!-- Card grid container -->
       <div id="nationaldex-grid-wrap"></div>
@@ -424,7 +424,6 @@ html.dark .dex-tab.active{color:#fff}
 <!-- ═══════════════════════════════ FICHA VIEW ═══════════════════════════════ -->
 <div class="view" id="view-ficha">
   <div class="ficha-wrap">
-    <button class="ficha-back" onclick="voltarDex()">← Voltar para a UWAdex</button>
     <div id="ficha-content"></div>
   </div>
 </div>
@@ -1114,11 +1113,68 @@ function getRegionForNum(num, regiaoCustom, isUwa){
   return 'extra';
 }
 
+// ── NDEX: active region state ──
+let _ndexActiveRegion = 'kanto';
+let _ndexGroupsCache = null;
+
+function _buildNdexGroups(all){
+  const groups={};
+  NDEX_REGIONS.forEach(r=>{ groups[r.id]=[]; });
+  groups['extra']=[];
+  all.forEach(p=>{
+    const num=p.numero||9999;
+    const rid=getRegionForNum(num, p.regiao, p._source==='uwa');
+    groups[rid].push(p);
+  });
+  return groups;
+}
+
+function _renderRegionSection(regionId, groups){
+  const CUSTOM_COLORS={prime:'var(--brand-mid)',axis:'var(--brand-mid)',uwa:'var(--accent)'};
+  const r=NDEX_REGIONS.find(x=>x.id===regionId);
+  const list=groups[regionId]||[];
+  if(!list.length) return '';
+  if(regionId==='extra'){
+    return `<div class="ndex-region-section" id="ndex-sec-extra">
+      <div class="ndex-region-title">Extras</div>
+      <div class="ndex-card-grid">${list.map(p=>ndexCardHTML(p)).join('')}</div>
+    </div>`;
+  }
+  if(r&&r.custom){
+    const color=CUSTOM_COLORS[r.id]||'var(--brand-mid)';
+    return `<div class="ndex-region-section" id="ndex-sec-${r.id}">
+      <div class="ndex-region-title" style="border-color:${color};color:${color}">
+        ${r.label}
+        <span class="ndex-region-range" style="color:${color};opacity:.7">${list.length} Pokémon</span>
+      </div>
+      <div class="ndex-card-grid">${list.map(p=>ndexCardHTML(p)).join('')}</div>
+    </div>`;
+  }
+  if(r){
+    return `<div class="ndex-region-section" id="ndex-sec-${r.id}">
+      <div class="ndex-region-title">
+        ${r.label}
+        <span class="ndex-region-range">#${String(r.from).padStart(4,'0')} — #${String(r.to).padStart(4,'0')}</span>
+      </div>
+      <div class="ndex-card-grid">${list.map(p=>ndexCardHTML(p)).join('')}</div>
+    </div>`;
+  }
+  return '';
+}
+
 function scrollToRegion(regionId, btn){
   document.querySelectorAll('.ndex-region-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  const sec=document.getElementById('ndex-sec-'+regionId);
-  if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+  // If currently in search mode, ignore — region switching only works in browse mode
+  const searchVal=(document.getElementById('search-nationaldex')?.value||'').trim();
+  if(searchVal) return;
+  _ndexActiveRegion=regionId;
+  // Render only this region
+  if(_ndexGroupsCache){
+    const wrap=document.getElementById('nationaldex-grid-wrap');
+    wrap.innerHTML=_renderRegionSection(regionId, _ndexGroupsCache);
+    wrap.scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
 
 function renderNationalDex(q=''){
@@ -1136,57 +1192,30 @@ function renderNationalDex(q=''){
   if(menuEl) menuEl.style.display=q?'none':'flex';
 
   if(q){
-    // flat grid when searching
+    // flat grid when searching — show all matches
+    _ndexGroupsCache=null;
     wrap.innerHTML=`<div class="ndex-card-grid">${filtered.map(p=>ndexCardHTML(p)).join('')}</div>`;
     return;
   }
 
-  // Group by region
-  const groups={};
-  NDEX_REGIONS.forEach(r=>{ groups[r.id]=[]; });
-  groups['extra']=[];
+  // Build groups cache (all Pokémon, not filtered)
+  _ndexGroupsCache=_buildNdexGroups(all);
 
-  filtered.forEach(p=>{
-    const num=p.numero||9999;
-    const rid=getRegionForNum(num, p.regiao, p._source==='uwa');
-    groups[rid].push(p);
-  });
-
-  let html='';
-  // Standard regions first (non-custom)
-  NDEX_REGIONS.filter(r=>!r.custom).forEach(r=>{
-    const list=groups[r.id];
-    if(!list.length) return;
-    html+=`<div class="ndex-region-section" id="ndex-sec-${r.id}">
-      <div class="ndex-region-title">
-        ${r.label}
-        <span class="ndex-region-range">#${String(r.from).padStart(4,'0')} — #${String(r.to).padStart(4,'0')}</span>
-      </div>
-      <div class="ndex-card-grid">${list.map(p=>ndexCardHTML(p)).join('')}</div>
-    </div>`;
-  });
-  // Custom regions (Prime, Axis, UWA)
-  const CUSTOM_COLORS={prime:'var(--brand-mid)',axis:'var(--brand-mid)',uwa:'var(--accent)'};
-  NDEX_REGIONS.filter(r=>r.custom).forEach(r=>{
-    const list=groups[r.id];
-    if(!list.length) return;
-    const color=CUSTOM_COLORS[r.id]||'var(--brand-mid)';
-    html+=`<div class="ndex-region-section" id="ndex-sec-${r.id}">
-      <div class="ndex-region-title" style="border-color:${color};color:${color}">
-        ${r.label}
-        <span class="ndex-region-range" style="color:${color};opacity:.7">${list.length} Pokémon</span>
-      </div>
-      <div class="ndex-card-grid">${list.map(p=>ndexCardHTML(p)).join('')}</div>
-    </div>`;
-  });
-  // Extra (entries not fitting any region)
-  if(groups['extra'].length){
-    html+=`<div class="ndex-region-section" id="ndex-sec-extra">
-      <div class="ndex-region-title">Extras</div>
-      <div class="ndex-card-grid">${groups['extra'].map(p=>ndexCardHTML(p)).join('')}</div>
-    </div>`;
+  // Make sure active region exists and has data; fallback to first non-empty
+  if(!_ndexGroupsCache[_ndexActiveRegion]?.length){
+    const first=[...NDEX_REGIONS,'extra'].find(r=>{
+      const id=typeof r==='string'?r:r.id;
+      return (_ndexGroupsCache[id]||[]).length>0;
+    });
+    _ndexActiveRegion=first?(typeof first==='string'?first:first.id):'kanto';
   }
-  wrap.innerHTML=html;
+
+  // Highlight the correct button
+  document.querySelectorAll('.ndex-region-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.region===_ndexActiveRegion);
+  });
+
+  wrap.innerHTML=_renderRegionSection(_ndexActiveRegion, _ndexGroupsCache);
 }
 
 function dadoFmt(dado){
@@ -1492,10 +1521,25 @@ function renderFicha(slug){
     ${a.desc?`: <span style="color:var(--text)">${a.desc}</span>`:''}
   </div>`).join('');
 
+  // ── Nav prev/next ──
+  const uwaSorted=[...uwaDex].sort((a,b)=>(a.numero??9999)-(b.numero??9999));
+  const idxS=uwaSorted.findIndex(x=>slugify(x.nome)===slug);
+  const prevP=idxS>0?uwaSorted[idxS-1]:null;
+  const nextP=idxS<uwaSorted.length-1?uwaSorted[idxS+1]:null;
+  const navHTML=`<div class="poke-nav">
+    ${prevP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(prevP.nome)}')">&#8249; <span><span class="poke-nav-num">${prevP.numero?'#'+String(prevP.numero).padStart(3,'0'):''}</span>${prevP.nome}</span></button>`:'<div></div>'}
+    <div style="display:flex;gap:6px">
+      <button class="poke-nav-btn" onclick="voltarDex();setTimeout(()=>{document.querySelector('.dex-tab[data-tab=pokemon]')?.click()},50)">UWAdex</button>
+      <button class="poke-nav-btn" onclick="voltarDex();setTimeout(()=>{document.querySelector('.dex-tab[data-tab=nationaldex]')?.click()},50)">NATIONALdex</button>
+    </div>
+    ${nextP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(nextP.nome)}')"><span><span class="poke-nav-num">${nextP.numero?'#'+String(nextP.numero).padStart(3,'0'):''}</span>${nextP.nome}</span> &#8250;</button>`:'<div></div>'}
+  </div>`;
+
   // ── Main block ──
   const themeStyle=`--brand:${theme.brand};--brand-mid:${theme.brandMid};--brand-light:${theme.brandLight};--surface2:${theme.surface2};--border:${theme.border};--muted:${theme.muted}`;
   document.getElementById('ficha-content').innerHTML=`
     <div style="${themeStyle}">
+    ${navHTML}
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
@@ -2525,8 +2569,8 @@ async function _renderUwaEntry(slug, p, root){
   const navHtml = `<div class="poke-nav">
     ${prev?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(prev.nome)}')">‹ <span><span class="poke-nav-num">${prev.numero?'#'+String(prev.numero).padStart(3,'0'):''}</span>${prev.nome}</span></button>`:'<div></div>'}
     <div style="display:flex;gap:6px">
-      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=pokemon]').click()">🌿 UWAdex</button>
-      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=nationaldex]').click()">📖 NATIONALdex</button>
+      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=pokemon]').click()">UWAdex</button>
+      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=nationaldex]').click()">NATIONALdex</button>
     </div>
     ${next?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(next.nome)}')"><span><span class="poke-nav-num">${next.numero?'#'+String(next.numero).padStart(3,'0'):''}</span>${next.nome}</span> ›</button>`:'<div></div>'}
   </div>`;
@@ -2794,7 +2838,10 @@ async function _renderPokeApiEntry(slug, root){
   const nextLabel = nextUwa?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>${nextUwa.nome}` : nextNum?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>Próximo`:'';
   const navHtml = `<div class="poke-nav">
     ${prevNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${prevNum})">‹ <span>${prevLabel}</span></button>`:'<div></div>'}
-    <button class="poke-nav-btn" onclick="navigateTo('dex');setTimeout(()=>{document.querySelector('.dex-tab[data-tab=nationaldex]')?.click()},50)">📖 NATIONALdex</button>
+    <div style="display:flex;gap:6px">
+      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=pokemon]').click()">UWAdex</button>
+      <button class="poke-nav-btn" onclick="navigateTo('dex');setTimeout(()=>{document.querySelector('.dex-tab[data-tab=nationaldex]')?.click()},50)">NATIONALdex</button>
+    </div>
     ${nextNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${nextNum})"><span>${nextLabel}</span> ›</button>`:'<div></div>'}
   </div>`;
 
