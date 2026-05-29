@@ -2444,28 +2444,29 @@ function _buildNdexMovesHtml(movesLvl, eggMoves, tutorMoves){
     return `<tr>
       <td class="lvl-cell">${m.lvl===0||m.lvl==='0'?'—':m.lvl||'—'}</td>
       <td class="move-name">${m.nome||''}</td>
-      <td>${_ndexCatPill(m.cat||mv?.categoria||'')}</td>
       <td style="color:var(--muted);font-size:11px;line-height:1.4">${rolagem?`<strong>${rolagem}</strong> — `:''}${desc}</td>
     </tr>`;
-  }).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum move cadastrado.</td></tr>`;
+  }).join('') : `<tr><td colspan="3" class="moves-empty">Nenhum move cadastrado.</td></tr>`;
 
   const eggH = eggMoves.length ? eggMoves.map(m=>{
     const mv=_getMoveData(m.nome);
     const desc=m.desc||mv?.efeito||'';
+    const rolagem=m.rolagem||mv?.rolagem||'';
     return `<tr>
       <td class="move-name" colspan="2">${m.nome||''}</td>
-      <td colspan="2" style="color:var(--muted);font-size:11px">${desc}</td>
+      <td style="color:var(--muted);font-size:11px">${rolagem?`<strong>${rolagem}</strong> — `:''}${desc}</td>
     </tr>`;
-  }).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum egg move cadastrado.</td></tr>`;
+  }).join('') : `<tr><td colspan="3" class="moves-empty">Nenhum egg move cadastrado.</td></tr>`;
 
   const tutH = tutorMoves.length ? tutorMoves.map(m=>{
     const mv=_getMoveData(m.nome);
     const desc=m.desc||mv?.efeito||'';
+    const rolagem=m.rolagem||mv?.rolagem||'';
     return `<tr>
       <td class="move-name" colspan="2">${m.nome||''}</td>
-      <td colspan="2" style="color:var(--muted);font-size:11px">${desc}</td>
+      <td style="color:var(--muted);font-size:11px">${rolagem?`<strong>${rolagem}</strong> — `:''}${desc}</td>
     </tr>`;
-  }).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum tutor move cadastrado.</td></tr>`;
+  }).join('') : `<tr><td colspan="3" class="moves-empty">Nenhum tutor move cadastrado.</td></tr>`;
 
   return `<div class="ficha-moves-wrap">
     <div class="moves-tabs">
@@ -2474,13 +2475,13 @@ function _buildNdexMovesHtml(movesLvl, eggMoves, tutorMoves){
       <button class="moves-tab" onclick="switchMovesTab(this,'ndex-tab-tutor')">Tutor Moves</button>
     </div>
     <div class="moves-panel active" id="ndex-tab-lvl">
-      <table class="moves-table"><thead><tr><th style="width:55px">LVL</th><th>Move</th><th style="width:80px">Cat.</th><th>Efeito / Rolagem</th></tr></thead><tbody>${lvlH}</tbody></table>
+      <table class="moves-table"><thead><tr><th style="width:55px">LVL</th><th>Move</th><th>Efeito / Rolagem</th></tr></thead><tbody>${lvlH}</tbody></table>
     </div>
     <div class="moves-panel" id="ndex-tab-egg">
-      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th colspan="2">Efeito</th></tr></thead><tbody>${eggH}</tbody></table>
+      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th>Efeito</th></tr></thead><tbody>${eggH}</tbody></table>
     </div>
     <div class="moves-panel" id="ndex-tab-tutor">
-      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th colspan="2">Efeito</th></tr></thead><tbody>${tutH}</tbody></table>
+      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th>Efeito</th></tr></thead><tbody>${tutH}</tbody></table>
     </div>
   </div>`;
 }
@@ -2583,8 +2584,7 @@ async function _renderUwaEntry(slug, p, root){
         <div class="ficha-sprite-num">${numStr}</div>
         ${rarLbl?`<div style="margin-bottom:4px"><span class="type-pill ${rarCls}" style="font-size:9px">${rarLbl}</span></div>`:''}
         <img class="ficha-sprite-img" src="${spriteUrl}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
-        <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
-        <div class="ficha-sprite-types">${tipos.map(t=>`<span class="type-pill ${_ndexTypeClass(t)}">${t}</span>`).join('')}</div>
+        <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t.toLowerCase()}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
         <div class="ficha-info-name">${p.nome_display||p.nome}</div>
@@ -2679,7 +2679,7 @@ async function _renderPokeApiEntry(slug, root){
             return `<div class="evo-stage${stage.isCurrent?' current':''}">
               <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${clickTarget}')"/>
               <div class="evo-stage-name">${stage.nome}</div>
-            </div>${arrow}`;
+            </div>${arrow.replace(/\bLVL\b/g,'lvl')}`;
           }).join('');
           evoHtml = `<div class="evo-chain-wrap"><div class="evo-chain-title">EVOLUTIONARY CHAIN</div><div class="evo-chain-inner">${stH}</div></div>`;
         }
@@ -2702,9 +2702,8 @@ async function _renderPokeApiEntry(slug, root){
   const movesLvlH = apiMovesLvl.length ? apiMovesLvl.map(m=>`<tr>
     <td class="lvl-cell">${m.lvl===0?'—':m.lvl}</td>
     <td class="move-name">${m.nome}</td>
-    <td>${_ndexCatPill(m.cat)}</td>
     <td style="color:var(--muted);font-size:11px;line-height:1.4">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
-  </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum move disponível.</td></tr>`;
+  </tr>`).join('') : `<tr><td colspan="3" class="moves-empty">Nenhum move disponível.</td></tr>`;
 
   // Egg moves from PokéAPI
   const apiEggMoves = pokeData.moves
@@ -2716,8 +2715,8 @@ async function _renderPokeApiEntry(slug, root){
     });
   const eggH = apiEggMoves.length ? apiEggMoves.map(m=>`<tr>
     <td class="move-name" colspan="2">${m.nome}</td>
-    <td colspan="2" style="color:var(--muted);font-size:11px">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
-  </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum egg move disponível.</td></tr>`;
+    <td style="color:var(--muted);font-size:11px">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
+  </tr>`).join('') : `<tr><td colspan="3" class="moves-empty">Nenhum egg move disponível.</td></tr>`;
 
   // Tutor moves from PokéAPI
   const apiTutorMoves = pokeData.moves
@@ -2729,8 +2728,8 @@ async function _renderPokeApiEntry(slug, root){
     });
   const tutH = apiTutorMoves.length ? apiTutorMoves.map(m=>`<tr>
     <td class="move-name" colspan="2">${m.nome}</td>
-    <td colspan="2" style="color:var(--muted);font-size:11px">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
-  </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum tutor move disponível.</td></tr>`;
+    <td style="color:var(--muted);font-size:11px">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
+  </tr>`).join('') : `<tr><td colspan="3" class="moves-empty">Nenhum tutor move disponível.</td></tr>`;
 
   const movesHtml = `<div class="ficha-moves-wrap">
     <div class="moves-tabs">
@@ -2739,13 +2738,13 @@ async function _renderPokeApiEntry(slug, root){
       <button class="moves-tab" onclick="switchMovesTab(this,'ndex-api-tutor')">Tutor Moves</button>
     </div>
     <div class="moves-panel active" id="ndex-api-lvl">
-      <table class="moves-table"><thead><tr><th style="width:55px">LVL</th><th>Move</th><th style="width:80px">Cat.</th><th>Efeito / Rolagem</th></tr></thead><tbody>${movesLvlH}</tbody></table>
+      <table class="moves-table"><thead><tr><th style="width:55px">LVL</th><th>Move</th><th>Efeito / Rolagem</th></tr></thead><tbody>${movesLvlH}</tbody></table>
     </div>
     <div class="moves-panel" id="ndex-api-egg">
-      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th colspan="2">Efeito</th></tr></thead><tbody>${eggH}</tbody></table>
+      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th>Efeito</th></tr></thead><tbody>${eggH}</tbody></table>
     </div>
     <div class="moves-panel" id="ndex-api-tutor">
-      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th colspan="2">Efeito</th></tr></thead><tbody>${tutH}</tbody></table>
+      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th>Efeito</th></tr></thead><tbody>${tutH}</tbody></table>
     </div>
   </div>`;
 
@@ -2761,14 +2760,28 @@ async function _renderPokeApiEntry(slug, root){
     return `<div class="ficha-dmg-wrap"><div class="ficha-section-title">DAMAGE TAKEN</div>${_buildDmgGroupsHtml(dmgTaken)}</div>`;
   })();
 
-  // Biology section
-  const bioHtml = (flavor||shinyUrl)?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
+  // Gender ratio from speciesData
+  const genderRate = speciesData?.gender_rate ?? -1;
+  let genderStr = '—';
+  if(genderRate === -1) genderStr = 'Genderless';
+  else if(genderRate === 0) genderStr = '100% ♂';
+  else if(genderRate === 8) genderStr = '100% ♀';
+  else { const f = Math.round(genderRate/8*100); genderStr = `${100-f}% ♂ / ${f}% ♀`; }
+
+  // Biology section — format: "Name, o CLASSIFICATION. Flavor."
+  const bioIntro = (genus||flavor) ? (()=>{
+    const parts = [];
+    if(genus) parts.push(`<strong>${namePt}</strong>, o <em>${genus}</em>.`);
+    if(flavor) parts.push(flavor);
+    return parts.join(' ');
+  })() : null;
+  const bioHtml = (bioIntro||shinyUrl)?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
     <div class="ficha-bio-inner">
       ${shinyUrl?`<div class="ficha-bio-sprites"><div style="display:flex;flex-direction:column;align-items:center;gap:4px">
         <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="shiny" onerror="this.style.display='none'"/>
         <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
       </div></div>`:''}
-      <div>${flavor?`<div class="flavor-box">${flavor}</div>`:''}
+      <div>${bioIntro?`<div class="flavor-box">${bioIntro}</div>`:''}
       </div>
     </div>
   </div>`:'';
@@ -2793,8 +2806,7 @@ async function _renderPokeApiEntry(slug, root){
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
         <img class="ficha-sprite-img" src="${spriteUrl}" alt="${namePt}" onerror="this.src='${FALLBACK}'"/>
-        <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
-        <div class="ficha-sprite-types">${tipos.map(t=>`<span class="type-pill ${_ndexTypeClass(t)}">${t}</span>`).join('')}</div>
+        <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t.toLowerCase()}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
         <div class="ficha-info-name">${namePt}${namePt!==name?`<span style="display:block;font-size:12px;font-weight:400;opacity:.7">${name}</span>`:''}</div>
@@ -2802,6 +2814,7 @@ async function _renderPokeApiEntry(slug, root){
           ${genus?`<tr><td>Classification</td><td>${genus}</td></tr>`:''}
           <tr><td>Height</td><td>${altura} cm</td></tr>
           <tr><td>Weight</td><td>${peso} kg</td></tr>
+          <tr><td>Gender Ratio</td><td>${genderStr}</td></tr>
           ${(dado!=='—'||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span>${dado}</div>
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span>${ca}</div>
@@ -2811,9 +2824,9 @@ async function _renderPokeApiEntry(slug, root){
         </table>
       </div>
     </div>
-    ${evoHtml}
     ${dmgHtml}
     ${bioHtml}
+    ${evoHtml}
     ${movesHtml}
   </div>`;
 }
