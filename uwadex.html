@@ -60,6 +60,34 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .ndex-num-wrap{display:flex;flex-direction:column;gap:2px}
 .ndex-stat{font-family:var(--font-body);font-size:13px;font-weight:400;color:var(--text);text-align:center}
 .ndex-uwa-row td{background:color-mix(in srgb, var(--surface) 85%, var(--brand-light))}
+
+/* ── NATIONAL DEX REGION MENU ── */
+.ndex-region-menu{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px;padding:14px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);position:sticky;top:58px;z-index:20}
+.ndex-region-btn{padding:5px 13px;border-radius:16px;border:1.5px solid var(--border);background:var(--surface2);font-family:var(--font-body);font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.ndex-region-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
+.ndex-region-btn.active{background:var(--brand-mid);border-color:var(--brand-mid);color:#fff}
+
+/* ── NATIONAL DEX CARD GRID ── */
+.ndex-region-section{margin-bottom:32px}
+.ndex-region-title{font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);letter-spacing:1px;text-transform:uppercase;padding:8px 0 10px 2px;border-bottom:2px solid var(--brand);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.ndex-region-range{font-size:10px;color:var(--muted);font-family:var(--font-body);font-weight:600;letter-spacing:.3px}
+.ndex-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.ndex-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:default;transition:all .2s;position:relative;overflow:hidden}
+.ndex-card.is-uwa{border-color:var(--brand-mid);cursor:pointer}
+.ndex-card.is-uwa:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(37,99,168,.15)}
+.ndex-card:not(.is-uwa):hover{border-color:var(--border2)}
+.ndex-card-num{font-size:9px;font-weight:700;color:var(--muted);font-family:var(--font-title);letter-spacing:.5px}
+.ndex-card-sprite{width:80px;height:80px;object-fit:contain;image-rendering:pixelated;image-rendering:crisp-edges}
+.ndex-card-name{font-family:var(--font-title);font-size:10.5px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
+.ndex-card.is-uwa .ndex-card-name{color:var(--brand-mid)}
+.ndex-card-types{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
+.ndex-card-stats{display:flex;gap:0;width:100%;margin-top:2px;border-top:1px solid var(--border);padding-top:6px}
+.ndex-card-stat{flex:1;text-align:center;display:flex;flex-direction:column;gap:1px;border-right:1px solid var(--border)}
+.ndex-card-stat:last-child{border-right:none}
+.ndex-card-stat-label{font-size:8px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+.ndex-card-stat-val{font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--brand-mid)}
+.ndex-card-stat-dado{font-size:11px;letter-spacing:0}
+.ndex-card-rarity{position:absolute;top:6px;right:6px}
 /* ── DEX LIST PAGE ── */
 .dex-wrap{max-width:1100px;margin:0 auto;padding:28px}
 .dex-header{margin-bottom:24px}
@@ -322,19 +350,24 @@ html.dark .dex-tab.active{color:#fff}
         <input class="dex-search" type="text" placeholder="Buscar na NationalDex…" id="search-nationaldex" oninput="filtrarNationalDex()" autocomplete="off"/>
         <span class="dex-count" id="nationaldex-count"></span>
       </div>
-      <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:visible">
-        <table class="ndex-table" style="border-radius:var(--r)">
-          <thead><tr>
-            <th style="width:70px">#</th>
-            <th>Nome</th>
-            <th style="width:161px">Tipo(s)</th>
-            <th style="width:60px;text-align:center">CA</th>
-            <th style="width:60px;text-align:center">HP</th>
-            <th style="width:80px;text-align:center">Dado</th>
-          </tr></thead>
-          <tbody id="nationaldex-grid"></tbody>
-        </table>
+      <!-- Region Quick Access Menu -->
+      <div class="ndex-region-menu" id="ndex-region-menu">
+        <button class="ndex-region-btn active" onclick="scrollToRegion('kanto',this)">Kanto</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('johto',this)">Johto</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('hoenn',this)">Hoenn</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('sinnoh',this)">Sinnoh</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('unova',this)">Unova</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('kalos',this)">Kalos</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('alola',this)">Alola</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('galar',this)">Galar</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('paldea',this)">Paldea</button>
+        <span style="width:1px;background:var(--border2);margin:0 2px;align-self:stretch;display:inline-block"></span>
+        <button class="ndex-region-btn" onclick="scrollToRegion('prime',this)" style="border-color:var(--brand-mid);color:var(--brand-mid)">Prime</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('axis',this)" style="border-color:var(--brand-mid);color:var(--brand-mid)">Axis</button>
+        <button class="ndex-region-btn" onclick="scrollToRegion('uwa',this)" style="border-color:var(--accent);color:var(--accent)">UWA</button>
       </div>
+      <!-- Card grid container -->
+      <div id="nationaldex-grid-wrap"></div>
       <div class="empty-state" id="nationaldex-empty" style="display:none">
         <div class="empty-icon">🔍</div>
         <div class="empty-text">Nenhum Pokémon encontrado.</div>
@@ -411,6 +444,7 @@ html.dark .dex-tab.active{color:#fff}
         <div class="adm-sidebar">
           <button class="adm-nav-btn active" onclick="admTab('pokemon',this)">⚡ Pokémon</button>
           <button class="adm-nav-btn" onclick="admTab('nationaldex',this)">📖 NationalDex</button>
+          <button class="adm-nav-btn" onclick="admTab('regioes',this)">🗺️ Regiões</button>
           <button class="adm-nav-btn" onclick="admTab('abilities',this)">✨ Abilities</button>
           <button class="adm-nav-btn" onclick="admTab('moves',this)">⚔️ Moves</button>
           <div class="adm-nav-sep"></div>
@@ -600,6 +634,35 @@ html.dark .dex-tab.active{color:#fff}
               <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Entradas manuais são salvas no Supabase e aparecem no fim da NationalDex.</p>
               <div id="adm-ndex-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div></div>
             </div>
+          </div>
+
+          <!-- SEC: REGIOES -->
+          <div class="adm-sec" id="adm-sec-regioes">
+            <div class="sec-title">🗺️ Organizador de Regiões</div>
+            <div class="sec-sub">Atribua cada Pokémon da UWAdex a uma região customizada (Prime, Axis ou UWA). Pokémon sem região ficam na seção "Extras" da NationalDex.</div>
+            <div class="box" style="margin-bottom:16px">
+              <div class="box-title">Filtrar Pokémon</div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <input type="text" id="reg-search" placeholder="Buscar por nome…"
+                  style="padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:220px"
+                  oninput="filtrarRegList()" autocomplete="off"/>
+                <div style="display:flex;gap:6px;flex-wrap:wrap" id="reg-filter-btns">
+                  <button class="ndex-region-btn active" onclick="filtrarRegPorRegiao('',this)">Todos</button>
+                  <button class="ndex-region-btn" onclick="filtrarRegPorRegiao('prime',this)" style="border-color:var(--brand-mid);color:var(--brand-mid)">Prime</button>
+                  <button class="ndex-region-btn" onclick="filtrarRegPorRegiao('axis',this)" style="border-color:var(--brand-mid);color:var(--brand-mid)">Axis</button>
+                  <button class="ndex-region-btn" onclick="filtrarRegPorRegiao('uwa',this)" style="border-color:var(--accent);color:var(--accent)">UWA</button>
+                  <button class="ndex-region-btn" onclick="filtrarRegPorRegiao('none',this)">Sem região</button>
+                </div>
+              </div>
+            </div>
+            <div class="box">
+              <div class="box-title">Pokémon da UWAdex <span id="reg-count" style="font-size:11px;color:var(--muted);font-weight:400;margin-left:6px"></span></div>
+              <div id="adm-reg-list">
+                <div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div>
+              </div>
+            </div>
+            <div class="fb fb-ok" id="adm-reg-ok">✓ Região salva!</div>
+            <div class="fb fb-err" id="adm-reg-err">Erro ao salvar.</div>
           </div>
 
           <!-- SEC: ABILITIES -->
@@ -950,39 +1013,151 @@ function buildNationalDexList(){
   return [...csvSorted,...uwaSorted];
 }
 
+const NDEX_REGIONS = [
+  {id:'kanto',  label:'Kanto',  from:1,    to:151,  custom:false },
+  {id:'johto',  label:'Johto',  from:152,  to:251,  custom:false },
+  {id:'hoenn',  label:'Hoenn',  from:252,  to:386,  custom:false },
+  {id:'sinnoh', label:'Sinnoh', from:387,  to:493,  custom:false },
+  {id:'unova',  label:'Unova',  from:494,  to:649,  custom:false },
+  {id:'kalos',  label:'Kalos',  from:650,  to:721,  custom:false },
+  {id:'alola',  label:'Alola',  from:722,  to:809,  custom:false },
+  {id:'galar',  label:'Galar',  from:810,  to:905,  custom:false },
+  {id:'paldea', label:'Paldea', from:906,  to:1025, custom:false },
+  // Regiões customizadas — range controlado pelo campo `regiao` do Pokémon
+  {id:'prime',  label:'Prime',  from:null, to:null, custom:true  },
+  {id:'axis',   label:'Axis',   from:null, to:null, custom:true  },
+  {id:'uwa',    label:'UWA',    from:null, to:null, custom:true  },
+];
+
+function getRegionForNum(num, regiaoCustom){
+  // Custom region field takes priority for UWA entries
+  if(regiaoCustom){
+    const rc=regiaoCustom.toLowerCase().trim();
+    if(['prime','axis','uwa'].includes(rc)) return rc;
+  }
+  for(const r of NDEX_REGIONS){
+    if(r.custom) continue;
+    if(num>=r.from&&num<=r.to) return r.id;
+  }
+  return 'extra';
+}
+
+function scrollToRegion(regionId, btn){
+  document.querySelectorAll('.ndex-region-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const sec=document.getElementById('ndex-sec-'+regionId);
+  if(sec) sec.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
 function renderNationalDex(q=''){
   const all=buildNationalDexList();
   const ql=q.toLowerCase();
   const filtered=q?all.filter(p=>p.nome.toLowerCase().includes(ql)||String(p.numero).includes(ql)):all;
   document.getElementById('nationaldex-count').textContent=q?`${filtered.length} encontrado${filtered.length!==1?'s':''}`:filtered.length+' Pokémon';
-  const tbody=document.getElementById('nationaldex-grid');
+  const wrap=document.getElementById('nationaldex-grid-wrap');
   const empty=document.getElementById('nationaldex-empty');
-  if(!filtered.length){tbody.innerHTML='';empty.style.display='block';return;}
+  if(!filtered.length){wrap.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
-  tbody.innerHTML=filtered.map(p=>{
-    const tipos=(p.tipos||[]).map(t=>{
-      const tLower=t.toLowerCase();
-      return `<span class="type-pill ${TCLS[tLower]||'t-normal'}" style="font-size:9px">${t}</span>`;
-    }).join(' ');
-    const numStr=p.numero?'#'+String(p.numero).padStart(4,'0'):'—';
-    const isUwa=p._source==='uwa';
-    const rarLbl=isUwa?(RLBL[p.raridade]||''):'';
-    const rarCls=isUwa?(RCLS[p.raridade]||'rc'):'';
-    const nameCell=isUwa
-      ? `<span class="ndex-name" onclick="abrirFicha('${slugify(p.nome)}')">${p.nome}</span>${rarLbl?` <span class="type-pill ${rarCls}" style="font-size:8px">${rarLbl}</span>`:''}`
-      : `<span style="color:var(--muted)">${p.nome}</span>`;
-    const ca=p.ca!=null&&!isNaN(p.ca)?p.ca:'—';
-    const pv=p.pv!=null&&!isNaN(p.pv)?p.pv:'—';
-    const dado=p.dado&&p.dado!=='NaN'?p.dado:'—';
-    return `<tr${isUwa?' class="ndex-uwa-row"':''}>
-      <td class="ndex-num">${numStr}</td>
-      <td>${nameCell}</td>
-      <td>${tipos}</td>
-      <td class="ndex-stat">${ca}</td>
-      <td class="ndex-stat">${pv}</td>
-      <td class="ndex-stat" style="text-transform:lowercase">${dado}</td>
-    </tr>`;
+
+  // Show/hide region menu based on search
+  const menuEl=document.getElementById('ndex-region-menu');
+  if(menuEl) menuEl.style.display=q?'none':'flex';
+
+  if(q){
+    // flat grid when searching
+    wrap.innerHTML=`<div class="ndex-card-grid">${filtered.map(p=>ndexCardHTML(p)).join('')}</div>`;
+    return;
+  }
+
+  // Group by region
+  const groups={};
+  NDEX_REGIONS.forEach(r=>{ groups[r.id]=[]; });
+  groups['extra']=[];
+
+  filtered.forEach(p=>{
+    const num=p.numero||9999;
+    const rid=getRegionForNum(num, p.regiao);
+    groups[rid].push(p);
+  });
+
+  let html='';
+  // Standard regions first (non-custom)
+  NDEX_REGIONS.filter(r=>!r.custom).forEach(r=>{
+    const list=groups[r.id];
+    if(!list.length) return;
+    html+=`<div class="ndex-region-section" id="ndex-sec-${r.id}">
+      <div class="ndex-region-title">
+        ${r.label}
+        <span class="ndex-region-range">#${String(r.from).padStart(4,'0')} — #${String(r.to).padStart(4,'0')}</span>
+      </div>
+      <div class="ndex-card-grid">${list.map(p=>ndexCardHTML(p)).join('')}</div>
+    </div>`;
+  });
+  // Custom regions (Prime, Axis, UWA)
+  const CUSTOM_COLORS={prime:'var(--brand-mid)',axis:'var(--brand-mid)',uwa:'var(--accent)'};
+  NDEX_REGIONS.filter(r=>r.custom).forEach(r=>{
+    const list=groups[r.id];
+    if(!list.length) return;
+    const color=CUSTOM_COLORS[r.id]||'var(--brand-mid)';
+    html+=`<div class="ndex-region-section" id="ndex-sec-${r.id}">
+      <div class="ndex-region-title" style="border-color:${color};color:${color}">
+        ${r.label}
+        <span class="ndex-region-range" style="color:${color};opacity:.7">${list.length} Pokémon</span>
+      </div>
+      <div class="ndex-card-grid">${list.map(p=>ndexCardHTML(p)).join('')}</div>
+    </div>`;
+  });
+  // Extra (entries not fitting any region)
+  if(groups['extra'].length){
+    html+=`<div class="ndex-region-section" id="ndex-sec-extra">
+      <div class="ndex-region-title">Extras</div>
+      <div class="ndex-card-grid">${groups['extra'].map(p=>ndexCardHTML(p)).join('')}</div>
+    </div>`;
+  }
+  wrap.innerHTML=html;
+}
+
+function dadoFmt(dado){
+  if(!dado||dado==='—') return '—';
+  // Replace uppercase D with lowercase d, keep the number before/after
+  return dado.replace(/(\d+)D(\d+)/gi, (_, a, b) => `${a}d${b}`);
+}
+
+function ndexCardHTML(p){
+  const isUwa=p._source==='uwa';
+  const numStr=p.numero?'#'+String(p.numero).padStart(4,'0'):'—';
+  const tipos=(p.tipos||[]).map(t=>{
+    const tLower=t.toLowerCase();
+    return `<span class="type-pill ${TCLS[tLower]||'t-normal'}" style="font-size:8px">${t}</span>`;
   }).join('');
+  const ca=p.ca!=null&&!isNaN(p.ca)?p.ca:'—';
+  const pv=p.pv!=null&&!isNaN(p.pv)?p.pv:'—';
+  const dado=p.dado&&p.dado!=='NaN'?p.dado:'—';
+  const rarLbl=isUwa?(RLBL[p.raridade]||''):'';
+  const rarCls=isUwa?(RCLS[p.raridade]||'rc'):'';
+  // Sprite from PokeAPI for CSV entries, custom sprite for UWA
+  let sprite='';
+  if(isUwa&&p.sprite){
+    sprite=p.sprite;
+  } else if(p.numero){
+    // Use the base number (handle variants with same number)
+    sprite=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${p.numero}.png`;
+  } else {
+    sprite=FALLBACK;
+  }
+  const clickAttr=isUwa?`onclick="abrirFicha('${slugify(p.nome)}')" style="cursor:pointer"`:'';
+  return `<div class="ndex-card${isUwa?' is-uwa':''}" ${clickAttr}>
+    <div class="ndex-card-num">${numStr}</div>
+    ${rarLbl?`<div class="ndex-card-rarity"><span class="type-pill ${rarCls}" style="font-size:7px">${rarLbl}</span></div>`:''}
+    <img class="ndex-card-sprite" src="${sprite}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+    <div class="ndex-card-name">${p.nome}</div>
+    <div class="ndex-card-types">${tipos}</div>
+    <div class="ndex-card-stats">
+      <div class="ndex-card-stat"><div class="ndex-card-stat-label">Dado</div><div class="ndex-card-stat-val ndex-card-stat-dado">${dadoFmt(dado)}</div></div>
+      <div class="ndex-card-stat"><div class="ndex-card-stat-label">CA</div><div class="ndex-card-stat-val">${ca}</div></div>
+      <div class="ndex-card-stat"><div class="ndex-card-stat-label">PV</div><div class="ndex-card-stat-val">${pv}</div></div>
+    </div>
+  </div>`;
 }
 
 function filtrarNationalDex(){
@@ -1368,6 +1543,88 @@ function admTab(sec,btn){
   if(sec==='nationaldex') renderAdmNDexList();
   if(sec==='abilities') renderAdmAbList();
   if(sec==='moves') renderAdmMvList();
+  if(sec==='regioes') renderAdmRegList();
+}
+
+// ════════════════════════════════════════
+// ADM: ORGANIZADOR DE REGIÕES
+// ════════════════════════════════════════
+let regFiltroRegiao = '';
+
+function renderAdmRegList(){
+  const wrap = document.getElementById('adm-reg-list');
+  const q = (document.getElementById('reg-search')?.value||'').toLowerCase().trim();
+  let list = [...uwaDex];
+  if(q) list = list.filter(p=>p.nome.toLowerCase().includes(q));
+  if(regFiltroRegiao==='none') list = list.filter(p=>!p.regiao||p.regiao.trim()==='');
+  else if(regFiltroRegiao) list = list.filter(p=>(p.regiao||'').toLowerCase()===regFiltroRegiao);
+  list = list.sort((a,b)=>(a.numero||9999)-(b.numero||9999));
+  document.getElementById('reg-count').textContent = `— ${list.length} Pokémon`;
+  if(!list.length){
+    wrap.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Nenhum Pokémon encontrado.</div>';
+    return;
+  }
+  const REGIAO_OPTS = [
+    {value:'', label:'— Sem região'},
+    {value:'prime', label:'🔵 Prime'},
+    {value:'axis', label:'🔷 Axis'},
+    {value:'uwa', label:'⭐ UWA'},
+  ];
+  wrap.innerHTML=`<table class="adm-table">
+    <thead><tr>
+      <th style="width:60px">#</th>
+      <th>Nome</th>
+      <th style="width:110px">Tipos</th>
+      <th style="width:160px">Região</th>
+      <th style="width:80px">Salvar</th>
+    </tr></thead>
+    <tbody>${list.map(p=>{
+      const numStr=p.numero?'#'+String(p.numero).padStart(3,'0'):'—';
+      const tipos=(p.tipos||[]).map(t=>`<span class="type-pill ${TCLS[t]||'t-normal'}" style="font-size:8px">${t}</span>`).join('');
+      const currentReg=(p.regiao||'').toLowerCase();
+      const opts=REGIAO_OPTS.map(o=>`<option value="${o.value}"${currentReg===o.value?' selected':''}>${o.label}</option>`).join('');
+      return `<tr>
+        <td style="font-family:var(--font-title);font-size:11px;color:var(--muted)">${numStr}</td>
+        <td><strong>${p.nome}</strong></td>
+        <td>${tipos}</td>
+        <td>
+          <select id="reg-sel-${p.id}"
+            style="padding:5px 8px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:12px;color:var(--text);width:100%">
+            ${opts}
+          </select>
+        </td>
+        <td>
+          <button class="btn btn-sm btn-primary" onclick="salvarRegiao(${p.id})">💾</button>
+        </td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+async function salvarRegiao(id){
+  const sel = document.getElementById('reg-sel-'+id);
+  if(!sel) return;
+  const regiao = sel.value || null;
+  const res = await dbPatch('uwadex', `id=eq.${id}`, {regiao});
+  if(res.ok){
+    // Update local cache
+    const p = uwaDex.find(x=>x.id===id);
+    if(p) p.regiao = regiao||'';
+    fb('adm-reg-ok');
+  } else {
+    fb('adm-reg-err');
+  }
+}
+
+function filtrarRegList(){
+  renderAdmRegList();
+}
+
+function filtrarRegPorRegiao(regiao, btn){
+  regFiltroRegiao = regiao;
+  document.querySelectorAll('#reg-filter-btns .ndex-region-btn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderAdmRegList();
 }
 
 // ── ADM: lista de pokémon ──
