@@ -940,7 +940,7 @@ function navigateTo(slug){
   let path;
   if(!slug||slug==='dex') path='/uwadex/';
   else if(slug==='adm') path='/adm';
-  else path='/dex/'+slug;
+  else path='/uwadex/'+slug;
   history.pushState({slug},'',path);
   routeCurrentPath();
 }
@@ -2364,7 +2364,7 @@ function _buildEvoFromApi(chainLink, targetSlug){
     const det=link.evolution_details?.[0];
     let trigger='';
     if(det){
-      if(det.min_level) trigger=`Nv. ${det.min_level}`;
+      if(det.min_level) trigger=`LVL ${det.min_level}`;
       else if(det.item) trigger=_capFirst(det.item.name.replace(/-/g,' '));
       else if(det.trigger?.name==='trade') trigger='Troca';
       else if(det.trigger?.name==='level-up') trigger=det.min_happiness?'Amizade':'Nível';
@@ -2439,12 +2439,11 @@ function _buildDmgGroupsHtml(dmgTaken){
 function _buildNdexMovesHtml(movesLvl, eggMoves, tutorMoves){
   const lvlH = movesLvl.length ? movesLvl.map(m=>{
     const mv=_getMoveData(m.nome);
-    const tipo=m.tipo||mv?.tipo||'';
     const desc=m.desc||m.efeito||mv?.efeito||'';
     const rolagem=m.rolagem||mv?.rolagem||'';
     return `<tr>
       <td class="lvl-cell">${m.lvl===0||m.lvl==='0'?'—':m.lvl||'—'}</td>
-      <td class="move-name">${m.nome||''}${tipo?` <span class="type-pill ${_ndexTypeClass(tipo)}" style="font-size:8px">${tipo}</span>`:''}</td>
+      <td class="move-name">${m.nome||''}</td>
       <td>${_ndexCatPill(m.cat||mv?.categoria||'')}</td>
       <td style="color:var(--muted);font-size:11px;line-height:1.4">${rolagem?`<strong>${rolagem}</strong> — `:''}${desc}</td>
     </tr>`;
@@ -2453,9 +2452,8 @@ function _buildNdexMovesHtml(movesLvl, eggMoves, tutorMoves){
   const eggH = eggMoves.length ? eggMoves.map(m=>{
     const mv=_getMoveData(m.nome);
     const desc=m.desc||mv?.efeito||'';
-    const tipo=mv?.tipo||'';
     return `<tr>
-      <td class="move-name" colspan="2">${m.nome||''}${tipo?` <span class="type-pill ${_ndexTypeClass(tipo)}" style="font-size:8px">${tipo}</span>`:''}</td>
+      <td class="move-name" colspan="2">${m.nome||''}</td>
       <td colspan="2" style="color:var(--muted);font-size:11px">${desc}</td>
     </tr>`;
   }).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum egg move cadastrado.</td></tr>`;
@@ -2463,9 +2461,8 @@ function _buildNdexMovesHtml(movesLvl, eggMoves, tutorMoves){
   const tutH = tutorMoves.length ? tutorMoves.map(m=>{
     const mv=_getMoveData(m.nome);
     const desc=m.desc||mv?.efeito||'';
-    const tipo=mv?.tipo||'';
     return `<tr>
-      <td class="move-name" colspan="2">${m.nome||''}${tipo?` <span class="type-pill ${_ndexTypeClass(tipo)}" style="font-size:8px">${tipo}</span>`:''}</td>
+      <td class="move-name" colspan="2">${m.nome||''}</td>
       <td colspan="2" style="color:var(--muted);font-size:11px">${desc}</td>
     </tr>`;
   }).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum tutor move cadastrado.</td></tr>`;
@@ -2581,13 +2578,10 @@ async function _renderUwaEntry(slug, p, root){
 
   root.innerHTML = `<div style="${themeStyle}">
     ${navHtml}
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-      <span class="source-badge source-uwa">⭐ UWAdex</span>
-      ${rarLbl?`<span class="type-pill ${rarCls}">${rarLbl}</span>`:''}
-    </div>
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
+        ${rarLbl?`<div style="margin-bottom:4px"><span class="type-pill ${rarCls}" style="font-size:9px">${rarLbl}</span></div>`:''}
         <img class="ficha-sprite-img" src="${spriteUrl}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
         <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
         <div class="ficha-sprite-types">${tipos.map(t=>`<span class="type-pill ${_ndexTypeClass(t)}">${t}</span>`).join('')}</div>
@@ -2596,9 +2590,10 @@ async function _renderUwaEntry(slug, p, root){
         <div class="ficha-info-name">${p.nome_display||p.nome}</div>
         <table class="ficha-info-table">
           ${p.classificacao?`<tr><td>Classification</td><td>${p.classificacao} Pokémon</td></tr>`:''}
-          ${(p.altura||p.peso)?`<tr><td>Altura / Peso</td><td>${p.altura||'—'} cm · ${p.peso||'—'} kg</td></tr>`:''}
-          ${p.genero?`<tr><td>Gênero</td><td>${p.genero}</td></tr>`:''}
-          ${p.egggroup?`<tr><td>Egg Group</td><td>${p.egggroup}</td></tr>`:''}
+          ${p.altura?`<tr><td>Height</td><td>${p.altura} cm</td></tr>`:''}
+          ${p.peso?`<tr><td>Weight</td><td>${p.peso} kg</td></tr>`:''}
+          ${p.genero?`<tr><td>Gender Ratio</td><td>${p.genero}</td></tr>`:''}
+          ${p.egggroup?`<tr><td>Egg Group(s)</td><td>${p.egggroup}</td></tr>`:''}
           ${(dado||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span>${dado||'—'}</div>
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span>${ca}</div>
@@ -2706,7 +2701,7 @@ async function _renderPokeApiEntry(slug, root){
 
   const movesLvlH = apiMovesLvl.length ? apiMovesLvl.map(m=>`<tr>
     <td class="lvl-cell">${m.lvl===0?'—':m.lvl}</td>
-    <td class="move-name">${m.nome}${m.tipo?` <span class="type-pill ${_ndexTypeClass(m.tipo)}" style="font-size:8px">${m.tipo}</span>`:''}</td>
+    <td class="move-name">${m.nome}</td>
     <td>${_ndexCatPill(m.cat)}</td>
     <td style="color:var(--muted);font-size:11px;line-height:1.4">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
   </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum move disponível.</td></tr>`;
@@ -2720,7 +2715,7 @@ async function _renderPokeApiEntry(slug, root){
       return {nome:moveName,tipo:mvCsv?.tipo||'',cat:mvCsv?.categoria||'',rolagem:mvCsv?.rolagem||'',desc:mvCsv?.efeito||''};
     });
   const eggH = apiEggMoves.length ? apiEggMoves.map(m=>`<tr>
-    <td class="move-name" colspan="2">${m.nome}${m.tipo?` <span class="type-pill ${_ndexTypeClass(m.tipo)}" style="font-size:8px">${m.tipo}</span>`:''}</td>
+    <td class="move-name" colspan="2">${m.nome}</td>
     <td colspan="2" style="color:var(--muted);font-size:11px">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
   </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum egg move disponível.</td></tr>`;
 
@@ -2733,7 +2728,7 @@ async function _renderPokeApiEntry(slug, root){
       return {nome:moveName,tipo:mvCsv?.tipo||'',cat:mvCsv?.categoria||'',rolagem:mvCsv?.rolagem||'',desc:mvCsv?.efeito||''};
     });
   const tutH = apiTutorMoves.length ? apiTutorMoves.map(m=>`<tr>
-    <td class="move-name" colspan="2">${m.nome}${m.tipo?` <span class="type-pill ${_ndexTypeClass(m.tipo)}" style="font-size:8px">${m.tipo}</span>`:''}</td>
+    <td class="move-name" colspan="2">${m.nome}</td>
     <td colspan="2" style="color:var(--muted);font-size:11px">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
   </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum tutor move disponível.</td></tr>`;
 
@@ -2758,6 +2753,14 @@ async function _renderPokeApiEntry(slug, root){
   const spriteUrl = pokeData.sprites?.other?.['official-artwork']?.front_default||pokeData.sprites?.front_default||FALLBACK;
   const shinyUrl = pokeData.sprites?.other?.['official-artwork']?.front_shiny||pokeData.sprites?.front_shiny||null;
 
+  // Damage taken from CSV
+  const dmgHtml = (()=>{
+    const csvDmg = csvRef?.dmg_taken||null;
+    // Build from PokéAPI types if no CSV data
+    const dmgTaken = csvDmg || {};
+    return `<div class="ficha-dmg-wrap"><div class="ficha-section-title">DAMAGE TAKEN</div>${_buildDmgGroupsHtml(dmgTaken)}</div>`;
+  })();
+
   // Biology section
   const bioHtml = (flavor||shinyUrl)?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
     <div class="ficha-bio-inner">
@@ -2766,7 +2769,6 @@ async function _renderPokeApiEntry(slug, root){
         <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
       </div></div>`:''}
       <div>${flavor?`<div class="flavor-box">${flavor}</div>`:''}
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">Fonte: PokéAPI · Dados RPG: CSV local</div>
       </div>
     </div>
   </div>`:'';
@@ -2787,10 +2789,6 @@ async function _renderPokeApiEntry(slug, root){
 
   root.innerHTML = `<div style="${themeStyle}">
     ${navHtml}
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-      <span class="source-badge source-pokeapi">🌐 PokéAPI</span>
-      ${(dado!=='—'||ca!=='—')?`<span class="source-badge" style="background:var(--surface2);color:var(--muted);border:1px solid var(--border)">📊 CSV</span>`:''}
-    </div>
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
@@ -2802,7 +2800,8 @@ async function _renderPokeApiEntry(slug, root){
         <div class="ficha-info-name">${namePt}${namePt!==name?`<span style="display:block;font-size:12px;font-weight:400;opacity:.7">${name}</span>`:''}</div>
         <table class="ficha-info-table">
           ${genus?`<tr><td>Classification</td><td>${genus}</td></tr>`:''}
-          <tr><td>Altura / Peso</td><td>${altura} cm · ${peso} kg</td></tr>
+          <tr><td>Height</td><td>${altura} cm</td></tr>
+          <tr><td>Weight</td><td>${peso} kg</td></tr>
           ${(dado!=='—'||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span>${dado}</div>
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span>${ca}</div>
@@ -2813,6 +2812,7 @@ async function _renderPokeApiEntry(slug, root){
       </div>
     </div>
     ${evoHtml}
+    ${dmgHtml}
     ${bioHtml}
     ${movesHtml}
   </div>`;
