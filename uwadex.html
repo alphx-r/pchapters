@@ -884,11 +884,11 @@ function showView(id){
 
 function parsePath(){
   const path=location.pathname.replace(/\/+$/,'');
-  if(path==='/uwadex/adm'||path==='/uwadex/adm/') return {view:'adm',slug:null,tab:null};
-  if(path==='/uwadex/abilitydex') return {view:'dex',slug:null,tab:'habilidades'};
-  if(path==='/uwadex/movedex') return {view:'dex',slug:null,tab:'moves'};
-  if(path==='/uwadex/nationaldex') return {view:'dex',slug:null,tab:'nationaldex'};
-  const m=path.match(/^\/uwadex\/(.+)$/);
+  if(path==='/uwadex/adm'||path==='/adm') return {view:'adm',slug:null,tab:null};
+  if(path==='/uwadex/abilitydex'||path==='/abilitydex') return {view:'dex',slug:null,tab:'habilidades'};
+  if(path==='/uwadex/movedex'||path==='/movedex') return {view:'dex',slug:null,tab:'moves'};
+  if(path==='/uwadex/nationaldex'||path==='/nationaldex') return {view:'dex',slug:null,tab:'nationaldex'};
+  const m=path.match(/^\/uwadex\/(.+)$/) || path.match(/^\/dex\/(.+)$/);
   if(m) return {view:'ficha',slug:m[1],tab:null};
   return {view:'dex',slug:null,tab:'pokemon'};
 }
@@ -896,8 +896,8 @@ function parsePath(){
 function navigateTo(slug){
   let path;
   if(!slug||slug==='dex') path='/uwadex/';
-  else if(slug==='adm') path='/uwadex/adm';
-  else path='/uwadex/'+slug;
+  else if(slug==='adm') path='/adm';
+  else path='/dex/'+slug;
   history.pushState({slug},'',path);
   routeCurrentPath();
 }
@@ -1198,7 +1198,7 @@ function switchDexTab(tab, btn, updateUrl=true){
   if(tab==='moves') renderMoves(document.getElementById('search-moves').value);
   if(tab==='nationaldex') renderNationalDex(document.getElementById('search-nationaldex').value);
   if(updateUrl){
-    const path=tab==='pokemon'?'/uwadex/':tab==='habilidades'?'/uwadex/abilitydex':tab==='moves'?'/uwadex/movedex':'/uwadex/nationaldex';
+    const path=tab==='pokemon'?'/uwadex/':tab==='habilidades'?'/abilitydex':tab==='moves'?'/movedex':'/nationaldex';
     history.pushState({tab},'',path);
   }
 }
