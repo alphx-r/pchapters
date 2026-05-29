@@ -20,56 +20,60 @@
 /* ── TEMAS DE ESTAÇÃO ── */
 html.tema-primavera{
   --brand:#2d6a2d !important;--brand-mid:#3e9e3e !important;--brand-light:#eaf7ea !important;
-  --accent:#f0a030 !important;--accent-light:#fff8e8 !important;
+  --accent:#a8d870 !important;--accent-light:#f0ffe0 !important;
   --bg:#f2faf2 !important;--surface:#ffffff !important;--surface2:#e8f5e8 !important;
   --border:#b8ddb8 !important;--border2:#90c890 !important;
   --text:#1a2e1a !important;--muted:#5a7a5a !important;
 }
 html.tema-primavera .nav{background:#2d6a2d !important}
-html.tema-primavera .nav-login{background:#f0a030 !important;border-color:#f0a030 !important}
+html.tema-primavera .nav-login{background:#a8d870 !important;border-color:#a8d870 !important;color:#1a2e1a !important}
 html.tema-primavera .nav-logo span{color:#fff !important}
+html.tema-primavera .slide-link-tag{background:#a8d870 !important;color:#1a2e1a !important}
 html.tema-primavera .callout-info{background:#e0f4e0;color:#2d6a2d}
 html.tema-primavera .callout-warn{background:#fff3e0;color:#9a5000}
 html.tema-primavera .callout-tip{background:#e8ffe8;color:#1a6a1a}
 
 html.tema-verao{
   --brand:#b05a00 !important;--brand-mid:#e07a10 !important;--brand-light:#fff4e0 !important;
-  --accent:#e8c020 !important;--accent-light:#fffbe0 !important;
+  --accent:#ffd066 !important;--accent-light:#fffbe0 !important;
   --bg:#fffaf0 !important;--surface:#ffffff !important;--surface2:#fff3d8 !important;
   --border:#f0d090 !important;--border2:#e0b860 !important;
   --text:#2e1a00 !important;--muted:#8a6030 !important;
 }
 html.tema-verao .nav{background:#b05a00 !important}
-html.tema-verao .nav-login{background:#e8c020 !important;border-color:#e8c020 !important}
+html.tema-verao .nav-login{background:#ffd066 !important;border-color:#ffd066 !important;color:#2e1a00 !important}
 html.tema-verao .nav-logo span{color:#fff !important}
+html.tema-verao .slide-link-tag{background:#ffd066 !important;color:#2e1a00 !important}
 html.tema-verao .callout-info{background:#fff4d8;color:#7a4000}
 html.tema-verao .callout-warn{background:#fffbe0;color:#7a6000}
 html.tema-verao .callout-tip{background:#f0ffe0;color:#3a6000}
 
 html.tema-outono{
   --brand:#7a2e00 !important;--brand-mid:#c04a10 !important;--brand-light:#fff0e8 !important;
-  --accent:#d4820a !important;--accent-light:#fff5e0 !important;
+  --accent:#f0b060 !important;--accent-light:#fff5e0 !important;
   --bg:#fdf6f0 !important;--surface:#ffffff !important;--surface2:#faeae0 !important;
   --border:#e8c0a0 !important;--border2:#d4a080 !important;
   --text:#2e1200 !important;--muted:#8a5030 !important;
 }
 html.tema-outono .nav{background:#7a2e00 !important}
-html.tema-outono .nav-login{background:#d4820a !important;border-color:#d4820a !important}
+html.tema-outono .nav-login{background:#f0b060 !important;border-color:#f0b060 !important;color:#2e1200 !important}
 html.tema-outono .nav-logo span{color:#fff !important}
+html.tema-outono .slide-link-tag{background:#f0b060 !important;color:#2e1200 !important}
 html.tema-outono .callout-info{background:#fae8d8;color:#7a2e00}
 html.tema-outono .callout-warn{background:#fff8e0;color:#7a5000}
 html.tema-outono .callout-tip{background:#f8ffe0;color:#4a5000}
 
 html.tema-inverno{
   --brand:#1a3a6a !important;--brand-mid:#2e6ab8 !important;--brand-light:#e8f2ff !important;
-  --accent:#60b0e0 !important;--accent-light:#e8f8ff !important;
+  --accent:#a0d8f0 !important;--accent-light:#e8f8ff !important;
   --bg:#f0f6ff !important;--surface:#ffffff !important;--surface2:#e4efff !important;
   --border:#b0ccee !important;--border2:#88aad8 !important;
   --text:#0a1828 !important;--muted:#4a6888 !important;
 }
 html.tema-inverno .nav{background:#1a3a6a !important}
-html.tema-inverno .nav-login{background:#60b0e0 !important;border-color:#60b0e0 !important}
+html.tema-inverno .nav-login{background:#a0d8f0 !important;border-color:#a0d8f0 !important;color:#0a1828 !important}
 html.tema-inverno .nav-logo span{color:#fff !important}
+html.tema-inverno .slide-link-tag{background:#a0d8f0 !important;color:#0a1828 !important}
 html.tema-inverno .callout-info{background:#e0eeff;color:#1a3a6a}
 html.tema-inverno .callout-warn{background:#fff8e0;color:#7a6000}
 html.tema-inverno .callout-tip{background:#e0fff8;color:#006a4a}
@@ -84,6 +88,14 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .nav-link.active{background:rgba(255,255,255,.18);color:#fff}
 .nav-logo-chapters{color:#b22a2a}
 html[class*="tema-"] .nav-logo-chapters{color:#fff !important}
+/* ── NAV DROPDOWN MOBILE ── */
+.nav-more-btn{display:none;font-size:13px;font-weight:600;font-family:var(--font-body);padding:7px 14px;border-radius:20px;border:none;background:rgba(255,255,255,.15);color:#fff;cursor:pointer;align-items:center;gap:5px;white-space:nowrap}
+.nav-more-btn:hover{background:rgba(255,255,255,.22)}
+.nav-dropdown{position:absolute;top:58px;right:14px;background:var(--brand);border:1.5px solid rgba(255,255,255,.18);border-radius:12px;padding:6px;display:none;flex-direction:column;gap:2px;min-width:140px;z-index:200;box-shadow:0 6px 24px rgba(0,0,0,.22)}
+.nav-dropdown.open{display:flex}
+.nav-dropdown .nav-link{border-radius:8px;text-align:left;width:100%;padding:9px 14px;font-size:13px}
+html[class*="tema-"] .nav-more-btn{background:rgba(255,255,255,.15)}
+html[class*="tema-"] .nav-dropdown{background:var(--brand)}
 .nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:all .2s}
 .nav-login:hover{background:var(--accent);border-color:var(--accent);opacity:.88}
 .nav-login.active{background:var(--accent);border-color:var(--accent)}
@@ -269,6 +281,9 @@ html[class*="tema-"] .nav-logo-chapters{color:#fff !important}
   .nav-logo{font-size:14px}
   .nav-link{padding:6px 10px;font-size:12px}
   .nav-login{padding:6px 12px;font-size:11px}
+  .nav-more-btn{display:inline-flex}
+  .nav-dropdown{top:52px}
+  .nav-link.nav-hidden-mobile{display:none}
   .page{padding:16px}
   .roller-header{margin-bottom:18px}
   .roller-header h2{font-size:18px}
@@ -559,10 +574,15 @@ html[class*="tema-"] .nav-logo-chapters{color:#fff !important}
     <button class="nav-link" onclick="goTo('bioma',this)">Por Bioma</button>
     <button class="nav-link" onclick="goTo('dados',this)">Dados</button>
     <button class="nav-link" onclick="goTo('ficha',this)">Fichário</button>
-    <button class="nav-link" onclick="goTo('rolagens',this)">Rolls</button>
-    <button class="nav-link" onclick="goTo('npcs',this)">NPCs</button>
+    <button class="nav-link nav-hidden-mobile" id="nav-btn-rolagens" onclick="goTo('rolagens',this)">Rolls</button>
+    <button class="nav-link nav-hidden-mobile" id="nav-btn-npcs" onclick="goTo('npcs',this)">NPCs</button>
   </div>
-  <div style="display:flex;align-items:center;gap:8px">
+  <div style="display:flex;align-items:center;gap:8px;position:relative">
+    <button class="nav-more-btn" id="nav-more-btn" onclick="toggleNavDropdown()" aria-label="Mais páginas">▾</button>
+    <div class="nav-dropdown" id="nav-dropdown">
+      <button class="nav-link" id="nav-dd-rolagens" onclick="goTo('rolagens',this);closeNavDropdown()">Rolls</button>
+      <button class="nav-link" id="nav-dd-npcs" onclick="goTo('npcs',this);closeNavDropdown()">NPCs</button>
+    </div>
     <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
   </div>
 </nav>
@@ -2221,10 +2241,24 @@ async function goTo(page,el,pushState=true,wikiSlug=null){
   document.querySelectorAll('.nav-link').forEach(b=>b.classList.remove('active'));
   document.getElementById('btn-login').classList.remove('active');
   if(el) el.classList.add('active');
+  // Sync hidden mobile buttons and dropdown buttons
+  if(page==='rolagens'){
+    const hid=document.getElementById('nav-btn-rolagens');
+    const dd=document.getElementById('nav-dd-rolagens');
+    if(hid) hid.classList.add('active');
+    if(dd) dd.classList.add('active');
+  }
+  if(page==='npcs'){
+    const hid=document.getElementById('nav-btn-npcs');
+    const dd=document.getElementById('nav-dd-npcs');
+    if(hid) hid.classList.add('active');
+    if(dd) dd.classList.add('active');
+  }
   if(['login','player','adm'].includes(page)) document.getElementById('btn-login').classList.add('active');
   let path = '/'+(PAGE_PATHS[page]||'');
   if(page==='wiki' && wikiSlug) path = '/'+wikiSlug;
   if(pushState) history.pushState({page,wikiSlug},'',path);
+  closeNavDropdown();
   await lazyLoad(page,wikiSlug);
   renderEstacaoFab();
 }
@@ -2278,6 +2312,19 @@ async function lazyLoad(page,wikiSlug=null){
     renderNpcs();
   }
 }
+
+function toggleNavDropdown(){
+  document.getElementById('nav-dropdown').classList.toggle('open');
+}
+function closeNavDropdown(){
+  document.getElementById('nav-dropdown').classList.remove('open');
+}
+document.addEventListener('click',e=>{
+  const dd=document.getElementById('nav-dropdown');
+  const btn=document.getElementById('nav-more-btn');
+  if(dd&&btn&&!dd.contains(e.target)&&!btn.contains(e.target)) closeNavDropdown();
+});
+
 
 function toggleSenha(id, btn){
   const inp = document.getElementById(id);
