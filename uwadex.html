@@ -310,6 +310,19 @@ html.dark .dex-tab.active{color:#fff}
   .ficha-wrap,.dex-wrap,.adm-wrap{padding:16px}
   .evo-chain-inner{padding:12px}
 }
+
+/* ═══════════════ NDEX FICHA STYLES ═══════════════ */
+.ndex-ficha-wrap{max-width:1000px;margin:0 auto;padding:28px}
+.source-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;text-transform:uppercase;letter-spacing:.4px}
+.source-uwa{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent)}
+.source-pokeapi{background:var(--brand-light);color:var(--brand-mid);border:1px solid var(--border)}
+.poke-nav{display:flex;gap:10px;margin-bottom:20px;justify-content:space-between}
+.poke-nav-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s}
+.poke-nav-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
+.poke-nav-num{color:var(--muted);font-family:var(--font-title);font-size:10px;display:block}
+.flavor-box{background:var(--surface2);border-left:3px solid var(--brand-mid);padding:12px 16px;border-radius:0 6px 6px 0;font-style:italic;font-size:13px;color:var(--text);line-height:1.7;margin-bottom:8px}
+.inline-loading{display:flex;align-items:center;gap:10px;padding:30px 20px;color:var(--muted);font-size:13px;font-weight:600}
+.inline-spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--brand-mid);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -413,6 +426,14 @@ html.dark .dex-tab.active{color:#fff}
   <div class="ficha-wrap">
     <button class="ficha-back" onclick="voltarDex()">← Voltar para a UWAdex</button>
     <div id="ficha-content"></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════ NDEX FICHA VIEW ═══════════════════════════════ -->
+<div class="view" id="view-ndex-ficha">
+  <div class="ndex-ficha-wrap" id="ndex-ficha-content">
+    <div class="inline-loading"><div class="inline-spinner"></div>Carregando…</div>
   </div>
 </div>
 
@@ -888,6 +909,8 @@ function parsePath(){
   if(path==='/uwadex/abilitydex'||path==='/abilitydex') return {view:'dex',slug:null,tab:'habilidades'};
   if(path==='/uwadex/movedex'||path==='/movedex') return {view:'dex',slug:null,tab:'moves'};
   if(path==='/uwadex/nationaldex'||path==='/nationaldex') return {view:'dex',slug:null,tab:'nationaldex'};
+  const ndex=path.match(/^\/ndex\/(.+)$/);
+  if(ndex) return {view:'ndex-ficha',slug:ndex[1],tab:null};
   const m=path.match(/^\/uwadex\/(.+)$/) || path.match(/^\/dex\/(.+)$/);
   if(m) return {view:'ficha',slug:m[1],tab:null};
   return {view:'dex',slug:null,tab:'pokemon'};
@@ -902,8 +925,24 @@ function navigateTo(slug){
   routeCurrentPath();
 }
 
+function navigateToNdex(slug){
+  history.pushState({slug},'','/ndex/'+slug);
+  renderNdexFichaPage(slug);
+  window.scrollTo(0,0);
+}
+
+function navigateToNdexNum(num){
+  // Check UWAdex first
+  const uwa=uwaDex.find(p=>p.numero===num);
+  if(uwa){ navigateToNdex(slugify(uwa.nome)); return; }
+  history.pushState({num},'','/ndex/'+num);
+  renderNdexFichaPage(String(num));
+  window.scrollTo(0,0);
+}
+
 function routeCurrentPath(){
   const {view,slug,tab}=parsePath();
+  if(view==='ndex-ficha'&&slug){ renderNdexFichaPage(slug); return; }
   if(view==='ficha'&&slug) renderFicha(slug);
   else if(view==='adm') mostrarAdm();
   else {
@@ -1158,9 +1197,9 @@ function ndexCardHTML(p){
   } else {
     sprite=FALLBACK;
   }
-  const clickAttr=isUwa?`onclick="abrirFicha('${slugify(p.nome)}')" style="cursor:pointer"`:'';
+  const clickAttr=`onclick="navigateToNdex('${slugify(p.nome)}')" style="cursor:pointer"`;
   const displayName = p.nome_display || p.nome;
-  return `<div class="ndex-card${isUwa?' is-uwa':''}" ${clickAttr}>
+  return `<div class="ndex-card${isUwa?' is-uwa':''}" ${clickAttr} style="cursor:pointer">
     <div class="ndex-card-num">${numStr}</div>
     ${rarLbl?`<div class="ndex-card-rarity"><span class="type-pill ${rarCls}" style="font-size:7px">${rarLbl}</span></div>`:''}
     <img class="ndex-card-sprite" src="${sprite}" alt="${displayName}" onerror="this.src='${FALLBACK}'"/>
@@ -2289,6 +2328,494 @@ function resetNavTheme(){
   // restaura "Chapters" vermelho
   const logo=nav.querySelector('.nav-logo');
   if(logo){ logo.style.color='#fff'; const sp=logo.querySelector('span'); if(sp) sp.style.color='#b22a2a'; }
+}
+
+
+// ════════════════════════════════════════
+// NDEX FICHA — PokéAPI + CSV cross-reference
+// ════════════════════════════════════════
+
+const _pokeApiCache = {};
+async function _pokeapiFetch(path){
+  if(_pokeApiCache[path]) return _pokeApiCache[path];
+  const r = await fetch('https://pokeapi.co/api/v2/'+path);
+  if(!r.ok) return null;
+  const d = await r.json();
+  _pokeApiCache[path] = d;
+  return d;
+}
+
+function _capFirst(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : ''; }
+
+function _getFlavorText(species){
+  if(!species) return '';
+  const entries = species.flavor_text_entries||[];
+  const pt = entries.find(e=>e.language.name==='pt-br'||e.language.name==='pt');
+  const en = entries.find(e=>e.language.name==='en');
+  const chosen = pt||en;
+  return chosen ? chosen.flavor_text.replace(/\f/g,' ').replace(/\n/g,' ').replace(/\u00ad/g,'') : '';
+}
+
+function _buildEvoFromApi(chainLink, targetSlug){
+  const stages=[];
+  function rec(link){
+    const name=_capFirst(link.species.name);
+    const n=parseInt(link.species.url.split('/').filter(Boolean).pop());
+    const det=link.evolution_details?.[0];
+    let trigger='';
+    if(det){
+      if(det.min_level) trigger=`Nv. ${det.min_level}`;
+      else if(det.item) trigger=_capFirst(det.item.name.replace(/-/g,' '));
+      else if(det.trigger?.name==='trade') trigger='Troca';
+      else if(det.trigger?.name==='level-up') trigger=det.min_happiness?'Amizade':'Nível';
+      else if(det.trigger?.name==='use-item'&&det.item) trigger=_capFirst(det.item.name.replace(/-/g,' '));
+    }
+    stages.push({nome:name,numero:n,trigger,isCurrent:slugify(name)===targetSlug});
+    (link.evolves_to||[]).forEach(next=>rec(next));
+  }
+  rec(chainLink);
+  return stages;
+}
+
+function _ndexTypeClass(t){ return t?(TCLS[(t||'').toLowerCase()]||'t-normal'):'t-normal'; }
+
+function _ndexCatPill(cat){
+  if(!cat) return '—';
+  const c=cat.toLowerCase();
+  if(c.includes('físico')||c.includes('physical')) return `<span class="cat-icon cat-fisico">Físico</span>`;
+  if(c.includes('especial')||c.includes('special')) return `<span class="cat-icon cat-especial">Especial</span>`;
+  return `<span class="cat-icon cat-status">Status</span>`;
+}
+
+function _getCsvStats(slug, num){
+  const list = DATADEX.pokemon||[];
+  // match by slug of name
+  let r = list.find(p=>p.nome&&p.nome!=='???'&&slugify(p.nome)===slug);
+  if(!r&&num) r = list.find(p=>p.numero===num&&p.nome&&p.nome!=='???');
+  return r||null;
+}
+
+function _getAbilityDesc(abName){
+  const upper = abName.toUpperCase().trim();
+  // Try CSV abilities (from DATADEX)
+  const ab = (DATADEX.abilities||[]).find(a=>a.nome&&a.nome.toUpperCase().trim()===upper);
+  if(ab) return ab.efeito||'';
+  return '';
+}
+
+function _getMoveData(moveName){
+  const lower = (moveName||'').toLowerCase().trim();
+  return (DATADEX.moves||[]).find(m=>m.nome&&m.nome.toLowerCase().trim()===lower)||null;
+}
+
+function _buildDmgGroupsHtml(dmgTaken){
+  if(!dmgTaken||!Object.keys(dmgTaken).length) return '<div style="padding:16px;text-align:center;color:var(--muted);font-size:13px">Sem dados cadastrados.</div>';
+  const DMG_TIPOS=['normal','fire','water','electric','grass','ice','fighting','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
+  const DMG_LABELS={normal:'Normal',fire:'Fire',water:'Water',electric:'Electric',grass:'Grass',ice:'Ice',fighting:'Fighting',poison:'Poison',ground:'Ground',flying:'Flying',psychic:'Psychic',bug:'Bug',rock:'Rock',ghost:'Ghost',dragon:'Dragon',dark:'Dark',steel:'Steel',fairy:'Fairy'};
+  const G={
+    '0':   {label:'Imune (×0)',bg:'#2a2a2a',color:'#aaa',border:'#444'},
+    '0.25':{label:'×0.25',bg:'#c8f0c8',color:'#1a5a1a',border:'#7acc7a'},
+    '0.5': {label:'×0.5',bg:'#e0f0e0',color:'#1a6a1a',border:'#7acc7a'},
+    '1':   {label:'×1',bg:'var(--surface2)',color:'var(--muted)',border:'var(--border)'},
+    '2':   {label:'×2',bg:'#fde8e8',color:'#c03030',border:'#f0a0a0'},
+    '4':   {label:'×4',bg:'#f8b0b0',color:'#7a0000',border:'#e06060'},
+  };
+  const groups={};
+  DMG_TIPOS.forEach(t=>{
+    const v=dmgTaken[t]!==undefined?String(dmgTaken[t]):'1';
+    if(!groups[v]) groups[v]=[];
+    groups[v].push(t);
+  });
+  return ['0.25','0.5','1','2','4','0'].filter(k=>groups[k]?.length).map(k=>{
+    const gs=G[k]||G['1'];
+    const pills=groups[k].map(t=>`<span class="type-pill ${_ndexTypeClass(t)}" style="font-size:10px;padding:3px 9px">${DMG_LABELS[t]}</span>`).join('');
+    return `<div style="display:flex;align-items:center;gap:10px;padding:6px 14px;border-bottom:1px solid var(--border)">
+      <div style="min-width:56px;text-align:center;font-size:11px;font-weight:800;padding:3px 6px;border-radius:5px;background:${gs.bg};color:${gs.color};border:1px solid ${gs.border};white-space:nowrap">${gs.label}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">${pills}</div>
+    </div>`;
+  }).join('');
+}
+
+function _buildNdexMovesHtml(movesLvl, eggMoves, tutorMoves){
+  const lvlH = movesLvl.length ? movesLvl.map(m=>{
+    const mv=_getMoveData(m.nome);
+    const tipo=m.tipo||mv?.tipo||'';
+    const desc=m.desc||m.efeito||mv?.efeito||'';
+    const rolagem=m.rolagem||mv?.rolagem||'';
+    return `<tr>
+      <td class="lvl-cell">${m.lvl===0||m.lvl==='0'?'—':m.lvl||'—'}</td>
+      <td class="move-name">${m.nome||''}${tipo?` <span class="type-pill ${_ndexTypeClass(tipo)}" style="font-size:8px">${tipo}</span>`:''}</td>
+      <td>${_ndexCatPill(m.cat||mv?.categoria||'')}</td>
+      <td style="color:var(--muted);font-size:11px;line-height:1.4">${rolagem?`<strong>${rolagem}</strong> — `:''}${desc}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum move cadastrado.</td></tr>`;
+
+  const eggH = eggMoves.length ? eggMoves.map(m=>{
+    const mv=_getMoveData(m.nome);
+    const desc=m.desc||mv?.efeito||'';
+    const tipo=mv?.tipo||'';
+    return `<tr>
+      <td class="move-name" colspan="2">${m.nome||''}${tipo?` <span class="type-pill ${_ndexTypeClass(tipo)}" style="font-size:8px">${tipo}</span>`:''}</td>
+      <td colspan="2" style="color:var(--muted);font-size:11px">${desc}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum egg move cadastrado.</td></tr>`;
+
+  const tutH = tutorMoves.length ? tutorMoves.map(m=>{
+    const mv=_getMoveData(m.nome);
+    const desc=m.desc||mv?.efeito||'';
+    const tipo=mv?.tipo||'';
+    return `<tr>
+      <td class="move-name" colspan="2">${m.nome||''}${tipo?` <span class="type-pill ${_ndexTypeClass(tipo)}" style="font-size:8px">${tipo}</span>`:''}</td>
+      <td colspan="2" style="color:var(--muted);font-size:11px">${desc}</td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum tutor move cadastrado.</td></tr>`;
+
+  return `<div class="ficha-moves-wrap">
+    <div class="moves-tabs">
+      <button class="moves-tab active" onclick="switchMovesTab(this,'ndex-tab-lvl')">Por Nível</button>
+      <button class="moves-tab" onclick="switchMovesTab(this,'ndex-tab-egg')">Egg Moves</button>
+      <button class="moves-tab" onclick="switchMovesTab(this,'ndex-tab-tutor')">Tutor Moves</button>
+    </div>
+    <div class="moves-panel active" id="ndex-tab-lvl">
+      <table class="moves-table"><thead><tr><th style="width:55px">LVL</th><th>Move</th><th style="width:80px">Cat.</th><th>Efeito / Rolagem</th></tr></thead><tbody>${lvlH}</tbody></table>
+    </div>
+    <div class="moves-panel" id="ndex-tab-egg">
+      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th colspan="2">Efeito</th></tr></thead><tbody>${eggH}</tbody></table>
+    </div>
+    <div class="moves-panel" id="ndex-tab-tutor">
+      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th colspan="2">Efeito</th></tr></thead><tbody>${tutH}</tbody></table>
+    </div>
+  </div>`;
+}
+
+// ─── MAIN RENDER DISPATCHER ───────────────────────────
+async function renderNdexFichaPage(slug){
+  showView('ndex-ficha');
+  resetNavTheme();
+  document.title = 'NationalDex — PChapters';
+  const root = document.getElementById('ndex-ficha-content');
+  root.innerHTML = `<div class="inline-loading"><div class="inline-spinner"></div>Buscando dados do Pokémon…</div>`;
+
+  // 1. Try UWAdex
+  const uwaEntry = uwaDex.find(p=>slugify(p.nome)===slug);
+  if(uwaEntry){ await _renderUwaEntry(slug, uwaEntry, root); return; }
+
+  // 2. PokéAPI
+  await _renderPokeApiEntry(slug, root);
+}
+
+// ─── RENDER UWA ENTRY (full RPG ficha from Supabase) ──
+async function _renderUwaEntry(slug, p, root){
+  const tipos = p.tipos||[];
+  const primaryType = (tipos[0]||'normal').toLowerCase();
+  const theme = TYPE_THEME[primaryType]||TYPE_THEME.normal;
+  const numStr = p.numero?'#'+String(p.numero).padStart(3,'0'):'';
+  const dado = dadoFmt(p.dado||'');
+  const ca = p.ca!=null&&p.ca!==''?p.ca:'—';
+  const pv = p.pv!=null&&p.pv!==''?p.pv:'—';
+  const themeStyle = `--brand:${theme.brand};--brand-mid:${theme.brandMid};--brand-light:${theme.brandLight||''}`;
+
+  // Set nav color
+  setNavTheme(primaryType);
+  document.title = `${p.nome} — NationalDex PChapters`;
+
+  // Nav buttons
+  const idx = uwaDex.indexOf(p);
+  const prev = idx>0?uwaDex[idx-1]:null;
+  const next = idx<uwaDex.length-1?uwaDex[idx+1]:null;
+  const navHtml = `<div class="poke-nav">
+    ${prev?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(prev.nome)}')">‹ <span><span class="poke-nav-num">${prev.numero?'#'+String(prev.numero).padStart(3,'0'):''}</span>${prev.nome}</span></button>`:'<div></div>'}
+    <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=nationaldex]').click()">📖 NationalDex</button>
+    ${next?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(next.nome)}')"><span><span class="poke-nav-num">${next.numero?'#'+String(next.numero).padStart(3,'0'):''}</span>${next.nome}</span> ›</button>`:'<div></div>'}
+  </div>`;
+
+  // Abilities
+  const habilidades = p.habilidades||[];
+  const abHtml = habilidades.map((a,i)=>{
+    const desc = a.desc||_getAbilityDesc(a.nome||'');
+    return `<div class="ficha-ability">
+      ${a.ha?`<span class="ficha-ability-ha">HA</span>`:`<span style="font-weight:700;color:var(--muted);margin-right:4px">${i+1}.</span>`}
+      <span class="ficha-ability-name">${a.nome||''}</span>
+      ${desc?`: <span style="color:var(--text)">${desc}</span>`:''}
+    </div>`;
+  }).join('');
+
+  // Evo chain
+  const evoChain = p.evo_chain||[];
+  let evoHtml = '';
+  if(evoChain.length>0){
+    const stH = evoChain.map((stage,i)=>{
+      const isCurr = slugify(stage.nome)===slug;
+      const dbM = !stage.sprite?uwaDex.find(x=>slugify(x.nome)===slugify(stage.nome)):null;
+      const spr = stage.sprite||(dbM?.sprite)||(stage.numero?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${stage.numero}.png`:FALLBACK);
+      const arrow = i<evoChain.length-1?`<div class="evo-arrow"><div class="evo-arrow-icon">›</div>${evoChain[i+1].trigger?`<div class="evo-arrow-label">${evoChain[i+1].trigger}</div>`:''}</div>`:'';
+      return `<div class="evo-stage${isCurr?' current':''}">
+        <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${slugify(stage.nome)}')"/>
+        <div class="evo-stage-name">${stage.nome}</div>
+      </div>${arrow}`;
+    }).join('');
+    evoHtml = `<div class="evo-chain-wrap"><div class="evo-chain-title">EVOLUTIONARY CHAIN</div><div class="evo-chain-inner">${stH}</div></div>`;
+  }
+
+  // Dmg taken
+  const dmgHtml = `<div class="ficha-dmg-wrap"><div class="ficha-section-title">DAMAGE TAKEN</div>${_buildDmgGroupsHtml(p.dmg_taken||{})}</div>`;
+
+  // Moves
+  const movesHtml = _buildNdexMovesHtml(p.moves_lvl||[], p.egg_moves||[], p.tutor_moves||[]);
+
+  // Biology
+  const shinyUrl = p.sprite_shiny||p.sprite||FALLBACK;
+  const bioHtml = p.bio?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
+    <div class="ficha-bio-inner">
+      <div class="ficha-bio-sprites"><div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="shiny" onerror="this.src='${FALLBACK}'"/>
+        <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
+      </div></div>
+      <div class="ficha-bio-text">${p.bio}</div>
+    </div>
+  </div>`:'';
+
+  const rarLbl = RLBL[p.raridade]||'';
+  const rarCls = RCLS[p.raridade]||'rc';
+  const spriteUrl = p.sprite||(p.numero?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.numero}.png`:FALLBACK);
+
+  root.innerHTML = `<div style="${themeStyle}">
+    ${navHtml}
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <span class="source-badge source-uwa">⭐ UWAdex</span>
+      ${rarLbl?`<span class="type-pill ${rarCls}">${rarLbl}</span>`:''}
+    </div>
+    <div class="ficha-main">
+      <div class="ficha-sprite-col">
+        <div class="ficha-sprite-num">${numStr}</div>
+        <img class="ficha-sprite-img" src="${spriteUrl}" alt="${p.nome}" onerror="this.src='${FALLBACK}'"/>
+        <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
+        <div class="ficha-sprite-types">${tipos.map(t=>`<span class="type-pill ${_ndexTypeClass(t)}">${t}</span>`).join('')}</div>
+      </div>
+      <div class="ficha-info-col">
+        <div class="ficha-info-name">${p.nome_display||p.nome}</div>
+        <table class="ficha-info-table">
+          ${p.classificacao?`<tr><td>Classification</td><td>${p.classificacao} Pokémon</td></tr>`:''}
+          ${(p.altura||p.peso)?`<tr><td>Altura / Peso</td><td>${p.altura||'—'} cm · ${p.peso||'—'} kg</td></tr>`:''}
+          ${p.genero?`<tr><td>Gênero</td><td>${p.genero}</td></tr>`:''}
+          ${p.egggroup?`<tr><td>Egg Group</td><td>${p.egggroup}</td></tr>`:''}
+          ${(dado||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span>${dado||'—'}</div>
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span>${ca}</div>
+            <div style="flex:1;padding:9px 16px"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV </span>${pv}</div>
+          </div></td></tr>`:''}
+          ${habilidades.length?`<tr><td colspan="2" style="padding:0"><div><div style="padding:6px 16px 2px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities</div><div style="padding:8px 16px 10px">${abHtml}</div></div></td></tr>`:''}
+        </table>
+      </div>
+    </div>
+    ${evoHtml}
+    ${dmgHtml}
+    ${bioHtml}
+    ${movesHtml}
+  </div>`;
+}
+
+// ─── RENDER POKÉAPI ENTRY ─────────────────────────────
+async function _renderPokeApiEntry(slug, root){
+  let pokeData=null, speciesData=null;
+  try{ pokeData = await _pokeapiFetch('pokemon/'+slug); }catch{}
+
+  if(!pokeData){
+    root.innerHTML = `<div class="empty-state"><div class="empty-icon">❓</div><div class="empty-text">Pokémon não encontrado: <strong>${slug}</strong></div></div>`;
+    return;
+  }
+
+  try{ speciesData = await _pokeapiFetch('pokemon-species/'+pokeData.species.name); }catch{}
+
+  const num = pokeData.id;
+  const name = _capFirst(speciesData?.names?.find(n=>n.language.name==='en')?.name||pokeData.name);
+  const namePt = speciesData?.names?.find(n=>n.language.name==='pt-br'||n.language.name==='pt')?.name||name;
+  const tipos = pokeData.types.map(t=>_capFirst(t.type.name));
+  const primaryType = (tipos[0]||'normal').toLowerCase();
+  const theme = TYPE_THEME[primaryType]||TYPE_THEME.normal;
+  const themeStyle = `--brand:${theme.brand};--brand-mid:${theme.brandMid};--brand-light:${theme.brandLight||''}`;
+  const numStr = '#'+String(num).padStart(4,'0');
+
+  setNavTheme(primaryType);
+  document.title = `${namePt} — NationalDex PChapters`;
+
+  // CSV stats cross-reference
+  const csvRef = _getCsvStats(slug, num);
+  const dado = csvRef ? dadoFmt(csvRef.dado) : '—';
+  const ca = (csvRef?.ca!=null&&!isNaN(csvRef.ca)) ? csvRef.ca : '—';
+  const pv = (csvRef?.pv!=null&&!isNaN(csvRef.pv)) ? csvRef.pv : '—';
+
+  // Height/weight from PokéAPI
+  const altura = (pokeData.height*10).toFixed(0);
+  const peso = (pokeData.weight/10).toFixed(1);
+
+  // Flavor text
+  const flavor = _getFlavorText(speciesData);
+  const genus = speciesData?.genera?.find(g=>g.language.name==='en')?.genus||'';
+
+  // Abilities — name from API + description from CSV
+  const abHtml = pokeData.abilities.map((ab,i)=>{
+    const rawName = ab.ability.name.replace(/-/g,' ').split(' ').map(_capFirst).join(' ');
+    const abNameUp = rawName.toUpperCase();
+    const desc = _getAbilityDesc(abNameUp);
+    const isHa = ab.is_hidden;
+    return `<div class="ficha-ability">
+      ${isHa?`<span class="ficha-ability-ha">HA</span>`:`<span style="font-weight:700;color:var(--muted);margin-right:4px">${i+1}.</span>`}
+      <span class="ficha-ability-name">${abNameUp}</span>
+      ${desc?`: <span style="color:var(--text)">${desc}</span>`:''}
+    </div>`;
+  }).join('');
+
+  // Evolution chain from PokéAPI
+  let evoHtml='';
+  if(speciesData?.evolution_chain?.url){
+    try{
+      const evoPath = speciesData.evolution_chain.url.replace('https://pokeapi.co/api/v2/','');
+      const evoData = await _pokeapiFetch(evoPath);
+      if(evoData?.chain){
+        const stages = _buildEvoFromApi(evoData.chain, slug);
+        if(stages.length>1){
+          const stH = stages.map((stage,i)=>{
+            const spr = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${stage.numero}.png`;
+            const arrow = i<stages.length-1?`<div class="evo-arrow"><div class="evo-arrow-icon">›</div>${stages[i+1].trigger?`<div class="evo-arrow-label">${stages[i+1].trigger}</div>`:''}</div>`:'';
+            // Check if UWAdex has this stage
+            const uwaStage = uwaDex.find(x=>slugify(x.nome)===slugify(stage.nome));
+            const clickTarget = uwaStage?slugify(uwaStage.nome):slugify(stage.nome);
+            return `<div class="evo-stage${stage.isCurrent?' current':''}">
+              <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${clickTarget}')"/>
+              <div class="evo-stage-name">${stage.nome}</div>
+            </div>${arrow}`;
+          }).join('');
+          evoHtml = `<div class="evo-chain-wrap"><div class="evo-chain-title">EVOLUTIONARY CHAIN</div><div class="evo-chain-inner">${stH}</div></div>`;
+        }
+      }
+    }catch{}
+  }
+
+  // Moves from PokéAPI — cross description/rolagem with CSV
+  const apiMovesLvl = pokeData.moves
+    .filter(m=>m.version_group_details.some(v=>v.move_learn_method.name==='level-up'))
+    .map(m=>{
+      const det = m.version_group_details.filter(v=>v.move_learn_method.name==='level-up').sort((a,b)=>a.level_learned_at-b.level_learned_at)[0];
+      const lvl = det?.level_learned_at||0;
+      const moveName = m.move.name.replace(/-/g,' ').split(' ').map(_capFirst).join(' ');
+      const mvCsv = _getMoveData(moveName);
+      return {lvl,nome:moveName,tipo:mvCsv?.tipo||'',cat:mvCsv?.categoria||'',rolagem:mvCsv?.rolagem||'',desc:mvCsv?.efeito||''};
+    })
+    .sort((a,b)=>a.lvl-b.lvl);
+
+  const movesLvlH = apiMovesLvl.length ? apiMovesLvl.map(m=>`<tr>
+    <td class="lvl-cell">${m.lvl===0?'—':m.lvl}</td>
+    <td class="move-name">${m.nome}${m.tipo?` <span class="type-pill ${_ndexTypeClass(m.tipo)}" style="font-size:8px">${m.tipo}</span>`:''}</td>
+    <td>${_ndexCatPill(m.cat)}</td>
+    <td style="color:var(--muted);font-size:11px;line-height:1.4">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
+  </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum move disponível.</td></tr>`;
+
+  // Egg moves from PokéAPI
+  const apiEggMoves = pokeData.moves
+    .filter(m=>m.version_group_details.some(v=>v.move_learn_method.name==='egg'))
+    .map(m=>{
+      const moveName = m.move.name.replace(/-/g,' ').split(' ').map(_capFirst).join(' ');
+      const mvCsv = _getMoveData(moveName);
+      return {nome:moveName,tipo:mvCsv?.tipo||'',cat:mvCsv?.categoria||'',rolagem:mvCsv?.rolagem||'',desc:mvCsv?.efeito||''};
+    });
+  const eggH = apiEggMoves.length ? apiEggMoves.map(m=>`<tr>
+    <td class="move-name" colspan="2">${m.nome}${m.tipo?` <span class="type-pill ${_ndexTypeClass(m.tipo)}" style="font-size:8px">${m.tipo}</span>`:''}</td>
+    <td colspan="2" style="color:var(--muted);font-size:11px">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
+  </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum egg move disponível.</td></tr>`;
+
+  // Tutor moves from PokéAPI
+  const apiTutorMoves = pokeData.moves
+    .filter(m=>m.version_group_details.some(v=>v.move_learn_method.name==='tutor'))
+    .map(m=>{
+      const moveName = m.move.name.replace(/-/g,' ').split(' ').map(_capFirst).join(' ');
+      const mvCsv = _getMoveData(moveName);
+      return {nome:moveName,tipo:mvCsv?.tipo||'',cat:mvCsv?.categoria||'',rolagem:mvCsv?.rolagem||'',desc:mvCsv?.efeito||''};
+    });
+  const tutH = apiTutorMoves.length ? apiTutorMoves.map(m=>`<tr>
+    <td class="move-name" colspan="2">${m.nome}${m.tipo?` <span class="type-pill ${_ndexTypeClass(m.tipo)}" style="font-size:8px">${m.tipo}</span>`:''}</td>
+    <td colspan="2" style="color:var(--muted);font-size:11px">${m.rolagem?`<strong>${m.rolagem}</strong> — `:''}${m.desc}</td>
+  </tr>`).join('') : `<tr><td colspan="4" class="moves-empty">Nenhum tutor move disponível.</td></tr>`;
+
+  const movesHtml = `<div class="ficha-moves-wrap">
+    <div class="moves-tabs">
+      <button class="moves-tab active" onclick="switchMovesTab(this,'ndex-api-lvl')">Por Nível</button>
+      <button class="moves-tab" onclick="switchMovesTab(this,'ndex-api-egg')">Egg Moves</button>
+      <button class="moves-tab" onclick="switchMovesTab(this,'ndex-api-tutor')">Tutor Moves</button>
+    </div>
+    <div class="moves-panel active" id="ndex-api-lvl">
+      <table class="moves-table"><thead><tr><th style="width:55px">LVL</th><th>Move</th><th style="width:80px">Cat.</th><th>Efeito / Rolagem</th></tr></thead><tbody>${movesLvlH}</tbody></table>
+    </div>
+    <div class="moves-panel" id="ndex-api-egg">
+      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th colspan="2">Efeito</th></tr></thead><tbody>${eggH}</tbody></table>
+    </div>
+    <div class="moves-panel" id="ndex-api-tutor">
+      <table class="moves-table"><thead><tr><th colspan="2">Move</th><th colspan="2">Efeito</th></tr></thead><tbody>${tutH}</tbody></table>
+    </div>
+  </div>`;
+
+  // Sprite
+  const spriteUrl = pokeData.sprites?.other?.['official-artwork']?.front_default||pokeData.sprites?.front_default||FALLBACK;
+  const shinyUrl = pokeData.sprites?.other?.['official-artwork']?.front_shiny||pokeData.sprites?.front_shiny||null;
+
+  // Biology section
+  const bioHtml = (flavor||shinyUrl)?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
+    <div class="ficha-bio-inner">
+      ${shinyUrl?`<div class="ficha-bio-sprites"><div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+        <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="shiny" onerror="this.style.display='none'"/>
+        <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
+      </div></div>`:''}
+      <div>${flavor?`<div class="flavor-box">${flavor}</div>`:''}
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Fonte: PokéAPI · Dados RPG: CSV local</div>
+      </div>
+    </div>
+  </div>`:'';
+
+  // Nav by number
+  const prevNum = num>1?num-1:null;
+  const nextNum = num<=1025?num+1:null;
+  // Check if prev/next are in uwadex for names
+  const prevUwa = prevNum?uwaDex.find(p=>p.numero===prevNum):null;
+  const nextUwa = nextNum?uwaDex.find(p=>p.numero===nextNum):null;
+  const prevLabel = prevUwa?`<span class="poke-nav-num">#${String(prevNum).padStart(3,'0')}</span>${prevUwa.nome}` : prevNum?`<span class="poke-nav-num">#${String(prevNum).padStart(3,'0')}</span>Anterior`:'';
+  const nextLabel = nextUwa?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>${nextUwa.nome}` : nextNum?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>Próximo`:'';
+  const navHtml = `<div class="poke-nav">
+    ${prevNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${prevNum})">‹ <span>${prevLabel}</span></button>`:'<div></div>'}
+    <button class="poke-nav-btn" onclick="navigateTo('dex');setTimeout(()=>{document.querySelector('.dex-tab[data-tab=nationaldex]')?.click()},50)">📖 NationalDex</button>
+    ${nextNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${nextNum})"><span>${nextLabel}</span> ›</button>`:'<div></div>'}
+  </div>`;
+
+  root.innerHTML = `<div style="${themeStyle}">
+    ${navHtml}
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+      <span class="source-badge source-pokeapi">🌐 PokéAPI</span>
+      ${(dado!=='—'||ca!=='—')?`<span class="source-badge" style="background:var(--surface2);color:var(--muted);border:1px solid var(--border)">📊 CSV</span>`:''}
+    </div>
+    <div class="ficha-main">
+      <div class="ficha-sprite-col">
+        <div class="ficha-sprite-num">${numStr}</div>
+        <img class="ficha-sprite-img" src="${spriteUrl}" alt="${namePt}" onerror="this.src='${FALLBACK}'"/>
+        <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
+        <div class="ficha-sprite-types">${tipos.map(t=>`<span class="type-pill ${_ndexTypeClass(t)}">${t}</span>`).join('')}</div>
+      </div>
+      <div class="ficha-info-col">
+        <div class="ficha-info-name">${namePt}${namePt!==name?`<span style="display:block;font-size:12px;font-weight:400;opacity:.7">${name}</span>`:''}</div>
+        <table class="ficha-info-table">
+          ${genus?`<tr><td>Classification</td><td>${genus}</td></tr>`:''}
+          <tr><td>Altura / Peso</td><td>${altura} cm · ${peso} kg</td></tr>
+          ${(dado!=='—'||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span>${dado}</div>
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span>${ca}</div>
+            <div style="flex:1;padding:9px 16px"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV </span>${pv}</div>
+          </div></td></tr>`:''}
+          ${pokeData.abilities.length?`<tr><td colspan="2" style="padding:0"><div><div style="padding:6px 16px 2px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities</div><div style="padding:8px 16px 10px">${abHtml}</div></div></td></tr>`:''}
+        </table>
+      </div>
+    </div>
+    ${evoHtml}
+    ${bioHtml}
+    ${movesHtml}
+  </div>`;
 }
 
 // ════════════════════════════════════════
