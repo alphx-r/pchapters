@@ -73,6 +73,7 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .ndex-region-range{font-size:10px;color:var(--muted);font-family:var(--font-body);font-weight:600;letter-spacing:.3px}
 .ndex-card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
 .ndex-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 10px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:default;transition:all .2s;position:relative;overflow:hidden}
+.ndex-card-stats{display:flex;gap:0;width:100%;margin-top:auto;border-top:1px solid var(--border);padding-top:6px}
 .ndex-card.is-uwa{border-color:var(--brand-mid);cursor:pointer}
 .ndex-card.is-uwa:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(37,99,168,.15)}
 .ndex-card:not(.is-uwa):hover{border-color:var(--border2)}
@@ -81,7 +82,6 @@ html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var
 .ndex-card-name{font-family:var(--font-title);font-size:10.5px;font-weight:600;color:var(--text);text-align:center;line-height:1.3}
 .ndex-card.is-uwa .ndex-card-name{color:var(--brand-mid)}
 .ndex-card-types{display:flex;gap:3px;flex-wrap:wrap;justify-content:center}
-.ndex-card-stats{display:flex;gap:0;width:100%;margin-top:2px;border-top:1px solid var(--border);padding-top:6px}
 .ndex-card-stat{flex:1;text-align:center;display:flex;flex-direction:column;gap:1px;border-right:1px solid var(--border)}
 .ndex-card-stat:last-child{border-right:none}
 .ndex-card-stat-label{font-size:8px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
