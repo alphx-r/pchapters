@@ -80,6 +80,8 @@ html.tema-inverno .callout-tip{background:#e0fff8;color:#006a4a}
 html{background:var(--bg);transition:background .2s}
 html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);transition:background .2s,color .2s}
 .nav{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--brand);position:sticky;top:0;z-index:100}
+.nav-hamburger{display:none;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;cursor:pointer;font-size:18px;line-height:1;flex-shrink:0}
+.nav-hamburger:hover{background:rgba(255,255,255,.22)}
 .nav-logo{font-family:var(--font-title);font-size:16px;font-weight:700;color:#fff;letter-spacing:1px}
 .nav-logo span{color:var(--accent)}
 .nav-links{display:flex;gap:4px}
@@ -91,14 +93,14 @@ html[class*="tema-"] .nav-logo-chapters{color:#fff !important}
 /* ── NAV DROPDOWN MOBILE ── */
 .nav-more-btn{display:none;font-size:13px;font-weight:600;font-family:var(--font-body);padding:7px 14px;border-radius:20px;border:none;background:rgba(255,255,255,.15);color:#fff;cursor:pointer;align-items:center;gap:5px;white-space:nowrap}
 .nav-more-btn:hover{background:rgba(255,255,255,.22)}
-.nav-dropdown{position:absolute;top:58px;right:14px;background:var(--brand);border:1.5px solid rgba(255,255,255,.18);border-radius:12px;padding:6px;display:none;flex-direction:column;gap:2px;min-width:140px;z-index:200;box-shadow:0 6px 24px rgba(0,0,0,.22)}
+.nav-dropdown{position:fixed;top:58px;left:50%;transform:translateX(-50%);background:var(--brand);border:1.5px solid rgba(255,255,255,.18);border-radius:12px;padding:6px;display:none;flex-direction:column;gap:2px;min-width:200px;z-index:200;box-shadow:0 6px 24px rgba(0,0,0,.22)}
 .nav-dropdown.open{display:flex}
-.nav-dropdown .nav-link{border-radius:8px;text-align:left;width:100%;padding:9px 14px;font-size:13px}
+.nav-dropdown .nav-link{border-radius:8px;text-align:center;width:100%;padding:11px 14px;font-size:13px}
 html[class*="tema-"] .nav-more-btn{background:rgba(255,255,255,.15)}
 html[class*="tema-"] .nav-dropdown{background:var(--brand)}
-.nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid var(--accent);background:var(--accent);color:#fff;cursor:pointer;transition:all .2s}
-.nav-login:hover{background:var(--accent);border-color:var(--accent);opacity:.88}
-.nav-login.active{background:var(--accent);border-color:var(--accent)}
+.nav-login{font-size:12px;font-weight:700;font-family:var(--font-body);padding:7px 18px;border-radius:20px;border:1.5px solid var(--brand-light);background:var(--brand-light);color:var(--brand);cursor:pointer;transition:all .2s}
+.nav-login:hover{background:var(--brand-light);border-color:var(--brand-light);opacity:.88}
+.nav-login.active{background:var(--brand-light);border-color:var(--brand-light)}
 .page{display:none;padding:28px;max-width:1000px;margin:0 auto}
 .page.active{display:block}
 .field{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
@@ -277,13 +279,12 @@ html[class*="tema-"] .nav-dropdown{background:var(--brand)}
 @keyframes diceShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-8deg)}40%{transform:rotate(8deg)}60%{transform:rotate(-5deg)}80%{transform:rotate(5deg)}}
 
 @media(max-width:768px){
-  .nav{padding:0 14px;height:52px}
-  .nav-logo{font-size:14px}
-  .nav-link{padding:6px 10px;font-size:12px}
-  .nav-login{padding:6px 12px;font-size:11px}
-  .nav-more-btn{display:inline-flex}
+  .nav{padding:0 14px;height:52px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
+  .nav-logo{font-size:14px;justify-self:start}
+  .nav-hamburger{display:inline-flex;justify-self:center}
+  .nav-login{justify-self:end;padding:6px 12px;font-size:11px}
+  .nav-links{display:none}
   .nav-dropdown{top:52px}
-  .nav-link.nav-hidden-mobile{display:none}
   .page{padding:16px}
   .roller-header{margin-bottom:18px}
   .roller-header h2{font-size:18px}
@@ -355,7 +356,7 @@ html[class*="tema-"] .nav-dropdown{background:var(--brand)}
 .slide.active .slide-text{transform:translateY(0);opacity:1}
 .slide-title{font-family:var(--font-title);font-size:22px;color:#fff;font-weight:700;line-height:1.25;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.5)}
 .slide-desc{font-size:13px;color:rgba(255,255,255,.82);line-height:1.55;max-width:520px;text-shadow:0 1px 4px rgba(0,0,0,.5)}
-.slide-link-tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:var(--accent);color:#fff;letter-spacing:.5px;text-decoration:none;cursor:pointer;border:none;font-family:var(--font-body)}
+.slide-link-tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;background:var(--brand-light);color:var(--brand);letter-spacing:.5px;text-decoration:none;cursor:pointer;border:none;font-family:var(--font-body)}
 .ss-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.18);backdrop-filter:blur(4px);border:none;border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:#fff;transition:background .2s;z-index:10;line-height:1}
 .ss-arrow:hover{background:rgba(255,255,255,.32)}
 .ss-prev{left:12px}.ss-next{right:12px}
@@ -577,14 +578,17 @@ html[class*="tema-"] .nav-dropdown{background:var(--brand)}
     <button class="nav-link nav-hidden-mobile" id="nav-btn-rolagens" onclick="goTo('rolagens',this)">Rolls</button>
     <button class="nav-link nav-hidden-mobile" id="nav-btn-npcs" onclick="goTo('npcs',this)">NPCs</button>
   </div>
-  <div style="display:flex;align-items:center;gap:8px;position:relative">
-    <button class="nav-more-btn" id="nav-more-btn" onclick="toggleNavDropdown()" aria-label="Mais páginas">▾</button>
-    <div class="nav-dropdown" id="nav-dropdown">
-      <button class="nav-link" id="nav-dd-rolagens" onclick="goTo('rolagens',this);closeNavDropdown()">Rolls</button>
-      <button class="nav-link" id="nav-dd-npcs" onclick="goTo('npcs',this);closeNavDropdown()">NPCs</button>
-    </div>
-    <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
+  <!-- Hamburger (mobile only, centered) -->
+  <button class="nav-hamburger" id="nav-more-btn" onclick="toggleNavDropdown()" aria-label="Menu">☰</button>
+  <div class="nav-dropdown" id="nav-dropdown">
+    <button class="nav-link" onclick="goTo('roller',this);closeNavDropdown()">Pokémon</button>
+    <button class="nav-link" onclick="goTo('bioma',this);closeNavDropdown()">Por Bioma</button>
+    <button class="nav-link" onclick="goTo('dados',this);closeNavDropdown()">Dados</button>
+    <button class="nav-link" onclick="goTo('ficha',this);closeNavDropdown()">Fichário</button>
+    <button class="nav-link" id="nav-dd-rolagens" onclick="goTo('rolagens',this);closeNavDropdown()">Rolls</button>
+    <button class="nav-link" id="nav-dd-npcs" onclick="goTo('npcs',this);closeNavDropdown()">NPCs</button>
   </div>
+  <button class="nav-login" id="btn-login" onclick="goTo('login',this)">Login</button>
 </nav>
 
 <!-- HOME -->
@@ -1287,41 +1291,21 @@ html[class*="tema-"] .nav-dropdown{background:var(--brand)}
         <div class="adm-section" id="sec-npcs-adm">
           <div class="sec-sub">Gerencie cidades, NPCs, Pokémon e informações exibidas na página de NPCs</div>
 
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border)">
-            <button class="pk-tab-btn active" data-ntab="tab-npc-cidade" onclick="setNpcAdmTab('tab-npc-cidade',this)">🏙️ Cidades</button>
-            <button class="pk-tab-btn" data-ntab="tab-npc-npc" onclick="setNpcAdmTab('tab-npc-npc',this)">🧑 NPCs</button>
-            <button class="btn btn-sm" style="background:#fdf3dc;color:#7a5010;border:1px solid #e8d080;margin-left:auto" onclick="diagnosticarNpc()">🔍 Diagnosticar tabelas</button>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1.5px solid var(--border);align-items:center">
+            <button class="btn btn-primary btn-sm" onclick="abrirModalCidade(null)">+ Nova Cidade</button>
+            <button class="btn btn-primary btn-sm" onclick="abrirModalNpc(null)">+ Novo NPC</button>
+            <button class="btn btn-sm" style="background:#e8f0fb;color:var(--brand-mid);border:1px solid #b8d0f0" onclick="abrirModalTransferirNpc()">↗️ Transferir personagem</button>
+            <button class="btn btn-sm" style="background:#fdf3dc;color:#7a5010;border:1px solid #e8d080;margin-left:auto" onclick="diagnosticarNpcTabelas()">🔍 Diagnosticar tabelas</button>
           </div>
 
-          <!-- TAB: Cidades -->
-          <div class="pk-tab-panel active" id="tab-npc-cidade">
-            <div style="font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px">🏙️ Gerenciar Cidades</div>
-            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
-              <button class="btn btn-primary btn-sm" onclick="abrirModalCidade(null)">+ Nova Cidade</button>
-            </div>
-            <div id="npc-cidades-lista" style="display:flex;flex-direction:column;gap:8px"></div>
-            <div class="fb fb-ok" id="npc-cidade-fb">✓ Cidade salva!</div>
-            <div class="fb fb-err" id="npc-cidade-fb-err">—</div>
-          </div>
+          <!-- VIEW UNIFICADA: cidades expansíveis com NPCs -->
+          <div id="npc-cidades-lista" style="display:flex;flex-direction:column;gap:10px"></div>
+          <div id="npc-npcs-lista" style="display:none"></div>
 
-          <!-- TAB: NPCs -->
-          <div class="pk-tab-panel" id="tab-npc-npc">
-            <div style="font-family:var(--font-title);font-size:13px;font-weight:700;color:var(--brand);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px">🧑 Gerenciar NPCs</div>
-            <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
-              <button id="npc-adm-tipo-oficial" class="pk-tab-btn active" onclick="setNpcAdmTipo('oficial',this)" style="font-size:12px;padding:6px 14px">🏙️ Oficiais</button>
-              <button id="npc-adm-tipo-evento" class="pk-tab-btn" onclick="setNpcAdmTipo('evento',this)" style="font-size:12px;padding:6px 14px">🎪 Eventos</button>
-            </div>
-            <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
-              <select id="npc-adm-cidade-sel" style="padding:9px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text)" onchange="renderNpcAdmLista()">
-                <option value="">— Todos —</option>
-              </select>
-              <button class="btn btn-primary btn-sm" onclick="abrirModalNpc(null)">+ Novo NPC</button>
-              <button class="btn btn-sm" style="background:#e8f0fb;color:var(--brand-mid);border:1px solid #b8d0f0;margin-left:4px" onclick="abrirModalTransferirNpc()">↗️ Transferir personagem</button>
-            </div>
-            <div id="npc-npcs-lista" style="display:flex;flex-direction:column;gap:8px"></div>
-            <div class="fb fb-ok" id="npc-npc-fb">✓ NPC salvo!</div>
-            <div class="fb fb-err" id="npc-npc-fb-err">—</div>
-          </div>
+          <div class="fb fb-ok" id="npc-cidade-fb">✓ Cidade salva!</div>
+          <div class="fb fb-err" id="npc-cidade-fb-err">—</div>
+          <div class="fb fb-ok" id="npc-npc-fb">✓ NPC salvo!</div>
+          <div class="fb fb-err" id="npc-npc-fb-err">—</div>
         </div>
         <!-- /NPC ADM SECTION -->
 
@@ -6114,7 +6098,7 @@ function renderModalPoolJogador(){
 init();
 </script>
 <!-- ESTAÇÃO FAB -->
-<div id="estacao-fab" style="display:none" onclick="toggleFab()"></div>
+<div id="estacao-fab" onclick="toggleFab()"></div>
 
 </body>
 </html>
