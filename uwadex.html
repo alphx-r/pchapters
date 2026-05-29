@@ -2517,13 +2517,17 @@ async function _renderUwaEntry(slug, p, root){
   setNavTheme(primaryType);
   document.title = `${p.nome} — NationalDex PChapters`;
 
-  // Nav buttons
-  const idx = uwaDex.indexOf(p);
-  const prev = idx>0?uwaDex[idx-1]:null;
-  const next = idx<uwaDex.length-1?uwaDex[idx+1]:null;
+  // Nav buttons — ordered by numero (National Dex order)
+  const uwaSorted = [...uwaDex].sort((a,b)=>(a.numero??9999)-(b.numero??9999));
+  const idxS = uwaSorted.findIndex(x=>x.id===p.id);
+  const prev = idxS>0?uwaSorted[idxS-1]:null;
+  const next = idxS<uwaSorted.length-1?uwaSorted[idxS+1]:null;
   const navHtml = `<div class="poke-nav">
     ${prev?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(prev.nome)}')">‹ <span><span class="poke-nav-num">${prev.numero?'#'+String(prev.numero).padStart(3,'0'):''}</span>${prev.nome}</span></button>`:'<div></div>'}
-    <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=nationaldex]').click()">📖 NationalDex</button>
+    <div style="display:flex;gap:6px">
+      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=pokemon]').click()">🌿 UWAdex</button>
+      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=nationaldex]').click()">📖 NATIONALdex</button>
+    </div>
     ${next?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(next.nome)}')"><span><span class="poke-nav-num">${next.numero?'#'+String(next.numero).padStart(3,'0'):''}</span>${next.nome}</span> ›</button>`:'<div></div>'}
   </div>`;
 
@@ -2657,7 +2661,7 @@ async function _renderPokeApiEntry(slug, root){
     return `<div class="ficha-ability">
       ${isHa?`<span class="ficha-ability-ha">HA</span>`:`<span style="font-weight:700;color:var(--muted);margin-right:4px">${i+1}.</span>`}
       <span class="ficha-ability-name">${abNameUp}</span>
-      ${desc?`: <span style="color:var(--text)">${desc}</span>`:''}
+      ${desc?`: <span style="color:var(--text);font-weight:400;text-transform:none">${desc}</span>`:''}
     </div>`;
   }).join('');
 
@@ -2752,11 +2756,10 @@ async function _renderPokeApiEntry(slug, root){
   const spriteUrl = pokeData.sprites?.other?.['official-artwork']?.front_default||pokeData.sprites?.front_default||FALLBACK;
   const shinyUrl = pokeData.sprites?.other?.['official-artwork']?.front_shiny||pokeData.sprites?.front_shiny||null;
 
-  // Damage taken from CSV
+  // Damage taken — auto-calculated from types using TYPE_CHART
   const dmgHtml = (()=>{
-    const csvDmg = csvRef?.dmg_taken||null;
-    // Build from PokéAPI types if no CSV data
-    const dmgTaken = csvDmg || {};
+    const tiposLower = tipos.map(t=>t.toLowerCase());
+    const dmgTaken = calcDmgTaken(tiposLower);
     return `<div class="ficha-dmg-wrap"><div class="ficha-section-title">DAMAGE TAKEN</div>${_buildDmgGroupsHtml(dmgTaken)}</div>`;
   })();
 
@@ -2764,24 +2767,19 @@ async function _renderPokeApiEntry(slug, root){
   const genderRate = speciesData?.gender_rate ?? -1;
   let genderStr = '—';
   if(genderRate === -1) genderStr = 'Genderless';
-  else if(genderRate === 0) genderStr = '100% ♂';
-  else if(genderRate === 8) genderStr = '100% ♀';
-  else { const f = Math.round(genderRate/8*100); genderStr = `${100-f}% ♂ / ${f}% ♀`; }
+  else if(genderRate === 0) genderStr = '100% Male';
+  else if(genderRate === 8) genderStr = '100% Female';
+  else { const f = Math.round(genderRate/8*100); genderStr = `${100-f}% Male, ${f}% Female`; }
 
-  // Biology section — format: "Name, o CLASSIFICATION. Flavor."
-  const bioIntro = (genus||flavor) ? (()=>{
-    const parts = [];
-    if(genus) parts.push(`<strong>${namePt}</strong>, o <em>${genus}</em>.`);
-    if(flavor) parts.push(flavor);
-    return parts.join(' ');
-  })() : null;
-  const bioHtml = (bioIntro||shinyUrl)?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
+  // Biology section — plain text in Portuguese, no bold/italic/stripe
+  const bioText = flavor||null;
+  const bioHtml = (bioText||shinyUrl)?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
     <div class="ficha-bio-inner">
       ${shinyUrl?`<div class="ficha-bio-sprites"><div style="display:flex;flex-direction:column;align-items:center;gap:4px">
         <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="shiny" onerror="this.style.display='none'"/>
         <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
       </div></div>`:''}
-      <div>${bioIntro?`<div class="flavor-box">${bioIntro}</div>`:''}
+      <div>${bioText?`<div style="font-size:13px;color:var(--text);line-height:1.75;padding-top:4px">${bioText}</div>`:''}
       </div>
     </div>
   </div>`:'';
@@ -2796,7 +2794,7 @@ async function _renderPokeApiEntry(slug, root){
   const nextLabel = nextUwa?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>${nextUwa.nome}` : nextNum?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>Próximo`:'';
   const navHtml = `<div class="poke-nav">
     ${prevNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${prevNum})">‹ <span>${prevLabel}</span></button>`:'<div></div>'}
-    <button class="poke-nav-btn" onclick="navigateTo('dex');setTimeout(()=>{document.querySelector('.dex-tab[data-tab=nationaldex]')?.click()},50)">📖 NationalDex</button>
+    <button class="poke-nav-btn" onclick="navigateTo('dex');setTimeout(()=>{document.querySelector('.dex-tab[data-tab=nationaldex]')?.click()},50)">📖 NATIONALdex</button>
     ${nextNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${nextNum})"><span>${nextLabel}</span> ›</button>`:'<div></div>'}
   </div>`;
 
@@ -2816,9 +2814,9 @@ async function _renderPokeApiEntry(slug, root){
           <tr><td>Weight</td><td>${peso} kg</td></tr>
           <tr><td>Gender Ratio</td><td>${genderStr}</td></tr>
           ${(dado!=='—'||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
-            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span>${dado}</div>
-            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span>${ca}</div>
-            <div style="flex:1;padding:9px 16px"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV </span>${pv}</div>
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span><span style="font-weight:400">${dado}</span></div>
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span><span style="font-weight:400">${ca}</span></div>
+            <div style="flex:1;padding:9px 16px"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV </span><span style="font-weight:400">${pv}</span></div>
           </div></td></tr>`:''}
           ${pokeData.abilities.length?`<tr><td colspan="2" style="padding:0"><div><div style="padding:6px 16px 2px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities</div><div style="padding:8px 16px 10px">${abHtml}</div></div></td></tr>`:''}
         </table>
