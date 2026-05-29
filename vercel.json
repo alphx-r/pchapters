@@ -9,7 +9,11 @@
     { "source": "/adm",              "destination": "/index.html" },
     { "source": "/ficha/:slug",      "destination": "/ficha.html" },
     { "source": "/uwadex",           "destination": "/uwadex.html" },
-    { "source": "/uwadex/",           "destination": "/uwadex.html" },
-    { "source": "/uwadex/:slug",     "destination": "/uwadex.html" }
+    { "source": "/uwadex/",          "destination": "/uwadex.html" },
+    { "source": "/uwadex/:slug",     "destination": "/uwadex.html" },
+    { "source": "/nationaldex",      "destination": "/uwadex.html" },
+    { "source": "/abilitydex",       "destination": "/uwadex.html" },
+    { "source": "/movedex",          "destination": "/uwadex.html" },
+    { "source": "/nationaldex/:slug",        "destination": "/uwadex.html" }
   ]
 }
