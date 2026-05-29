@@ -875,6 +875,26 @@ const TCLS = {fire:'t-fire',water:'t-water',grass:'t-grass',normal:'t-normal',el
 const RCLS = {inicial:'r-ini',comum:'rc',incomum:'ri',raro:'rr',rarissimo:'rrr',lendario:'r-lend',mitico:'r-mitic',ultrabeast:'r-ub'};
 const RLBL = {inicial:'Inicial',comum:'Comum',incomum:'Incomum',raro:'Raro',rarissimo:'Raríssimo',lendario:'Lendário',mitico:'Mítico',ultrabeast:'Ultra Beast'};
 const FALLBACK = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/201.png';
+const TYPE_THEME={
+  grass:  {brand:'#2d7a3a', brandMid:'#3a9e4a', brandLight:'#e6f5e9', surface2:'#edf7ef', border:'#b6ddbf', muted:'#4a7a56'},
+  fire:   {brand:'#b83c10', brandMid:'#e04a18', brandLight:'#fdeee8', surface2:'#fdf1ed', border:'#f0b8a0', muted:'#8a4030'},
+  water:  {brand:'#1a5a8a', brandMid:'#2272b0', brandLight:'#e4f0fb', surface2:'#eaf3fc', border:'#a8ccec', muted:'#345e80'},
+  electric:{brand:'#8a6800', brandMid:'#b88c00', brandLight:'#fdf8de', surface2:'#fdf9e4', border:'#e8d870', muted:'#7a6010'},
+  psychic:{brand:'#8a1a50', brandMid:'#b82070', brandLight:'#fde8f2', surface2:'#fdeef5', border:'#f0a8cc', muted:'#7a2050'},
+  ice:    {brand:'#1a6a6a', brandMid:'#1e8888', brandLight:'#e2f5f5', surface2:'#e8f7f7', border:'#9ad8d8', muted:'#2a6060'},
+  fighting:{brand:'#7a1818', brandMid:'#a02020', brandLight:'#fbe8e8', surface2:'#fceeed', border:'#e8a8a8', muted:'#702020'},
+  poison: {brand:'#5a1878', brandMid:'#7820a0', brandLight:'#f3e8fb', surface2:'#f5edfb', border:'#cca8e8', muted:'#601880'},
+  ground: {brand:'#7a5800', brandMid:'#a07010', brandLight:'#faf2dc', surface2:'#faf4e2', border:'#ddc880', muted:'#705010'},
+  flying: {brand:'#2a3a8a', brandMid:'#3a50b8', brandLight:'#eaeefb', surface2:'#ecf0fc', border:'#a8b8ec', muted:'#303880'},
+  bug:    {brand:'#4a6800', brandMid:'#608a00', brandLight:'#eef5d8', surface2:'#f1f7de', border:'#c0d880', muted:'#4a6010'},
+  rock:   {brand:'#5a4a10', brandMid:'#786020', brandLight:'#f5f0e0', surface2:'#f6f2e4', border:'#d8c880', muted:'#605020'},
+  ghost:  {brand:'#2a1a5a', brandMid:'#3a2878', brandLight:'#ece8f8', surface2:'#efedf8', border:'#b8a8e0', muted:'#382068'},
+  dragon: {brand:'#2a1a8a', brandMid:'#3820b0', brandLight:'#eae8fb', surface2:'#ececfb', border:'#a8a0e8', muted:'#302080'},
+  dark:   {brand:'#2a1e14', brandMid:'#4a3428', brandLight:'#ece8e4', surface2:'#eeeae6', border:'#c0b0a0', muted:'#504030'},
+  steel:  {brand:'#2a3a4a', brandMid:'#3a5068', brandLight:'#e4eaf0', surface2:'#e8edf2', border:'#a8bece', muted:'#384858'},
+  fairy:  {brand:'#8a1060', brandMid:'#b81880', brandLight:'#fde8f4', surface2:'#fdeef6', border:'#f0a8d8', muted:'#781068'},
+  normal: {brand:'#4a4a38', brandMid:'#686858', brandLight:'#f0f0e8', surface2:'#f2f2ea', border:'#c8c8b0', muted:'#585848'},
+};
 
 // Damage taken tipos na ordem do PDF
 const DMG_TIPOS = ['normal','fire','water','electric','grass','ice','fight','poison','ground','flying','psychic','bug','rock','ghost','dragon','dark','steel','fairy'];
@@ -909,7 +929,7 @@ function parsePath(){
   if(path==='/uwadex/abilitydex'||path==='/abilitydex') return {view:'dex',slug:null,tab:'habilidades'};
   if(path==='/uwadex/movedex'||path==='/movedex') return {view:'dex',slug:null,tab:'moves'};
   if(path==='/uwadex/nationaldex'||path==='/nationaldex') return {view:'dex',slug:null,tab:'nationaldex'};
-  const ndex=path.match(/^\/ndex\/(.+)$/);
+  const ndex=path.match(/^\/nationaldex\/(.+)$/)||path.match(/^\/ndex\/(.+)$/);
   if(ndex) return {view:'ndex-ficha',slug:ndex[1],tab:null};
   const m=path.match(/^\/uwadex\/(.+)$/) || path.match(/^\/dex\/(.+)$/);
   if(m) return {view:'ficha',slug:m[1],tab:null};
@@ -926,7 +946,7 @@ function navigateTo(slug){
 }
 
 function navigateToNdex(slug){
-  history.pushState({slug},'','/ndex/'+slug);
+  history.pushState({slug},'','/nationaldex/'+slug);
   renderNdexFichaPage(slug);
   window.scrollTo(0,0);
 }
@@ -935,7 +955,7 @@ function navigateToNdexNum(num){
   // Check UWAdex first
   const uwa=uwaDex.find(p=>p.numero===num);
   if(uwa){ navigateToNdex(slugify(uwa.nome)); return; }
-  history.pushState({num},'','/ndex/'+num);
+  history.pushState({num},'','/nationaldex/'+num);
   renderNdexFichaPage(String(num));
   window.scrollTo(0,0);
 }
@@ -1396,26 +1416,6 @@ function renderFicha(slug){
   const statsHTML='';
 
   // ── Type theme colors ──
-  const TYPE_THEME={
-    grass:  {brand:'#2d7a3a', brandMid:'#3a9e4a', brandLight:'#e6f5e9', surface2:'#edf7ef', border:'#b6ddbf', muted:'#4a7a56'},
-    fire:   {brand:'#b83c10', brandMid:'#e04a18', brandLight:'#fdeee8', surface2:'#fdf1ed', border:'#f0b8a0', muted:'#8a4030'},
-    water:  {brand:'#1a5a8a', brandMid:'#2272b0', brandLight:'#e4f0fb', surface2:'#eaf3fc', border:'#a8ccec', muted:'#345e80'},
-    electric:{brand:'#8a6800', brandMid:'#b88c00', brandLight:'#fdf8de', surface2:'#fdf9e4', border:'#e8d870', muted:'#7a6010'},
-    psychic:{brand:'#8a1a50', brandMid:'#b82070', brandLight:'#fde8f2', surface2:'#fdeef5', border:'#f0a8cc', muted:'#7a2050'},
-    ice:    {brand:'#1a6a6a', brandMid:'#1e8888', brandLight:'#e2f5f5', surface2:'#e8f7f7', border:'#9ad8d8', muted:'#2a6060'},
-    fighting:{brand:'#7a1818', brandMid:'#a02020', brandLight:'#fbe8e8', surface2:'#fceeed', border:'#e8a8a8', muted:'#702020'},
-    poison: {brand:'#5a1878', brandMid:'#7820a0', brandLight:'#f3e8fb', surface2:'#f5edfb', border:'#cca8e8', muted:'#601880'},
-    ground: {brand:'#7a5800', brandMid:'#a07010', brandLight:'#faf2dc', surface2:'#faf4e2', border:'#ddc880', muted:'#705010'},
-    flying: {brand:'#2a3a8a', brandMid:'#3a50b8', brandLight:'#eaeefb', surface2:'#ecf0fc', border:'#a8b8ec', muted:'#303880'},
-    bug:    {brand:'#4a6800', brandMid:'#608a00', brandLight:'#eef5d8', surface2:'#f1f7de', border:'#c0d880', muted:'#4a6010'},
-    rock:   {brand:'#5a4a10', brandMid:'#786020', brandLight:'#f5f0e0', surface2:'#f6f2e4', border:'#d8c880', muted:'#605020'},
-    ghost:  {brand:'#2a1a5a', brandMid:'#3a2878', brandLight:'#ece8f8', surface2:'#efedf8', border:'#b8a8e0', muted:'#382068'},
-    dragon: {brand:'#2a1a8a', brandMid:'#3820b0', brandLight:'#eae8fb', surface2:'#ececfb', border:'#a8a0e8', muted:'#302080'},
-    dark:   {brand:'#2a1e14', brandMid:'#4a3428', brandLight:'#ece8e4', surface2:'#eeeae6', border:'#c0b0a0', muted:'#504030'},
-    steel:  {brand:'#2a3a4a', brandMid:'#3a5068', brandLight:'#e4eaf0', surface2:'#e8edf2', border:'#a8bece', muted:'#384858'},
-    fairy:  {brand:'#8a1060', brandMid:'#b81880', brandLight:'#fde8f4', surface2:'#fdeef6', border:'#f0a8d8', muted:'#781068'},
-    normal: {brand:'#4a4a38', brandMid:'#686858', brandLight:'#f0f0e8', surface2:'#f2f2ea', border:'#c8c8b0', muted:'#585848'},
-  };
   const primaryType=(tipos[0]||'normal').toLowerCase();
   const theme=TYPE_THEME[primaryType]||TYPE_THEME.normal;
 
