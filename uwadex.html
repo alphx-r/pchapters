@@ -1280,7 +1280,8 @@ function ndexCardHTML(p){
   if(p.sprite){
     sprite=p.sprite;
   } else if(p.artwork_slug||p.numero){
-    const artSlug = p.artwork_slug || p.numero;
+    // Use resolved numeric ID if artwork_slug was a text slug (e.g. "megacharizardx")
+    const artSlug = p._resolved_artwork_id || (p.artwork_slug && /^\d+$/.test(String(p.artwork_slug)) ? p.artwork_slug : null) || p.numero;
     sprite=`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artSlug}.png`;
   } else {
     sprite=FALLBACK;
@@ -2254,6 +2255,7 @@ let editingOvrId  = null;    // id being edited, or null for new
 async function loadNdexOverrides(){
   try{ ndexOverrides = await dbGet('uwadex_ndex_overrides','order=numero.asc'); }
   catch{ ndexOverrides=[]; }
+  await _preResolveOverrideSlugs();
 }
 
 // Apply overrides to a CSV-sourced pokemon list entry.
@@ -2299,7 +2301,7 @@ function applyNdexOverrides(list){
     const claimedByOvr = variantOverrides.find(o=>variantMatches.get(o.id)===i);
     if(claimedByOvr){
       const ovr = claimedByOvr;
-      const artSlug = ovr.artwork_slug || ovr.numero;
+      const artSlug = ovr._resolved_artwork_id || ovr.artwork_slug || ovr.numero;
       return {
         ...p,
         _variant_ovr : true,
@@ -2331,7 +2333,7 @@ function applyNdexOverrides(list){
     .filter(ovr=>!variantMatches.has(ovr.id))
     .map(ovr=>{
       const base = list.find(p=>p._source==='csv'&&p.numero===ovr.numero);
-      const artSlug = ovr.artwork_slug || ovr.numero;
+      const artSlug = ovr._resolved_artwork_id || ovr.artwork_slug || ovr.numero;
       return {
         _source      : 'csv',
         _variant_ovr : true,
@@ -2828,6 +2830,57 @@ async function _pokeapiFetch(path){
   const d = await r.json();
   _pokeApiCache[path] = d;
   return d;
+}
+
+// Cache: artwork_slug (texto) → ID numérico resolvido via PokeAPI
+const _artworkSlugCache = {};
+
+// Converte "megacharizardx" → "mega-charizard-x" inserindo hífens antes de maiúsculas
+// Mas como o usuário digita tudo minúsculo, usamos uma abordagem diferente:
+// Tenta o slug como está (kebab já funciona), e também tenta inserir hífens em posições comuns.
+function _artworkSlugToPokeApiName(raw){
+  // Remove espaços, converte para minúsculo
+  let s = raw.trim().toLowerCase();
+  // Se já tem hífen, usa como está
+  if(s.includes('-')) return s;
+  // Tentativas comuns de separação: "mega", "gmax", "gigantamax", "alolan", "galarian", "hisuian", "paldean"
+  const prefixes = ['mega','gigantamax','gmax','alolan','galarian','hisuian','paldean','origin','sky','land','heat','wash','frost','fan','mow','zen','standard','incarnate','therian','black','white','resolute','ordinary','pirouette','aria','blade','shield','blade','eternal','natural','heart','sunshine','rainy','snowy'];
+  for(const pre of prefixes){
+    if(s.startsWith(pre) && s.length > pre.length){
+      const rest = s.slice(pre.length);
+      return pre + '-' + rest;
+    }
+  }
+  return s;
+}
+
+// Resolve um artwork_slug textual para URL final.
+// Se numérico: usa direto. Se textual: busca na PokeAPI e cacheia o ID.
+async function _resolveArtworkSlug(raw){
+  if(!raw) return null;
+  const s = String(raw).trim();
+  if(/^\d+$/.test(s)) return s; // já é número, retorna como está
+  if(_artworkSlugCache[s] !== undefined) return _artworkSlugCache[s];
+  const apiName = _artworkSlugToPokeApiName(s);
+  try{
+    const data = await _pokeapiFetch('pokemon/'+apiName);
+    if(data?.id){
+      _artworkSlugCache[s] = String(data.id);
+      return String(data.id);
+    }
+  }catch{}
+  // Fallback: guarda null para não tentar de novo
+  _artworkSlugCache[s] = null;
+  return null;
+}
+
+// Pré-resolve todos os artwork_slugs textuais dos overrides carregados
+async function _preResolveOverrideSlugs(){
+  const toResolve = ndexOverrides.filter(o=>o.artwork_slug && !/^\d+$/.test(String(o.artwork_slug).trim()));
+  await Promise.all(toResolve.map(async o=>{
+    const resolved = await _resolveArtworkSlug(o.artwork_slug);
+    if(resolved) o._resolved_artwork_id = resolved;
+  }));
 }
 
 function _capFirst(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : ''; }
