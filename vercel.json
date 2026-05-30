@@ -14,6 +14,9 @@
     { "source": "/nationaldex",      "destination": "/uwadex.html" },
     { "source": "/abilitydex",       "destination": "/uwadex.html" },
     { "source": "/movedex",          "destination": "/uwadex.html" },
+    { "source": "/nationaldex/",      "destination": "/uwadex.html" },
+    { "source": "/abilitydex/",       "destination": "/uwadex.html" },
+    { "source": "/movedex/",          "destination": "/uwadex.html" },
     { "source": "/nationaldex/:slug",        "destination": "/uwadex.html" }
   ]
 }
