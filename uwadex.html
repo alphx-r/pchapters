@@ -171,7 +171,7 @@ html.dark .dex-tab.active{color:#fff}
 .ficha-info-table tr:first-child{border-top:1px solid var(--border)}
 .ficha-info-table tr:last-child{border-bottom:none}
 .ficha-info-table td{padding:4px 16px;font-size:13px;vertical-align:top}
-.ficha-info-table td:first-child{font-weight:700;color:var(--muted);width:38%;font-size:12px;text-transform:uppercase;letter-spacing:.4px}
+.ficha-info-table td:first-child{font-weight:700;color:var(--muted);width:38%;font-size:12px;letter-spacing:.4px}
 .ficha-info-table td:last-child{color:var(--text)}
 .ficha-ability{margin-bottom:6px;font-size:12px;line-height:1.5;text-align:justify}
 .ficha-type-icons{display:flex;gap:6px;justify-content:center;align-items:center}
@@ -464,6 +464,7 @@ html.dark .dex-tab.active{color:#fff}
         <div class="adm-sidebar">
           <button class="adm-nav-btn active" onclick="admTab('pokemon',this)">⚡ Pokémon</button>
           <button class="adm-nav-btn" onclick="admTab('nationaldex',this)">📖 NationalDex</button>
+          <button class="adm-nav-btn" onclick="admTab('ndex-overrides',this)">🎨 Overrides NatDex</button>
           <button class="adm-nav-btn" onclick="admTab('regioes',this)">🗺️ Regiões</button>
           <button class="adm-nav-btn" onclick="admTab('abilities',this)">✨ Abilities</button>
           <button class="adm-nav-btn" onclick="admTab('moves',this)">⚔️ Moves</button>
@@ -666,6 +667,57 @@ html.dark .dex-tab.active{color:#fff}
               <div id="adm-ndex-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div></div>
             </div>
           </div>
+
+          <!-- SEC: NDEX OVERRIDES -->
+          <div class="adm-sec" id="adm-sec-ndex-overrides">
+            <div class="sec-title">🎨 Overrides NationalDex</div>
+            <div class="sec-sub">Sobrescreva nome de exibição, slug e imagem de qualquer Pokémon da NationalDex (incluindo os do CSV padrão).</div>
+            <div class="box" id="adm-ovr-form-box">
+              <div class="box-title" id="adm-ovr-form-title">➕ Novo Override</div>
+              <div class="g3">
+                <div class="field">
+                  <label>Número (#) <span style="font-weight:400;color:var(--muted)">identificador</span></label>
+                  <input type="number" id="ovr-num" placeholder="001" min="1" autocomplete="off"/>
+                </div>
+                <div class="field">
+                  <label>Nome exibido <span style="font-weight:400;color:var(--muted)">(substitui o nome original)</span></label>
+                  <input type="text" id="ovr-nome" placeholder="Ex: Charizard-Mega" autocomplete="off"/>
+                </div>
+                <div class="field">
+                  <label>Slug customizado <span style="font-weight:400;color:var(--muted)">(URL da ficha)</span></label>
+                  <input type="text" id="ovr-slug" placeholder="Ex: charizard-mega" autocomplete="off"/>
+                </div>
+              </div>
+              <div class="g2">
+                <div class="field">
+                  <label>URL da imagem <span style="font-weight:400;color:var(--muted)">(sprite customizado)</span></label>
+                  <input type="text" id="ovr-sprite" placeholder="https://…" autocomplete="off"/>
+                </div>
+                <div class="field">
+                  <label>Artwork slug <span style="font-weight:400;color:var(--muted)">(número ou slug do PokeAPI)</span></label>
+                  <input type="text" id="ovr-artwork-slug" placeholder="Ex: 6 ou charizard-gmax" autocomplete="off"/>
+                  <span style="font-size:10px;color:var(--muted);margin-top:3px;display:block">Só usado se não tiver URL de imagem acima.</span>
+                </div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+                <button class="btn btn-primary" onclick="salvarOverride()">💾 Salvar Override</button>
+                <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="resetOvrForm()">Limpar</button>
+                <button class="btn btn-danger" id="adm-ovr-del-btn" style="display:none;margin-left:auto" onclick="excluirOverride()">🗑 Excluir</button>
+              </div>
+              <div class="fb fb-ok" id="adm-ovr-ok">✓ Override salvo!</div>
+              <div class="fb fb-err" id="adm-ovr-err">Erro ao salvar.</div>
+            </div>
+            <div class="box">
+              <div class="box-title">Overrides Cadastrados</div>
+              <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Clique em ✏️ para editar. O override sobrescreve nome, slug e imagem na NationalDex.</p>
+              <div style="margin-bottom:10px">
+                <input type="text" id="ovr-search" placeholder="Buscar por nome ou número…"
+                  style="padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:100%;box-sizing:border-box"
+                  oninput="renderAdmOvrList()" autocomplete="off"/>
+              </div>
+              <div id="adm-ovr-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div></div>
+            </div>
+          </div><!-- /adm-sec-ndex-overrides -->
 
           <!-- SEC: REGIOES -->
           <div class="adm-sec" id="adm-sec-regioes">
@@ -919,7 +971,7 @@ function showView(id){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById('view-'+id).classList.add('active');
   const nt=document.getElementById('nav-tabs');
-  if(nt) nt.style.display='none';
+  if(nt) nt.style.display=(id==='adm')?'none':'flex';
 }
 
 function parsePath(){
@@ -1005,6 +1057,9 @@ async function init(){
     uwaDex = Array.isArray(data) ? data : [];
   }catch(e){ uwaDex=[]; }
 
+  // Load ndex overrides (non-blocking — fail silently)
+  try{ await loadNdexOverrides(); }catch{}
+
   clearTimeout(failsafe);
   renderDexGrid();
   document.getElementById('dex-total-count').textContent = uwaDex.length;
@@ -1079,7 +1134,8 @@ function buildNationalDexList(){
   const uwaEntries=uwaDex.map(p=>({...p,_source:'uwa'}));
   const csvSorted=csvMapped.sort((a,b)=>(a.numero||9999)-(b.numero||9999));
   const uwaSorted=uwaEntries.sort((a,b)=>(a.numero||9999)-(b.numero||9999));
-  return [...csvSorted,...uwaSorted];
+  const combined = [...applyNdexOverrides(csvSorted),...uwaSorted];
+  return combined;
 }
 
 const NDEX_REGIONS = [
@@ -1246,7 +1302,8 @@ function ndexCardHTML(p){
   } else {
     sprite=FALLBACK;
   }
-  const clickAttr=`onclick="navigateToNdex('${slugify(p.nome)}')" style="cursor:pointer"`;
+  const cardSlug = p._custom_slug || slugify(p.nome);
+  const clickAttr=`onclick="navigateToNdex('${cardSlug}')" style="cursor:pointer"`;
   const displayName = p.nome_display || p.nome;
   return `<div class="ndex-card${isUwa?' is-uwa':''}" ${clickAttr} style="cursor:pointer">
     <div class="ndex-card-num">${numStr}</div>
@@ -1370,6 +1427,7 @@ function renderFicha(slug){
     return;
   }
   showView('ficha');
+  document.querySelectorAll('.dex-tab').forEach(b=>b.classList.toggle('active',b.getAttribute('data-tab')==='pokemon'));
   document.title=`${p.nome} — UWAdex`;
 
   const tipos=p.tipos||[];
@@ -1528,10 +1586,6 @@ function renderFicha(slug){
   const nextP=idxS<uwaSorted.length-1?uwaSorted[idxS+1]:null;
   const navHTML=`<div class="poke-nav">
     ${prevP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(prevP.nome)}')">&#8249; <span><span class="poke-nav-num">${prevP.numero?'#'+String(prevP.numero).padStart(3,'0'):''}</span>${prevP.nome}</span></button>`:'<div></div>'}
-    <div style="display:flex;gap:6px">
-      <button class="poke-nav-btn" onclick="voltarDex();setTimeout(()=>{document.querySelector('.dex-tab[data-tab=pokemon]')?.click()},50)">UWAdex</button>
-      <button class="poke-nav-btn" onclick="voltarDex();setTimeout(()=>{document.querySelector('.dex-tab[data-tab=nationaldex]')?.click()},50)">NATIONALdex</button>
-    </div>
     ${nextP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(nextP.nome)}')"><span><span class="poke-nav-num">${nextP.numero?'#'+String(nextP.numero).padStart(3,'0'):''}</span>${nextP.nome}</span> &#8250;</button>`:'<div></div>'}
   </div>`;
 
@@ -1550,7 +1604,7 @@ function renderFicha(slug){
         <div class="ficha-info-name"><span>${p.nome}</span></div>
         <table class="ficha-info-table">
           ${p.classificacao?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;color:var(--text);font-size:13px">${p.classificacao} Pokémon</span></td></tr>`:''}
-          ${(p.altura||p.peso)?`<tr><td style="border-right:1px solid var(--border);width:50%">HEIGHT: <span style="font-weight:400;color:var(--text)">${p.altura||'—'} cm</span></td><td style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;width:50%">Weight: <span style="font-weight:400;color:var(--text)">${p.peso||'—'} kg</span></td></tr>`:''}
+          ${(p.altura||p.peso)?`<tr><td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height: </span><span style="font-weight:400;color:var(--text)">${p.altura||'—'} cm</span></td><td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: </span><span style="font-weight:400;color:var(--text)">${p.peso||'—'} kg</span></td></tr>`:''}
           ${p.genero?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;color:var(--text);font-size:13px">${p.genero}</span></td></tr>`:''}
           ${p.egggroup?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Egg Group(s): </span><span style="font-weight:400;color:var(--text);font-size:13px">${p.egggroup}</span></td></tr>`:''}
           ${(dado||ca!=null||pv!=null)?`<tr><td colspan="2" style="padding:0">
@@ -1638,6 +1692,7 @@ function admTab(sec,btn){
   document.getElementById('adm-sec-'+sec).classList.add('active');
   btn.classList.add('active');
   if(sec==='nationaldex') renderAdmNDexList();
+  if(sec==='ndex-overrides'){ loadNdexOverrides().then(renderAdmOvrList); }
   if(sec==='abilities') renderAdmAbList();
   if(sec==='moves') renderAdmMvList();
   if(sec==='regioes') renderAdmRegList();
@@ -2210,6 +2265,118 @@ function resetNDexForm(){
 }
 
 // ════════════════════════════════════════
+// ADM: NDEX OVERRIDES
+// ════════════════════════════════════════
+let ndexOverrides = [];      // cache loaded from Supabase
+let editingOvrId  = null;    // id being edited, or null for new
+
+async function loadNdexOverrides(){
+  try{ ndexOverrides = await dbGet('uwadex_ndex_overrides','order=numero.asc'); }
+  catch{ ndexOverrides=[]; }
+}
+
+// Apply overrides to a CSV-sourced pokemon list entry
+function applyNdexOverrides(list){
+  if(!ndexOverrides.length) return list;
+  return list.map(p=>{
+    if(p._source!=='csv') return p;
+    const ovr = ndexOverrides.find(o=>o.numero===p.numero);
+    if(!ovr) return p;
+    return {
+      ...p,
+      nome_display : ovr.nome_display || p.nome_display || undefined,
+      _custom_slug : ovr.slug_custom  || undefined,
+      sprite       : ovr.sprite       || p.sprite,
+      artwork_slug : ovr.artwork_slug || p.artwork_slug,
+    };
+  });
+}
+
+function renderAdmOvrList(){
+  const wrap = document.getElementById('adm-ovr-list');
+  if(!wrap) return;
+  const q = (document.getElementById('ovr-search')?.value||'').toLowerCase().trim();
+  let list = [...ndexOverrides];
+  if(q) list = list.filter(o=>(o.nome_display||'').toLowerCase().includes(q)||String(o.numero).includes(q));
+  if(!list.length){
+    wrap.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Nenhum override cadastrado ainda.</div>';
+    return;
+  }
+  wrap.innerHTML=`<table class="adm-table">
+    <thead><tr><th style="width:60px">#</th><th>Nome exibido</th><th>Slug</th><th>Imagem</th><th></th></tr></thead>
+    <tbody>${list.map(o=>`<tr>
+      <td><strong>#${String(o.numero).padStart(4,'0')}</strong></td>
+      <td>${o.nome_display||'<span style="color:var(--muted)">—</span>'}</td>
+      <td style="font-size:11px;color:var(--muted)">${o.slug_custom||'—'}</td>
+      <td style="font-size:11px;color:var(--muted)">${o.sprite?'✔ URL custom':o.artwork_slug?'🎨 '+o.artwork_slug:'—'}</td>
+      <td><button class="btn btn-sm btn-primary" onclick="editarOverride(${o.id})">✏️</button></td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+function editarOverride(id){
+  const o = ndexOverrides.find(x=>x.id===id);
+  if(!o) return;
+  editingOvrId = id;
+  document.getElementById('adm-ovr-form-title').textContent='✏️ Editando Override #'+String(o.numero).padStart(4,'0');
+  document.getElementById('ovr-num').value         = o.numero||'';
+  document.getElementById('ovr-nome').value        = o.nome_display||'';
+  document.getElementById('ovr-slug').value        = o.slug_custom||'';
+  document.getElementById('ovr-sprite').value      = o.sprite||'';
+  document.getElementById('ovr-artwork-slug').value= o.artwork_slug||'';
+  document.getElementById('adm-ovr-del-btn').style.display='inline-block';
+  document.getElementById('adm-ovr-form-box').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+async function salvarOverride(){
+  const num = parseInt(document.getElementById('ovr-num').value);
+  if(!num||isNaN(num)){ alert('Informe o número (#) do Pokémon.'); return; }
+  const payload = {
+    numero       : num,
+    nome_display : document.getElementById('ovr-nome').value.trim()||null,
+    slug_custom  : document.getElementById('ovr-slug').value.trim()||null,
+    sprite       : document.getElementById('ovr-sprite').value.trim()||null,
+    artwork_slug : document.getElementById('ovr-artwork-slug').value.trim()||null,
+  };
+  let res;
+  if(editingOvrId) res = await dbPatch('uwadex_ndex_overrides',`id=eq.${editingOvrId}`,payload);
+  else             res = await dbPost('uwadex_ndex_overrides',payload);
+  if(res.ok){
+    fb('adm-ovr-ok');
+    resetOvrForm();
+    await loadNdexOverrides();
+    renderAdmOvrList();
+    // Invalidate ndex cache so next render picks up changes
+    _ndexGroupsCache = null;
+  } else {
+    fb('adm-ovr-err');
+  }
+}
+
+async function excluirOverride(){
+  if(!editingOvrId) return;
+  if(!confirm('Excluir este override?')) return;
+  const res = await dbDelete('uwadex_ndex_overrides',`id=eq.${editingOvrId}`);
+  if(res.ok){
+    resetOvrForm();
+    await loadNdexOverrides();
+    renderAdmOvrList();
+    _ndexGroupsCache = null;
+  } else {
+    fb('adm-ovr-err');
+  }
+}
+
+function resetOvrForm(){
+  editingOvrId = null;
+  document.getElementById('adm-ovr-form-title').textContent='➕ Novo Override';
+  ['ovr-num','ovr-nome','ovr-slug','ovr-sprite','ovr-artwork-slug'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('adm-ovr-del-btn').style.display='none';
+}
+
+// ════════════════════════════════════════
 // ADM: ABILITIES MANUAL
 // ════════════════════════════════════════
 let admAbilities = [];
@@ -2533,17 +2700,29 @@ function _buildNdexMovesHtml(movesLvl, eggMoves, tutorMoves){
 // ─── MAIN RENDER DISPATCHER ───────────────────────────
 async function renderNdexFichaPage(slug){
   showView('ndex-ficha');
+  document.querySelectorAll('.dex-tab').forEach(b=>b.classList.toggle('active',b.getAttribute('data-tab')==='nationaldex'));
   resetNavTheme();
   document.title = 'NationalDex — PChapters';
   const root = document.getElementById('ndex-ficha-content');
   root.innerHTML = `<div class="inline-loading"><div class="inline-spinner"></div>Buscando dados do Pokémon…</div>`;
 
-  // 1. Try UWAdex
+  // 1. Try UWAdex (by slug of nome)
   const uwaEntry = uwaDex.find(p=>slugify(p.nome)===slug);
   if(uwaEntry){ await _renderUwaEntry(slug, uwaEntry, root); return; }
 
-  // 2. PokéAPI
-  await _renderPokeApiEntry(slug, root);
+  // 2. Check if slug matches a custom slug override → resolve to PokeAPI slug/num
+  const ovrBySlug = ndexOverrides.find(o=>o.slug_custom===slug);
+  if(ovrBySlug){
+    // resolve: if artwork_slug is text, use it; else use numero
+    const resolvedSlug = (ovrBySlug.artwork_slug && isNaN(ovrBySlug.artwork_slug))
+      ? ovrBySlug.artwork_slug
+      : String(ovrBySlug.numero);
+    await _renderPokeApiEntry(resolvedSlug, root, ovrBySlug);
+    return;
+  }
+
+  // 3. PokéAPI by slug or number as-is
+  await _renderPokeApiEntry(slug, root, null);
 }
 
 // ─── RENDER UWA ENTRY (full RPG ficha from Supabase) ──
@@ -2568,10 +2747,6 @@ async function _renderUwaEntry(slug, p, root){
   const next = idxS<uwaSorted.length-1?uwaSorted[idxS+1]:null;
   const navHtml = `<div class="poke-nav">
     ${prev?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(prev.nome)}')">‹ <span><span class="poke-nav-num">${prev.numero?'#'+String(prev.numero).padStart(3,'0'):''}</span>${prev.nome}</span></button>`:'<div></div>'}
-    <div style="display:flex;gap:6px">
-      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=pokemon]').click()">UWAdex</button>
-      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=nationaldex]').click()">NATIONALdex</button>
-    </div>
     ${next?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(next.nome)}')"><span><span class="poke-nav-num">${next.numero?'#'+String(next.numero).padStart(3,'0'):''}</span>${next.nome}</span> ›</button>`:'<div></div>'}
   </div>`;
 
@@ -2640,7 +2815,7 @@ async function _renderUwaEntry(slug, p, root){
           ${p.classificacao?`<tr><td>Classification</td><td>${p.classificacao} Pokémon</td></tr>`:''}
           ${p.altura?`<tr><td>Height</td><td>${p.altura} cm</td></tr>`:''}
           ${p.peso?`<tr><td>Weight</td><td>${p.peso} kg</td></tr>`:''}
-          ${p.genero?`<tr><td>Gender Ratio</td><td>${p.genero}</td></tr>`:''}
+          ${p.genero?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;color:var(--text);font-size:13px">${p.genero.replace(/\b(male|female|genderless)\b/gi, w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase())}</span></td></tr>`:''}
           ${p.egggroup?`<tr><td>Egg Group(s)</td><td>${p.egggroup}</td></tr>`:''}
           ${(dado||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span>${dado||'—'}</div>
@@ -2659,7 +2834,7 @@ async function _renderUwaEntry(slug, p, root){
 }
 
 // ─── RENDER POKÉAPI ENTRY ─────────────────────────────
-async function _renderPokeApiEntry(slug, root){
+async function _renderPokeApiEntry(slug, root, ovr=null){
   let pokeData=null, speciesData=null;
   try{ pokeData = await _pokeapiFetch('pokemon/'+slug); }catch{}
 
@@ -2671,8 +2846,11 @@ async function _renderPokeApiEntry(slug, root){
   try{ speciesData = await _pokeapiFetch('pokemon-species/'+pokeData.species.name); }catch{}
 
   const num = pokeData.id;
-  const name = _capFirst(speciesData?.names?.find(n=>n.language.name==='en')?.name||pokeData.name);
-  const namePt = speciesData?.names?.find(n=>n.language.name==='pt-br'||n.language.name==='pt')?.name||name;
+  const nameApi = _capFirst(speciesData?.names?.find(n=>n.language.name==='en')?.name||pokeData.name);
+  const namePtApi = speciesData?.names?.find(n=>n.language.name==='pt-br'||n.language.name==='pt')?.name||nameApi;
+  // Override: use custom nome_display if set
+  const name = nameApi;
+  const namePt = ovr?.nome_display || namePtApi;
   const tipos = pokeData.types.map(t=>_capFirst(t.type.name));
   const primaryType = (tipos[0]||'normal').toLowerCase();
   const theme = TYPE_THEME[primaryType]||TYPE_THEME.normal;
@@ -2838,10 +3016,6 @@ async function _renderPokeApiEntry(slug, root){
   const nextLabel = nextUwa?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>${nextUwa.nome}` : nextNum?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>Próximo`:'';
   const navHtml = `<div class="poke-nav">
     ${prevNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${prevNum})">‹ <span>${prevLabel}</span></button>`:'<div></div>'}
-    <div style="display:flex;gap:6px">
-      <button class="poke-nav-btn" onclick="navigateTo('dex');document.querySelector('.dex-tab[data-tab=pokemon]').click()">UWAdex</button>
-      <button class="poke-nav-btn" onclick="navigateTo('dex');setTimeout(()=>{document.querySelector('.dex-tab[data-tab=nationaldex]')?.click()},50)">NATIONALdex</button>
-    </div>
     ${nextNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${nextNum})"><span>${nextLabel}</span> ›</button>`:'<div></div>'}
   </div>`;
 
@@ -2856,10 +3030,13 @@ async function _renderPokeApiEntry(slug, root){
       <div class="ficha-info-col">
         <div class="ficha-info-name">${namePt}${namePt!==name?`<span style="display:block;font-size:12px;font-weight:400;opacity:.7">${name}</span>`:''}</div>
         <table class="ficha-info-table">
-          ${genus?`<tr><td>Classification</td><td>${genus}</td></tr>`:''}
-          <tr><td>Height</td><td>${altura} cm</td></tr>
-          <tr><td>Weight</td><td>${peso} kg</td></tr>
-          <tr><td>Gender Ratio</td><td>${genderStr}</td></tr>
+          ${genus?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;color:var(--text);font-size:13px">${genus}</span></td></tr>`:''}
+          <tr>
+            <td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height: </span><span style="font-weight:400;color:var(--text)">${altura} cm</span></td>
+            <td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: </span><span style="font-weight:400;color:var(--text)">${peso} kg</span></td>
+          </tr>
+          <tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;color:var(--text);font-size:13px">${genderStr}</span></td></tr>
+          ${(()=>{ const eggG=(speciesData?.egg_groups||[]).map(g=>_capFirst(g.name.replace(/-/g,' '))).join(', '); return eggG?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Egg Group(s): </span><span style="font-weight:400;color:var(--text);font-size:13px">${eggG}</span></td></tr>`:''; })()}
           ${(dado!=='—'||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span><span style="font-weight:400">${dado}</span></div>
             <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span><span style="font-weight:400">${ca}</span></div>
