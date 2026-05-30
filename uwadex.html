@@ -2257,50 +2257,98 @@ async function loadNdexOverrides(){
 }
 
 // Apply overrides to a CSV-sourced pokemon list entry.
-// Overrides sem variante modificam o card base; overrides COM variante geram cards extras.
+// Overrides sem variante modificam o card base (1º entry do número).
+// Overrides COM variante:
+//   - Se já existir um 2º+ entry CSV com aquele número → substitui (patch)
+//   - Se não existir → injeta card novo
 function applyNdexOverrides(list){
   if(!ndexOverrides.length) return list;
 
-  // Split overrides into base (variante null/empty) and variant ones
+  // Split overrides
   const baseOverrides    = ndexOverrides.filter(o=>!o.variante);
   const variantOverrides = ndexOverrides.filter(o=> o.variante);
 
-  // Apply base overrides to existing CSV entries
-  const patched = list.map(p=>{
+  // Track which CSV entries (by index) were claimed by a variant override
+  const claimedIndices = new Set();
+
+  // For each variant override, find the Nth extra entry (index>=1) with same numero
+  // Build a map: ovrId → index in list
+  const variantMatches = new Map(); // ovr.id → list index
+  variantOverrides.forEach(ovr=>{
+    // Collect all CSV entries with this numero, sorted by their position in list
+    const sameNum = list
+      .map((p,i)=>({p,i}))
+      .filter(({p})=>p._source==='csv'&&p.numero===ovr.numero);
+    // Skip the first one (base), look for extras (index 1+)
+    const extras = sameNum.slice(1);
+    if(extras.length>0){
+      // Find first unclaimed extra
+      const match = extras.find(({i})=>!claimedIndices.has(i));
+      if(match){
+        claimedIndices.add(match.i);
+        variantMatches.set(ovr.id, match.i);
+      }
+    }
+  });
+
+  // Apply all overrides to list entries
+  const patched = list.map((p,i)=>{
     if(p._source!=='csv') return p;
-    const ovr = baseOverrides.find(o=>o.numero===p.numero);
-    if(!ovr) return p;
+
+    // Check if this index is claimed by a variant override
+    const claimedByOvr = variantOverrides.find(o=>variantMatches.get(o.id)===i);
+    if(claimedByOvr){
+      const ovr = claimedByOvr;
+      const artSlug = ovr.artwork_slug || ovr.numero;
+      return {
+        ...p,
+        _variant_ovr : true,
+        nome         : ovr.nome_display || p.nome,
+        nome_display : ovr.nome_display || undefined,
+        _custom_slug : ovr.slug_custom  || undefined,
+        sprite       : ovr.sprite       || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artSlug}.png`,
+        artwork_slug : ovr.artwork_slug || p.artwork_slug,
+        ca           : ovr.ca   ?? p.ca,
+        pv           : ovr.pv   ?? p.pv,
+        dado         : ovr.dado || p.dado,
+      };
+    }
+
+    // Base override (variante null)
+    const baseOvr = baseOverrides.find(o=>o.numero===p.numero);
+    if(!baseOvr) return p;
     return {
       ...p,
-      nome_display : ovr.nome_display || p.nome_display || undefined,
-      _custom_slug : ovr.slug_custom  || undefined,
-      sprite       : ovr.sprite       || p.sprite,
-      artwork_slug : ovr.artwork_slug || p.artwork_slug,
+      nome_display : baseOvr.nome_display || p.nome_display || undefined,
+      _custom_slug : baseOvr.slug_custom  || undefined,
+      sprite       : baseOvr.sprite       || p.sprite,
+      artwork_slug : baseOvr.artwork_slug || p.artwork_slug,
     };
   });
 
-  // Inject extra cards for variant overrides (mega, gmax, etc.)
-  const extras = variantOverrides.map(ovr=>{
-    // Find the base entry to inherit tipos / region / ca / pv / dado when not overridden
-    const base = list.find(p=>p._source==='csv'&&p.numero===ovr.numero);
-    const artSlug = ovr.artwork_slug || ovr.numero;
-    return {
-      _source      : 'csv',
-      _variant_ovr : true,
-      numero       : ovr.numero,
-      nome         : ovr.nome_display || (base?.nome ? base.nome+' '+ovr.variante : '#'+ovr.numero+'-'+ovr.variante),
-      nome_display : ovr.nome_display || undefined,
-      _custom_slug : ovr.slug_custom  || undefined,
-      sprite       : ovr.sprite       || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artSlug}.png`,
-      artwork_slug : ovr.artwork_slug || undefined,
-      tipos        : base?.tipos || [],
-      ca           : base?.ca   ?? null,
-      pv           : base?.pv   ?? null,
-      dado         : base?.dado || null,
-    };
-  });
+  // Variant overrides that had NO matching CSV entry → inject new card
+  const injected = variantOverrides
+    .filter(ovr=>!variantMatches.has(ovr.id))
+    .map(ovr=>{
+      const base = list.find(p=>p._source==='csv'&&p.numero===ovr.numero);
+      const artSlug = ovr.artwork_slug || ovr.numero;
+      return {
+        _source      : 'csv',
+        _variant_ovr : true,
+        numero       : ovr.numero,
+        nome         : ovr.nome_display || (base?.nome ? base.nome+' '+ovr.variante : '#'+ovr.numero+'-'+ovr.variante),
+        nome_display : ovr.nome_display || undefined,
+        _custom_slug : ovr.slug_custom  || undefined,
+        sprite       : ovr.sprite       || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artSlug}.png`,
+        artwork_slug : ovr.artwork_slug || undefined,
+        tipos        : base?.tipos || [],
+        ca           : base?.ca   ?? null,
+        pv           : base?.pv   ?? null,
+        dado         : base?.dado || null,
+      };
+    });
 
-  return [...patched, ...extras];
+  return [...patched, ...injected];
 }
 
 // ── Render: lista de todos os pokémon UWAdex + overrides existentes ──
