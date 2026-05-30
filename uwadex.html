@@ -2471,11 +2471,23 @@ function abrirOvrModal(ovrId, uwaId){
   const titulo = o ? `✏️ Override — ${u?.nome||o.nome_display||'#'+o.numero}` : '➕ Novo Override';
   document.getElementById('adm-ovr-form-title').textContent = titulo;
   const num = o?.numero ?? u?.numero ?? '';
+
+  // Resolve base pokemon data (UWAdex or CSV) for pre-filling when no override yet
+  const csvPoke = num ? (DATADEX.pokemon||[]).find(p=>parseInt(p.numero)===parseInt(num) && p.nome && p.nome!=='???') : null;
+  const baseName = u?.nome || csvPoke?.nome || '';
+  const baseNum  = num || '';
+
   document.getElementById('ovr-num').value          = num;
   document.getElementById('ovr-variante').value     = o?.variante ?? '';
-  document.getElementById('ovr-nome').value         = o?.nome_display ?? '';
-  document.getElementById('ovr-artwork-slug').value = o?.artwork_slug ?? '';
-  document.getElementById('ovr-sprite').value       = o?.sprite ?? '';
+  // Pre-fill nome with existing override OR base pokemon name
+  document.getElementById('ovr-nome').value         = o?.nome_display ?? baseName;
+  // Pre-fill artwork slug with existing override OR base number
+  document.getElementById('ovr-artwork-slug').value = o?.artwork_slug ?? (baseNum ? String(baseNum) : '');
+  // Pre-fill sprite with existing override OR construct from artwork slug/number
+  const defaultSprite = baseNum
+    ? `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${baseNum}.png`
+    : '';
+  document.getElementById('ovr-sprite').value       = o?.sprite ?? defaultSprite;
   // Base slug a partir do pokémon (UWAdex ou CSV)
   const baseSlug = _getBaseSlugForNum(num, u);
   const varSalva = o?.variante ?? '';
@@ -2950,6 +2962,21 @@ function _buildEvoFromApi(chainLink, targetSlug){
   return stages;
 }
 
+// Returns true if a variante string is a regional/special form we want to show in evo chain
+function _isRegionalVariante(v){
+  return /^(mega|gmax|gigantamax|alola|alolan|galar|galarian|hisui|hisuian|paldea|paldean)/i.test(v);
+}
+
+function _regionalLabel(v){
+  if(/gmax|gigantamax/i.test(v)) return 'G-MAX';
+  if(/mega/i.test(v)) return 'MEGA';
+  if(/alola|alolan/i.test(v)) return 'ALOLA';
+  if(/galar|galarian/i.test(v)) return 'GALAR';
+  if(/hisui|hisuian/i.test(v)) return 'HISUI';
+  if(/paldea|paldean/i.test(v)) return 'PALDEA';
+  return v.toUpperCase();
+}
+
 function _ndexTypeClass(t){ return t?(TCLS[(t||'').toLowerCase()]||'t-normal'):'t-normal'; }
 
 function _ndexCatPill(cat){
@@ -3135,9 +3162,9 @@ async function _renderUwaEntry(slug, p, root){
       // Variantes mega/gmax deste stage
       const stageNum = stage.numero||dbM?.numero||null;
       const variantsList = stageNum ? ndexOverrides
-        .filter(o=> o.numero===stageNum && o.variante && /^(mega|gmax|gigantamax)/i.test(o.variante))
+        .filter(o=> o.numero===stageNum && o.variante && _isRegionalVariante(o.variante))
         .map(o=>{
-          const vLabel = /gmax|gigantamax/i.test(o.variante)?'G-MAX':'MEGA';
+          const vLabel = _regionalLabel(o.variante);
           const artId = o._resolved_artwork_id || (o.artwork_slug && !isNaN(String(o.artwork_slug).trim()) ? String(o.artwork_slug).trim() : null) || stageNum;
           const varSpr = o.sprite||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artId}.png`;
           const varSlug = o.slug_custom||slugify(o.nome_display||stage.nome+'-'+o.variante);
@@ -3292,11 +3319,11 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
             const arrow = i<stages.length-1?`<div class="evo-arrow"><div class="evo-arrow-icon">›</div>${stages[i+1].trigger?`<div class="evo-arrow-label">${stages[i+1].trigger}</div>`:''}</div>`:'';
             const uwaStage = uwaDex.find(x=>slugify(x.nome)===slugify(stage.nome));
             const clickTarget = uwaStage?slugify(uwaStage.nome):slugify(stage.nome);
-            // Variantes mega/gmax para este stage
+            // Variantes mega/gmax/regional para este stage
             const variantsList = ndexOverrides
-              .filter(o=> o.numero===stage.numero && o.variante && /^(mega|gmax|gigantamax)/i.test(o.variante))
+              .filter(o=> o.numero===stage.numero && o.variante && _isRegionalVariante(o.variante))
               .map(o=>{
-                const vLabel = /gmax|gigantamax/i.test(o.variante)?'G-MAX':'MEGA';
+                const vLabel = _regionalLabel(o.variante);
                 const artId = o._resolved_artwork_id || (o.artwork_slug && !isNaN(String(o.artwork_slug).trim()) ? String(o.artwork_slug).trim() : null) || stage.numero;
                 const varSpr = o.sprite||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artId}.png`;
                 const varSlug = o.slug_custom||slugify(o.nome_display||stage.nome+'-'+o.variante);
