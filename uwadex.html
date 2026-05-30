@@ -318,10 +318,10 @@ html.dark .dex-tab.active{color:#fff}
 .source-pokeapi{background:var(--brand-light);color:var(--brand-mid);border:1px solid var(--border)}
 .poke-nav{display:contents}
 .ficha-info-name{position:relative;display:flex;align-items:center;justify-content:center;padding:14px 70px !important}
-.poke-nav-btn{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:6px 10px;background:rgba(255,255,255,.15);border:none;border-radius:8px;font-family:var(--font-body);font-size:9px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;min-width:48px}
+.poke-nav-btn{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 6px;background:none;border:none;border-radius:6px;font-family:var(--font-body);font-size:9px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;min-width:40px}
 .poke-nav-btn:first-child{left:10px}
 .poke-nav-btn:last-child{right:10px}
-.poke-nav-btn:hover{background:rgba(255,255,255,.28)}
+.poke-nav-btn:hover{background:rgba(255,255,255,.18)}
 .poke-nav-btn .nav-arrow{font-size:16px;line-height:1}
 .poke-nav-btn .nav-name{font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52px;text-align:center}
 .poke-nav-num{color:rgba(255,255,255,.7);font-family:var(--font-title);font-size:8px;display:block;text-align:center}
@@ -677,49 +677,69 @@ html.dark .dex-tab.active{color:#fff}
           <!-- SEC: NDEX OVERRIDES -->
           <div class="adm-sec" id="adm-sec-ndex-overrides">
             <div class="sec-title">🎨 Overrides NationalDex</div>
-            <div class="sec-sub">Sobrescreva nome de exibição, slug e imagem de qualquer Pokémon da NationalDex (incluindo os do CSV padrão).</div>
-            <div class="box" id="adm-ovr-form-box">
-              <div class="box-title" id="adm-ovr-form-title">➕ Novo Override</div>
-              <div class="g3">
-                <div class="field">
-                  <label>Número (#) <span style="font-weight:400;color:var(--muted)">identificador</span></label>
-                  <input type="number" id="ovr-num" placeholder="001" min="1" autocomplete="off"/>
+            <div class="sec-sub">Lista de todos os Pokémon da UWAdex. Edite individualmente ou mescle duplicatas.</div>
+
+            <!-- MODAL DE EDIÇÃO -->
+            <div id="adm-ovr-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center">
+              <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:28px;max-width:520px;width:90%;max-height:90vh;overflow-y:auto;position:relative">
+                <div class="box-title" id="adm-ovr-form-title" style="margin-bottom:16px">✏️ Editar Override</div>
+                <div class="g3">
+                  <div class="field">
+                    <label>Número (#)</label>
+                    <input type="number" id="ovr-num" placeholder="001" min="1" autocomplete="off"/>
+                  </div>
+                  <div class="field">
+                    <label>Nome exibido</label>
+                    <input type="text" id="ovr-nome" placeholder="Ex: Charizard-Mega" autocomplete="off"/>
+                  </div>
+                  <div class="field">
+                    <label>Slug customizado</label>
+                    <input type="text" id="ovr-slug" placeholder="Ex: charizard-mega" autocomplete="off"/>
+                  </div>
                 </div>
-                <div class="field">
-                  <label>Nome exibido <span style="font-weight:400;color:var(--muted)">(substitui o nome original)</span></label>
-                  <input type="text" id="ovr-nome" placeholder="Ex: Charizard-Mega" autocomplete="off"/>
+                <div class="g2" style="margin-top:10px">
+                  <div class="field">
+                    <label>URL da imagem</label>
+                    <input type="text" id="ovr-sprite" placeholder="https://…" autocomplete="off"/>
+                  </div>
+                  <div class="field">
+                    <label>Artwork slug</label>
+                    <input type="text" id="ovr-artwork-slug" placeholder="Ex: 6 ou charizard-gmax" autocomplete="off"/>
+                  </div>
                 </div>
-                <div class="field">
-                  <label>Slug customizado <span style="font-weight:400;color:var(--muted)">(URL da ficha)</span></label>
-                  <input type="text" id="ovr-slug" placeholder="Ex: charizard-mega" autocomplete="off"/>
+                <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+                  <button class="btn btn-primary" onclick="salvarOverride()">💾 Salvar</button>
+                  <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharOvrModal()">Cancelar</button>
+                  <button class="btn btn-danger" id="adm-ovr-del-btn" style="display:none;margin-left:auto" onclick="excluirOverride()">🗑 Excluir Override</button>
                 </div>
+                <div class="fb fb-ok" id="adm-ovr-ok">✓ Override salvo!</div>
+                <div class="fb fb-err" id="adm-ovr-err">Erro ao salvar.</div>
               </div>
-              <div class="g2">
-                <div class="field">
-                  <label>URL da imagem <span style="font-weight:400;color:var(--muted)">(sprite customizado)</span></label>
-                  <input type="text" id="ovr-sprite" placeholder="https://…" autocomplete="off"/>
-                </div>
-                <div class="field">
-                  <label>Artwork slug <span style="font-weight:400;color:var(--muted)">(número ou slug do PokeAPI)</span></label>
-                  <input type="text" id="ovr-artwork-slug" placeholder="Ex: 6 ou charizard-gmax" autocomplete="off"/>
-                  <span style="font-size:10px;color:var(--muted);margin-top:3px;display:block">Só usado se não tiver URL de imagem acima.</span>
-                </div>
-              </div>
-              <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
-                <button class="btn btn-primary" onclick="salvarOverride()">💾 Salvar Override</button>
-                <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="resetOvrForm()">Limpar</button>
-                <button class="btn btn-danger" id="adm-ovr-del-btn" style="display:none;margin-left:auto" onclick="excluirOverride()">🗑 Excluir</button>
-              </div>
-              <div class="fb fb-ok" id="adm-ovr-ok">✓ Override salvo!</div>
-              <div class="fb fb-err" id="adm-ovr-err">Erro ao salvar.</div>
             </div>
+
+            <!-- MODAL DE MESCLA -->
+            <div id="adm-merge-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center">
+              <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:28px;max-width:480px;width:90%">
+                <div class="box-title" style="margin-bottom:12px">🔀 Mesclar Pokémon Duplicados</div>
+                <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Selecione os registros duplicados a mesclar. O primeiro será mantido e os demais excluídos.</p>
+                <div id="adm-merge-list" style="max-height:300px;overflow-y:auto;margin-bottom:16px"></div>
+                <div style="display:flex;gap:10px">
+                  <button class="btn btn-primary" onclick="confirmarMescla()">🔀 Mesclar Selecionados</button>
+                  <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharMergeModal()">Cancelar</button>
+                </div>
+                <div class="fb fb-ok" id="adm-merge-ok">✓ Mescla concluída!</div>
+                <div class="fb fb-err" id="adm-merge-err">Erro ao mesclar.</div>
+              </div>
+            </div>
+
+            <!-- LISTA PRINCIPAL -->
             <div class="box">
-              <div class="box-title">Overrides Cadastrados</div>
-              <p style="font-size:12px;color:var(--muted);margin-bottom:10px">Clique em ✏️ para editar. O override sobrescreve nome, slug e imagem na NationalDex.</p>
-              <div style="margin-bottom:10px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
                 <input type="text" id="ovr-search" placeholder="Buscar por nome ou número…"
-                  style="padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);width:100%;box-sizing:border-box"
+                  style="flex:1;min-width:160px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:var(--font-body);font-size:13px;color:var(--text);box-sizing:border-box"
                   oninput="renderAdmOvrList()" autocomplete="off"/>
+                <button class="btn" style="background:var(--surface2);border:1px solid var(--border);white-space:nowrap" onclick="abrirMergeModal()">🔀 Mesclar Duplicatas</button>
+                <button class="btn btn-primary" style="white-space:nowrap" onclick="abrirOvrModal(null)">➕ Novo Override</button>
               </div>
               <div id="adm-ovr-list"><div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Carregando…</div></div>
             </div>
@@ -1514,6 +1534,7 @@ function renderFicha(slug){
 
   // ── Biology HTML ──
   const shinyUrl=p.sprite_shiny||p.sprite_shiny||(p.sprite?p.sprite.replace('/sprites/','/sprites/shiny/').replace('/normal/','/shiny/'):null)||p.sprite||FALLBACK;
+  const bioPrefix = p.classificacao ? `${p.nome}, o ${p.classificacao} Pokémon. ` : `${p.nome}. `;
   const bioHTML=p.bio?`<div class="ficha-bio-wrap">
     <div class="ficha-section-title">BIOLOGY</div>
     <div class="ficha-bio-inner">
@@ -1523,7 +1544,7 @@ function renderFicha(slug){
           <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
         </div>
       </div>
-      <div class="ficha-bio-text">${p.bio}</div>
+      <div class="ficha-bio-text"><strong>${bioPrefix}</strong>${p.bio}</div>
     </div>
   </div>`:'';
 
@@ -2295,40 +2316,89 @@ function applyNdexOverrides(list){
   });
 }
 
+// ── Render: lista de todos os pokémon UWAdex + overrides existentes ──
 function renderAdmOvrList(){
   const wrap = document.getElementById('adm-ovr-list');
   if(!wrap) return;
   const q = (document.getElementById('ovr-search')?.value||'').toLowerCase().trim();
-  let list = [...ndexOverrides];
-  if(q) list = list.filter(o=>(o.nome_display||'').toLowerCase().includes(q)||String(o.numero).includes(q));
-  if(!list.length){
-    wrap.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Nenhum override cadastrado ainda.</div>';
+
+  // Build merged list: all uwaDex entries + any override not yet linked to a uwaDex entry
+  const uwaList = [...uwaDex].sort((a,b)=>(a.numero??9999)-(b.numero??9999));
+  const ovrOnlyIds = new Set(ndexOverrides.map(o=>o.numero));
+  uwaList.forEach(p=>ovrOnlyIds.delete(p.numero));
+  const extraOvr = ndexOverrides.filter(o=>ovrOnlyIds.has(o.numero));
+
+  let rows = [
+    ...uwaList.map(p=>{
+      const ovr = ndexOverrides.find(o=>o.numero===p.numero);
+      return { uwa:p, ovr:ovr||null, numero:p.numero??9999, nome:p.nome };
+    }),
+    ...extraOvr.map(o=>({ uwa:null, ovr:o, numero:o.numero??9999, nome:o.nome_display||'#'+o.numero }))
+  ];
+
+  if(q) rows = rows.filter(r=>
+    r.nome.toLowerCase().includes(q) ||
+    String(r.numero).includes(q)
+  );
+
+  if(!rows.length){
+    wrap.innerHTML='<div style="text-align:center;color:var(--muted);padding:20px;font-size:13px">Nenhum resultado.</div>';
     return;
   }
+
+  // Detect duplicates by numero
+  const numCount = {};
+  rows.forEach(r=>{ numCount[r.numero]=(numCount[r.numero]||0)+1; });
+
   wrap.innerHTML=`<table class="adm-table">
-    <thead><tr><th style="width:60px">#</th><th>Nome exibido</th><th>Slug</th><th>Imagem</th><th></th></tr></thead>
-    <tbody>${list.map(o=>`<tr>
-      <td><strong>#${String(o.numero).padStart(4,'0')}</strong></td>
-      <td>${o.nome_display||'<span style="color:var(--muted)">—</span>'}</td>
-      <td style="font-size:11px;color:var(--muted)">${o.slug_custom||'—'}</td>
-      <td style="font-size:11px;color:var(--muted)">${o.sprite?'✔ URL custom':o.artwork_slug?'🎨 '+o.artwork_slug:'—'}</td>
-      <td><button class="btn btn-sm btn-primary" onclick="editarOverride(${o.id})">✏️</button></td>
-    </tr>`).join('')}</tbody>
+    <thead><tr>
+      <th style="width:56px">#</th>
+      <th>Nome UWAdex</th>
+      <th>Override nome</th>
+      <th>Override slug</th>
+      <th style="width:90px">Ações</th>
+    </tr></thead>
+    <tbody>${rows.map(r=>{
+      const isDup = numCount[r.numero]>1;
+      const numStr = r.numero?'#'+String(r.numero).padStart(3,'0'):'—';
+      const nomeUwa = r.uwa?r.uwa.nome:'<span style="color:var(--muted)">—</span>';
+      const nomeOvr = r.ovr?.nome_display||'<span style="color:var(--muted)">—</span>';
+      const slugOvr = r.ovr?.slug_custom?`<span style="font-size:11px;color:var(--muted)">${r.ovr.slug_custom}</span>`:'<span style="color:var(--muted)">—</span>';
+      const dupBadge = isDup?'<span style="font-size:9px;background:#f59e0b;color:#fff;padding:1px 5px;border-radius:4px;margin-left:4px">DUP</span>':'';
+      return `<tr style="${isDup?'background:rgba(245,158,11,.06)':''}">
+        <td><strong>${numStr}</strong>${dupBadge}</td>
+        <td>${nomeUwa}</td>
+        <td>${nomeOvr}</td>
+        <td>${slugOvr}</td>
+        <td style="display:flex;gap:4px">
+          <button class="btn btn-sm btn-primary" title="Editar override" onclick="abrirOvrModal(${r.ovr?.id??'null'},${r.uwa?.id??'null'})">✏️</button>
+          ${isDup?`<button class="btn btn-sm" style="background:#f59e0b;color:#fff;border:none" title="Mesclar duplicatas deste número" onclick="abrirMergeModalNum(${r.numero})">🔀</button>`:''}
+        </td>
+      </tr>`;
+    }).join('')}</tbody>
   </table>`;
 }
 
-function editarOverride(id){
-  const o = ndexOverrides.find(x=>x.id===id);
-  if(!o) return;
-  editingOvrId = id;
-  document.getElementById('adm-ovr-form-title').textContent='✏️ Editando Override #'+String(o.numero).padStart(4,'0');
-  document.getElementById('ovr-num').value         = o.numero||'';
-  document.getElementById('ovr-nome').value        = o.nome_display||'';
-  document.getElementById('ovr-slug').value        = o.slug_custom||'';
-  document.getElementById('ovr-sprite').value      = o.sprite||'';
-  document.getElementById('ovr-artwork-slug').value= o.artwork_slug||'';
-  document.getElementById('adm-ovr-del-btn').style.display='inline-block';
-  document.getElementById('adm-ovr-form-box').scrollIntoView({behavior:'smooth',block:'start'});
+// ── Modal de edição de override ──
+function abrirOvrModal(ovrId, uwaId){
+  editingOvrId = ovrId;
+  const o = ovrId ? ndexOverrides.find(x=>x.id===ovrId) : null;
+  const u = uwaId ? uwaDex.find(x=>x.id===uwaId) : null;
+  const titulo = o ? `✏️ Override — ${u?.nome||o.nome_display||'#'+o.numero}` : '➕ Novo Override';
+  document.getElementById('adm-ovr-form-title').textContent = titulo;
+  document.getElementById('ovr-num').value          = o?.numero ?? u?.numero ?? '';
+  document.getElementById('ovr-nome').value         = o?.nome_display ?? '';
+  document.getElementById('ovr-slug').value         = o?.slug_custom ?? '';
+  document.getElementById('ovr-sprite').value       = o?.sprite ?? '';
+  document.getElementById('ovr-artwork-slug').value = o?.artwork_slug ?? '';
+  document.getElementById('adm-ovr-del-btn').style.display = o ? 'inline-block' : 'none';
+  const bg = document.getElementById('adm-ovr-modal-bg');
+  bg.style.display='flex';
+}
+
+function fecharOvrModal(){
+  document.getElementById('adm-ovr-modal-bg').style.display='none';
+  editingOvrId=null;
 }
 
 async function salvarOverride(){
@@ -2346,11 +2416,10 @@ async function salvarOverride(){
   else             res = await dbPost('uwadex_ndex_overrides',payload);
   if(res.ok){
     fb('adm-ovr-ok');
-    resetOvrForm();
     await loadNdexOverrides();
     renderAdmOvrList();
-    // Invalidate ndex cache so next render picks up changes
     _ndexGroupsCache = null;
+    setTimeout(fecharOvrModal, 900);
   } else {
     fb('adm-ovr-err');
   }
@@ -2359,9 +2428,9 @@ async function salvarOverride(){
 async function excluirOverride(){
   if(!editingOvrId) return;
   if(!confirm('Excluir este override?')) return;
-  const res = await dbDelete('uwadex_ndex_overrides',`id=eq.${editingOvrId}`);
-  if(res.ok){
-    resetOvrForm();
+  const res = await dbDel('uwadex_ndex_overrides',`id=eq.${editingOvrId}`);
+  if(res?.ok??true){
+    fecharOvrModal();
     await loadNdexOverrides();
     renderAdmOvrList();
     _ndexGroupsCache = null;
@@ -2370,9 +2439,77 @@ async function excluirOverride(){
   }
 }
 
+// ── Modal de mescla ──
+let mergeTargetNum = null;
+
+function abrirMergeModal(){
+  // Show all duplicate numbers
+  const numCount = {};
+  uwaDex.forEach(p=>{ if(p.numero) numCount[p.numero]=(numCount[p.numero]||0)+1; });
+  const dups = Object.entries(numCount).filter(([,c])=>c>1).map(([n])=>parseInt(n));
+  if(!dups.length){
+    alert('Nenhum Pokémon duplicado encontrado na UWAdex.');
+    return;
+  }
+  mergeTargetNum = null;
+  const listEl = document.getElementById('adm-merge-list');
+  listEl.innerHTML = dups.map(num=>{
+    const entries = uwaDex.filter(p=>p.numero===num).sort((a,b)=>a.id-b.id);
+    return `<div style="margin-bottom:14px;padding:10px;border:1px solid var(--border);border-radius:8px">
+      <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">#${String(num).padStart(3,'0')} — ${entries.length} entradas</div>
+      ${entries.map((e,i)=>`<label style="display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;font-size:13px">
+        <input type="radio" name="merge-keep-${num}" value="${e.id}" ${i===0?'checked':''}/>
+        <strong>${e.nome}</strong>
+        <span style="font-size:11px;color:var(--muted)">(ID ${e.id}${i===0?' — manter':' — excluir'})</span>
+      </label>`).join('')}
+      <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="confirmarMesclaNum(${num})">🔀 Mesclar este grupo</button>
+    </div>`;
+  }).join('');
+  document.getElementById('adm-merge-modal-bg').style.display='flex';
+}
+
+function abrirMergeModalNum(num){
+  mergeTargetNum = num;
+  const entries = uwaDex.filter(p=>p.numero===num).sort((a,b)=>a.id-b.id);
+  const listEl = document.getElementById('adm-merge-list');
+  listEl.innerHTML = `<div style="margin-bottom:14px;padding:10px;border:1px solid var(--border);border-radius:8px">
+    <div style="font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px">#${String(num).padStart(3,'0')} — ${entries.length} entradas</div>
+    ${entries.map((e,i)=>`<label style="display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;font-size:13px">
+      <input type="radio" name="merge-keep-${num}" value="${e.id}" ${i===0?'checked':''}/>
+      <strong>${e.nome}</strong>
+      <span style="font-size:11px;color:var(--muted)">(ID ${e.id}${i===0?' — manter':' — excluir'})</span>
+    </label>`).join('')}
+    <button class="btn btn-primary btn-sm" style="margin-top:8px" onclick="confirmarMesclaNum(${num})">🔀 Mesclar este grupo</button>
+  </div>`;
+  document.getElementById('adm-merge-modal-bg').style.display='flex';
+}
+
+async function confirmarMesclaNum(num){
+  const radio = document.querySelector(`input[name="merge-keep-${num}"]:checked`);
+  if(!radio){ alert('Selecione qual entrada manter.'); return; }
+  const keepId = parseInt(radio.value);
+  const toDelete = uwaDex.filter(p=>p.numero===num && p.id!==keepId).map(p=>p.id);
+  if(!toDelete.length){ alert('Nada para mesclar.'); return; }
+  let erros = 0;
+  for(const id of toDelete){
+    const res = await dbDel('uwadex',`id=eq.${id}`);
+    if(!(res?.ok??true)) erros++;
+  }
+  if(erros){ fb('adm-merge-err'); return; }
+  fb('adm-merge-ok');
+  // Reload uwaDex
+  try{ const data=await dbGet('uwadex','order=numero.asc'); uwaDex=Array.isArray(data)?data:[]; }catch{}
+  await loadNdexOverrides();
+  renderAdmOvrList();
+  setTimeout(()=>{ document.getElementById('adm-merge-modal-bg').style.display='none'; }, 1000);
+}
+
+function fecharMergeModal(){
+  document.getElementById('adm-merge-modal-bg').style.display='none';
+}
+
 function resetOvrForm(){
   editingOvrId = null;
-  document.getElementById('adm-ovr-form-title').textContent='➕ Novo Override';
   ['ovr-num','ovr-nome','ovr-slug','ovr-sprite','ovr-artwork-slug'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });
@@ -2787,13 +2924,14 @@ async function _renderUwaEntry(slug, p, root){
 
   // Biology
   const shinyUrl = p.sprite_shiny||p.sprite||FALLBACK;
+  const bioPrefix2 = p.classificacao ? `${p.nome_display||p.nome}, o ${p.classificacao} Pokémon. ` : `${p.nome_display||p.nome}. `;
   const bioHtml = p.bio?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
     <div class="ficha-bio-inner">
       <div class="ficha-bio-sprites"><div style="display:flex;flex-direction:column;align-items:center;gap:4px">
         <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="shiny" onerror="this.src='${FALLBACK}'"/>
         <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
       </div></div>
-      <div class="ficha-bio-text">${p.bio}</div>
+      <div class="ficha-bio-text"><strong>${bioPrefix2}</strong>${p.bio}</div>
     </div>
   </div>`:'';
 
@@ -2994,13 +3132,17 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
 
   // Biology section — plain text in Portuguese, no bold/italic/stripe
   const bioText = flavor||null;
+  const bioNomePt = namePt||name;
+  const bioGenusRaw = speciesData?.genera?.find(g=>g.language.name==='pt-BR')?.genus || genus || '';
+  const bioGenus = bioGenusRaw.replace(/ Pokémon$/i,'').replace(/ Pokemon$/i,'');
+  const bioPrefix3 = bioGenus ? `${bioNomePt}, o ${bioGenus} Pokémon. ` : `${bioNomePt}. `;
   const bioHtml = (bioText||shinyUrl)?`<div class="ficha-bio-wrap"><div class="ficha-section-title">BIOLOGY</div>
     <div class="ficha-bio-inner">
       ${shinyUrl?`<div class="ficha-bio-sprites"><div style="display:flex;flex-direction:column;align-items:center;gap:4px">
         <img class="ficha-bio-sprite ficha-bio-shiny" src="${shinyUrl}" alt="shiny" onerror="this.style.display='none'"/>
         <span style="font-size:10px;font-weight:700;color:#c090e0;text-transform:uppercase;letter-spacing:.4px">✨ Shiny</span>
       </div></div>`:''}
-      <div>${bioText?`<div style="font-size:13px;color:var(--text);line-height:1.75;padding-top:4px">${bioText}</div>`:''}
+      <div>${bioText?`<div style="font-size:13px;color:var(--text);line-height:1.75;padding-top:4px"><strong>${bioPrefix3}</strong>${bioText}</div>`:''}
       </div>
     </div>
   </div>`:'';
