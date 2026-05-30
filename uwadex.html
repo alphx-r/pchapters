@@ -2360,27 +2360,46 @@ function renderAdmOvrList(){
 }
 
 // ── Modal de edição de override ──
+function _getBaseSlugForNum(num, uwaEntry){
+  if(uwaEntry) return slugify(uwaEntry.nome);
+  // Tenta CSV
+  const csvPoke = (DATADEX.pokemon||[]).find(p=>parseInt(p.numero)===parseInt(num) && p.nome && p.nome!=='???');
+  if(csvPoke) return slugify(csvPoke.nome);
+  return '';
+}
+
 function abrirOvrModal(ovrId, uwaId){
   editingOvrId = ovrId;
   const o = ovrId ? ndexOverrides.find(x=>x.id===ovrId) : null;
   const u = uwaId ? uwaDex.find(x=>x.id===uwaId) : null;
   const titulo = o ? `✏️ Override — ${u?.nome||o.nome_display||'#'+o.numero}` : '➕ Novo Override';
   document.getElementById('adm-ovr-form-title').textContent = titulo;
-  // Número: preenche com o do override salvo ou do pokémon UWAdex
-  document.getElementById('ovr-num').value          = o?.numero ?? u?.numero ?? '';
-  document.getElementById('ovr-variante').value      = o?.variante ?? '';
+  const num = o?.numero ?? u?.numero ?? '';
+  document.getElementById('ovr-num').value          = num;
+  document.getElementById('ovr-variante').value     = o?.variante ?? '';
   document.getElementById('ovr-nome').value         = o?.nome_display ?? '';
   document.getElementById('ovr-artwork-slug').value = o?.artwork_slug ?? '';
   document.getElementById('ovr-sprite').value       = o?.sprite ?? '';
-  // Slug: preenche com o salvo, ou auto-gera a partir do pokémon UWAdex + variante
-  const baseSlug = u ? slugify(u.nome) : '';
+  // Base slug a partir do pokémon (UWAdex ou CSV)
+  const baseSlug = _getBaseSlugForNum(num, u);
   const varSalva = o?.variante ?? '';
   document.getElementById('ovr-slug').value = o?.slug_custom ?? (baseSlug && varSalva ? `${baseSlug}-${varSalva}` : baseSlug);
-  // Guarda o slug base para auto-completar quando variante mudar
   document.getElementById('ovr-variante')._baseSlug = baseSlug;
   document.getElementById('adm-ovr-del-btn').style.display = o ? 'inline-block' : 'none';
-  const bg = document.getElementById('adm-ovr-modal-bg');
-  bg.style.display='flex';
+  document.getElementById('adm-ovr-modal-bg').style.display='flex';
+}
+
+function ovrNumChanged(){
+  const num = parseInt(document.getElementById('ovr-num').value)||0;
+  if(!num) return;
+  const uwa = uwaDex.find(p=>p.numero===num);
+  const baseSlug = _getBaseSlugForNum(num, uwa||null);
+  const varEl = document.getElementById('ovr-variante');
+  varEl._baseSlug = baseSlug;
+  // Atualiza slug só se ainda não foi editado manualmente (está em branco ou igual ao padrão anterior)
+  const variante = varEl.value.trim().toLowerCase().replace(/\s+/g,'-');
+  const slugEl = document.getElementById('ovr-slug');
+  if(baseSlug) slugEl.value = variante ? `${baseSlug}-${variante}` : baseSlug;
 }
 
 function ovrVarianteChanged(){
@@ -2413,44 +2432,43 @@ async function salvarOverride(){
     artwork_slug : document.getElementById('ovr-artwork-slug').value.trim()||null,
   };
   try {
-    if(editingOvrId){
-      // Edição: PATCH direto pelo id
-      await dbPatch('uwadex_ndex_overrides', `id=eq.${editingOvrId}`, payload);
-    } else {
-      // Novo: tenta inserir; se já existir (unique violation) faz PATCH pelo numero (e variante se houver)
+    let targetId = editingOvrId;
+
+    if(!targetId){
+      // Tenta inserir; se der unique violation, busca o id do registro existente e faz PATCH
       const insertRes = await fetch(`${SUPA_URL}/rest/v1/uwadex_ndex_overrides`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPA_KEY,
-          'Authorization': `Bearer ${SUPA_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation',
-        },
-        body: JSON.stringify(payload),
+        method : 'POST',
+        headers: { 'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=representation' },
+        body   : JSON.stringify(payload),
       });
-      if(!insertRes.ok){
-        const errText = await insertRes.text();
-        const errJson = (() => { try{ return JSON.parse(errText); }catch{ return {}; } })();
-        const isConflict = insertRes.status === 409 || (errJson?.code === '23505');
-        if(isConflict){
-          // Já existe — faz PATCH pelo numero (+ variante se existir)
-          const q = variante
-            ? `numero=eq.${num}&variante=eq.${variante}`
-            : `numero=eq.${num}&variante=is.null`;
-          await dbPatch('uwadex_ndex_overrides', q, payload);
-        } else {
-          throw new Error(errJson?.message || errJson?.hint || errText || `HTTP ${insertRes.status}`);
-        }
+      if(insertRes.ok){
+        fb('adm-ovr-ok');
+        await loadNdexOverrides(); renderAdmOvrList(); _ndexGroupsCache=null;
+        setTimeout(fecharOvrModal,900);
+        return;
       }
+      const errText  = await insertRes.text();
+      const errJson  = (()=>{ try{return JSON.parse(errText);}catch{return {};} })();
+      const isConflict = insertRes.status===409 || errJson?.code==='23505';
+      if(!isConflict) throw new Error(errJson?.message||errJson?.hint||errText||`HTTP ${insertRes.status}`);
+
+      // Busca o id do registro já existente pelo numero (+ variante)
+      const qFind = variante
+        ? `numero=eq.${num}&variante=eq.${encodeURIComponent(variante)}&select=id`
+        : `numero=eq.${num}&variante=is.null&select=id`;
+      const existing = await dbGet('uwadex_ndex_overrides', qFind);
+      if(!existing.length) throw new Error('Conflito mas registro não encontrado para PATCH.');
+      targetId = existing[0].id;
     }
+
+    // PATCH sempre pelo id — nunca por numero
+    await dbPatch('uwadex_ndex_overrides', `id=eq.${targetId}`, payload);
     fb('adm-ovr-ok');
-    await loadNdexOverrides();
-    renderAdmOvrList();
-    _ndexGroupsCache = null;
-    setTimeout(fecharOvrModal, 900);
-  } catch(e) {
+    await loadNdexOverrides(); renderAdmOvrList(); _ndexGroupsCache=null;
+    setTimeout(fecharOvrModal,900);
+  } catch(e){
     console.error('salvarOverride:', e);
-    alert('Erro ao salvar override:\n' + (e?.message || e));
+    alert('Erro ao salvar override:\n'+(e?.message||e));
     fb('adm-ovr-err');
   }
 }
@@ -2962,17 +2980,32 @@ async function _renderUwaEntry(slug, p, root){
   const evoChain = p.evo_chain||[];
   let evoHtml = '';
   if(evoChain.length>0){
-    const stH = evoChain.map((stage,i)=>{
+    const stagesHtml = evoChain.map((stage,i)=>{
       const isCurr = slugify(stage.nome)===slug;
       const dbM = !stage.sprite?uwaDex.find(x=>slugify(x.nome)===slugify(stage.nome)):null;
       const spr = stage.sprite||(dbM?.sprite)||(stage.numero?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${stage.numero}.png`:FALLBACK);
       const arrow = i<evoChain.length-1?`<div class="evo-arrow"><div class="evo-arrow-icon">›</div>${evoChain[i+1].trigger?`<div class="evo-arrow-label">${evoChain[i+1].trigger}</div>`:''}</div>`:'';
+      // Variantes mega/gmax deste stage
+      const stageNum = stage.numero||dbM?.numero||null;
+      const variantNodes = stageNum ? ndexOverrides
+        .filter(o=> o.numero===stageNum && o.variante && /^(mega|gmax|gigantamax)/i.test(o.variante))
+        .map(o=>{
+          const vLabel = /gmax|gigantamax/i.test(o.variante)?'G-MAX':'MEGA';
+          const varSpr = o.sprite||(o.artwork_slug?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${o.artwork_slug}.png`:null)||(stageNum?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${stageNum}.png`:FALLBACK);
+          const varSlug = o.slug_custom||slugify(o.nome_display||stage.nome+'-'+o.variante);
+          const isVarCurr = slugify(p.nome_display||p.nome)===varSlug || slug===varSlug;
+          return `<div class="evo-arrow"><div class="evo-arrow-icon">›</div><div class="evo-arrow-label">${vLabel}</div></div>
+            <div class="evo-stage${isVarCurr?' current':''}">
+              <img class="evo-stage-sprite" src="${varSpr}" alt="${o.nome_display||vLabel}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${varSlug}')"/>
+              <div class="evo-stage-name">${o.nome_display||stage.nome+' '+vLabel}</div>
+            </div>`;
+        }).join('') : '';
       return `<div class="evo-stage${isCurr?' current':''}">
         <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${slugify(stage.nome)}')"/>
         <div class="evo-stage-name">${stage.nome}</div>
-      </div>${arrow}`;
+      </div>${arrow}${variantNodes}`;
     }).join('');
-    evoHtml = `<div class="evo-chain-wrap"><div class="evo-chain-title">EVOLUTIONARY CHAIN</div><div class="evo-chain-inner">${stH}</div></div>`;
+    evoHtml = `<div class="evo-chain-wrap"><div class="evo-chain-title">EVOLUTIONARY CHAIN</div><div class="evo-chain-inner">${stagesHtml}</div></div>`;
   }
 
   // Dmg taken
@@ -3097,13 +3130,26 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
           const stH = stages.map((stage,i)=>{
             const spr = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${stage.numero}.png`;
             const arrow = i<stages.length-1?`<div class="evo-arrow"><div class="evo-arrow-icon">›</div>${stages[i+1].trigger?`<div class="evo-arrow-label">${stages[i+1].trigger}</div>`:''}</div>`:'';
-            // Check if UWAdex has this stage
             const uwaStage = uwaDex.find(x=>slugify(x.nome)===slugify(stage.nome));
             const clickTarget = uwaStage?slugify(uwaStage.nome):slugify(stage.nome);
+            // Variantes mega/gmax para este stage
+            const variantNodes = ndexOverrides
+              .filter(o=> o.numero===stage.numero && o.variante && /^(mega|gmax|gigantamax)/i.test(o.variante))
+              .map(o=>{
+                const vLabel = /gmax|gigantamax/i.test(o.variante)?'G-MAX':'MEGA';
+                const varSpr = o.sprite||(o.artwork_slug?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${o.artwork_slug}.png`:null)||spr;
+                const varSlug = o.slug_custom||slugify(o.nome_display||stage.nome+'-'+o.variante);
+                const isVarCurr = slug===varSlug;
+                return `<div class="evo-arrow"><div class="evo-arrow-icon">›</div><div class="evo-arrow-label">${vLabel}</div></div>
+                  <div class="evo-stage${isVarCurr?' current':''}">
+                    <img class="evo-stage-sprite" src="${varSpr}" alt="${o.nome_display||vLabel}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${varSlug}')"/>
+                    <div class="evo-stage-name">${o.nome_display||stage.nome+' '+vLabel}</div>
+                  </div>`;
+              }).join('');
             return `<div class="evo-stage${stage.isCurrent?' current':''}">
               <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${clickTarget}')"/>
               <div class="evo-stage-name">${stage.nome}</div>
-            </div>${arrow.replace(/\bLVL\b/g,'lvl')}`;
+            </div>${arrow}${variantNodes}`;
           }).join('');
           evoHtml = `<div class="evo-chain-wrap"><div class="evo-chain-title">EVOLUTIONARY CHAIN</div><div class="evo-chain-inner">${stH}</div></div>`;
         }
@@ -3264,7 +3310,7 @@ init();
     <div class="g3">
       <div class="field">
         <label>Número (#)</label>
-        <input type="text" id="ovr-num" placeholder="003" autocomplete="off" style="font-family:var(--font-mono,monospace)"/>
+        <input type="text" id="ovr-num" placeholder="003" autocomplete="off" style="font-family:var(--font-mono,monospace)" oninput="ovrNumChanged()"/>
       </div>
       <div class="field">
         <label>Variante <span style="font-weight:400;color:var(--muted)">(mega, gmax, 1, 2…)</span></label>
