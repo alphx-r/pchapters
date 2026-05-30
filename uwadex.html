@@ -2412,24 +2412,45 @@ async function salvarOverride(){
     sprite       : document.getElementById('ovr-sprite').value.trim()||null,
     artwork_slug : document.getElementById('ovr-artwork-slug').value.trim()||null,
   };
-  let res;
-  if(editingOvrId){
-    res = await dbPatch('uwadex_ndex_overrides',`id=eq.${editingOvrId}`,payload);
-  } else {
-    // Upsert: se já existe um override com mesmo numero+variante, atualiza; senão insere
-    res = await sb('uwadex_ndex_overrides', {
-      method:'POST',
-      body: JSON.stringify(payload),
-      prefer: 'resolution=merge-duplicates,return=representation',
-    });
-  }
-  if(res.ok){
+  try {
+    if(editingOvrId){
+      // Edição: PATCH direto pelo id
+      await dbPatch('uwadex_ndex_overrides', `id=eq.${editingOvrId}`, payload);
+    } else {
+      // Novo: tenta inserir; se já existir (unique violation) faz PATCH pelo numero (e variante se houver)
+      const insertRes = await fetch(`${SUPA_URL}/rest/v1/uwadex_ndex_overrides`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPA_KEY,
+          'Authorization': `Bearer ${SUPA_KEY}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
+        },
+        body: JSON.stringify(payload),
+      });
+      if(!insertRes.ok){
+        const errText = await insertRes.text();
+        const errJson = (() => { try{ return JSON.parse(errText); }catch{ return {}; } })();
+        const isConflict = insertRes.status === 409 || (errJson?.code === '23505');
+        if(isConflict){
+          // Já existe — faz PATCH pelo numero (+ variante se existir)
+          const q = variante
+            ? `numero=eq.${num}&variante=eq.${variante}`
+            : `numero=eq.${num}&variante=is.null`;
+          await dbPatch('uwadex_ndex_overrides', q, payload);
+        } else {
+          throw new Error(errJson?.message || errJson?.hint || errText || `HTTP ${insertRes.status}`);
+        }
+      }
+    }
     fb('adm-ovr-ok');
     await loadNdexOverrides();
     renderAdmOvrList();
     _ndexGroupsCache = null;
     setTimeout(fecharOvrModal, 900);
-  } else {
+  } catch(e) {
+    console.error('salvarOverride:', e);
+    alert('Erro ao salvar override:\n' + (e?.message || e));
     fb('adm-ovr-err');
   }
 }
