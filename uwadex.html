@@ -316,12 +316,14 @@ html.dark .dex-tab.active{color:#fff}
 .source-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;text-transform:uppercase;letter-spacing:.4px}
 .source-uwa{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent)}
 .source-pokeapi{background:var(--brand-light);color:var(--brand-mid);border:1px solid var(--border)}
-.poke-nav{position:fixed;top:50%;left:0;right:0;pointer-events:none;display:flex;justify-content:space-between;padding:0 8px;z-index:200;transform:translateY(-50%)}
-.poke-nav-btn{pointer-events:all;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 8px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;font-family:var(--font-body);font-size:10px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;max-width:64px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
-.poke-nav-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:var(--surface)}
-.poke-nav-btn .nav-arrow{font-size:20px;line-height:1;color:var(--brand-mid)}
-.poke-nav-btn .nav-name{font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56px;text-align:center}
-.poke-nav-num{color:var(--muted);font-family:var(--font-title);font-size:9px;display:block;text-align:center}
+.poke-nav{display:contents}
+.ficha-info-name{position:relative;display:flex;align-items:center;justify-content:center;gap:8px}
+.poke-nav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:6px 10px;background:rgba(255,255,255,.15);border:none;border-radius:8px;font-family:var(--font-body);font-size:9px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;min-width:48px}
+.poke-nav-btn:hover{background:rgba(255,255,255,.28)}
+.poke-nav-btn .nav-arrow{font-size:16px;line-height:1}
+.poke-nav-btn .nav-name{font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52px;text-align:center}
+.poke-nav-num{color:rgba(255,255,255,.7);font-family:var(--font-title);font-size:8px;display:block;text-align:center}
+.ficha-nav-spacer{flex:1;min-width:48px}
 .flavor-box{background:var(--surface2);border-left:3px solid var(--brand-mid);padding:12px 16px;border-radius:0 6px 6px 0;font-style:italic;font-size:13px;color:var(--text);line-height:1.7;margin-bottom:8px}
 .inline-loading{display:flex;align-items:center;gap:10px;padding:30px 20px;color:var(--muted);font-size:13px;font-weight:600}
 .inline-spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--brand-mid);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
@@ -1586,16 +1588,13 @@ function renderFicha(slug){
   const idxS=uwaSorted.findIndex(x=>slugify(x.nome)===slug);
   const prevP=idxS>0?uwaSorted[idxS-1]:null;
   const nextP=idxS<uwaSorted.length-1?uwaSorted[idxS+1]:null;
-  const navHTML=`<div class="poke-nav">
-    ${prevP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(prevP.nome)}')"><span class="nav-arrow">‹</span><span class="poke-nav-num">${prevP.numero?'#'+String(prevP.numero).padStart(3,'0'):''}</span><span class="nav-name">${prevP.nome}</span></button>`:'<div></div>'}
-    ${nextP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(nextP.nome)}')"><span class="nav-arrow">›</span><span class="poke-nav-num">${nextP.numero?'#'+String(nextP.numero).padStart(3,'0'):''}</span><span class="nav-name">${nextP.nome}</span></button>`:'<div></div>'}
-  </div>`;
+  const navPrev=prevP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(prevP.nome)}')"><span class="nav-arrow">‹</span><span class="poke-nav-num">${prevP.numero?'#'+String(prevP.numero).padStart(3,'0'):''}</span><span class="nav-name">${prevP.nome}</span></button>`:'<div class="ficha-nav-spacer"></div>';
+  const navNext=nextP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(nextP.nome)}')"><span class="nav-arrow">›</span><span class="poke-nav-num">${nextP.numero?'#'+String(nextP.numero).padStart(3,'0'):''}</span><span class="nav-name">${nextP.nome}</span></button>`:'<div class="ficha-nav-spacer"></div>';
 
   // ── Main block ──
   const themeStyle=`--brand:${theme.brand};--brand-mid:${theme.brandMid};--brand-light:${theme.brandLight};--surface2:${theme.surface2};--border:${theme.border};--muted:${theme.muted}`;
   document.getElementById('ficha-content').innerHTML=`
     <div style="${themeStyle}">
-    ${navHTML}
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
@@ -1603,7 +1602,7 @@ function renderFicha(slug){
         <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
-        <div class="ficha-info-name"><span>${p.nome}</span></div>
+        <div class="ficha-info-name">${navPrev}<span>${p.nome}</span>${navNext}</div>
         <table class="ficha-info-table">
           ${p.classificacao?`<tr><td colspan="2" style="padding:8px 16px"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;text-transform:none">${p.classificacao} Pokémon</span></td></tr>`:''}
           ${(p.altura||p.peso)?`<tr><td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height: </span>${p.altura||'—'} cm</td><td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: </span>${p.peso||'—'} kg</td></tr>`:''}
@@ -2747,10 +2746,8 @@ async function _renderUwaEntry(slug, p, root){
   const idxS = uwaSorted.findIndex(x=>x.id===p.id);
   const prev = idxS>0?uwaSorted[idxS-1]:null;
   const next = idxS<uwaSorted.length-1?uwaSorted[idxS+1]:null;
-  const navHtml = `<div class="poke-nav">
-    ${prev?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(prev.nome)}')"><span class="nav-arrow">‹</span><span class="poke-nav-num">${prev.numero?'#'+String(prev.numero).padStart(3,'0'):''}</span><span class="nav-name">${prev.nome}</span></button>`:'<div></div>'}
-    ${next?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(next.nome)}')"><span class="nav-arrow">›</span><span class="poke-nav-num">${next.numero?'#'+String(next.numero).padStart(3,'0'):''}</span><span class="nav-name">${next.nome}</span></button>`:'<div></div>'}
-  </div>`;
+  const navPrev=prev?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(prev.nome)}')"><span class="nav-arrow">‹</span><span class="poke-nav-num">${prev.numero?'#'+String(prev.numero).padStart(3,'0'):''}</span><span class="nav-name">${prev.nome}</span></button>`:'<div class="ficha-nav-spacer"></div>';
+  const navNext=next?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(next.nome)}')"><span class="nav-arrow">›</span><span class="poke-nav-num">${next.numero?'#'+String(next.numero).padStart(3,'0'):''}</span><span class="nav-name">${next.nome}</span></button>`:'<div class="ficha-nav-spacer"></div>';
 
   // Abilities
   const habilidades = p.habilidades||[];
@@ -2803,7 +2800,6 @@ async function _renderUwaEntry(slug, p, root){
   const spriteUrl = p.sprite||(p.numero?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${p.numero}.png`:FALLBACK);
 
   root.innerHTML = `<div style="${themeStyle}">
-    ${navHtml}
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
@@ -2812,7 +2808,7 @@ async function _renderUwaEntry(slug, p, root){
         <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t.toLowerCase()}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
-        <div class="ficha-info-name">${p.nome_display||p.nome}</div>
+        <div class="ficha-info-name">${navPrev}${p.nome_display||p.nome}${navNext}</div>
         <table class="ficha-info-table">
           ${p.classificacao?`<tr><td><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification:</span></td><td>${p.classificacao} Pokémon</td></tr>`:''}
           ${(p.altura||p.peso)?`<tr><td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height:</span> ${p.altura||'—'} cm</td><td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight:</span> ${p.peso||'—'} kg</td></tr>`:''}
@@ -3015,13 +3011,10 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
   const nextUwa = nextNum?uwaDex.find(p=>p.numero===nextNum):null;
   const prevLabel = prevUwa?`<span class="poke-nav-num">#${String(prevNum).padStart(3,'0')}</span>${prevUwa.nome}` : prevNum?`<span class="poke-nav-num">#${String(prevNum).padStart(3,'0')}</span>Anterior`:'';
   const nextLabel = nextUwa?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>${nextUwa.nome}` : nextNum?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>Próximo`:'';
-  const navHtml = `<div class="poke-nav">
-    ${prevNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${prevNum})"><span class="nav-arrow">‹</span>${prevLabel}</button>`:'<div></div>'}
-    ${nextNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${nextNum})"><span class="nav-arrow">›</span>${nextLabel}</button>`:'<div></div>'}
-  </div>`;
+  const navPrev=prevNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${prevNum})"><span class="nav-arrow">‹</span>${prevLabel}</button>`:'<div class="ficha-nav-spacer"></div>';
+  const navNext=nextNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${nextNum})"><span class="nav-arrow">›</span>${nextLabel}</button>`:'<div class="ficha-nav-spacer"></div>';
 
   root.innerHTML = `<div style="${themeStyle}">
-    ${navHtml}
     <div class="ficha-main">
       <div class="ficha-sprite-col">
         <div class="ficha-sprite-num">${numStr}</div>
@@ -3029,7 +3022,7 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
         <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t.toLowerCase()}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
-        <div class="ficha-info-name">${namePt}${namePt!==name?`<span style="display:block;font-size:12px;font-weight:400;opacity:.7">${name}</span>`:''}</div>
+        <div class="ficha-info-name">${navPrev}${namePt}${namePt!==name?`<span style="display:block;font-size:12px;font-weight:400;opacity:.7">${name}</span>`:''}${navNext}</div>
         <table class="ficha-info-table">
           ${genus?`<tr><td colspan="2" style="padding:8px 16px"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;text-transform:none">${genus}</span></td></tr>`:''}
           <tr>
