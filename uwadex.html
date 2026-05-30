@@ -1155,6 +1155,16 @@ function _buildNdexGroups(all){
     const rid=getRegionForNum(num, p.regiao, p._source==='uwa');
     groups[rid].push(p);
   });
+  // Sort each group by numero so variant cards appear right after their base
+  Object.keys(groups).forEach(k=>{
+    groups[k].sort((a,b)=>{
+      if(a.numero!==b.numero) return (a.numero||9999)-(b.numero||9999);
+      // base card (no variante override) before variant cards
+      const aIsVar = a._variant_ovr ? 1 : 0;
+      const bIsVar = b._variant_ovr ? 1 : 0;
+      return aIsVar - bIsVar;
+    });
+  });
   return groups;
 }
 
@@ -2246,12 +2256,19 @@ async function loadNdexOverrides(){
   catch{ ndexOverrides=[]; }
 }
 
-// Apply overrides to a CSV-sourced pokemon list entry
+// Apply overrides to a CSV-sourced pokemon list entry.
+// Overrides sem variante modificam o card base; overrides COM variante geram cards extras.
 function applyNdexOverrides(list){
   if(!ndexOverrides.length) return list;
-  return list.map(p=>{
+
+  // Split overrides into base (variante null/empty) and variant ones
+  const baseOverrides    = ndexOverrides.filter(o=>!o.variante);
+  const variantOverrides = ndexOverrides.filter(o=> o.variante);
+
+  // Apply base overrides to existing CSV entries
+  const patched = list.map(p=>{
     if(p._source!=='csv') return p;
-    const ovr = ndexOverrides.find(o=>o.numero===p.numero);
+    const ovr = baseOverrides.find(o=>o.numero===p.numero);
     if(!ovr) return p;
     return {
       ...p,
@@ -2261,6 +2278,29 @@ function applyNdexOverrides(list){
       artwork_slug : ovr.artwork_slug || p.artwork_slug,
     };
   });
+
+  // Inject extra cards for variant overrides (mega, gmax, etc.)
+  const extras = variantOverrides.map(ovr=>{
+    // Find the base entry to inherit tipos / region / ca / pv / dado when not overridden
+    const base = list.find(p=>p._source==='csv'&&p.numero===ovr.numero);
+    const artSlug = ovr.artwork_slug || ovr.numero;
+    return {
+      _source      : 'csv',
+      _variant_ovr : true,
+      numero       : ovr.numero,
+      nome         : ovr.nome_display || (base?.nome ? base.nome+' '+ovr.variante : '#'+ovr.numero+'-'+ovr.variante),
+      nome_display : ovr.nome_display || undefined,
+      _custom_slug : ovr.slug_custom  || undefined,
+      sprite       : ovr.sprite       || `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artSlug}.png`,
+      artwork_slug : ovr.artwork_slug || undefined,
+      tipos        : base?.tipos || [],
+      ca           : base?.ca   ?? null,
+      pv           : base?.pv   ?? null,
+      dado         : base?.dado || null,
+    };
+  });
+
+  return [...patched, ...extras];
 }
 
 // ── Render: lista de todos os pokémon UWAdex + overrides existentes ──
@@ -2305,9 +2345,9 @@ function renderAdmOvrList(){
     .map(r=>({
       ...r,
       ovr: ndexOverrides.find(o=>
-        o.numero===r.numero &&
+        o.numero===r.numero && !o.variante &&
         (!o.nome_display || o.nome_display.toLowerCase()===r.nome.toLowerCase())
-      ) || ndexOverrides.find(o=>o.numero===r.numero&&!o.nome_display) || null
+      ) || ndexOverrides.find(o=>o.numero===r.numero&&!o.variante&&!o.nome_display) || null
     }));
 
   if(q) rows = rows.filter(r=>
@@ -2435,7 +2475,7 @@ async function salvarOverride(){
     let targetId = editingOvrId;
 
     if(!targetId){
-      // Tenta inserir; se der unique violation, busca o id do registro existente e faz PATCH
+      // Tenta inserir
       const insertRes = await fetch(`${SUPA_URL}/rest/v1/uwadex_ndex_overrides`, {
         method : 'POST',
         headers: { 'apikey':SUPA_KEY,'Authorization':`Bearer ${SUPA_KEY}`,'Content-Type':'application/json','Prefer':'return=representation' },
@@ -2452,16 +2492,14 @@ async function salvarOverride(){
       const isConflict = insertRes.status===409 || errJson?.code==='23505';
       if(!isConflict) throw new Error(errJson?.message||errJson?.hint||errText||`HTTP ${insertRes.status}`);
 
-      // Busca o id do registro já existente pelo numero (+ variante)
-      const qFind = variante
-        ? `numero=eq.${num}&variante=eq.${encodeURIComponent(variante)}&select=id`
-        : `numero=eq.${num}&variante=is.null&select=id`;
-      const existing = await dbGet('uwadex_ndex_overrides', qFind);
-      if(!existing.length) throw new Error('Conflito mas registro não encontrado para PATCH.');
+      // Unique violation: constraint é em (numero, variante) — busca o registro exato
+      const varFilter = variante ? `variante=eq.${encodeURIComponent(variante)}` : 'variante=is.null';
+      const existing = await dbGet('uwadex_ndex_overrides', `numero=eq.${num}&${varFilter}&select=id&limit=1`);
+      if(!existing.length) throw new Error(`Conflito em numero=${num} variante=${variante||'(base)'} mas registro não encontrado.`);
       targetId = existing[0].id;
     }
 
-    // PATCH sempre pelo id — nunca por numero
+    // PATCH sempre pelo id
     await dbPatch('uwadex_ndex_overrides', `id=eq.${targetId}`, payload);
     fb('adm-ovr-ok');
     await loadNdexOverrides(); renderAdmOvrList(); _ndexGroupsCache=null;
@@ -3316,6 +3354,7 @@ init();
         <label>Variante <span style="font-weight:400;color:var(--muted)">(mega, gmax, 1, 2…)</span></label>
         <input type="text" id="ovr-variante" placeholder="Ex: mega ou 1" autocomplete="off" oninput="ovrVarianteChanged()"/>
         <span style="font-size:10px;color:var(--muted);margin-top:2px;display:block">Resulta em #003-mega. Deixe em branco se não houver forma.</span>
+        <span style="font-size:10px;color:#2a7a2a;margin-top:2px;display:block">✅ A constraint agora é em <code>(numero, variante)</code> — múltiplas variantes do mesmo número são suportadas.</span>
       </div>
       <div class="field">
         <label>Nome exibido</label>
