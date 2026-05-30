@@ -316,10 +316,12 @@ html.dark .dex-tab.active{color:#fff}
 .source-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:12px;text-transform:uppercase;letter-spacing:.4px}
 .source-uwa{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent)}
 .source-pokeapi{background:var(--brand-light);color:var(--brand-mid);border:1px solid var(--border)}
-.poke-nav{display:flex;gap:10px;margin-bottom:20px;justify-content:space-between}
-.poke-nav-btn{display:flex;align-items:center;gap:6px;padding:8px 16px;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s}
-.poke-nav-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid)}
-.poke-nav-num{color:var(--muted);font-family:var(--font-title);font-size:10px;display:block}
+.poke-nav{position:fixed;top:50%;left:0;right:0;pointer-events:none;display:flex;justify-content:space-between;padding:0 8px;z-index:200;transform:translateY(-50%)}
+.poke-nav-btn{pointer-events:all;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:10px 8px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;font-family:var(--font-body);font-size:10px;font-weight:700;color:var(--text);cursor:pointer;transition:all .2s;max-width:64px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.poke-nav-btn:hover{border-color:var(--brand-mid);color:var(--brand-mid);background:var(--surface)}
+.poke-nav-btn .nav-arrow{font-size:20px;line-height:1;color:var(--brand-mid)}
+.poke-nav-btn .nav-name{font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:56px;text-align:center}
+.poke-nav-num{color:var(--muted);font-family:var(--font-title);font-size:9px;display:block;text-align:center}
 .flavor-box{background:var(--surface2);border-left:3px solid var(--brand-mid);padding:12px 16px;border-radius:0 6px 6px 0;font-style:italic;font-size:13px;color:var(--text);line-height:1.7;margin-bottom:8px}
 .inline-loading{display:flex;align-items:center;gap:10px;padding:30px 20px;color:var(--muted);font-size:13px;font-weight:600}
 .inline-spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--brand-mid);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
@@ -1585,8 +1587,8 @@ function renderFicha(slug){
   const prevP=idxS>0?uwaSorted[idxS-1]:null;
   const nextP=idxS<uwaSorted.length-1?uwaSorted[idxS+1]:null;
   const navHTML=`<div class="poke-nav">
-    ${prevP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(prevP.nome)}')">&#8249; <span><span class="poke-nav-num">${prevP.numero?'#'+String(prevP.numero).padStart(3,'0'):''}</span>${prevP.nome}</span></button>`:'<div></div>'}
-    ${nextP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(nextP.nome)}')"><span><span class="poke-nav-num">${nextP.numero?'#'+String(nextP.numero).padStart(3,'0'):''}</span>${nextP.nome}</span> &#8250;</button>`:'<div></div>'}
+    ${prevP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(prevP.nome)}')"><span class="nav-arrow">‹</span><span class="poke-nav-num">${prevP.numero?'#'+String(prevP.numero).padStart(3,'0'):''}</span><span class="nav-name">${prevP.nome}</span></button>`:'<div></div>'}
+    ${nextP?`<button class="poke-nav-btn" onclick="abrirFicha('${slugify(nextP.nome)}')"><span class="nav-arrow">›</span><span class="poke-nav-num">${nextP.numero?'#'+String(nextP.numero).padStart(3,'0'):''}</span><span class="nav-name">${nextP.nome}</span></button>`:'<div></div>'}
   </div>`;
 
   // ── Main block ──
@@ -2746,8 +2748,8 @@ async function _renderUwaEntry(slug, p, root){
   const prev = idxS>0?uwaSorted[idxS-1]:null;
   const next = idxS<uwaSorted.length-1?uwaSorted[idxS+1]:null;
   const navHtml = `<div class="poke-nav">
-    ${prev?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(prev.nome)}')">‹ <span><span class="poke-nav-num">${prev.numero?'#'+String(prev.numero).padStart(3,'0'):''}</span>${prev.nome}</span></button>`:'<div></div>'}
-    ${next?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(next.nome)}')"><span><span class="poke-nav-num">${next.numero?'#'+String(next.numero).padStart(3,'0'):''}</span>${next.nome}</span> ›</button>`:'<div></div>'}
+    ${prev?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(prev.nome)}')"><span class="nav-arrow">‹</span><span class="poke-nav-num">${prev.numero?'#'+String(prev.numero).padStart(3,'0'):''}</span><span class="nav-name">${prev.nome}</span></button>`:'<div></div>'}
+    ${next?`<button class="poke-nav-btn" onclick="navigateToNdex('${slugify(next.nome)}')"><span class="nav-arrow">›</span><span class="poke-nav-num">${next.numero?'#'+String(next.numero).padStart(3,'0'):''}</span><span class="nav-name">${next.nome}</span></button>`:'<div></div>'}
   </div>`;
 
   // Abilities
@@ -3014,8 +3016,8 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
   const prevLabel = prevUwa?`<span class="poke-nav-num">#${String(prevNum).padStart(3,'0')}</span>${prevUwa.nome}` : prevNum?`<span class="poke-nav-num">#${String(prevNum).padStart(3,'0')}</span>Anterior`:'';
   const nextLabel = nextUwa?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>${nextUwa.nome}` : nextNum?`<span class="poke-nav-num">#${String(nextNum).padStart(3,'0')}</span>Próximo`:'';
   const navHtml = `<div class="poke-nav">
-    ${prevNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${prevNum})">‹ <span>${prevLabel}</span></button>`:'<div></div>'}
-    ${nextNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${nextNum})"><span>${nextLabel}</span> ›</button>`:'<div></div>'}
+    ${prevNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${prevNum})"><span class="nav-arrow">‹</span>${prevLabel}</button>`:'<div></div>'}
+    ${nextNum?`<button class="poke-nav-btn" onclick="navigateToNdexNum(${nextNum})"><span class="nav-arrow">›</span>${nextLabel}</button>`:'<div></div>'}
   </div>`;
 
   root.innerHTML = `<div style="${themeStyle}">
