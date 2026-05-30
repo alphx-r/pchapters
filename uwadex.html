@@ -146,7 +146,7 @@ html.dark .dex-tab.active{color:#fff}
 /* Evolutionary Chain */
 .evo-chain-wrap{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
 .evo-chain-title{background:var(--brand);color:#fff;text-align:center;font-family:var(--font-title);font-size:11px;letter-spacing:1.5px;padding:8px;font-weight:600}
-.evo-chain-inner{display:flex;align-items:center;justify-content:center;gap:0;padding:20px;flex-wrap:wrap;gap:4px}
+.evo-chain-inner{display:flex;align-items:flex-start;justify-content:center;gap:0;padding:20px;flex-wrap:wrap;row-gap:8px}
 .evo-stage{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 14px}
 .evo-stage-sprite{width:80px;height:80px;object-fit:contain;image-rendering:auto;cursor:pointer;transition:transform .2s}
 .evo-stage-sprite:hover{transform:scale(1.08)}
@@ -156,6 +156,12 @@ html.dark .dex-tab.active{color:#fff}
 .evo-arrow{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0 6px}
 .evo-arrow-icon{font-size:20px;color:var(--muted)}
 .evo-arrow-label{font-size:10px;color:var(--muted);font-weight:700;white-space:nowrap;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:2px 7px}
+.evo-stage-group{display:flex;flex-direction:column;align-items:center;gap:0}
+.evo-stage-variants{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:0;margin-top:4px}
+.evo-variant-branch{display:flex;flex-direction:column;align-items:center;gap:2px}
+.evo-variant-branch-arrow{display:flex;flex-direction:column;align-items:center;gap:2px}
+.evo-variant-branch-icon{font-size:14px;color:var(--muted);line-height:1}
+.evo-variant-branch-label{font-size:9px;color:var(--muted);font-weight:700;background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:1px 6px;white-space:nowrap}
 
 /* Main info block */
 .ficha-main{display:grid;grid-template-columns:260px 1fr;gap:0;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);margin-bottom:20px;overflow:hidden}
@@ -3069,10 +3075,12 @@ async function renderNdexFichaPage(slug){
   // 2. Check if slug matches a custom slug override → resolve to PokeAPI slug/num
   const ovrBySlug = ndexOverrides.find(o=>o.slug_custom===slug);
   if(ovrBySlug){
-    // resolve: if artwork_slug is text, use it; else use numero
-    const resolvedSlug = (ovrBySlug.artwork_slug && isNaN(ovrBySlug.artwork_slug))
-      ? ovrBySlug.artwork_slug
-      : String(ovrBySlug.numero);
+    // Priority: _resolved_artwork_id (pré-resolvido de texto), depois artwork_slug numérico,
+    // depois artwork_slug textual direto, por último o numero base
+    const resolvedSlug = ovrBySlug._resolved_artwork_id
+      || (ovrBySlug.artwork_slug && !isNaN(String(ovrBySlug.artwork_slug).trim()) ? String(ovrBySlug.artwork_slug).trim() : null)
+      || (ovrBySlug.artwork_slug && isNaN(String(ovrBySlug.artwork_slug).trim()) ? String(ovrBySlug.artwork_slug).trim() : null)
+      || String(ovrBySlug.numero);
     await _renderPokeApiEntry(resolvedSlug, root, ovrBySlug);
     return;
   }
@@ -3126,23 +3134,36 @@ async function _renderUwaEntry(slug, p, root){
       const arrow = i<evoChain.length-1?`<div class="evo-arrow"><div class="evo-arrow-icon">›</div>${evoChain[i+1].trigger?`<div class="evo-arrow-label">${evoChain[i+1].trigger}</div>`:''}</div>`:'';
       // Variantes mega/gmax deste stage
       const stageNum = stage.numero||dbM?.numero||null;
-      const variantNodes = stageNum ? ndexOverrides
+      const variantsList = stageNum ? ndexOverrides
         .filter(o=> o.numero===stageNum && o.variante && /^(mega|gmax|gigantamax)/i.test(o.variante))
         .map(o=>{
           const vLabel = /gmax|gigantamax/i.test(o.variante)?'G-MAX':'MEGA';
-          const varSpr = o.sprite||(o.artwork_slug?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${o.artwork_slug}.png`:null)||(stageNum?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${stageNum}.png`:FALLBACK);
+          const artId = o._resolved_artwork_id || (o.artwork_slug && !isNaN(String(o.artwork_slug).trim()) ? String(o.artwork_slug).trim() : null) || stageNum;
+          const varSpr = o.sprite||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artId}.png`;
           const varSlug = o.slug_custom||slugify(o.nome_display||stage.nome+'-'+o.variante);
           const isVarCurr = slugify(p.nome_display||p.nome)===varSlug || slug===varSlug;
-          return `<div class="evo-arrow"><div class="evo-arrow-icon">›</div><div class="evo-arrow-label">${vLabel}</div></div>
+          return `<div class="evo-variant-branch">
+            <div class="evo-variant-branch-arrow">
+              <div class="evo-variant-branch-icon">↓</div>
+              <div class="evo-variant-branch-label">${vLabel}</div>
+            </div>
             <div class="evo-stage${isVarCurr?' current':''}">
               <img class="evo-stage-sprite" src="${varSpr}" alt="${o.nome_display||vLabel}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${varSlug}')"/>
               <div class="evo-stage-name">${o.nome_display||stage.nome+' '+vLabel}</div>
-            </div>`;
-        }).join('') : '';
-      return `<div class="evo-stage${isCurr?' current':''}">
-        <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${slugify(stage.nome)}')"/>
-        <div class="evo-stage-name">${stage.nome}</div>
-      </div>${arrow}${variantNodes}`;
+            </div>
+          </div>`;
+        }) : [];
+      const variantsHtml = variantsList.length
+        ? `<div class="evo-stage-variants">${variantsList.join('')}</div>`
+        : '';
+      return `<div class="evo-stage-group">
+        <div style="display:flex;align-items:center">
+          <div class="evo-stage${isCurr?' current':''}">
+            <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${slugify(stage.nome)}')"/>
+            <div class="evo-stage-name">${stage.nome}</div>
+          </div>${arrow}
+        </div>${variantsHtml}
+      </div>`;
     }).join('');
     evoHtml = `<div class="evo-chain-wrap"><div class="evo-chain-title">EVOLUTIONARY CHAIN</div><div class="evo-chain-inner">${stagesHtml}</div></div>`;
   }
@@ -3272,23 +3293,36 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
             const uwaStage = uwaDex.find(x=>slugify(x.nome)===slugify(stage.nome));
             const clickTarget = uwaStage?slugify(uwaStage.nome):slugify(stage.nome);
             // Variantes mega/gmax para este stage
-            const variantNodes = ndexOverrides
+            const variantsList = ndexOverrides
               .filter(o=> o.numero===stage.numero && o.variante && /^(mega|gmax|gigantamax)/i.test(o.variante))
               .map(o=>{
                 const vLabel = /gmax|gigantamax/i.test(o.variante)?'G-MAX':'MEGA';
-                const varSpr = o.sprite||(o.artwork_slug?`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${o.artwork_slug}.png`:null)||spr;
+                const artId = o._resolved_artwork_id || (o.artwork_slug && !isNaN(String(o.artwork_slug).trim()) ? String(o.artwork_slug).trim() : null) || stage.numero;
+                const varSpr = o.sprite||`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${artId}.png`;
                 const varSlug = o.slug_custom||slugify(o.nome_display||stage.nome+'-'+o.variante);
                 const isVarCurr = slug===varSlug;
-                return `<div class="evo-arrow"><div class="evo-arrow-icon">›</div><div class="evo-arrow-label">${vLabel}</div></div>
+                return `<div class="evo-variant-branch">
+                  <div class="evo-variant-branch-arrow">
+                    <div class="evo-variant-branch-icon">↓</div>
+                    <div class="evo-variant-branch-label">${vLabel}</div>
+                  </div>
                   <div class="evo-stage${isVarCurr?' current':''}">
                     <img class="evo-stage-sprite" src="${varSpr}" alt="${o.nome_display||vLabel}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${varSlug}')"/>
                     <div class="evo-stage-name">${o.nome_display||stage.nome+' '+vLabel}</div>
-                  </div>`;
-              }).join('');
-            return `<div class="evo-stage${stage.isCurrent?' current':''}">
-              <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${clickTarget}')"/>
-              <div class="evo-stage-name">${stage.nome}</div>
-            </div>${arrow}${variantNodes}`;
+                  </div>
+                </div>`;
+              });
+            const variantsHtml = variantsList.length
+              ? `<div class="evo-stage-variants">${variantsList.join('')}</div>`
+              : '';
+            return `<div class="evo-stage-group">
+              <div style="display:flex;align-items:center">
+                <div class="evo-stage${stage.isCurrent?' current':''}">
+                  <img class="evo-stage-sprite" src="${spr}" alt="${stage.nome}" onerror="this.src='${FALLBACK}'" onclick="navigateToNdex('${clickTarget}')"/>
+                  <div class="evo-stage-name">${stage.nome}</div>
+                </div>${arrow}
+              </div>${variantsHtml}
+            </div>`;
           }).join('');
           evoHtml = `<div class="evo-chain-wrap"><div class="evo-chain-title">EVOLUTIONARY CHAIN</div><div class="evo-chain-inner">${stH}</div></div>`;
         }
@@ -3357,8 +3391,9 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
     </div>
   </div>`;
 
-  // Sprite
-  const spriteUrl = pokeData.sprites?.other?.['official-artwork']?.front_default||pokeData.sprites?.front_default||FALLBACK;
+  // Sprite — override sprite takes priority, then PokeAPI official artwork
+  const _apiSprite = pokeData.sprites?.other?.['official-artwork']?.front_default||pokeData.sprites?.front_default||FALLBACK;
+  const spriteUrl = ovr?.sprite || _apiSprite;
   const shinyUrl = pokeData.sprites?.other?.['official-artwork']?.front_shiny||pokeData.sprites?.front_shiny||null;
 
   // Damage taken — auto-calculated from types using TYPE_CHART
