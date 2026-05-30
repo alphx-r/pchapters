@@ -679,64 +679,6 @@ html.dark .dex-tab.active{color:#fff}
             <div class="sec-title">🎨 Overrides NationalDex</div>
             <div class="sec-sub">Lista de todos os Pokémon da UWAdex. Edite individualmente ou mescle duplicatas.</div>
 
-            <!-- MODAL DE EDIÇÃO -->
-            <div id="adm-ovr-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center">
-              <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:28px;max-width:520px;width:90%;max-height:90vh;overflow-y:auto;position:relative">
-                <div class="box-title" id="adm-ovr-form-title" style="margin-bottom:16px">✏️ Editar Override</div>
-                <div class="g3">
-                  <div class="field">
-                    <label>Número (#)</label>
-                    <input type="text" id="ovr-num" placeholder="003" autocomplete="off" style="font-family:var(--font-mono,monospace)"/>
-                  </div>
-                  <div class="field">
-                    <label>Variante <span style="font-weight:400;color:var(--muted)">(mega, gmax, 1, 2…)</span></label>
-                    <input type="text" id="ovr-variante" placeholder="Ex: mega ou 1" autocomplete="off"/>
-                    <span style="font-size:10px;color:var(--muted);margin-top:2px;display:block">Resulta em #003-mega. Deixe em branco se não houver forma.</span>
-                  </div>
-                  <div class="field">
-                    <label>Nome exibido</label>
-                    <input type="text" id="ovr-nome" placeholder="Ex: Charizard-Mega" autocomplete="off"/>
-                  </div>
-                  <div class="field">
-                    <label>Slug customizado</label>
-                    <input type="text" id="ovr-slug" placeholder="Ex: charizard-mega" autocomplete="off"/>
-                  </div>
-                </div>
-                <div class="g2" style="margin-top:10px">
-                  <div class="field">
-                    <label>URL da imagem</label>
-                    <input type="text" id="ovr-sprite" placeholder="https://…" autocomplete="off"/>
-                  </div>
-                  <div class="field">
-                    <label>Artwork slug</label>
-                    <input type="text" id="ovr-artwork-slug" placeholder="Ex: 6 ou charizard-gmax" autocomplete="off"/>
-                  </div>
-                </div>
-                <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
-                  <button class="btn btn-primary" onclick="salvarOverride()">💾 Salvar</button>
-                  <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharOvrModal()">Cancelar</button>
-                  <button class="btn btn-danger" id="adm-ovr-del-btn" style="display:none;margin-left:auto" onclick="excluirOverride()">🗑 Excluir Override</button>
-                </div>
-                <div class="fb fb-ok" id="adm-ovr-ok">✓ Override salvo!</div>
-                <div class="fb fb-err" id="adm-ovr-err">Erro ao salvar.</div>
-              </div>
-            </div>
-
-            <!-- MODAL DE MESCLA -->
-            <div id="adm-merge-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;align-items:center;justify-content:center">
-              <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:28px;max-width:480px;width:90%">
-                <div class="box-title" style="margin-bottom:12px">🔀 Mesclar Pokémon Duplicados</div>
-                <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Selecione os registros duplicados a mesclar. O primeiro será mantido e os demais excluídos.</p>
-                <div id="adm-merge-list" style="max-height:300px;overflow-y:auto;margin-bottom:16px"></div>
-                <div style="display:flex;gap:10px">
-                  <button class="btn btn-primary" onclick="confirmarMescla()">🔀 Mesclar Selecionados</button>
-                  <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharMergeModal()">Cancelar</button>
-                </div>
-                <div class="fb fb-ok" id="adm-merge-ok">✓ Mescla concluída!</div>
-                <div class="fb fb-err" id="adm-merge-err">Erro ao mesclar.</div>
-              </div>
-            </div>
-
             <!-- LISTA PRINCIPAL -->
             <div class="box">
               <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
@@ -3270,5 +3212,63 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
 // ════════════════════════════════════════
 init();
 </script>
+<!-- MODAL OVERRIDE (body-level para evitar problemas de z-index/overflow) -->
+<div id="adm-ovr-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:28px;max-width:520px;width:90%;max-height:90vh;overflow-y:auto;position:relative">
+    <div class="box-title" id="adm-ovr-form-title" style="margin-bottom:16px">✏️ Editar Override</div>
+    <div class="g3">
+      <div class="field">
+        <label>Número (#)</label>
+        <input type="text" id="ovr-num" placeholder="003" autocomplete="off" style="font-family:var(--font-mono,monospace)"/>
+      </div>
+      <div class="field">
+        <label>Variante <span style="font-weight:400;color:var(--muted)">(mega, gmax, 1, 2…)</span></label>
+        <input type="text" id="ovr-variante" placeholder="Ex: mega ou 1" autocomplete="off"/>
+        <span style="font-size:10px;color:var(--muted);margin-top:2px;display:block">Resulta em #003-mega. Deixe em branco se não houver forma.</span>
+      </div>
+      <div class="field">
+        <label>Nome exibido</label>
+        <input type="text" id="ovr-nome" placeholder="Ex: Charizard-Mega" autocomplete="off"/>
+      </div>
+      <div class="field">
+        <label>Slug customizado</label>
+        <input type="text" id="ovr-slug" placeholder="Ex: charizard-mega" autocomplete="off"/>
+      </div>
+    </div>
+    <div class="g2" style="margin-top:10px">
+      <div class="field">
+        <label>URL da imagem</label>
+        <input type="text" id="ovr-sprite" placeholder="https://…" autocomplete="off"/>
+      </div>
+      <div class="field">
+        <label>Artwork slug</label>
+        <input type="text" id="ovr-artwork-slug" placeholder="Ex: 6 ou charizard-gmax" autocomplete="off"/>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="salvarOverride()">💾 Salvar</button>
+      <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharOvrModal()">Cancelar</button>
+      <button class="btn btn-danger" id="adm-ovr-del-btn" style="display:none;margin-left:auto" onclick="excluirOverride()">🗑 Excluir Override</button>
+    </div>
+    <div class="fb fb-ok" id="adm-ovr-ok">✓ Override salvo!</div>
+    <div class="fb fb-err" id="adm-ovr-err">Erro ao salvar.</div>
+  </div>
+</div>
+
+<!-- MODAL MESCLA (body-level) -->
+<div id="adm-merge-modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;align-items:center;justify-content:center">
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:28px;max-width:480px;width:90%">
+    <div class="box-title" style="margin-bottom:12px">🔀 Mesclar Pokémon Duplicados</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Selecione os registros duplicados a mesclar. O primeiro será mantido e os demais excluídos.</p>
+    <div id="adm-merge-list" style="max-height:300px;overflow-y:auto;margin-bottom:16px"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="confirmarMescla()">🔀 Mesclar Selecionados</button>
+      <button class="btn" style="background:var(--surface2);border:1px solid var(--border)" onclick="fecharMergeModal()">Cancelar</button>
+    </div>
+    <div class="fb fb-ok" id="adm-merge-ok">✓ Mescla concluída!</div>
+    <div class="fb fb-err" id="adm-merge-err">Erro ao mesclar.</div>
+  </div>
+</div>
+
 </body>
 </html>
