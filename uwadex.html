@@ -171,8 +171,8 @@ html.dark .dex-tab.active{color:#fff}
 .ficha-info-table tr:first-child{border-top:1px solid var(--border)}
 .ficha-info-table tr:last-child{border-bottom:none}
 .ficha-info-table td{padding:4px 16px;font-size:13px;vertical-align:top}
-.ficha-info-table td:first-child{font-weight:700;color:var(--muted);width:38%;font-size:12px;letter-spacing:.4px}
-.ficha-info-table td:last-child{color:var(--text)}
+.ficha-info-table td:first-child{font-weight:700;color:var(--muted);width:38%;font-size:12px;letter-spacing:.4px;text-transform:uppercase}
+.ficha-info-table td:last-child{color:var(--text);font-weight:400;text-transform:none}
 .ficha-ability{margin-bottom:6px;font-size:12px;line-height:1.5;text-align:justify}
 .ficha-type-icons{display:flex;gap:6px;justify-content:center;align-items:center}
 .ficha-type-icon{width:22px;height:22px;object-fit:contain}
@@ -1576,7 +1576,7 @@ function renderFicha(slug){
   const abilitiesHTML=habilidades.map((a,i)=>`<div class="ficha-ability">
     ${a.ha?`<span class="ficha-ability-ha">HA</span>`:`<span style="font-weight:700;color:var(--muted);margin-right:4px">${i+1}.</span>`}
     <span class="ficha-ability-name">${a.nome}</span>
-    ${a.desc?`: <span style="color:var(--text)">${a.desc}</span>`:''}
+    ${a.desc?`: <span style="color:var(--text);font-weight:400">${a.desc}</span>`:''}
   </div>`).join('');
 
   // ── Nav prev/next ──
@@ -1603,10 +1603,10 @@ function renderFicha(slug){
       <div class="ficha-info-col">
         <div class="ficha-info-name"><span>${p.nome}</span></div>
         <table class="ficha-info-table">
-          ${p.classificacao?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;color:var(--text);font-size:13px">${p.classificacao} Pokémon</span></td></tr>`:''}
-          ${(p.altura||p.peso)?`<tr><td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height: </span><span style="font-weight:400;color:var(--text)">${p.altura||'—'} cm</span></td><td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: </span><span style="font-weight:400;color:var(--text)">${p.peso||'—'} kg</span></td></tr>`:''}
-          ${p.genero?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;color:var(--text);font-size:13px">${p.genero}</span></td></tr>`:''}
-          ${p.egggroup?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Egg Group(s): </span><span style="font-weight:400;color:var(--text);font-size:13px">${p.egggroup}</span></td></tr>`:''}
+          ${p.classificacao?`<tr><td colspan="2" style="padding:8px 16px"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;text-transform:none">${p.classificacao} Pokémon</span></td></tr>`:''}
+          ${(p.altura||p.peso)?`<tr><td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height: </span>${p.altura||'—'} cm</td><td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: </span>${p.peso||'—'} kg</td></tr>`:''}
+          ${p.genero?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;text-transform:none">${p.genero}</span></td></tr>`:''}
+          ${p.egggroup?`<tr><td colspan="2" style="padding:8px 16px"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Egg Group(s): </span><span style="font-weight:400;text-transform:none">${p.egggroup}</span></td></tr>`:''}
           ${(dado||ca!=null||pv!=null)?`<tr><td colspan="2" style="padding:0">
             <div style="display:flex;gap:0;padding:0">
               <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)">
@@ -2706,9 +2706,9 @@ async function renderNdexFichaPage(slug){
   const root = document.getElementById('ndex-ficha-content');
   root.innerHTML = `<div class="inline-loading"><div class="inline-spinner"></div>Buscando dados do Pokémon…</div>`;
 
-  // 1. Try UWAdex (by slug of nome)
+  // 1. Try UWAdex (by slug of nome) → redirect to UWAdex ficha
   const uwaEntry = uwaDex.find(p=>slugify(p.nome)===slug);
-  if(uwaEntry){ await _renderUwaEntry(slug, uwaEntry, root); return; }
+  if(uwaEntry){ abrirFicha(slug); return; }
 
   // 2. Check if slug matches a custom slug override → resolve to PokeAPI slug/num
   const ovrBySlug = ndexOverrides.find(o=>o.slug_custom===slug);
@@ -2757,7 +2757,7 @@ async function _renderUwaEntry(slug, p, root){
     return `<div class="ficha-ability">
       ${a.ha?`<span class="ficha-ability-ha">HA</span>`:`<span style="font-weight:700;color:var(--muted);margin-right:4px">${i+1}.</span>`}
       <span class="ficha-ability-name">${a.nome||''}</span>
-      ${desc?`: <span style="color:var(--text)">${desc}</span>`:''}
+      ${desc?`: <span style="color:var(--text);font-weight:400">${desc}</span>`:''}
     </div>`;
   }).join('');
 
@@ -2812,17 +2812,16 @@ async function _renderUwaEntry(slug, p, root){
       <div class="ficha-info-col">
         <div class="ficha-info-name">${p.nome_display||p.nome}</div>
         <table class="ficha-info-table">
-          ${p.classificacao?`<tr><td>Classification</td><td>${p.classificacao} Pokémon</td></tr>`:''}
-          ${p.altura?`<tr><td>Height</td><td>${p.altura} cm</td></tr>`:''}
-          ${p.peso?`<tr><td>Weight</td><td>${p.peso} kg</td></tr>`:''}
-          ${p.genero?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;color:var(--text);font-size:13px">${p.genero.replace(/\b(male|female|genderless)\b/gi, w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase())}</span></td></tr>`:''}
-          ${p.egggroup?`<tr><td>Egg Group(s)</td><td>${p.egggroup}</td></tr>`:''}
+          ${p.classificacao?`<tr><td><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification:</span></td><td>${p.classificacao} Pokémon</td></tr>`:''}
+          ${(p.altura||p.peso)?`<tr><td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height:</span> ${p.altura||'—'} cm</td><td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight:</span> ${p.peso||'—'} kg</td></tr>`:''}
+          ${p.genero?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;text-transform:none">${p.genero.replace(/\b(male|female|genderless)\b/gi, w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase())}</span></td></tr>`:''}
+          ${p.egggroup?`<tr><td><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Egg Group(s):</span></td><td>${p.egggroup}</td></tr>`:''}
           ${(dado||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
-            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span>${dado||'—'}</div>
-            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span>${ca}</div>
-            <div style="flex:1;padding:9px 16px"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV </span>${pv}</div>
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-weight:400">${dado||'—'}</span></div>
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA: </span><span style="font-weight:400">${ca}</span></div>
+            <div style="flex:1;padding:9px 16px"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV: </span><span style="font-weight:400">${pv}</span></div>
           </div></td></tr>`:''}
-          ${habilidades.length?`<tr><td colspan="2" style="padding:0"><div><div style="padding:6px 16px 2px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities</div><div style="padding:8px 16px 10px">${abHtml}</div></div></td></tr>`:''}
+          ${habilidades.length?`<tr><td colspan="2" style="padding:0"><div><div style="padding:6px 16px 2px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities:</div><div style="padding:8px 16px 10px">${abHtml}</div></div></td></tr>`:''}
         </table>
       </div>
     </div>
@@ -3030,19 +3029,19 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
       <div class="ficha-info-col">
         <div class="ficha-info-name">${namePt}${namePt!==name?`<span style="display:block;font-size:12px;font-weight:400;opacity:.7">${name}</span>`:''}</div>
         <table class="ficha-info-table">
-          ${genus?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;color:var(--text);font-size:13px">${genus}</span></td></tr>`:''}
+          ${genus?`<tr><td colspan="2" style="padding:8px 16px"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;text-transform:none">${genus}</span></td></tr>`:''}
           <tr>
-            <td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height: </span><span style="font-weight:400;color:var(--text)">${altura} cm</span></td>
-            <td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: </span><span style="font-weight:400;color:var(--text)">${peso} kg</span></td>
+            <td style="border-right:1px solid var(--border);width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Height: </span>${altura} cm</td>
+            <td style="width:50%"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Weight: </span>${peso} kg</td>
           </tr>
-          <tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;color:var(--text);font-size:13px">${genderStr}</span></td></tr>
-          ${(()=>{ const eggG=(speciesData?.egg_groups||[]).map(g=>_capFirst(g.name.replace(/-/g,' '))).join(', '); return eggG?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Egg Group(s): </span><span style="font-weight:400;color:var(--text);font-size:13px">${eggG}</span></td></tr>`:''; })()}
+          <tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Gender Ratio: </span><span style="font-weight:400;text-transform:none">${genderStr}</span></td></tr>
+          ${(()=>{ const eggG=(speciesData?.egg_groups||[]).map(g=>_capFirst(g.name.replace(/-/g,' '))).join(', '); return eggG?`<tr><td colspan="2"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Egg Group(s): </span><span style="font-weight:400;text-transform:none">${eggG}</span></td></tr>`:''; })()}
           ${(dado!=='—'||ca!=='—'||pv!=='—')?`<tr><td colspan="2" style="padding:0"><div style="display:flex">
-            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado </span><span style="font-weight:400">${dado}</span></div>
-            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA </span><span style="font-weight:400">${ca}</span></div>
-            <div style="flex:1;padding:9px 16px"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV </span><span style="font-weight:400">${pv}</span></div>
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">Dado: </span><span style="font-weight:400">${dado}</span></div>
+            <div style="flex:1;padding:9px 16px;border-right:1px solid var(--border)"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">CA: </span><span style="font-weight:400">${ca}</span></div>
+            <div style="flex:1;padding:9px 16px"><span style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">PV: </span><span style="font-weight:400">${pv}</span></div>
           </div></td></tr>`:''}
-          ${pokeData.abilities.length?`<tr><td colspan="2" style="padding:0"><div><div style="padding:6px 16px 2px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities</div><div style="padding:8px 16px 10px">${abHtml}</div></div></td></tr>`:''}
+          ${pokeData.abilities.length?`<tr><td colspan="2" style="padding:0"><div><div style="padding:6px 16px 2px;font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border)">Abilities:</div><div style="padding:8px 16px 10px">${abHtml}</div></div></td></tr>`:''}
         </table>
       </div>
     </div>
