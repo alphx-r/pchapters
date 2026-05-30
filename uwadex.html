@@ -2330,26 +2330,38 @@ function renderAdmOvrList(){
 
   const uwaList = [...uwaDex].sort((a,b)=>(a.numero??9999)-(b.numero??9999));
 
-  // Merge: for each number, prefer UWAdex entry if exists, otherwise CSV
-  const byNum = new Map();
-  csvList.forEach(p=>byNum.set(p.numero,{ uwa:null, csv:p, numero:p.numero, nome:p.nome }));
+  // Use composite key "numero:nome" so duplicates with same number each get their own row
+  const byKey = new Map();
+  csvList.forEach(p=>{
+    const key = `${p.numero}:${p.nome.toLowerCase()}`;
+    byKey.set(key,{ uwa:null, csv:p, numero:p.numero, nome:p.nome });
+  });
   uwaList.forEach(p=>{
     const num = p.numero??9999;
-    const existing = byNum.get(num);
+    const key = `${num}:${p.nome.toLowerCase()}`;
+    const existing = byKey.get(key);
     if(existing) existing.uwa = p;
-    else byNum.set(num,{ uwa:p, csv:null, numero:num, nome:p.nome });
+    else byKey.set(key,{ uwa:p, csv:null, numero:num, nome:p.nome });
   });
 
-  // Also include overrides that don't match any known number
-  const knownNums = new Set(byNum.keys());
+  // Include overrides that don't match any known entry — match by numero+nome_display or just numero
   ndexOverrides.forEach(o=>{
-    if(!knownNums.has(o.numero))
-      byNum.set(o.numero,{ uwa:null, csv:null, numero:o.numero, nome:o.nome_display||'#'+o.numero });
+    const keyExact = `${o.numero}:${(o.nome_display||'').toLowerCase()}`;
+    const hasExact = byKey.has(keyExact);
+    const hasNum = [...byKey.keys()].some(k=>k.startsWith(`${o.numero}:`));
+    if(!hasExact && !hasNum)
+      byKey.set(`${o.numero}:override-${o.id}`,{ uwa:null, csv:null, numero:o.numero, nome:o.nome_display||'#'+o.numero });
   });
 
-  let rows = [...byNum.values()]
-    .sort((a,b)=>a.numero-b.numero)
-    .map(r=>({ ...r, ovr: ndexOverrides.find(o=>o.numero===r.numero)||null }));
+  let rows = [...byKey.values()]
+    .sort((a,b)=>a.numero!==b.numero ? a.numero-b.numero : a.nome.localeCompare(b.nome))
+    .map(r=>({
+      ...r,
+      ovr: ndexOverrides.find(o=>
+        o.numero===r.numero &&
+        (!o.nome_display || o.nome_display.toLowerCase()===r.nome.toLowerCase())
+      ) || ndexOverrides.find(o=>o.numero===r.numero&&!o.nome_display) || null
+    }));
 
   if(q) rows = rows.filter(r=>
     r.nome.toLowerCase().includes(q) ||
@@ -2375,7 +2387,9 @@ function renderAdmOvrList(){
     </tr></thead>
     <tbody>${rows.map(r=>{
       const isDup = numCount[r.numero]>1;
-      const numStr = r.numero?'#'+String(r.numero).padStart(3,'0'):'—';
+      const numStr = r.uwa
+        ? 'U'+String(r.numero).padStart(3,'0')
+        : r.numero ? '#'+String(r.numero).padStart(3,'0') : '—';
       const nomeBase = r.uwa ? r.uwa.nome : r.csv ? r.csv.nome : '<span style="color:var(--muted)">—</span>';
       const srcBadge = r.uwa
         ? '<span style="font-size:9px;background:var(--brand-mid);color:#fff;padding:1px 5px;border-radius:4px;margin-left:5px">UWA</span>'
