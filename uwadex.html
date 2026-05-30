@@ -2366,15 +2366,31 @@ function abrirOvrModal(ovrId, uwaId){
   const u = uwaId ? uwaDex.find(x=>x.id===uwaId) : null;
   const titulo = o ? `✏️ Override — ${u?.nome||o.nome_display||'#'+o.numero}` : '➕ Novo Override';
   document.getElementById('adm-ovr-form-title').textContent = titulo;
+  // Número: preenche com o do override salvo ou do pokémon UWAdex
   document.getElementById('ovr-num').value          = o?.numero ?? u?.numero ?? '';
   document.getElementById('ovr-variante').value      = o?.variante ?? '';
   document.getElementById('ovr-nome').value         = o?.nome_display ?? '';
-  document.getElementById('ovr-slug').value         = o?.slug_custom ?? '';
-  document.getElementById('ovr-sprite').value       = o?.sprite ?? '';
   document.getElementById('ovr-artwork-slug').value = o?.artwork_slug ?? '';
+  document.getElementById('ovr-sprite').value       = o?.sprite ?? '';
+  // Slug: preenche com o salvo, ou auto-gera a partir do pokémon UWAdex + variante
+  const baseSlug = u ? slugify(u.nome) : '';
+  const varSalva = o?.variante ?? '';
+  document.getElementById('ovr-slug').value = o?.slug_custom ?? (baseSlug && varSalva ? `${baseSlug}-${varSalva}` : baseSlug);
+  // Guarda o slug base para auto-completar quando variante mudar
+  document.getElementById('ovr-variante')._baseSlug = baseSlug;
   document.getElementById('adm-ovr-del-btn').style.display = o ? 'inline-block' : 'none';
   const bg = document.getElementById('adm-ovr-modal-bg');
   bg.style.display='flex';
+}
+
+function ovrVarianteChanged(){
+  const varEl = document.getElementById('ovr-variante');
+  const slugEl = document.getElementById('ovr-slug');
+  const base = varEl._baseSlug || '';
+  const variante = varEl.value.trim().toLowerCase().replace(/\s+/g,'-');
+  if(base){
+    slugEl.value = variante ? `${base}-${variante}` : base;
+  }
 }
 
 function fecharOvrModal(){
@@ -2397,8 +2413,16 @@ async function salvarOverride(){
     artwork_slug : document.getElementById('ovr-artwork-slug').value.trim()||null,
   };
   let res;
-  if(editingOvrId) res = await dbPatch('uwadex_ndex_overrides',`id=eq.${editingOvrId}`,payload);
-  else             res = await dbPost('uwadex_ndex_overrides',payload);
+  if(editingOvrId){
+    res = await dbPatch('uwadex_ndex_overrides',`id=eq.${editingOvrId}`,payload);
+  } else {
+    // Upsert: se já existe um override com mesmo numero+variante, atualiza; senão insere
+    res = await sb('uwadex_ndex_overrides', {
+      method:'POST',
+      body: JSON.stringify(payload),
+      prefer: 'resolution=merge-duplicates,return=representation',
+    });
+  }
   if(res.ok){
     fb('adm-ovr-ok');
     await loadNdexOverrides();
@@ -3223,7 +3247,7 @@ init();
       </div>
       <div class="field">
         <label>Variante <span style="font-weight:400;color:var(--muted)">(mega, gmax, 1, 2…)</span></label>
-        <input type="text" id="ovr-variante" placeholder="Ex: mega ou 1" autocomplete="off"/>
+        <input type="text" id="ovr-variante" placeholder="Ex: mega ou 1" autocomplete="off" oninput="ovrVarianteChanged()"/>
         <span style="font-size:10px;color:var(--muted);margin-top:2px;display:block">Resulta em #003-mega. Deixe em branco se não houver forma.</span>
       </div>
       <div class="field">
