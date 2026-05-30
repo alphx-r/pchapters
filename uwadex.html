@@ -2322,19 +2322,34 @@ function renderAdmOvrList(){
   if(!wrap) return;
   const q = (document.getElementById('ovr-search')?.value||'').toLowerCase().trim();
 
-  // Build merged list: all uwaDex entries + any override not yet linked to a uwaDex entry
-  const uwaList = [...uwaDex].sort((a,b)=>(a.numero??9999)-(b.numero??9999));
-  const ovrOnlyIds = new Set(ndexOverrides.map(o=>o.numero));
-  uwaList.forEach(p=>ovrOnlyIds.delete(p.numero));
-  const extraOvr = ndexOverrides.filter(o=>ovrOnlyIds.has(o.numero));
+  // Build base list: CSV pokemon + UWAdex entries
+  const csvList = (DATADEX.pokemon||[])
+    .filter(p=>p.nome&&p.nome!=='???')
+    .map(p=>({ _src:'csv', numero:parseInt(p.numero)||9999, nome:p.nome }))
+    .sort((a,b)=>a.numero-b.numero);
 
-  let rows = [
-    ...uwaList.map(p=>{
-      const ovr = ndexOverrides.find(o=>o.numero===p.numero);
-      return { uwa:p, ovr:ovr||null, numero:p.numero??9999, nome:p.nome };
-    }),
-    ...extraOvr.map(o=>({ uwa:null, ovr:o, numero:o.numero??9999, nome:o.nome_display||'#'+o.numero }))
-  ];
+  const uwaList = [...uwaDex].sort((a,b)=>(a.numero??9999)-(b.numero??9999));
+
+  // Merge: for each number, prefer UWAdex entry if exists, otherwise CSV
+  const byNum = new Map();
+  csvList.forEach(p=>byNum.set(p.numero,{ uwa:null, csv:p, numero:p.numero, nome:p.nome }));
+  uwaList.forEach(p=>{
+    const num = p.numero??9999;
+    const existing = byNum.get(num);
+    if(existing) existing.uwa = p;
+    else byNum.set(num,{ uwa:p, csv:null, numero:num, nome:p.nome });
+  });
+
+  // Also include overrides that don't match any known number
+  const knownNums = new Set(byNum.keys());
+  ndexOverrides.forEach(o=>{
+    if(!knownNums.has(o.numero))
+      byNum.set(o.numero,{ uwa:null, csv:null, numero:o.numero, nome:o.nome_display||'#'+o.numero });
+  });
+
+  let rows = [...byNum.values()]
+    .sort((a,b)=>a.numero-b.numero)
+    .map(r=>({ ...r, ovr: ndexOverrides.find(o=>o.numero===r.numero)||null }));
 
   if(q) rows = rows.filter(r=>
     r.nome.toLowerCase().includes(q) ||
@@ -2353,7 +2368,7 @@ function renderAdmOvrList(){
   wrap.innerHTML=`<table class="adm-table">
     <thead><tr>
       <th style="width:56px">#</th>
-      <th>Nome UWAdex</th>
+      <th>Nome</th>
       <th>Override nome</th>
       <th>Override slug</th>
       <th style="width:90px">Ações</th>
@@ -2361,13 +2376,16 @@ function renderAdmOvrList(){
     <tbody>${rows.map(r=>{
       const isDup = numCount[r.numero]>1;
       const numStr = r.numero?'#'+String(r.numero).padStart(3,'0'):'—';
-      const nomeUwa = r.uwa?r.uwa.nome:'<span style="color:var(--muted)">—</span>';
+      const nomeBase = r.uwa ? r.uwa.nome : r.csv ? r.csv.nome : '<span style="color:var(--muted)">—</span>';
+      const srcBadge = r.uwa
+        ? '<span style="font-size:9px;background:var(--brand-mid);color:#fff;padding:1px 5px;border-radius:4px;margin-left:5px">UWA</span>'
+        : '<span style="font-size:9px;background:var(--surface2);color:var(--muted);padding:1px 5px;border-radius:4px;margin-left:5px;border:1px solid var(--border)">CSV</span>';
       const nomeOvr = r.ovr?.nome_display||'<span style="color:var(--muted)">—</span>';
       const slugOvr = r.ovr?.slug_custom?`<span style="font-size:11px;color:var(--muted)">${r.ovr.slug_custom}</span>`:'<span style="color:var(--muted)">—</span>';
       const dupBadge = isDup?'<span style="font-size:9px;background:#f59e0b;color:#fff;padding:1px 5px;border-radius:4px;margin-left:4px">DUP</span>':'';
       return `<tr style="${isDup?'background:rgba(245,158,11,.06)':''}">
         <td><strong>${numStr}</strong>${dupBadge}</td>
-        <td>${nomeUwa}</td>
+        <td>${nomeBase}${srcBadge}</td>
         <td>${nomeOvr}</td>
         <td>${slugOvr}</td>
         <td style="display:flex;gap:4px">
@@ -2707,6 +2725,35 @@ function _getFlavorText(species){
   return chosen ? chosen.flavor_text.replace(/\f/g,' ').replace(/\n/g,' ').replace(/\u00ad/g,'') : '';
 }
 
+// Translation cache to avoid repeat API calls
+const _translationCache = {};
+
+async function _translateToPt(text){
+  if(!text) return text;
+  // Check if already Portuguese (heuristic: contains common PT words)
+  if(_translationCache[text]) return _translationCache[text];
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:300,
+        messages:[{
+          role:'user',
+          content:`Traduza o seguinte texto de descrição de Pokémon para o Português do Brasil. Retorne APENAS o texto traduzido, sem aspas, sem explicações, sem prefixos:\n\n${text}`
+        }]
+      })
+    });
+    const data = await res.json();
+    const translated = data?.content?.[0]?.text?.trim()||text;
+    _translationCache[text] = translated;
+    return translated;
+  }catch{
+    return text;
+  }
+}
+
 function _buildEvoFromApi(chainLink, targetSlug){
   const stages=[];
   function rec(link){
@@ -3007,8 +3054,10 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
   const altura = (pokeData.height*10).toFixed(0);
   const peso = (pokeData.weight/10).toFixed(1);
 
-  // Flavor text
-  const flavor = _getFlavorText(speciesData);
+  // Flavor text — translate to PT if not already
+  const flavorRaw = _getFlavorText(speciesData);
+  const isPt = !flavorRaw || /[ãõáéíóúâêîôûàèìòùç]/i.test(flavorRaw);
+  const flavor = isPt ? flavorRaw : await _translateToPt(flavorRaw);
   const genus = speciesData?.genera?.find(g=>g.language.name==='en')?.genus||'';
 
   // Abilities — name from API + description from CSV
