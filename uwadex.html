@@ -686,7 +686,12 @@ html.dark .dex-tab.active{color:#fff}
                 <div class="g3">
                   <div class="field">
                     <label>Número (#)</label>
-                    <input type="number" id="ovr-num" placeholder="001" min="1" autocomplete="off"/>
+                    <input type="text" id="ovr-num" placeholder="003" autocomplete="off" style="font-family:var(--font-mono,monospace)"/>
+                  </div>
+                  <div class="field">
+                    <label>Variante <span style="font-weight:400;color:var(--muted)">(mega, gmax, 1, 2…)</span></label>
+                    <input type="text" id="ovr-variante" placeholder="Ex: mega ou 1" autocomplete="off"/>
+                    <span style="font-size:10px;color:var(--muted);margin-top:2px;display:block">Resulta em #003-mega. Deixe em branco se não houver forma.</span>
                   </div>
                   <div class="field">
                     <label>Nome exibido</label>
@@ -2373,9 +2378,9 @@ function renderAdmOvrList(){
     return;
   }
 
-  // Detect duplicates by numero
-  const numCount = {};
-  rows.forEach(r=>{ numCount[r.numero]=(numCount[r.numero]||0)+1; });
+  // Detect duplicates: only among CSV entries with same number
+  const csvNumCount = {};
+  rows.forEach(r=>{ if(!r.uwa) csvNumCount[r.numero]=(csvNumCount[r.numero]||0)+1; });
 
   wrap.innerHTML=`<table class="adm-table">
     <thead><tr>
@@ -2386,10 +2391,11 @@ function renderAdmOvrList(){
       <th style="width:90px">Ações</th>
     </tr></thead>
     <tbody>${rows.map(r=>{
-      const isDup = numCount[r.numero]>1;
-      const numStr = r.uwa
+      const isDup = !r.uwa && (csvNumCount[r.numero]||0)>1;
+      const numBase = r.uwa
         ? 'U'+String(r.numero).padStart(3,'0')
         : r.numero ? '#'+String(r.numero).padStart(3,'0') : '—';
+      const numStr = r.ovr?.variante ? `${numBase}-${r.ovr.variante}` : numBase;
       const nomeBase = r.uwa ? r.uwa.nome : r.csv ? r.csv.nome : '<span style="color:var(--muted)">—</span>';
       const srcBadge = r.uwa
         ? '<span style="font-size:9px;background:var(--brand-mid);color:#fff;padding:1px 5px;border-radius:4px;margin-left:5px">UWA</span>'
@@ -2419,6 +2425,7 @@ function abrirOvrModal(ovrId, uwaId){
   const titulo = o ? `✏️ Override — ${u?.nome||o.nome_display||'#'+o.numero}` : '➕ Novo Override';
   document.getElementById('adm-ovr-form-title').textContent = titulo;
   document.getElementById('ovr-num').value          = o?.numero ?? u?.numero ?? '';
+  document.getElementById('ovr-variante').value      = o?.variante ?? '';
   document.getElementById('ovr-nome').value         = o?.nome_display ?? '';
   document.getElementById('ovr-slug').value         = o?.slug_custom ?? '';
   document.getElementById('ovr-sprite').value       = o?.sprite ?? '';
@@ -2430,14 +2437,18 @@ function abrirOvrModal(ovrId, uwaId){
 
 function fecharOvrModal(){
   document.getElementById('adm-ovr-modal-bg').style.display='none';
+  document.getElementById('ovr-variante').value='';
   editingOvrId=null;
 }
 
 async function salvarOverride(){
-  const num = parseInt(document.getElementById('ovr-num').value);
+  const numRaw = document.getElementById('ovr-num').value.trim();
+  const num = parseInt(numRaw);
   if(!num||isNaN(num)){ alert('Informe o número (#) do Pokémon.'); return; }
+  const variante = document.getElementById('ovr-variante').value.trim()||null;
   const payload = {
     numero       : num,
+    variante     : variante,
     nome_display : document.getElementById('ovr-nome').value.trim()||null,
     slug_custom  : document.getElementById('ovr-slug').value.trim()||null,
     sprite       : document.getElementById('ovr-sprite').value.trim()||null,
@@ -3229,7 +3240,7 @@ async function _renderPokeApiEntry(slug, root, ovr=null){
         <div class="ficha-type-icons">${tipos.map(t=>`<img class="ficha-type-icon" src="https://raw.githubusercontent.com/partywhale/pokemon-type-icons/main/icons/${t.toLowerCase()}.svg" alt="${t}" title="${t}"/>`).join('')}</div>
       </div>
       <div class="ficha-info-col">
-        <div class="ficha-info-name">${navPrev}${namePt}${namePt!==name?`<span style="display:block;font-size:12px;font-weight:400;opacity:.7">${name}</span>`:''}${navNext}</div>
+        <div class="ficha-info-name">${navPrev}${namePt}${navNext}</div>
         <table class="ficha-info-table">
           ${genus?`<tr><td colspan="2" style="padding:8px 16px"><span style="font-weight:700;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.4px">Classification: </span><span style="font-weight:400;text-transform:none">${genus}</span></td></tr>`:''}
           <tr>
