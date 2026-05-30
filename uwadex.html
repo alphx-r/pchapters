@@ -317,13 +317,15 @@ html.dark .dex-tab.active{color:#fff}
 .source-uwa{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent)}
 .source-pokeapi{background:var(--brand-light);color:var(--brand-mid);border:1px solid var(--border)}
 .poke-nav{display:contents}
-.ficha-info-name{position:relative;display:flex;align-items:center;justify-content:center;gap:8px}
-.poke-nav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:6px 10px;background:rgba(255,255,255,.15);border:none;border-radius:8px;font-family:var(--font-body);font-size:9px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;min-width:48px}
+.ficha-info-name{position:relative;display:flex;align-items:center;justify-content:center;padding:14px 70px !important}
+.poke-nav-btn{position:absolute;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:6px 10px;background:rgba(255,255,255,.15);border:none;border-radius:8px;font-family:var(--font-body);font-size:9px;font-weight:700;color:#fff;cursor:pointer;transition:all .2s;min-width:48px}
+.poke-nav-btn:first-child{left:10px}
+.poke-nav-btn:last-child{right:10px}
 .poke-nav-btn:hover{background:rgba(255,255,255,.28)}
 .poke-nav-btn .nav-arrow{font-size:16px;line-height:1}
 .poke-nav-btn .nav-name{font-size:9px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:52px;text-align:center}
 .poke-nav-num{color:rgba(255,255,255,.7);font-family:var(--font-title);font-size:8px;display:block;text-align:center}
-.ficha-nav-spacer{flex:1;min-width:48px}
+.ficha-nav-spacer{display:none}
 .flavor-box{background:var(--surface2);border-left:3px solid var(--brand-mid);padding:12px 16px;border-radius:0 6px 6px 0;font-style:italic;font-size:13px;color:var(--text);line-height:1.7;margin-bottom:8px}
 .inline-loading{display:flex;align-items:center;gap:10px;padding:30px 20px;color:var(--muted);font-size:13px;font-weight:600}
 .inline-spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--brand-mid);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
