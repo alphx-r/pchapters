@@ -7386,16 +7386,11 @@ async function resetarPaginaParaPadrao(){
     delete editOriginalHTML[editPageKey];
     if(_edDraftKey){ localStorage.removeItem(_edDraftKey); localStorage.removeItem(_edDraftKey+'_date'); }
     sairModoEdicao();
-    // Força recarga do HTML estático original
-    const pageEl = document.getElementById('page-' + editPageKey.replace(/^page_/,''));
-    if(pageEl) pageEl.style.visibility = '';
     const fb = document.createElement('div');
-    fb.textContent = '✓ Página resetada para o padrão!';
+    fb.textContent = '✓ Página resetada! Recarregando...';
     fb.style.cssText='position:fixed;bottom:80px;right:20px;background:var(--green);color:#fff;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:700;z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.2)';
     document.body.appendChild(fb);
-    setTimeout(()=>fb.remove(), 3000);
-    // Recarrega a página para mostrar o HTML estático
-    setTimeout(()=>location.reload(), 500);
+    setTimeout(()=>location.reload(), 1200);
   } catch(e){
     alert('Erro ao resetar: ' + e.message);
   }
